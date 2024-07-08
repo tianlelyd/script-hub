@@ -1,0 +1,12 @@
+📦 script-hub
+├ 📜 .gitignore
+├ 📜 generateStructure.js
+├ 📜 LICENSE
+├ 📜 maskData.js
+├ 📜 mrsoft.common.config--.json
+├ 📜 mrsoft.common.config-.json
+├ 📜 mrsoft.common.config.json
+├ 📜 package.json
+├ 📜 pnpm-lock.yaml
+├ 📜 README.md
+└ 📜 structure.txt
