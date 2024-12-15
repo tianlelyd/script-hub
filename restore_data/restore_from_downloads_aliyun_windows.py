@@ -3,6 +3,7 @@
 # ScriptName: restore_from_downloads
 # Author: @alibaba-inc.com
 # Function:
+# 基于阿里云linux导入mysql数据脚本改为了支持windows
 # ***************************************************************#
 
 import os
@@ -14,7 +15,9 @@ DATA_PATH_PREFIX = "data"
 
 def create_database(db_host, db_port, db_user, db_pass, create_stmt_file):
     cmd = "mysql -h" + db_host + " -P" + db_port + " -u" + \
-        db_user + " -p" + db_pass + " <" + create_stmt_file
+        db_user + " -p" + db_pass + \
+        " --default-character-set=utf8mb4" + \
+        " <" + create_stmt_file
     if os.system(cmd) != 0:
         print("[ERROR]: execute SQL failed. command: " + cmd)
         exit(1)
@@ -22,7 +25,9 @@ def create_database(db_host, db_port, db_user, db_pass, create_stmt_file):
 
 def create_table(db_host, db_port, db_user, db_pass, db_name, create_stmt_file):
     cmd = "mysql -h" + db_host + " -P" + db_port + " -u" + db_user + \
-        " -p" + db_pass + " -D" + db_name + " <" + create_stmt_file
+        " -p" + db_pass + " -D" + db_name + \
+        " --default-character-set=utf8mb4" + \
+        " <" + create_stmt_file
     if os.system(cmd) != 0:
         print("[ERROR]: execute SQL failed. command: " + cmd)
         exit(1)
