@@ -137,16 +137,25 @@ def handle_api_error(error):
 def main():
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='获取关键词的月均搜索量')
-    parser.add_argument('--keywords', nargs='+', help='要查询的关键词列表')
+    parser.add_argument('--keywords', nargs='+', help='要作为附加查询的关键词列表')
     parser.add_argument('--output', help='输出CSV文件路径')
     args = parser.parse_args()
     
-    # 使用命令行参数中的关键词或默认关键词
-    keywords = args.keywords if args.keywords else [
+    # 默认关键词列表
+    default_keywords = [
         "good morning images", "happy birthday images", "baby shower", 
         "image to text converter", "GPTs", "ai image upscaler", 
         "random images", "banana png", "translate text from image", "conversational"
     ]
+    
+    # 合并默认关键词和命令行附加关键词
+    keywords = default_keywords.copy()
+    if args.keywords:
+        keywords.extend(args.keywords)
+        logger.info(f"使用默认关键词 + 附加关键词，总共 {len(keywords)} 个关键词")
+        logger.info(f"附加关键词: {args.keywords}")
+    else:
+        logger.info(f"仅使用默认关键词，总共 {len(keywords)} 个关键词")
     
     # 获取关键词数据
     keyword_stats = get_keyword_stats(keywords)
