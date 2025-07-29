@@ -19,25 +19,52 @@ claude-switch() {
 EOF
     fi
 
-    if [[ $# -eq 0 ]]; then
-        echo "可用配置："
-        # 使用 jq 解析 JSON 并显示名称列表
-        if command -v jq >/dev/null 2>&1; then
-            jq -r '.[] | "\(.name)"' "$config_file"
-        else
-            echo "需要安装 jq 工具来解析配置"
-        fi
-        return 0
+    # 检查是否安装了 jq
+    if ! command -v jq >/dev/null 2>&1; then
+        echo "需要安装 jq 工具来解析配置"
+        return 1
+    fi
+
+    # 获取配置名称列表
+    local config_names=($(jq -r '.[].name' "$config_file"))
+    
+    # 如果没有配置项
+    if [[ ${#config_names[@]} -eq 0 ]]; then
+        echo "配置文件中没有可用的配置"
+        return 1
+    fi
+
+    local selected_name=""
+    
+    # 如果有参数直接使用，否则显示菜单选择
+    if [[ $# -gt 0 ]]; then
+        selected_name="$1"
+    else
+        # 显示交互式菜单
+        echo "请选择配置："
+        select config_name in "${config_names[@]}" "退出"; do
+            case $config_name in
+                "退出")
+                    return 0
+                    ;;
+                "")
+                    echo "无效选择，请重新选择"
+                    ;;
+                *)
+                    selected_name="$config_name"
+                    break
+                    ;;
+            esac
+        done
     fi
 
     # 使用 jq 查找匹配的配置项
     local config_entry=""
-    if command -v jq >/dev/null 2>&1; then
-        config_entry=$(jq -r --arg name "$1" '.[] | select(.name == $name)' "$config_file")
-    fi
+    config_entry=$(jq -r --arg name "$selected_name" '.[] | select(.name == $name)' "$config_file")
 
     if [[ -z "$config_entry" ]]; then
-        echo "未知配置名：$1"; return 1
+        echo "未知配置名：$selected_name"
+        return 1
     fi
 
     # 导出环境变量
