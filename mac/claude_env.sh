@@ -1,3 +1,4 @@
+claude_env.sh
 claude-switch() {
     local config_file="$HOME/.claude_config"
     if [[ ! -f "$config_file" ]]; then
@@ -19,36 +20,36 @@ claude-switch() {
 EOF
     fi
 
-    # 检查是否安装了 jq
+    # Check if jq is installed
     if ! command -v jq >/dev/null 2>&1; then
-        echo "需要安装 jq 工具来解析配置"
+        echo "jq tool is required to parse the configuration"
         return 1
     fi
 
-    # 获取配置名称列表
+    # Get configuration name list
     local config_names=($(jq -r '.[].name' "$config_file"))
     
-    # 如果没有配置项
+    # If there are no configuration items
     if [[ ${#config_names[@]} -eq 0 ]]; then
-        echo "配置文件中没有可用的配置"
+        echo "No available configurations in the config file"
         return 1
     fi
 
     local selected_name=""
     
-    # 如果有参数直接使用，否则显示菜单选择
+    # If argument is provided, use it directly, otherwise show menu selection
     if [[ $# -gt 0 ]]; then
         selected_name="$1"
     else
-        # 显示交互式菜单
-        echo "请选择配置："
-        select config_name in "${config_names[@]}" "退出"; do
+        # Show interactive menu
+        echo "Please select configuration:"
+        select config_name in "${config_names[@]}" "Exit"; do
             case $config_name in
-                "退出")
+                "Exit")
                     return 0
                     ;;
                 "")
-                    echo "无效选择，请重新选择"
+                    echo "Invalid selection, please try again"
                     ;;
                 *)
                     selected_name="$config_name"
@@ -58,22 +59,22 @@ EOF
         done
     fi
 
-    # 使用 jq 查找匹配的配置项
+    # Use jq to find the matching configuration entry
     local config_entry=""
     config_entry=$(jq -r --arg name "$selected_name" '.[] | select(.name == $name)' "$config_file")
 
     if [[ -z "$config_entry" ]]; then
-        echo "未知配置名：$selected_name"
+        echo "Unknown configuration name: $selected_name"
         return 1
     fi
 
-    # 导出环境变量
+    # Export environment variables
     export ANTHROPIC_AUTH_TOKEN=$(echo "$config_entry" | jq -r '.ANTHROPIC_AUTH_TOKEN')
     export ANTHROPIC_BASE_URL=$(echo "$config_entry" | jq -r '.ANTHROPIC_BASE_URL')
     local display_name=$(echo "$config_entry" | jq -r '.name')
     local web_url=$(echo "$config_entry" | jq -r '.WEBURL')
-    echo "已切换到：$display_name"
-    echo "网站地址：$web_url"
+    echo "Switched to: $display_name"
+    echo "Website URL: $web_url"
 }
 
 alias cs='claude-switch'
