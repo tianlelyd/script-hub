@@ -71,10 +71,21 @@ EOF
     # Export environment variables
     export ANTHROPIC_AUTH_TOKEN=$(echo "$config_entry" | jq -r '.ANTHROPIC_AUTH_TOKEN')
     export ANTHROPIC_BASE_URL=$(echo "$config_entry" | jq -r '.ANTHROPIC_BASE_URL')
-    local display_name=$(echo "$config_entry" | jq -r '.name')
-    local web_url=$(echo "$config_entry" | jq -r '.WEBURL')
-    echo "Switched to: $display_name"
-    echo "Website URL: $web_url"
+    local display_url=$(echo "$config_entry" | jq -r '.ANTHROPIC_BASE_URL')
+    local display_token=$(echo "$config_entry" | jq -r '.ANTHROPIC_AUTH_TOKEN')
+    # 只显示前8位和后4位，中间用*号代替
+    local token_prefix=${display_token:0:8}
+    local token_suffix=${display_token: -4}
+    local token_length=${#display_token}
+    local mask_length=$((token_length-12))
+    if [[ $mask_length -gt 0 ]]; then
+        local token_mask=$(printf '%*s' "$mask_length" | tr ' ' '*')
+        local masked_token="${token_prefix}${token_mask}${token_suffix}"
+    else
+        local masked_token="$display_token"
+    fi
+    echo "ANTHROPIC_BASE_URL: $display_url"
+    echo "ANTHROPIC_AUTH_TOKEN: $masked_token"
 }
 
 alias cs='claude-switch'
