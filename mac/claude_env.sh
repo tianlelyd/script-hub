@@ -1,7 +1,64 @@
+# Claude API environment switcher utility
+# Author: optimized version
+# Usage: claude-switch [config_name]
+
+# ------------------ Helper Functions ------------------
+# Mask token to protect sensitive info (keep first 8 and last 4 chars)
+_mask_token() {
+    local token="$1"
+    # if token length <=12 just return it
+    local len=${#token}
+    if (( len <= 12 )); then
+        echo "$token"
+        return
+    fi
+    local prefix=${token:0:8}
+    local suffix=${token: -4}
+    local mask_len=$((len - 12))
+    local mask=""
+    (( mask_len > 0 )) && mask=$(printf '%*s' "$mask_len" | tr ' ' '*')
+    echo "${prefix}${mask}${suffix}"
+}
+
+# Determine which shell config file to write
+_get_shell_config() {
+    case "$SHELL" in
+        *zsh*)  echo "$HOME/.zshrc" ;;
+        *bash*) echo "$HOME/.bashrc" ;;
+        *)      echo "$HOME/.profile" ;;
+    esac
+}
+
+# Print current configuration information
+_print_current_config() {
+    local config_file="$HOME/.claude_config"
+
+    if [[ -n "$ANTHROPIC_BASE_URL" && -n "$ANTHROPIC_AUTH_TOKEN" ]]; then
+        local masked=$(_mask_token "$ANTHROPIC_AUTH_TOKEN")
+        local current_name=""
+        if [[ -f "$config_file" ]] && command -v jq >/dev/null 2>&1; then
+            current_name=$(jq -r --arg url "$ANTHROPIC_BASE_URL" \
+                               --arg token "$ANTHROPIC_AUTH_TOKEN" \
+                               '.[] | select(.ANTHROPIC_BASE_URL == $url and .ANTHROPIC_AUTH_TOKEN == $token) | .name' \
+                               "$config_file")
+        fi
+        [[ -z $current_name ]] && current_name="Custom"
+        echo "Current configuration: $current_name"
+        echo "  ANTHROPIC_BASE_URL: $ANTHROPIC_BASE_URL"
+        echo "  ANTHROPIC_AUTH_TOKEN: $masked"
+    else
+        echo "  None"
+    fi
+    echo ""
+}
+
+# ------------------ Main Function ------------------
 claude-switch() {
     local config_file="$HOME/.claude_config"
-    if [[ ! -f "$config_file" ]]; then
-        cat > "$config_file" << 'EOF'
+
+    # Create sample configuration file if missing
+    if [[ ! -f $config_file ]]; then
+        cat > "$config_file" <<'EOF'
 [
   {
     "name": "wenwen-ai",
@@ -19,161 +76,87 @@ claude-switch() {
 EOF
     fi
 
-    # Check if jq is installed
+    # Ensure jq is installed
     if ! command -v jq >/dev/null 2>&1; then
         echo "jq tool is required for parsing configuration"
         return 1
     fi
 
-    # Display current environment variable settings
-    if [[ -n "$ANTHROPIC_BASE_URL" ]] && [[ -n "$ANTHROPIC_AUTH_TOKEN" ]]; then
-        local display_token="$ANTHROPIC_AUTH_TOKEN"
-        local token_prefix=${display_token:0:8}
-        local token_suffix=${display_token: -4}
-        local token_length=${#display_token}
-        local mask_length=$((token_length-12))
-        if [[ $mask_length -gt 0 ]]; then
-            local token_mask=$(printf '%*s' "$mask_length" | tr ' ' '*')
-            local masked_token="${token_prefix}${token_mask}${token_suffix}"
-        else
-            local masked_token="$display_token"
-        fi
-        # Find the name corresponding to current configuration
-        local current_name=$(jq -r --arg url "$ANTHROPIC_BASE_URL" --arg token "$ANTHROPIC_AUTH_TOKEN" '.[] | select(.ANTHROPIC_BASE_URL == $url and .ANTHROPIC_AUTH_TOKEN == $token) | .name' "$config_file")
-        if [[ -n "$current_name" ]]; then
-            echo "Current configuration: $current_name"
-        else
-            echo "Current configuration: Custom"
-        fi
-        echo "  ANTHROPIC_BASE_URL: $ANTHROPIC_BASE_URL"
-        echo "  ANTHROPIC_AUTH_TOKEN: $masked_token"
-        
+    # Show current configuration
+    _print_current_config
 
-    else
-        echo "  None"
-    fi
-    echo ""
+    # Load available configuration names (compatible with bash & zsh)
+    local config_names=()
+    while IFS= read -r name; do
+        config_names+=("$name")
+    done < <(jq -r '.[].name' "$config_file")
 
-    # Get configuration name list
-    local config_names=($(jq -r '.[].name' "$config_file"))
-    
-    # If there are no configuration items
     if [[ ${#config_names[@]} -eq 0 ]]; then
         echo "No available configurations in config file"
         return 1
     fi
 
     local selected_name=""
-    
-    # If argument is provided, use it directly, otherwise show menu selection
+
+    # If argument provided use it, otherwise prompt user
     if [[ $# -gt 0 ]]; then
         selected_name="$1"
     else
-        # Show interactive menu
         echo "Please select configuration:"
-        select config_name in "${config_names[@]}" "Exit"; do
-            case $config_name in
-                "Exit")
-                    return 0
-                    ;;
-                "")
-                    echo "Invalid selection, please try again"
-                    ;;
-                *)
-                    selected_name="$config_name"
-                    break
-                    ;;
+        select selected_name in "${config_names[@]}" "Exit"; do
+            case $selected_name in
+                "Exit") return 0 ;;
+                "")     echo "Invalid selection, please try again" ;;
+                *)       break ;;
             esac
         done
     fi
 
-    # Use jq to find the matching configuration entry
+    # Fetch selected configuration entry
     local config_entry=""
     config_entry=$(jq -r --arg name "$selected_name" '.[] | select(.name == $name)' "$config_file")
 
-    if [[ -z "$config_entry" ]]; then
+    if [[ -z $config_entry ]]; then
         echo "Unknown configuration name: $selected_name"
         return 1
     fi
 
-    # Extract environment variables
-    local new_token=$(echo "$config_entry" | jq -r '.ANTHROPIC_AUTH_TOKEN')
-    local new_url=$(echo "$config_entry" | jq -r '.ANTHROPIC_BASE_URL')
+    # Extract new environment variables
+    local new_token new_url
+    new_token=$(jq -r '.ANTHROPIC_AUTH_TOKEN' <<<"$config_entry")
+    new_url=$(jq -r '.ANTHROPIC_BASE_URL' <<<"$config_entry")
 
-    # Export environment variables for current session
+    # Export for current session
     export ANTHROPIC_AUTH_TOKEN="$new_token"
     export ANTHROPIC_BASE_URL="$new_url"
 
-    # Save environment variables to shell configuration file
-    local shell_config=""
-    if [[ "$SHELL" == *"zsh"* ]]; then
-        shell_config="$HOME/.zshrc"
-    elif [[ "$SHELL" == *"bash"* ]]; then
-        shell_config="$HOME/.bashrc"
-    else
-        shell_config="$HOME/.profile"
-    fi
+    # Persist to shell configuration file
+    local shell_config
+    shell_config=$(_get_shell_config)
 
-    # Remove old ANTHROPIC related environment variables
-    if [[ -f "$shell_config" ]]; then
-        # Create temporary file, excluding existing ANTHROPIC environment variables
-        grep -v "^export ANTHROPIC_" "$shell_config" > "${shell_config}.tmp" || true
+    if [[ -f $shell_config ]]; then
+        # Remove existing ANTHROPIC_* exports
+        grep -v '^export ANTHROPIC_' "$shell_config" > "${shell_config}.tmp" || true
         mv "${shell_config}.tmp" "$shell_config"
     fi
 
-    # Add new environment variables to shell configuration file
-    echo "" >> "$shell_config"
-    echo "# Claude API configuration (auto-generated by claude-switch)" >> "$shell_config"
-    echo "export ANTHROPIC_AUTH_TOKEN=\"$new_token\"" >> "$shell_config"
-    echo "export ANTHROPIC_BASE_URL=\"$new_url\"" >> "$shell_config"
+    {
+        echo ""  # ensure newline
+        echo "# Claude API configuration (auto-generated by claude-switch)"
+        echo "export ANTHROPIC_AUTH_TOKEN=\"$new_token\""
+        echo "export ANTHROPIC_BASE_URL=\"$new_url\""
+    } >> "$shell_config"
 
-    # Display setting results
-    local token_prefix=${new_token:0:8}
-    local token_suffix=${new_token: -4}
-    local token_length=${#new_token}
-    local mask_length=$((token_length-12))
-    if [[ $mask_length -gt 0 ]]; then
-        local token_mask=$(printf '%*s' "$mask_length" | tr ' ' '*')
-        local masked_token="${token_prefix}${token_mask}${token_suffix}"
-    else
-        local masked_token="$new_token"
-    fi
-    
+    # Display results
     echo "✅ Configuration switched and permanently saved to $shell_config"
     echo "ANTHROPIC_BASE_URL: $new_url"
-    echo "ANTHROPIC_AUTH_TOKEN: $masked_token"
+    echo "ANTHROPIC_AUTH_TOKEN: $(_mask_token "$new_token")"
     echo ""
     echo "💡 Tip: Environment variables have been saved to shell config file, will take effect after reopening terminal"
 }
 
+# ------------------ Aliases ------------------
+# Quick switch
 alias cs='claude-switch'
-alias css='claude-switch-status() {
-    local config_file="$HOME/.claude_config"
-    if [[ -n "$ANTHROPIC_BASE_URL" ]] && [[ -n "$ANTHROPIC_AUTH_TOKEN" ]]; then
-        local display_token="$ANTHROPIC_AUTH_TOKEN"
-        local token_prefix=${display_token:0:8}
-        local token_suffix=${display_token: -4}
-        local token_length=${#display_token}
-        local mask_length=$((token_length-12))
-        if [[ $mask_length -gt 0 ]]; then
-            local token_mask=$(printf "%*s" "$mask_length" | tr " " "*")
-            local masked_token="${token_prefix}${token_mask}${token_suffix}"
-        else
-            local masked_token="$display_token"
-        fi
-        if [[ -f "$config_file" ]] && command -v jq >/dev/null 2>&1; then
-            local current_name=$(jq -r --arg url "$ANTHROPIC_BASE_URL" --arg token "$ANTHROPIC_AUTH_TOKEN" ".[] | select(.ANTHROPIC_BASE_URL == \$url and .ANTHROPIC_AUTH_TOKEN == \$token) | .name" "$config_file")
-            if [[ -n "$current_name" ]]; then
-                echo "Current configuration: $current_name"
-            else
-                echo "Current configuration: Custom"
-            fi
-        else
-            echo "Current configuration: Custom"
-        fi
-        echo "  ANTHROPIC_BASE_URL: $ANTHROPIC_BASE_URL"
-        echo "  ANTHROPIC_AUTH_TOKEN: $masked_token"
-    else
-        echo "  None"
-    fi
-}; claude-switch-status'
+# Show current status
+alias css='_print_current_config'
