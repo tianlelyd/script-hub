@@ -136,3 +136,10 @@ dist
 .DS_Store
 google_ads/client_secrets.json
 google_ads/google-ads.yaml
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
