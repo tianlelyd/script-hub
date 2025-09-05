@@ -1,0 +1,2116 @@
+{
+  "metadata": {
+    "total_count": 263,
+    "unique_users": 92,
+    "scraped_at": "2025-08-26 23:52:45",
+    "method": "selenium",
+    "source": "https://replicate.com/explore",
+    "note": "Complete scrape using Selenium with dynamic content loading"
+  },
+  "models": [
+    {
+      "path": "/851-labs/background-remover",
+      "url": "https://replicate.com/851-labs/background-remover",
+      "username": "851-labs",
+      "model_name": "background-remover",
+      "full_name": "851-labs/background-remover",
+      "title": "851-labs/background-remover"
+    },
+    {
+      "path": "/8w9ag/tom-cruise-runs",
+      "url": "https://replicate.com/8w9ag/tom-cruise-runs",
+      "username": "8w9ag",
+      "model_name": "tom-cruise-runs",
+      "full_name": "8w9ag/tom-cruise-runs",
+      "title": "8w9ag/tom-cruise-runs\nTom Cruise is always running, now you can choose where\n8 runs"
+    },
+    {
+      "path": "/abiruyt/text-extract-ocr",
+      "url": "https://replicate.com/abiruyt/text-extract-ocr",
+      "username": "abiruyt",
+      "model_name": "text-extract-ocr",
+      "full_name": "abiruyt/text-extract-ocr",
+      "title": "abiruyt/text-extract-ocr"
+    },
+    {
+      "path": "/adirik/flux-cinestill",
+      "url": "https://replicate.com/adirik/flux-cinestill",
+      "username": "adirik",
+      "model_name": "flux-cinestill",
+      "full_name": "adirik/flux-cinestill",
+      "title": "adirik/flux-cinestill"
+    },
+    {
+      "path": "/aihilums/sehatsanjha",
+      "url": "https://replicate.com/aihilums/sehatsanjha",
+      "username": "aihilums",
+      "model_name": "sehatsanjha",
+      "full_name": "aihilums/sehatsanjha",
+      "title": "aihilums/sehatsanjha\n36k runs"
+    },
+    {
+      "path": "/alexgenovese/adcsr-ultra-fast-super-resolution",
+      "url": "https://replicate.com/alexgenovese/adcsr-ultra-fast-super-resolution",
+      "username": "alexgenovese",
+      "model_name": "adcsr-ultra-fast-super-resolution",
+      "full_name": "alexgenovese/adcsr-ultra-fast-super-resolution",
+      "title": "alexgenovese/\nAdcSR: ultra-fast super-resolution, optimized to run faster\n57 runs"
+    },
+    {
+      "path": "/alexgenovese/seesr-upscale-and-stable-diffusion-turbo",
+      "url": "https://replicate.com/alexgenovese/seesr-upscale-and-stable-diffusion-turbo",
+      "username": "alexgenovese",
+      "model_name": "seesr-upscale-and-stable-diffusion-turbo",
+      "full_name": "alexgenovese/seesr-upscale-and-stable-diffusion-turbo",
+      "title": "alexgenovese/\nImage super-resolution model based on SEESR, designed to reconstruct low-resolution images with sharper details and accurate colors.\n35 runs"
+    },
+    {
+      "path": "/alicewuv/kitten-tts",
+      "url": "https://replicate.com/alicewuv/kitten-tts",
+      "username": "alicewuv",
+      "model_name": "kitten-tts",
+      "full_name": "alicewuv/kitten-tts",
+      "title": "alicewuv/kitten-tts\nLightweight text to speech models\n13 runs"
+    },
+    {
+      "path": "/alicewuv/whiskii-chat",
+      "url": "https://replicate.com/alicewuv/whiskii-chat",
+      "username": "alicewuv",
+      "model_name": "whiskii-chat",
+      "full_name": "alicewuv/whiskii-chat",
+      "title": "alicewuv/whiskii-chat\nFine-Tuned Qwen2.5-7B-Instruct\n138 runs"
+    },
+    {
+      "path": "/alicewuv/whiskii-gen",
+      "url": "https://replicate.com/alicewuv/whiskii-gen",
+      "username": "alicewuv",
+      "model_name": "whiskii-gen",
+      "full_name": "alicewuv/whiskii-gen",
+      "title": "alicewuv/whiskii-gen\nPsst..\n458 runs"
+    },
+    {
+      "path": "/andreasjansson/clip-features",
+      "url": "https://replicate.com/andreasjansson/clip-features",
+      "username": "andreasjansson",
+      "model_name": "clip-features",
+      "full_name": "andreasjansson/clip-features",
+      "title": "andreasjansson\nReturn CLIP features for the clip-vit-large-patch14 model\n100.1m runs"
+    },
+    {
+      "path": "/andreasjansson/fractal",
+      "url": "https://replicate.com/andreasjansson/fractal",
+      "username": "andreasjansson",
+      "model_name": "fractal",
+      "full_name": "andreasjansson/fractal",
+      "title": "andreasjansson\n163 runs"
+    },
+    {
+      "path": "/andreasjansson/github-code-understander",
+      "url": "https://replicate.com/andreasjansson/github-code-understander",
+      "username": "andreasjansson",
+      "model_name": "github-code-understander",
+      "full_name": "andreasjansson/github-code-understander",
+      "title": "andreasjansson\nAgent that reads a public github repo and analyzes it based on a prompt\n4 runs"
+    },
+    {
+      "path": "/andreasjansson/h.264-glitch",
+      "url": "https://replicate.com/andreasjansson/h.264-glitch",
+      "username": "andreasjansson",
+      "model_name": "h.264-glitch",
+      "full_name": "andreasjansson/h.264-glitch",
+      "title": "andreasjansson\nVideo corruption as a service\n51 runs"
+    },
+    {
+      "path": "/andreasjansson/illusion",
+      "url": "https://replicate.com/andreasjansson/illusion",
+      "username": "andreasjansson",
+      "model_name": "illusion",
+      "full_name": "andreasjansson/illusion",
+      "title": "andreasjansson/illusion"
+    },
+    {
+      "path": "/andreasjansson/jpg-glitch",
+      "url": "https://replicate.com/andreasjansson/jpg-glitch",
+      "username": "andreasjansson",
+      "model_name": "jpg-glitch",
+      "full_name": "andreasjansson/jpg-glitch",
+      "title": "andreasjansson\nJPEG corruption as a service\n123 runs"
+    },
+    {
+      "path": "/andreasjansson/jpg-glitch-animation",
+      "url": "https://replicate.com/andreasjansson/jpg-glitch-animation",
+      "username": "andreasjansson",
+      "model_name": "jpg-glitch-animation",
+      "full_name": "andreasjansson/jpg-glitch-animation",
+      "title": "andreasjansson\nJPEG glitch animation\n24 runs"
+    },
+    {
+      "path": "/andreasjansson/portrait-blur",
+      "url": "https://replicate.com/andreasjansson/portrait-blur",
+      "username": "andreasjansson",
+      "model_name": "portrait-blur",
+      "full_name": "andreasjansson/portrait-blur",
+      "title": "andreasjansson\nBlur out-of-focus parts of an image\n18 runs"
+    },
+    {
+      "path": "/anthropic/claude-4-sonnet",
+      "url": "https://replicate.com/anthropic/claude-4-sonnet",
+      "username": "anthropic",
+      "model_name": "claude-4-sonnet",
+      "full_name": "anthropic/claude-4-sonnet",
+      "title": "anthropic/claude-4-sonnet"
+    },
+    {
+      "path": "/arielreplicate/robust_video_matting",
+      "url": "https://replicate.com/arielreplicate/robust_video_matting",
+      "username": "arielreplicate",
+      "model_name": "robust_video_matting",
+      "full_name": "arielreplicate/robust_video_matting",
+      "title": "arielreplicate/robust_video_matting"
+    },
+    {
+      "path": "/astramlco/easycontrol-ghibli",
+      "url": "https://replicate.com/astramlco/easycontrol-ghibli",
+      "username": "astramlco",
+      "model_name": "easycontrol-ghibli",
+      "full_name": "astramlco/easycontrol-ghibli",
+      "title": "astramlco/easycontrol-ghibli\nMake images in Studio Ghibli art style\n3.2k runs"
+    },
+    {
+      "path": "/astramlco/supir",
+      "url": "https://replicate.com/astramlco/supir",
+      "username": "astramlco",
+      "model_name": "supir",
+      "full_name": "astramlco/supir",
+      "title": "astramlco/supir\nPracticing Model Scaling for Photo-Realistic Image Restoration In the Wild, using tiled VAE and Juggernaut XL to eliminate plastic skin and smooth textures.\n127 runs"
+    },
+    {
+      "path": "/beautyyuyanli/multilingual-e5-large",
+      "url": "https://replicate.com/beautyyuyanli/multilingual-e5-large",
+      "username": "beautyyuyanli",
+      "model_name": "multilingual-e5-large",
+      "full_name": "beautyyuyanli/multilingual-e5-large",
+      "title": "beautyyuyanli/multilingual-e5-large"
+    },
+    {
+      "path": "/black-forest-labs/flux-1.1-pro-ultra",
+      "url": "https://replicate.com/black-forest-labs/flux-1.1-pro-ultra",
+      "username": "black-forest-labs",
+      "model_name": "flux-1.1-pro-ultra",
+      "full_name": "black-forest-labs/flux-1.1-pro-ultra",
+      "title": "black-forest-labs/flux-1.1-pro-ultra"
+    },
+    {
+      "path": "/black-forest-labs/flux-kontext-max",
+      "url": "https://replicate.com/black-forest-labs/flux-kontext-max",
+      "username": "black-forest-labs",
+      "model_name": "flux-kontext-max",
+      "full_name": "black-forest-labs/flux-kontext-max",
+      "title": "black-forest-labs/flux-kontext-max"
+    },
+    {
+      "path": "/black-forest-labs/flux-kontext-pro",
+      "url": "https://replicate.com/black-forest-labs/flux-kontext-pro",
+      "username": "black-forest-labs",
+      "model_name": "flux-kontext-pro",
+      "full_name": "black-forest-labs/flux-kontext-pro",
+      "title": "black-forest-labs/flux-kontext-pro"
+    },
+    {
+      "path": "/black-forest-labs/flux-krea-dev",
+      "url": "https://replicate.com/black-forest-labs/flux-krea-dev",
+      "username": "black-forest-labs",
+      "model_name": "flux-krea-dev",
+      "full_name": "black-forest-labs/flux-krea-dev",
+      "title": "black-forest-labs/flux-krea-dev\nAn opinionated text-to-image model from Black Forest Labs in collaboration with Krea that excels in photorealism. Creates images that avoid the oversaturated \"AI look\".\n79.4k runs\nOfficial"
+    },
+    {
+      "path": "/black-forest-labs/flux-schnell",
+      "url": "https://replicate.com/black-forest-labs/flux-schnell",
+      "username": "black-forest-labs",
+      "model_name": "flux-schnell",
+      "full_name": "black-forest-labs/flux-schnell",
+      "title": "black-forest-labs/flux-schnell"
+    },
+    {
+      "path": "/bytedance/dolphin",
+      "url": "https://replicate.com/bytedance/dolphin",
+      "username": "bytedance",
+      "model_name": "dolphin",
+      "full_name": "bytedance/dolphin",
+      "title": "bytedance/dolphin"
+    },
+    {
+      "path": "/bytedance/dreamina-3.1",
+      "url": "https://replicate.com/bytedance/dreamina-3.1",
+      "username": "bytedance",
+      "model_name": "dreamina-3.1",
+      "full_name": "bytedance/dreamina-3.1",
+      "title": "bytedance/dreamina-3.1\n4MP text-to-image generation with enhanced cinematic-quality image generation with precise style control, improved text rendering, and commercial design optimization.\n22.2K runs\nOfficial"
+    },
+    {
+      "path": "/bytedance/hyper-flux-8step",
+      "url": "https://replicate.com/bytedance/hyper-flux-8step",
+      "username": "bytedance",
+      "model_name": "hyper-flux-8step",
+      "full_name": "bytedance/hyper-flux-8step",
+      "title": "bytedance/hyper-flux-8step"
+    },
+    {
+      "path": "/bytedance/omni-human",
+      "url": "https://replicate.com/bytedance/omni-human",
+      "username": "bytedance",
+      "model_name": "omni-human",
+      "full_name": "bytedance/omni-human",
+      "title": "bytedance/omni-human"
+    },
+    {
+      "path": "/bytedance/seedance-1-lite",
+      "url": "https://replicate.com/bytedance/seedance-1-lite",
+      "username": "bytedance",
+      "model_name": "seedance-1-lite",
+      "full_name": "bytedance/seedance-1-lite",
+      "title": "bytedance/seedance-1-lite\nA video generation model that offers text-to-video and image-to-video support for 5s or 10s videos, at 480p and 720p resolution\n497.1k runs\nOfficial"
+    },
+    {
+      "path": "/bytedance/seedance-1-pro",
+      "url": "https://replicate.com/bytedance/seedance-1-pro",
+      "username": "bytedance",
+      "model_name": "seedance-1-pro",
+      "full_name": "bytedance/seedance-1-pro",
+      "title": "bytedance/seedance-1-pro"
+    },
+    {
+      "path": "/bytedance/seededit-3.0",
+      "url": "https://replicate.com/bytedance/seededit-3.0",
+      "username": "bytedance",
+      "model_name": "seededit-3.0",
+      "full_name": "bytedance/seededit-3.0",
+      "title": "bytedance/seededit-3.0\nText-guided image editing model that preserves original details while making targeted modifications like lighting changes, object removal, and style conversion\n144.1k runs\nOfficial"
+    },
+    {
+      "path": "/charlesmccarthy/addwatermark",
+      "url": "https://replicate.com/charlesmccarthy/addwatermark",
+      "username": "charlesmccarthy",
+      "model_name": "addwatermark",
+      "full_name": "charlesmccarthy/addwatermark",
+      "title": "charlesmccarthy/addwatermark"
+    },
+    {
+      "path": "/chuckchen/supir-v0q",
+      "url": "https://replicate.com/chuckchen/supir-v0q",
+      "username": "chuckchen",
+      "model_name": "supir-v0q",
+      "full_name": "chuckchen/supir-v0q",
+      "title": "chuckchen/supir-v0q\nPracticing Model Scaling for Photo-Realistic Image Restoration In the Wild, using tiled VAE and Juggernaut XL to eliminate plastic skin and smooth textures.\n20 runs"
+    },
+    {
+      "path": "/cjwbw/shap-e",
+      "url": "https://replicate.com/cjwbw/shap-e",
+      "username": "cjwbw",
+      "model_name": "shap-e",
+      "full_name": "cjwbw/shap-e",
+      "title": "cjwbw/shap-e"
+    },
+    {
+      "path": "/collections/3d-models",
+      "url": "https://replicate.com/collections/3d-models",
+      "username": "collections",
+      "model_name": "3d-models",
+      "full_name": "collections/3d-models",
+      "title": "Make 3D stuff"
+    },
+    {
+      "path": "/collections/ai-detect-objects",
+      "url": "https://replicate.com/collections/ai-detect-objects",
+      "username": "collections",
+      "model_name": "ai-detect-objects",
+      "full_name": "collections/ai-detect-objects",
+      "title": "Detect objects"
+    },
+    {
+      "path": "/collections/ai-enhance-videos",
+      "url": "https://replicate.com/collections/ai-enhance-videos",
+      "username": "collections",
+      "model_name": "ai-enhance-videos",
+      "full_name": "collections/ai-enhance-videos",
+      "title": "Enhance videos"
+    },
+    {
+      "path": "/collections/ai-face-generator",
+      "url": "https://replicate.com/collections/ai-face-generator",
+      "username": "collections",
+      "model_name": "ai-face-generator",
+      "full_name": "collections/ai-face-generator",
+      "title": "Use a face to make images"
+    },
+    {
+      "path": "/collections/ai-image-restoration",
+      "url": "https://replicate.com/collections/ai-image-restoration",
+      "username": "collections",
+      "model_name": "ai-image-restoration",
+      "full_name": "collections/ai-image-restoration",
+      "title": "Restore images"
+    },
+    {
+      "path": "/collections/ai-music-generation",
+      "url": "https://replicate.com/collections/ai-music-generation",
+      "username": "collections",
+      "model_name": "ai-music-generation",
+      "full_name": "collections/ai-music-generation",
+      "title": "Generate music"
+    },
+    {
+      "path": "/collections/control-net",
+      "url": "https://replicate.com/collections/control-net",
+      "username": "collections",
+      "model_name": "control-net",
+      "full_name": "collections/control-net",
+      "title": "Control image generation"
+    },
+    {
+      "path": "/collections/embedding-models",
+      "url": "https://replicate.com/collections/embedding-models",
+      "username": "collections",
+      "model_name": "embedding-models",
+      "full_name": "collections/embedding-models",
+      "title": "Get embeddings"
+    },
+    {
+      "path": "/collections/flux",
+      "url": "https://replicate.com/collections/flux",
+      "username": "collections",
+      "model_name": "flux",
+      "full_name": "collections/flux",
+      "title": "Use the FLUX family of models"
+    },
+    {
+      "path": "/collections/flux-fine-tunes",
+      "url": "https://replicate.com/collections/flux-fine-tunes",
+      "username": "collections",
+      "model_name": "flux-fine-tunes",
+      "full_name": "collections/flux-fine-tunes",
+      "title": "Use FLUX fine-tunes"
+    },
+    {
+      "path": "/collections/image-editing",
+      "url": "https://replicate.com/collections/image-editing",
+      "username": "collections",
+      "model_name": "image-editing",
+      "full_name": "collections/image-editing",
+      "title": "Edit images"
+    },
+    {
+      "path": "/collections/image-to-text",
+      "url": "https://replicate.com/collections/image-to-text",
+      "username": "collections",
+      "model_name": "image-to-text",
+      "full_name": "collections/image-to-text",
+      "title": "Caption images"
+    },
+    {
+      "path": "/collections/image-to-video",
+      "url": "https://replicate.com/collections/image-to-video",
+      "username": "collections",
+      "model_name": "image-to-video",
+      "full_name": "collections/image-to-video",
+      "title": "Videos from images"
+    },
+    {
+      "path": "/collections/kontext-fine-tunes",
+      "url": "https://replicate.com/collections/kontext-fine-tunes",
+      "username": "collections",
+      "model_name": "kontext-fine-tunes",
+      "full_name": "collections/kontext-fine-tunes",
+      "title": "Use Kontext fine-tunes"
+    },
+    {
+      "path": "/collections/language-models",
+      "url": "https://replicate.com/collections/language-models",
+      "username": "collections",
+      "model_name": "language-models",
+      "full_name": "collections/language-models",
+      "title": "Use LLMs"
+    },
+    {
+      "path": "/collections/official",
+      "url": "https://replicate.com/collections/official",
+      "username": "collections",
+      "model_name": "official",
+      "full_name": "collections/official",
+      "title": "View all official models"
+    },
+    {
+      "path": "/collections/remove-backgrounds",
+      "url": "https://replicate.com/collections/remove-backgrounds",
+      "username": "collections",
+      "model_name": "remove-backgrounds",
+      "full_name": "collections/remove-backgrounds",
+      "title": "Remove backgrounds"
+    },
+    {
+      "path": "/collections/sing-with-voices",
+      "url": "https://replicate.com/collections/sing-with-voices",
+      "username": "collections",
+      "model_name": "sing-with-voices",
+      "full_name": "collections/sing-with-voices",
+      "title": "Sing with voices"
+    },
+    {
+      "path": "/collections/speech-to-text",
+      "url": "https://replicate.com/collections/speech-to-text",
+      "username": "collections",
+      "model_name": "speech-to-text",
+      "full_name": "collections/speech-to-text",
+      "title": "Transcribe speech"
+    },
+    {
+      "path": "/collections/super-resolution",
+      "url": "https://replicate.com/collections/super-resolution",
+      "username": "collections",
+      "model_name": "super-resolution",
+      "full_name": "collections/super-resolution",
+      "title": "Upscale images"
+    },
+    {
+      "path": "/collections/text-recognition-ocr",
+      "url": "https://replicate.com/collections/text-recognition-ocr",
+      "username": "collections",
+      "model_name": "text-recognition-ocr",
+      "full_name": "collections/text-recognition-ocr",
+      "title": "Extract text from images"
+    },
+    {
+      "path": "/collections/text-to-image",
+      "url": "https://replicate.com/collections/text-to-image",
+      "username": "collections",
+      "model_name": "text-to-image",
+      "full_name": "collections/text-to-image",
+      "title": "Generate images"
+    },
+    {
+      "path": "/collections/text-to-speech",
+      "url": "https://replicate.com/collections/text-to-speech",
+      "username": "collections",
+      "model_name": "text-to-speech",
+      "full_name": "collections/text-to-speech",
+      "title": "Generate speech"
+    },
+    {
+      "path": "/collections/text-to-video",
+      "url": "https://replicate.com/collections/text-to-video",
+      "username": "collections",
+      "model_name": "text-to-video",
+      "full_name": "collections/text-to-video",
+      "title": "Generate videos"
+    },
+    {
+      "path": "/collections/try-for-free",
+      "url": "https://replicate.com/collections/try-for-free",
+      "username": "collections",
+      "model_name": "try-for-free",
+      "full_name": "collections/try-for-free",
+      "title": "Try for free"
+    },
+    {
+      "path": "/collections/utilities",
+      "url": "https://replicate.com/collections/utilities",
+      "username": "collections",
+      "model_name": "utilities",
+      "full_name": "collections/utilities",
+      "title": "Use handy tools"
+    },
+    {
+      "path": "/collections/video-editing",
+      "url": "https://replicate.com/collections/video-editing",
+      "username": "collections",
+      "model_name": "video-editing",
+      "full_name": "collections/video-editing",
+      "title": "Edit Videos"
+    },
+    {
+      "path": "/collections/video-to-text",
+      "url": "https://replicate.com/collections/video-to-text",
+      "username": "collections",
+      "model_name": "video-to-text",
+      "full_name": "collections/video-to-text",
+      "title": "Caption videos"
+    },
+    {
+      "path": "/collections/vision-models",
+      "url": "https://replicate.com/collections/vision-models",
+      "username": "collections",
+      "model_name": "vision-models",
+      "full_name": "collections/vision-models",
+      "title": "Chat with images"
+    },
+    {
+      "path": "/collections/wan-video",
+      "url": "https://replicate.com/collections/wan-video",
+      "username": "collections",
+      "model_name": "wan-video",
+      "full_name": "collections/wan-video",
+      "title": "Make videos with Wan"
+    },
+    {
+      "path": "/corywilkerson/icons",
+      "url": "https://replicate.com/corywilkerson/icons",
+      "username": "corywilkerson",
+      "model_name": "icons",
+      "full_name": "corywilkerson/icons",
+      "title": "corywilkerson/\n90 runs"
+    },
+    {
+      "path": "/corywilkerson/mascot-me",
+      "url": "https://replicate.com/corywilkerson/mascot-me",
+      "username": "corywilkerson",
+      "model_name": "mascot-me",
+      "full_name": "corywilkerson/mascot-me",
+      "title": "corywilkerson/\n37 runs"
+    },
+    {
+      "path": "/corywilkerson/redbook",
+      "url": "https://replicate.com/corywilkerson/redbook",
+      "username": "corywilkerson",
+      "model_name": "redbook",
+      "full_name": "corywilkerson/redbook",
+      "title": "corywilkerson/\n34 runs"
+    },
+    {
+      "path": "/cuuupid/marker",
+      "url": "https://replicate.com/cuuupid/marker",
+      "username": "cuuupid",
+      "model_name": "marker",
+      "full_name": "cuuupid/marker",
+      "title": "cuuupid/marker"
+    },
+    {
+      "path": "/daanelson/imagebind",
+      "url": "https://replicate.com/daanelson/imagebind",
+      "username": "daanelson",
+      "model_name": "imagebind",
+      "full_name": "daanelson/imagebind",
+      "title": "daanelson/imagebind"
+    },
+    {
+      "path": "/deepseek-ai/deepseek-r1",
+      "url": "https://replicate.com/deepseek-ai/deepseek-r1",
+      "username": "deepseek-ai",
+      "model_name": "deepseek-r1",
+      "full_name": "deepseek-ai/deepseek-r1",
+      "title": "deepseek-ai/deepseek-r1"
+    },
+    {
+      "path": "/dessix/moss-ttsd",
+      "url": "https://replicate.com/dessix/moss-ttsd",
+      "username": "dessix",
+      "model_name": "moss-ttsd",
+      "full_name": "dessix/moss-ttsd",
+      "title": "dessix/moss-ttsd\nMOSS-TTSD (text to spoken dialogue) is an open-source bilingual spoken dialogue synthesis model that supports both Chinese and English. It can transform dialogue scripts between two speakers into natural, expressive conversational speech.\n687 runs"
+    },
+    {
+      "path": "/dmtanner/parakeet-tdt-0.6b-v3",
+      "url": "https://replicate.com/dmtanner/parakeet-tdt-0.6b-v3",
+      "username": "dmtanner",
+      "model_name": "parakeet-tdt-0.6b-v3",
+      "full_name": "dmtanner/parakeet-tdt-0.6b-v3",
+      "title": "dmtanner/parakeet-tdt-0.6b-v3\nASR model, created by Nvidia, with word-level timestamps available. Supports .wav inputs, or m3u8 urls, with a start and end time (to only process a section of the m3u8).\n18 runs"
+    },
+    {
+      "path": "/erbridge/dithercam",
+      "url": "https://replicate.com/erbridge/dithercam",
+      "username": "erbridge",
+      "model_name": "dithercam",
+      "full_name": "erbridge/dithercam",
+      "title": "erbridge/dithercam\nForked from mattrothenberg/dithercam\n4 runs"
+    },
+    {
+      "path": "/erbridge/mascot-me",
+      "url": "https://replicate.com/erbridge/mascot-me",
+      "username": "erbridge",
+      "model_name": "mascot-me",
+      "full_name": "erbridge/mascot-me",
+      "title": "erbridge/mascot-me\nForked from corywilkerson/mascot-me\n31 runs"
+    },
+    {
+      "path": "/erbridge/vhs-degrade",
+      "url": "https://replicate.com/erbridge/vhs-degrade",
+      "username": "erbridge",
+      "model_name": "vhs-degrade",
+      "full_name": "erbridge/vhs-degrade",
+      "title": "erbridge/vhs-degrade\nTurn an image into an old VHS tape recording\n14 runs"
+    },
+    {
+      "path": "/ethulia/chengyu-generator",
+      "url": "https://replicate.com/ethulia/chengyu-generator",
+      "username": "ethulia",
+      "model_name": "chengyu-generator",
+      "full_name": "ethulia/chengyu-generator",
+      "title": "ethulia/chengyu-generator\ngenerates images and definitions of chinese idioms (成语)\n47 runs"
+    },
+    {
+      "path": "/falcons-ai/nsfw_image_detection",
+      "url": "https://replicate.com/falcons-ai/nsfw_image_detection",
+      "username": "falcons-ai",
+      "model_name": "nsfw_image_detection",
+      "full_name": "falcons-ai/nsfw_image_detection",
+      "title": "falcons-ai/nsfw_image_detection"
+    },
+    {
+      "path": "/fermatresearch/bisenet-faces",
+      "url": "https://replicate.com/fermatresearch/bisenet-faces",
+      "username": "fermatresearch",
+      "model_name": "bisenet-faces",
+      "full_name": "fermatresearch/bisenet-faces",
+      "title": "fermatresearch\nA Cog implementation of BiSeNet: Bilateral Segmentation Network for Real-time Semantic Segmentation [Face Parsing] (https://github.com/yakhyo/face-parsing).\n26 runs"
+    },
+    {
+      "path": "/fermatresearch/magic-image-refiner",
+      "url": "https://replicate.com/fermatresearch/magic-image-refiner",
+      "username": "fermatresearch",
+      "model_name": "magic-image-refiner",
+      "full_name": "fermatresearch/magic-image-refiner",
+      "title": "fermatresearch/magic-image-refiner"
+    },
+    {
+      "path": "/fictions-ai/autocaption",
+      "url": "https://replicate.com/fictions-ai/autocaption",
+      "username": "fictions-ai",
+      "model_name": "autocaption",
+      "full_name": "fictions-ai/autocaption",
+      "title": "fictions-ai/autocaption"
+    },
+    {
+      "path": "/fire/flux",
+      "url": "https://replicate.com/fire/flux",
+      "username": "fire",
+      "model_name": "flux",
+      "full_name": "fire/flux",
+      "title": "fire/flux\nThe image generation model tailored for local development and personal use\n101 runs"
+    },
+    {
+      "path": "/fire/part-crafter",
+      "url": "https://replicate.com/fire/part-crafter",
+      "username": "fire",
+      "model_name": "part-crafter",
+      "full_name": "fire/part-crafter",
+      "title": "fire/part-crafter\nPartCrafter is a structured 3D mesh generation model that creates multiple parts and objects from a single RGB image.\n51 runs"
+    },
+    {
+      "path": "/firtoz/trellis",
+      "url": "https://replicate.com/firtoz/trellis",
+      "username": "firtoz",
+      "model_name": "trellis",
+      "full_name": "firtoz/trellis",
+      "title": "firtoz/trellis"
+    },
+    {
+      "path": "/fishwowater/ram-grounded-sam-maskfixed",
+      "url": "https://replicate.com/fishwowater/ram-grounded-sam-maskfixed",
+      "username": "fishwowater",
+      "model_name": "ram-grounded-sam-maskfixed",
+      "full_name": "fishwowater/ram-grounded-sam-maskfixed",
+      "title": "fishwowater/ram-grounded-sam-maskfixed\nA fork of https://replicate.com/idea-research/ram-grounded-sam that outputs usable(grayscale) mask values\n17 runs"
+    },
+    {
+      "path": "/flux-kontext-apps/kontext-emoji-maker",
+      "url": "https://replicate.com/flux-kontext-apps/kontext-emoji-maker",
+      "username": "flux-kontext-apps",
+      "model_name": "kontext-emoji-maker",
+      "full_name": "flux-kontext-apps/kontext-emoji-maker",
+      "title": "flux-kontext-apps\nUse kontext to turn any image into an emoji, using a lora by starsfriday\n2.3k runs"
+    },
+    {
+      "path": "/fofr/any-comfyui-workflow",
+      "url": "https://replicate.com/fofr/any-comfyui-workflow",
+      "username": "fofr",
+      "model_name": "any-comfyui-workflow",
+      "full_name": "fofr/any-comfyui-workflow",
+      "title": "fofr/any-comfyui-workflow"
+    },
+    {
+      "path": "/fofr/batch-image-captioner",
+      "url": "https://replicate.com/fofr/batch-image-captioner",
+      "username": "fofr",
+      "model_name": "batch-image-captioner",
+      "full_name": "fofr/batch-image-captioner",
+      "title": "fofr/batch-image-captioner\nCaption images in batches using GPT-5 or Claude\n9 runs"
+    },
+    {
+      "path": "/fofr/chained-video",
+      "url": "https://replicate.com/fofr/chained-video",
+      "username": "fofr",
+      "model_name": "chained-video",
+      "full_name": "fofr/chained-video",
+      "title": "fofr/chained-video\n21 runs"
+    },
+    {
+      "path": "/fofr/color-matcher",
+      "url": "https://replicate.com/fofr/color-matcher",
+      "username": "fofr",
+      "model_name": "color-matcher",
+      "full_name": "fofr/color-matcher",
+      "title": "fofr/color-matcher\nColor match and white balance fixes for images\n53.7K runs\nOfficial"
+    },
+    {
+      "path": "/fofr/face-swap-with-ideogram",
+      "url": "https://replicate.com/fofr/face-swap-with-ideogram",
+      "username": "fofr",
+      "model_name": "face-swap-with-ideogram",
+      "full_name": "fofr/face-swap-with-ideogram",
+      "title": "fofr/face-swap-with-ideogram\nUse ideogram-character to face-swap someone into a target image\n4k runs"
+    },
+    {
+      "path": "/fofr/flux-mona-lisa",
+      "url": "https://replicate.com/fofr/flux-mona-lisa",
+      "username": "fofr",
+      "model_name": "flux-mona-lisa",
+      "full_name": "fofr/flux-mona-lisa",
+      "title": "fofr/flux-mona-lisa"
+    },
+    {
+      "path": "/fofr/image-models",
+      "url": "https://replicate.com/fofr/image-models",
+      "username": "fofr",
+      "model_name": "image-models",
+      "full_name": "fofr/image-models",
+      "title": "fofr/image-models\nPopular image models with a convenient standardised API\n70 runs"
+    },
+    {
+      "path": "/fofr/kontext-make-person-real",
+      "url": "https://replicate.com/fofr/kontext-make-person-real",
+      "username": "fofr",
+      "model_name": "kontext-make-person-real",
+      "full_name": "fofr/kontext-make-person-real",
+      "title": "fofr/kontext-make-person-real"
+    },
+    {
+      "path": "/fofr/kontext-ps1",
+      "url": "https://replicate.com/fofr/kontext-ps1",
+      "username": "fofr",
+      "model_name": "kontext-ps1",
+      "full_name": "fofr/kontext-ps1",
+      "title": "fofr/kontext-ps1"
+    },
+    {
+      "path": "/fofr/latent-consistency-model",
+      "url": "https://replicate.com/fofr/latent-consistency-model",
+      "username": "fofr",
+      "model_name": "latent-consistency-model",
+      "full_name": "fofr/latent-consistency-model",
+      "title": "fofr/latent-consistency-model"
+    },
+    {
+      "path": "/fofr/make-someone",
+      "url": "https://replicate.com/fofr/make-someone",
+      "username": "fofr",
+      "model_name": "make-someone",
+      "full_name": "fofr/make-someone",
+      "title": "fofr/make-someone\n27 runs"
+    },
+    {
+      "path": "/fofr/not-real-wan",
+      "url": "https://replicate.com/fofr/not-real-wan",
+      "username": "fofr",
+      "model_name": "not-real-wan",
+      "full_name": "fofr/not-real-wan",
+      "title": "fofr/not-real-wan\nMake a very realistic looking real-world AI video via FLUX 1.1 Pro and Wan 2.2 i2v\n100 runs"
+    },
+    {
+      "path": "/fofr/prompt-riff",
+      "url": "https://replicate.com/fofr/prompt-riff",
+      "username": "fofr",
+      "model_name": "prompt-riff",
+      "full_name": "fofr/prompt-riff",
+      "title": "fofr/prompt-riff\n6 runs"
+    },
+    {
+      "path": "/fofr/prompter",
+      "url": "https://replicate.com/fofr/prompter",
+      "username": "fofr",
+      "model_name": "prompter",
+      "full_name": "fofr/prompter",
+      "title": "fofr/prompter\nGenerate prompts from a template\n13 runs"
+    },
+    {
+      "path": "/fofr/qwen-shou-xin",
+      "url": "https://replicate.com/fofr/qwen-shou-xin",
+      "username": "fofr",
+      "model_name": "qwen-shou-xin",
+      "full_name": "fofr/qwen-shou-xin",
+      "title": "fofr/qwen-shou-xin\nQwen fine-tuned on Shou Xin's cat sketches\n190 runs"
+    },
+    {
+      "path": "/fofr/real-life-anime",
+      "url": "https://replicate.com/fofr/real-life-anime",
+      "username": "fofr",
+      "model_name": "real-life-anime",
+      "full_name": "fofr/real-life-anime",
+      "title": "fofr/real-life-anime\nLoRA model by FlyMy.ai that transforms anime-style prompts into photorealistic images for Qwen-Image\n336 runs"
+    },
+    {
+      "path": "/fofr/smart-ffmpeg",
+      "url": "https://replicate.com/fofr/smart-ffmpeg",
+      "username": "fofr",
+      "model_name": "smart-ffmpeg",
+      "full_name": "fofr/smart-ffmpeg",
+      "title": "fofr/smart-ffmpeg\nQuickly edit, trim, re-encode, concatenate videos using ffmpeg and gpt-5 generated commands\n133 runs"
+    },
+    {
+      "path": "/fofr/why-so-serious",
+      "url": "https://replicate.com/fofr/why-so-serious",
+      "username": "fofr",
+      "model_name": "why-so-serious",
+      "full_name": "fofr/why-so-serious",
+      "title": "fofr/why-so-serious\nTurn anyone into The Joker\n44 runs"
+    },
+    {
+      "path": "/founderfeedadmin/hackthon-avatar",
+      "url": "https://replicate.com/founderfeedadmin/hackthon-avatar",
+      "username": "founderfeedadmin",
+      "model_name": "hackthon-avatar",
+      "full_name": "founderfeedadmin/hackthon-avatar",
+      "title": "founderfeedadmin\n74 runs"
+    },
+    {
+      "path": "/google/veo-3",
+      "url": "https://replicate.com/google/veo-3",
+      "username": "google",
+      "model_name": "veo-3",
+      "full_name": "google/veo-3",
+      "title": "google/veo-3\nSound on: Google’s flagship Veo 3 text to video model, with audio\n147.4k runs\nOfficial"
+    },
+    {
+      "path": "/google/veo-3-fast",
+      "url": "https://replicate.com/google/veo-3-fast",
+      "username": "google",
+      "model_name": "veo-3-fast",
+      "full_name": "google/veo-3-fast",
+      "title": "google/veo-3-fast"
+    },
+    {
+      "path": "/hautechai/json-to-media",
+      "url": "https://replicate.com/hautechai/json-to-media",
+      "username": "hautechai",
+      "model_name": "json-to-media",
+      "full_name": "hautechai/json-to-media",
+      "title": "hautechai/json-to-media\n20 runs"
+    },
+    {
+      "path": "/hcl14/direct3d_s2",
+      "url": "https://replicate.com/hcl14/direct3d_s2",
+      "username": "hcl14",
+      "model_name": "direct3d_s2",
+      "full_name": "hcl14/direct3d_s2",
+      "title": "hcl14/direct3d_s2\nDirect3D‑S2: Gigascale 3D Generation Made Easy with Spatial Sparse Attention\n66 runs"
+    },
+    {
+      "path": "/hcl14/omnipart",
+      "url": "https://replicate.com/hcl14/omnipart",
+      "username": "hcl14",
+      "model_name": "omnipart",
+      "full_name": "hcl14/omnipart",
+      "title": "hcl14/omnipart\nOmniPart: Part-Aware 3D Generation with Semantic Decoupling and Structural Cohesion\n46 runs"
+    },
+    {
+      "path": "/hollis-source/llama-assistant",
+      "url": "https://replicate.com/hollis-source/llama-assistant",
+      "username": "hollis-source",
+      "model_name": "llama-assistant",
+      "full_name": "hollis-source/llama-assistant",
+      "title": "hollis-source/llama-assistant\nFast AI assistant powered by Llama 3.1\n469 runs"
+    },
+    {
+      "path": "/ibm-granite/granite-3.3-8b-instruct",
+      "url": "https://replicate.com/ibm-granite/granite-3.3-8b-instruct",
+      "username": "ibm-granite",
+      "model_name": "granite-3.3-8b-instruct",
+      "full_name": "ibm-granite/granite-3.3-8b-instruct",
+      "title": "ibm-granite/granite-3.3-8b-instruct\nGranite-3.3-8B-Instruct is a 8-billion parameter 128K context length language model fine-tuned for improved reasoning and instruction-following capabilities.\n1m runs\nOfficial"
+    },
+    {
+      "path": "/ibm-granite/granite-speech-3.3-8b",
+      "url": "https://replicate.com/ibm-granite/granite-speech-3.3-8b",
+      "username": "ibm-granite",
+      "model_name": "granite-speech-3.3-8b",
+      "full_name": "ibm-granite/granite-speech-3.3-8b",
+      "title": "ibm-granite/granite-speech-3.3-8b\nGranite-speech-3.3-8b is a compact and efficient speech-language model, specifically designed for automatic speech recognition (ASR) and automatic speech translation (AST).\n1.7k runs\nOfficial"
+    },
+    {
+      "path": "/ibm-granite/granite-vision-3.3-2b",
+      "url": "https://replicate.com/ibm-granite/granite-vision-3.3-2b",
+      "username": "ibm-granite",
+      "model_name": "granite-vision-3.3-2b",
+      "full_name": "ibm-granite/granite-vision-3.3-2b",
+      "title": "ibm-granite/granite-vision-3.3-2b\nGranite-vision-3.3-2b is a compact and efficient vision-language model, specifically designed for visual document understanding, enabling automated content extraction from tables, charts, infographics, plots, diagrams, and more.\n12.7k runs\nOfficial"
+    },
+    {
+      "path": "/ibrahimpenekli/depth-pro",
+      "url": "https://replicate.com/ibrahimpenekli/depth-pro",
+      "username": "ibrahimpenekli",
+      "model_name": "depth-pro",
+      "full_name": "ibrahimpenekli/depth-pro",
+      "title": "ibrahimpenekli\nSharp Monocular Metric Depth in Less Than a Second\n114 runs"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-character",
+      "url": "https://replicate.com/ideogram-ai/ideogram-character",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-character",
+      "full_name": "ideogram-ai/ideogram-character",
+      "title": "ideogram-ai/ideogram-character\nGenerate consistent characters from a single reference image. Outputs can be in many styles. You can also use inpainting to add your character to an existing image.\n38.3k runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v2",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v2",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v2",
+      "full_name": "ideogram-ai/ideogram-v2",
+      "title": "ideogram-ai/ideogram-v2\nAn excellent image model with state of the art inpainting, prompt comprehension and text rendering\n2.1m runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v2-turbo",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v2-turbo",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v2-turbo",
+      "full_name": "ideogram-ai/ideogram-v2-turbo",
+      "title": "ideogram-ai/ideogram-v2-turbo\nA fast image model with state of the art inpainting, prompt comprehension and text rendering.\n2.4m runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v2a",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v2a",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v2a",
+      "full_name": "ideogram-ai/ideogram-v2a",
+      "title": "ideogram-ai/ideogram-v2a\nLike Ideogram v2, but faster and cheaper\n1.3m runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v2a-turbo",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v2a-turbo",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v2a-turbo",
+      "full_name": "ideogram-ai/ideogram-v2a-turbo",
+      "title": "ideogram-ai/ideogram-v2a-turbo\nLike Ideogram v2 turbo, but now faster and cheaper\n337.2k runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v3-balanced",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v3-balanced",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v3-balanced",
+      "full_name": "ideogram-ai/ideogram-v3-balanced",
+      "title": "ideogram-ai/ideogram-v3-balanced\nBalance speed, quality and cost. Ideogram v3 creates images with stunning realism, creative designs, and consistent styles\n179.1k runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v3-quality",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v3-quality",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v3-quality",
+      "full_name": "ideogram-ai/ideogram-v3-quality",
+      "title": "ideogram-ai/ideogram-v3-quality\nThe highest quality Ideogram v3 model. v3 creates images with stunning realism, creative designs, and consistent styles\n992.7k runs\nOfficial"
+    },
+    {
+      "path": "/ideogram-ai/ideogram-v3-turbo",
+      "url": "https://replicate.com/ideogram-ai/ideogram-v3-turbo",
+      "username": "ideogram-ai",
+      "model_name": "ideogram-v3-turbo",
+      "full_name": "ideogram-ai/ideogram-v3-turbo",
+      "title": "ideogram-ai/ideogram-v3-turbo"
+    },
+    {
+      "path": "/intelligent-utilities/detect-language",
+      "url": "https://replicate.com/intelligent-utilities/detect-language",
+      "username": "intelligent-utilities",
+      "model_name": "detect-language",
+      "full_name": "intelligent-utilities/detect-language",
+      "title": "intelligent-utilities\nDetect the language of a given passage of text\n5 runs"
+    },
+    {
+      "path": "/intelligent-utilities/fix-encoding-artifacts",
+      "url": "https://replicate.com/intelligent-utilities/fix-encoding-artifacts",
+      "username": "intelligent-utilities",
+      "model_name": "fix-encoding-artifacts",
+      "full_name": "intelligent-utilities/fix-encoding-artifacts",
+      "title": "intelligent-utilities\nFix text with encoding artifacts\n4 runs"
+    },
+    {
+      "path": "/intelligent-utilities/html-to-markdown-or-text",
+      "url": "https://replicate.com/intelligent-utilities/html-to-markdown-or-text",
+      "username": "intelligent-utilities",
+      "model_name": "html-to-markdown-or-text",
+      "full_name": "intelligent-utilities/html-to-markdown-or-text",
+      "title": "intelligent-utilities\nConvert HTML to plain text or markdown, optionally keep links\n4 runs"
+    },
+    {
+      "path": "/intelligent-utilities/improve-typography",
+      "url": "https://replicate.com/intelligent-utilities/improve-typography",
+      "username": "intelligent-utilities",
+      "model_name": "improve-typography",
+      "full_name": "intelligent-utilities/improve-typography",
+      "title": "intelligent-utilities\nGood typography uses smart quotes. Convert quotes, dashes and other marks into their correct typographical symbols\n21 runs"
+    },
+    {
+      "path": "/intelligent-utilities/random-wikipedia-article",
+      "url": "https://replicate.com/intelligent-utilities/random-wikipedia-article",
+      "username": "intelligent-utilities",
+      "model_name": "random-wikipedia-article",
+      "full_name": "intelligent-utilities/random-wikipedia-article",
+      "title": "intelligent-utilities\nGet a random wikipedia article\n9 runs"
+    },
+    {
+      "path": "/intelligent-utilities/repair-json",
+      "url": "https://replicate.com/intelligent-utilities/repair-json",
+      "username": "intelligent-utilities",
+      "model_name": "repair-json",
+      "full_name": "intelligent-utilities/repair-json",
+      "title": "intelligent-utilities\nTurn broken JSON into valid JSON\n7 runs"
+    },
+    {
+      "path": "/intelligent-utilities/simple-translate",
+      "url": "https://replicate.com/intelligent-utilities/simple-translate",
+      "username": "intelligent-utilities",
+      "model_name": "simple-translate",
+      "full_name": "intelligent-utilities/simple-translate",
+      "title": "intelligent-utilities\nTranslate text\n7 runs"
+    },
+    {
+      "path": "/intelligent-utilities/spam-detector",
+      "url": "https://replicate.com/intelligent-utilities/spam-detector",
+      "username": "intelligent-utilities",
+      "model_name": "spam-detector",
+      "full_name": "intelligent-utilities/spam-detector",
+      "title": "intelligent-utilities\nA tool to detect whether given text is spam, also returns a reason and confidence score\n13 runs"
+    },
+    {
+      "path": "/intelligent-utilities/topic-tags",
+      "url": "https://replicate.com/intelligent-utilities/topic-tags",
+      "username": "intelligent-utilities",
+      "model_name": "topic-tags",
+      "full_name": "intelligent-utilities/topic-tags",
+      "title": "intelligent-utilities\nGenerate topic tags for a passage of text\n8 runs"
+    },
+    {
+      "path": "/jaaari/kokoro-82m",
+      "url": "https://replicate.com/jaaari/kokoro-82m",
+      "username": "jaaari",
+      "model_name": "kokoro-82m",
+      "full_name": "jaaari/kokoro-82m",
+      "title": "jaaari/kokoro-82m\nKokoro v1.0 - text-to-speech (82M params, based on StyleTTS2)\n38.7m runs"
+    },
+    {
+      "path": "/jd7h/zero123plusplus",
+      "url": "https://replicate.com/jd7h/zero123plusplus",
+      "username": "jd7h",
+      "model_name": "zero123plusplus",
+      "full_name": "jd7h/zero123plusplus",
+      "title": "jd7h/zero123plusplus"
+    },
+    {
+      "path": "/jingyunliang/swinir",
+      "url": "https://replicate.com/jingyunliang/swinir",
+      "username": "jingyunliang",
+      "model_name": "swinir",
+      "full_name": "jingyunliang/swinir",
+      "title": "jingyunliang/swinir"
+    },
+    {
+      "path": "/lucataco/audio-boost",
+      "url": "https://replicate.com/lucataco/audio-boost",
+      "username": "lucataco",
+      "model_name": "audio-boost",
+      "full_name": "lucataco/audio-boost",
+      "title": "lucataco/audio-boost\nAudio processing tool to help boost (or decrease) audio volume\n39 runs"
+    },
+    {
+      "path": "/lucataco/compare-img2vid-models",
+      "url": "https://replicate.com/lucataco/compare-img2vid-models",
+      "username": "lucataco",
+      "model_name": "compare-img2vid-models",
+      "full_name": "lucataco/compare-img2vid-models",
+      "title": "lucataco/compare-img2vid-models\nForked from shridharathi/compare-video-models\n6 runs"
+    },
+    {
+      "path": "/lucataco/extract-audio",
+      "url": "https://replicate.com/lucataco/extract-audio",
+      "username": "lucataco",
+      "model_name": "extract-audio",
+      "full_name": "lucataco/extract-audio",
+      "title": "lucataco/extract-audio\nSimple tool to extract audio from a video file\n56 runs"
+    },
+    {
+      "path": "/lucataco/hunyuan-1.8b-instruct",
+      "url": "https://replicate.com/lucataco/hunyuan-1.8b-instruct",
+      "username": "lucataco",
+      "model_name": "hunyuan-1.8b-instruct",
+      "full_name": "lucataco/hunyuan-1.8b-instruct",
+      "title": "lucataco/hunyuan-1.8b-instruct\nHunyuan is Tencent’s open-source efficient large language model series, designed for versatile deployment across diverse computational environments.\n6 runs"
+    },
+    {
+      "path": "/lucataco/image-caption",
+      "url": "https://replicate.com/lucataco/image-caption",
+      "username": "lucataco",
+      "model_name": "image-caption",
+      "full_name": "lucataco/image-caption",
+      "title": "lucataco/image-caption\nsimple gpt-5-mini wrapper to caption an image\n203 runs"
+    },
+    {
+      "path": "/lucataco/kontext-meta-cars",
+      "url": "https://replicate.com/lucataco/kontext-meta-cars",
+      "username": "lucataco",
+      "model_name": "kontext-meta-cars",
+      "full_name": "lucataco/kontext-meta-cars",
+      "title": "lucataco/kontext-meta-cars"
+    },
+    {
+      "path": "/lucataco/magnet",
+      "url": "https://replicate.com/lucataco/magnet",
+      "username": "lucataco",
+      "model_name": "magnet",
+      "full_name": "lucataco/magnet",
+      "title": "lucataco/magnet"
+    },
+    {
+      "path": "/lucataco/minicpm-v-4",
+      "url": "https://replicate.com/lucataco/minicpm-v-4",
+      "username": "lucataco",
+      "model_name": "minicpm-v-4",
+      "full_name": "lucataco/minicpm-v-4",
+      "title": "lucataco/minicpm-v-4\nMiniCPM-V 4.0 has strong image and video understanding performance\n76 runs"
+    },
+    {
+      "path": "/lucataco/moondream2",
+      "url": "https://replicate.com/lucataco/moondream2",
+      "username": "lucataco",
+      "model_name": "moondream2",
+      "full_name": "lucataco/moondream2",
+      "title": "lucataco/moondream2"
+    },
+    {
+      "path": "/lucataco/multi-image-qwen-edit",
+      "url": "https://replicate.com/lucataco/multi-image-qwen-edit",
+      "username": "lucataco",
+      "model_name": "multi-image-qwen-edit",
+      "full_name": "lucataco/multi-image-qwen-edit",
+      "title": "lucataco/multi-image-qwen-edit\nExperimental model with multiple image support for Qwen-Image-Edit\n1k runs"
+    },
+    {
+      "path": "/lucataco/qwen2-vl-7b-instruct",
+      "url": "https://replicate.com/lucataco/qwen2-vl-7b-instruct",
+      "username": "lucataco",
+      "model_name": "qwen2-vl-7b-instruct",
+      "full_name": "lucataco/qwen2-vl-7b-instruct",
+      "title": "lucataco/qwen2-vl-7b-instruct"
+    },
+    {
+      "path": "/lucataco/remove-bg",
+      "url": "https://replicate.com/lucataco/remove-bg",
+      "username": "lucataco",
+      "model_name": "remove-bg",
+      "full_name": "lucataco/remove-bg",
+      "title": "lucataco/remove-bg"
+    },
+    {
+      "path": "/lucataco/seed-x-ppo",
+      "url": "https://replicate.com/lucataco/seed-x-ppo",
+      "username": "lucataco",
+      "model_name": "seed-x-ppo",
+      "full_name": "lucataco/seed-x-ppo",
+      "title": "lucataco/seed-x-ppo\nSeed-X-PPO-7B by ByteDance-Seed, a powerful series of open-source multilingual translation language models\n21.6k runs"
+    },
+    {
+      "path": "/lucataco/stable-avatar",
+      "url": "https://replicate.com/lucataco/stable-avatar",
+      "username": "lucataco",
+      "model_name": "stable-avatar",
+      "full_name": "lucataco/stable-avatar",
+      "title": "lucataco/stable-avatar\nEnd-to-end video diffusion transformer, which synthesizes infinite-length high-quality audio-driven avatar videos without any post-processing\n90 runs"
+    },
+    {
+      "path": "/lucataco/talking-avatar",
+      "url": "https://replicate.com/lucataco/talking-avatar",
+      "username": "lucataco",
+      "model_name": "talking-avatar",
+      "full_name": "lucataco/talking-avatar",
+      "title": "lucataco/talking-avatar\nA combination of Seedance, Kling Lipsync and Autocaption to create talking avatars\n186 runs"
+    },
+    {
+      "path": "/lucataco/video-caption",
+      "url": "https://replicate.com/lucataco/video-caption",
+      "username": "lucataco",
+      "model_name": "video-caption",
+      "full_name": "lucataco/video-caption",
+      "title": "lucataco/video-caption\ngpt-5 wrapper to caption a video\n19 runs"
+    },
+    {
+      "path": "/lucataco/wan-2.2-i2v-audio",
+      "url": "https://replicate.com/lucataco/wan-2.2-i2v-audio",
+      "username": "lucataco",
+      "model_name": "wan-2.2-i2v-audio",
+      "full_name": "lucataco/wan-2.2-i2v-audio",
+      "title": "lucataco/wan-2.2-i2v-audio\nWan 2.2 A14B image-to-video with MMaudio\n681 runs"
+    },
+    {
+      "path": "/lucataco/xtts-v2",
+      "url": "https://replicate.com/lucataco/xtts-v2",
+      "username": "lucataco",
+      "model_name": "xtts-v2",
+      "full_name": "lucataco/xtts-v2",
+      "title": "lucataco/xtts-v2"
+    },
+    {
+      "path": "/luke100000/sana-sprint-0.6b",
+      "url": "https://replicate.com/luke100000/sana-sprint-0.6b",
+      "username": "luke100000",
+      "model_name": "sana-sprint-0.6b",
+      "full_name": "luke100000/sana-sprint-0.6b",
+      "title": "luke100000/sana-sprint-0.6b\nSANA-Sprint: One-Step Diffusion with Continuous-Time Consistency Distillation\n57 runs"
+    },
+    {
+      "path": "/luma/modify-video",
+      "url": "https://replicate.com/luma/modify-video",
+      "username": "luma",
+      "model_name": "modify-video",
+      "full_name": "luma/modify-video",
+      "title": "luma/modify-video"
+    },
+    {
+      "path": "/luma/reframe-video",
+      "url": "https://replicate.com/luma/reframe-video",
+      "username": "luma",
+      "model_name": "reframe-video",
+      "full_name": "luma/reframe-video",
+      "title": "luma/reframe-video"
+    },
+    {
+      "path": "/maikocode/create-dataset-ai-influencer",
+      "url": "https://replicate.com/maikocode/create-dataset-ai-influencer",
+      "username": "maikocode",
+      "model_name": "create-dataset-ai-influencer",
+      "full_name": "maikocode/create-dataset-ai-influencer",
+      "title": "maikocode/create-dataset-ai-influencer\nThis tool generates a dataset of images that you can use with a Flux trainer. It uses Flux Krea and GPT-5 under the hood to create the dataset.\n76 runs"
+    },
+    {
+      "path": "/mattrothenberg/dithercam",
+      "url": "https://replicate.com/mattrothenberg/dithercam",
+      "username": "mattrothenberg",
+      "model_name": "dithercam",
+      "full_name": "mattrothenberg/dithercam",
+      "title": "mattrothenberg\n38 runs"
+    },
+    {
+      "path": "/merahburam/color-extraction-v4",
+      "url": "https://replicate.com/merahburam/color-extraction-v4",
+      "username": "merahburam",
+      "model_name": "color-extraction-v4",
+      "full_name": "merahburam/color-extraction-v4",
+      "title": "merahburam/color-extraction-v4\nAdvanced color extraction API. Extract dominant colors from images using multiple methods including K-means clustering, ColorThief, and adaptive algorithms. Get beautiful visual summaries with insights and suggestions.\n11 runs"
+    },
+    {
+      "path": "/merahburam/remove-bg",
+      "url": "https://replicate.com/merahburam/remove-bg",
+      "username": "merahburam",
+      "model_name": "remove-bg",
+      "full_name": "merahburam/remove-bg",
+      "title": "merahburam/remove-bg\nA high-performance AI background removal API built with multiple state-of-the-art models. Remove backgrounds from images with professional quality results in seconds.\n46 runs"
+    },
+    {
+      "path": "/merahburam/vectorizer",
+      "url": "https://replicate.com/merahburam/vectorizer",
+      "username": "merahburam",
+      "model_name": "vectorizer",
+      "full_name": "merahburam/vectorizer",
+      "title": "merahburam/vectorizer\nProfessional PNG to SVG vectorization with VTracer\n98 runs"
+    },
+    {
+      "path": "/merahburam/vectorizer-v2",
+      "url": "https://replicate.com/merahburam/vectorizer-v2",
+      "username": "merahburam",
+      "model_name": "vectorizer-v2",
+      "full_name": "merahburam/vectorizer-v2",
+      "title": "merahburam/vectorizer-v2\nProfessional PNG to SVG vectorization with VTracer. Lightning-fast conversion with superior quality.\n109 runs"
+    },
+    {
+      "path": "/meta/musicgen",
+      "url": "https://replicate.com/meta/musicgen",
+      "username": "meta",
+      "model_name": "musicgen",
+      "full_name": "meta/musicgen",
+      "title": "meta/musicgen"
+    },
+    {
+      "path": "/meta/sam-2",
+      "url": "https://replicate.com/meta/sam-2",
+      "username": "meta",
+      "model_name": "sam-2",
+      "full_name": "meta/sam-2",
+      "title": "meta/sam-2"
+    },
+    {
+      "path": "/michaeldwan/boulder-smoke-forecast",
+      "url": "https://replicate.com/michaeldwan/boulder-smoke-forecast",
+      "username": "michaeldwan",
+      "model_name": "boulder-smoke-forecast",
+      "full_name": "michaeldwan/boulder-smoke-forecast",
+      "title": "michaeldwan/\nExtract structured air quality forecast data from maps\n38 runs"
+    },
+    {
+      "path": "/minimax/hailuo-02",
+      "url": "https://replicate.com/minimax/hailuo-02",
+      "username": "minimax",
+      "model_name": "hailuo-02",
+      "full_name": "minimax/hailuo-02",
+      "title": "minimax/hailuo-02"
+    },
+    {
+      "path": "/minimax/hailuo-02-fast",
+      "url": "https://replicate.com/minimax/hailuo-02-fast",
+      "username": "minimax",
+      "model_name": "hailuo-02-fast",
+      "full_name": "minimax/hailuo-02-fast",
+      "title": "minimax/hailuo-02-fast\nA low cost and fast version of Hailuo 02. Generate 6s and 10s videos in 512p\n7.7k runs\nOfficial"
+    },
+    {
+      "path": "/minimax/music-01",
+      "url": "https://replicate.com/minimax/music-01",
+      "username": "minimax",
+      "model_name": "music-01",
+      "full_name": "minimax/music-01",
+      "title": "minimax/music-01"
+    },
+    {
+      "path": "/minimax/video-01",
+      "url": "https://replicate.com/minimax/video-01",
+      "username": "minimax",
+      "model_name": "video-01",
+      "full_name": "minimax/video-01",
+      "title": "minimax/video-01\nGenerate 6s videos with prompts or images. (Also known as Hailuo). Use a subject reference to make a video with a character and the S2V-01 model.\n571.6k runs\nOfficial"
+    },
+    {
+      "path": "/moonshotai/kimi-k2-instruct",
+      "url": "https://replicate.com/moonshotai/kimi-k2-instruct",
+      "username": "moonshotai",
+      "model_name": "kimi-k2-instruct",
+      "full_name": "moonshotai/kimi-k2-instruct",
+      "title": "moonshotai/kimi-k2-instruct\nKimi K2 achieves exceptional performance across frontier knowledge, reasoning, and coding tasks while being meticulously optimized for agentic capabilities\n15.2k runs\nOfficial"
+    },
+    {
+      "path": "/nightmareai/real-esrgan",
+      "url": "https://replicate.com/nightmareai/real-esrgan",
+      "username": "nightmareai",
+      "model_name": "real-esrgan",
+      "full_name": "nightmareai/real-esrgan",
+      "title": "nightmareai/real-esrgan"
+    },
+    {
+      "path": "/notdaniel/voxtral-small-24b-2507",
+      "url": "https://replicate.com/notdaniel/voxtral-small-24b-2507",
+      "username": "notdaniel",
+      "model_name": "voxtral-small-24b-2507",
+      "full_name": "notdaniel/voxtral-small-24b-2507",
+      "title": "notdaniel/voxtral-small-24b-2507\nVoxtral Small is an enhancement of Mistral Small 3 that incorporates state-of-the-art audio input capabilities and excels at speech transcription, translation and audio understanding.\n28 runs"
+    },
+    {
+      "path": "/openai/clip",
+      "url": "https://replicate.com/openai/clip",
+      "username": "openai",
+      "model_name": "clip",
+      "full_name": "openai/clip",
+      "title": "openai/clip\nOfficial CLIP models, generate CLIP (clip-vit-large-patch14) text & image embeddings\n205k runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-4.1",
+      "url": "https://replicate.com/openai/gpt-4.1",
+      "username": "openai",
+      "model_name": "gpt-4.1",
+      "full_name": "openai/gpt-4.1",
+      "title": "openai/gpt-4.1\nOpenAI's Flagship GPT model for complex tasks.\n88.3K runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-4.1-mini",
+      "url": "https://replicate.com/openai/gpt-4.1-mini",
+      "username": "openai",
+      "model_name": "gpt-4.1-mini",
+      "full_name": "openai/gpt-4.1-mini",
+      "title": "openai/gpt-4.1-mini\nFast, affordable version of GPT-4.1\n1M runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-4.1-nano",
+      "url": "https://replicate.com/openai/gpt-4.1-nano",
+      "username": "openai",
+      "model_name": "gpt-4.1-nano",
+      "full_name": "openai/gpt-4.1-nano",
+      "title": "openai/gpt-4.1-nano\nFastest, most cost-effective GPT-4.1 model from OpenAI\n349.7K runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-4o",
+      "url": "https://replicate.com/openai/gpt-4o",
+      "username": "openai",
+      "model_name": "gpt-4o",
+      "full_name": "openai/gpt-4o",
+      "title": "openai/gpt-4o\nOpenAI's high-intelligence chat model\n175.1K runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-4o-mini",
+      "url": "https://replicate.com/openai/gpt-4o-mini",
+      "username": "openai",
+      "model_name": "gpt-4o-mini",
+      "full_name": "openai/gpt-4o-mini",
+      "title": "openai/gpt-4o-mini\nLow latency, low cost version of OpenAI's GPT-4o model\n2.7M runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-4o-transcribe",
+      "url": "https://replicate.com/openai/gpt-4o-transcribe",
+      "username": "openai",
+      "model_name": "gpt-4o-transcribe",
+      "full_name": "openai/gpt-4o-transcribe",
+      "title": "openai/gpt-4o-transcribe"
+    },
+    {
+      "path": "/openai/gpt-5",
+      "url": "https://replicate.com/openai/gpt-5",
+      "username": "openai",
+      "model_name": "gpt-5",
+      "full_name": "openai/gpt-5",
+      "title": "openai/gpt-5\nOpenAI's new model excelling at coding, writing, and reasoning.\n30.4k runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-5-mini",
+      "url": "https://replicate.com/openai/gpt-5-mini",
+      "username": "openai",
+      "model_name": "gpt-5-mini",
+      "full_name": "openai/gpt-5-mini",
+      "title": "openai/gpt-5-mini\nFaster version of OpenAI's flagship GPT-5 model\n16.2K runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-5-nano",
+      "url": "https://replicate.com/openai/gpt-5-nano",
+      "username": "openai",
+      "model_name": "gpt-5-nano",
+      "full_name": "openai/gpt-5-nano",
+      "title": "openai/gpt-5-nano\nFastest, most cost-effective GPT-5 model from OpenAI\n6.8K runs\nOfficial"
+    },
+    {
+      "path": "/openai/gpt-5-structured",
+      "url": "https://replicate.com/openai/gpt-5-structured",
+      "username": "openai",
+      "model_name": "gpt-5-structured",
+      "full_name": "openai/gpt-5-structured",
+      "title": "openai/gpt-5-structured"
+    },
+    {
+      "path": "/openai/gpt-oss-120b",
+      "url": "https://replicate.com/openai/gpt-oss-120b",
+      "username": "openai",
+      "model_name": "gpt-oss-120b",
+      "full_name": "openai/gpt-oss-120b",
+      "title": "openai/gpt-oss-120b"
+    },
+    {
+      "path": "/openai/gpt-oss-20b",
+      "url": "https://replicate.com/openai/gpt-oss-20b",
+      "username": "openai",
+      "model_name": "gpt-oss-20b",
+      "full_name": "openai/gpt-oss-20b",
+      "title": "openai/gpt-oss-20b\n20b open-weight language model from OpenAI\n22.9k runs\nOfficial"
+    },
+    {
+      "path": "/openai/o1",
+      "url": "https://replicate.com/openai/o1",
+      "username": "openai",
+      "model_name": "o1",
+      "full_name": "openai/o1",
+      "title": "openai/o1\nOpenAI's first o-series reasoning model\n15.2K runs\nOfficial"
+    },
+    {
+      "path": "/openai/o1-mini",
+      "url": "https://replicate.com/openai/o1-mini",
+      "username": "openai",
+      "model_name": "o1-mini",
+      "full_name": "openai/o1-mini",
+      "title": "openai/o1-mini\nA small model alternative to o1\n552 runs\nOfficial"
+    },
+    {
+      "path": "/openai/o4-mini",
+      "url": "https://replicate.com/openai/o4-mini",
+      "username": "openai",
+      "model_name": "o4-mini",
+      "full_name": "openai/o4-mini",
+      "title": "openai/o4-mini\nOpenAI's fast, lightweight reasoning model\n205.5K runs\nOfficial"
+    },
+    {
+      "path": "/paragekbote/flux-fast-lora-hotswap",
+      "url": "https://replicate.com/paragekbote/flux-fast-lora-hotswap",
+      "username": "paragekbote",
+      "model_name": "flux-fast-lora-hotswap",
+      "full_name": "paragekbote/flux-fast-lora-hotswap",
+      "title": "paragekbote/flux-fast-lora-hotswap\nA blazing-fast inference setup for Flux.1-dev with dynamic LoRA hotswapping.\n26 runs"
+    },
+    {
+      "path": "/paragekbote/smollm3-3b-smashed",
+      "url": "https://replicate.com/paragekbote/smollm3-3b-smashed",
+      "username": "paragekbote",
+      "model_name": "smollm3-3b-smashed",
+      "full_name": "paragekbote/smollm3-3b-smashed",
+      "title": "paragekbote/smollm3-3b-smashed\nSmolLM3-3B with Pruna for lightning-fast, memory-efficient AI inference.\n5 runs"
+    },
+    {
+      "path": "/pbarker/gfpgan-video",
+      "url": "https://replicate.com/pbarker/gfpgan-video",
+      "username": "pbarker",
+      "model_name": "gfpgan-video",
+      "full_name": "pbarker/gfpgan-video",
+      "title": "pbarker/gfpgan-video"
+    },
+    {
+      "path": "/philz1337x/clarity-upscaler",
+      "url": "https://replicate.com/philz1337x/clarity-upscaler",
+      "username": "philz1337x",
+      "model_name": "clarity-upscaler",
+      "full_name": "philz1337x/clarity-upscaler",
+      "title": "philz1337x/clarity-upscaler"
+    },
+    {
+      "path": "/piddnad/ddcolor",
+      "url": "https://replicate.com/piddnad/ddcolor",
+      "username": "piddnad",
+      "model_name": "ddcolor",
+      "full_name": "piddnad/ddcolor",
+      "title": "piddnad/ddcolor"
+    },
+    {
+      "path": "/pipeline-examples/ads-for-products",
+      "url": "https://replicate.com/pipeline-examples/ads-for-products",
+      "username": "pipeline-examples",
+      "model_name": "ads-for-products",
+      "full_name": "pipeline-examples/ads-for-products",
+      "title": "pipeline-examples\nCreate stunning ads using an image of a product\n159 runs"
+    },
+    {
+      "path": "/pipeline-examples/fractal",
+      "url": "https://replicate.com/pipeline-examples/fractal",
+      "username": "pipeline-examples",
+      "model_name": "fractal",
+      "full_name": "pipeline-examples/fractal",
+      "title": "pipeline-examples\nEnter a prompt to make an infinite fractal video.\n14 runs"
+    },
+    {
+      "path": "/pipeline-examples/hunyuan-glitch",
+      "url": "https://replicate.com/pipeline-examples/hunyuan-glitch",
+      "username": "pipeline-examples",
+      "model_name": "hunyuan-glitch",
+      "full_name": "pipeline-examples/hunyuan-glitch",
+      "title": "pipeline-examples\n~̴͔̱̬͛̔͊ ̴̳͔̆͛̓g̶̞̍̽ ̸̧̤́l̸̰̟̲̾̈́ ̸̈́͌͜ǐ̶̒͜ ̶̺̭̾̊̈́t̷̩̔̂̉ ̸̬͘c̸̭͍͂̂ ̶͔̈́̓̅ẖ̶̜̎̍͜ ̶̡̻͖̆̐͒ ̶̢͇̘̒̚c̸̹̃͛̓ ̴̗͓̫͑̑͌ȏ̴̫͙̙ ̶̘̩̆̉̚r̶̟̃ ̶̬̹̆̆ë̷̼ ̸͙͛~̵͔̠̓̾\n5 runs"
+    },
+    {
+      "path": "/pipeline-examples/interior-designer",
+      "url": "https://replicate.com/pipeline-examples/interior-designer",
+      "username": "pipeline-examples",
+      "model_name": "interior-designer",
+      "full_name": "pipeline-examples/interior-designer",
+      "title": "pipeline-examples\nTransform your room using this interior designer app\n84 runs"
+    },
+    {
+      "path": "/pipeline-examples/outpainter",
+      "url": "https://replicate.com/pipeline-examples/outpainter",
+      "username": "pipeline-examples",
+      "model_name": "outpainter",
+      "full_name": "pipeline-examples/outpainter",
+      "title": "pipeline-examples\nCreate hybrid photos with text prompts using this outpainting tool\n20 runs"
+    },
+    {
+      "path": "/pipeline-examples/talking-avatar",
+      "url": "https://replicate.com/pipeline-examples/talking-avatar",
+      "username": "pipeline-examples",
+      "model_name": "talking-avatar",
+      "full_name": "pipeline-examples/talking-avatar",
+      "title": "pipeline-examples\nA lip-syncing avatar for UGC/TikTok/Reels content\n53 runs"
+    },
+    {
+      "path": "/pipeline-examples/tile",
+      "url": "https://replicate.com/pipeline-examples/tile",
+      "username": "pipeline-examples",
+      "model_name": "tile",
+      "full_name": "pipeline-examples/tile",
+      "title": "pipeline-examples\nCreate a tile that's infinitely patternable.\n51 runs"
+    },
+    {
+      "path": "/pipeline-examples/video-ads",
+      "url": "https://replicate.com/pipeline-examples/video-ads",
+      "username": "pipeline-examples",
+      "model_name": "video-ads",
+      "full_name": "pipeline-examples/video-ads",
+      "title": "pipeline-examples\nVideo ads with a product!\n56 runs"
+    },
+    {
+      "path": "/pipeline-examples/video-to-gif",
+      "url": "https://replicate.com/pipeline-examples/video-to-gif",
+      "username": "pipeline-examples",
+      "model_name": "video-to-gif",
+      "full_name": "pipeline-examples/video-to-gif",
+      "title": "pipeline-examples\nTurn a video into a GIF with removed background\n10 runs"
+    },
+    {
+      "path": "/press1209/musicology-v1-beta",
+      "url": "https://replicate.com/press1209/musicology-v1-beta",
+      "username": "press1209",
+      "model_name": "musicology-v1-beta",
+      "full_name": "press1209/musicology-v1-beta",
+      "title": "press1209/musicology-v1-beta\n48 runs"
+    },
+    {
+      "path": "/prunaai/flux-kontext-dev",
+      "url": "https://replicate.com/prunaai/flux-kontext-dev",
+      "username": "prunaai",
+      "model_name": "flux-kontext-dev",
+      "full_name": "prunaai/flux-kontext-dev",
+      "title": "prunaai/flux-kontext-dev"
+    },
+    {
+      "path": "/prunaai/flux.1-dev",
+      "url": "https://replicate.com/prunaai/flux.1-dev",
+      "username": "prunaai",
+      "model_name": "flux.1-dev",
+      "full_name": "prunaai/flux.1-dev",
+      "title": "prunaai/flux.1-dev\nThis is the fastest Flux Dev endpoint in the world, contact us for more at pruna.ai\n17m runs"
+    },
+    {
+      "path": "/prunaai/gpt-oss-20b",
+      "url": "https://replicate.com/prunaai/gpt-oss-20b",
+      "username": "prunaai",
+      "model_name": "gpt-oss-20b",
+      "full_name": "prunaai/gpt-oss-20b",
+      "title": "prunaai/gpt-oss-20b\nAdvanced 20B open-weight reasoning models to customize for any use case and run anywhere.\n87 runs"
+    },
+    {
+      "path": "/prunaai/hidream-l1-fast",
+      "url": "https://replicate.com/prunaai/hidream-l1-fast",
+      "username": "prunaai",
+      "model_name": "hidream-l1-fast",
+      "full_name": "prunaai/hidream-l1-fast",
+      "title": "prunaai/hidream-l1-fast\nThis is an optimised version of the hidream-l1 model using the pruna ai optimisation toolkit!\n2.6m runs"
+    },
+    {
+      "path": "/prunaai/wan-2.2-image",
+      "url": "https://replicate.com/prunaai/wan-2.2-image",
+      "username": "prunaai",
+      "model_name": "wan-2.2-image",
+      "full_name": "prunaai/wan-2.2-image",
+      "title": "prunaai/wan-2.2-image\nThis model generates beautiful cinematic 2 megapixel images in 3-4 seconds and is derived from the Wan 2.2 model through optimisation techniques from the pruna package\n115.1k runs\nOfficial"
+    },
+    {
+      "path": "/qwen/qwen-image",
+      "url": "https://replicate.com/qwen/qwen-image",
+      "username": "qwen",
+      "model_name": "qwen-image",
+      "full_name": "qwen/qwen-image",
+      "title": "qwen/qwen-image\nAn image generation foundation model in the Qwen series that achieves significant advances in complex text rendering.\n145.6k runs\nOfficial"
+    },
+    {
+      "path": "/qwen/qwen-image-edit",
+      "url": "https://replicate.com/qwen/qwen-image-edit",
+      "username": "qwen",
+      "model_name": "qwen-image-edit",
+      "full_name": "qwen/qwen-image-edit",
+      "title": "qwen/qwen-image-edit\nEdit images using a prompt. This model extends Qwen-Image’s unique text rendering capabilities to image editing tasks, enabling precise text editing\n67.7k runs\nOfficial"
+    },
+    {
+      "path": "/qwen/qwen3-235b-a22b-instruct-2507",
+      "url": "https://replicate.com/qwen/qwen3-235b-a22b-instruct-2507",
+      "username": "qwen",
+      "model_name": "qwen3-235b-a22b-instruct-2507",
+      "full_name": "qwen/qwen3-235b-a22b-instruct-2507",
+      "title": "qwen/qwen3-235b-a22b-instruct-2507\nUpdated Qwen3 model for instruction following\n35.7k runs\nOfficial"
+    },
+    {
+      "path": "/research/design-protein",
+      "url": "https://replicate.com/research/design-protein",
+      "username": "research",
+      "model_name": "design-protein",
+      "full_name": "research/design-protein",
+      "title": "research/design-protein\nDesign complex Protein de-novo\n854 runs"
+    },
+    {
+      "path": "/resemble-ai/chatterbox-pro",
+      "url": "https://replicate.com/resemble-ai/chatterbox-pro",
+      "username": "resemble-ai",
+      "model_name": "chatterbox-pro",
+      "full_name": "resemble-ai/chatterbox-pro",
+      "title": "resemble-ai/chatterbox-pro"
+    },
+    {
+      "path": "/runwayml/gen4-aleph",
+      "url": "https://replicate.com/runwayml/gen4-aleph",
+      "username": "runwayml",
+      "model_name": "gen4-aleph",
+      "full_name": "runwayml/gen4-aleph",
+      "title": "runwayml/gen4-aleph\nA new way to edit, transform and generate video\n5.2k runs\nOfficial"
+    },
+    {
+      "path": "/runwayml/gen4-image",
+      "url": "https://replicate.com/runwayml/gen4-image",
+      "username": "runwayml",
+      "model_name": "gen4-image",
+      "full_name": "runwayml/gen4-image",
+      "title": "runwayml/gen4-image"
+    },
+    {
+      "path": "/runwayml/gen4-image-turbo",
+      "url": "https://replicate.com/runwayml/gen4-image-turbo",
+      "username": "runwayml",
+      "model_name": "gen4-image-turbo",
+      "full_name": "runwayml/gen4-image-turbo",
+      "title": "runwayml/gen4-image-turbo\nGen-4 Image Turbo is cheaper and 2.5x faster than Gen-4 Image. An image model with references, use up to 3 reference images to create the exact image you need. Capture every angle.\n15.7k runs\nOfficial"
+    },
+    {
+      "path": "/runwayml/upscale-v1",
+      "url": "https://replicate.com/runwayml/upscale-v1",
+      "username": "runwayml",
+      "model_name": "upscale-v1",
+      "full_name": "runwayml/upscale-v1",
+      "title": "runwayml/upscale-v1"
+    },
+    {
+      "path": "/salesforce/blip",
+      "url": "https://replicate.com/salesforce/blip",
+      "username": "salesforce",
+      "model_name": "blip",
+      "full_name": "salesforce/blip",
+      "title": "salesforce/blip"
+    },
+    {
+      "path": "/schananas/grounded_sam",
+      "url": "https://replicate.com/schananas/grounded_sam",
+      "username": "schananas",
+      "model_name": "grounded_sam",
+      "full_name": "schananas/grounded_sam",
+      "title": "schananas/grounded_sam"
+    },
+    {
+      "path": "/sczhou/codeformer",
+      "url": "https://replicate.com/sczhou/codeformer",
+      "username": "sczhou",
+      "model_name": "codeformer",
+      "full_name": "sczhou/codeformer",
+      "title": "sczhou/codeformer"
+    },
+    {
+      "path": "/seanbiggs/n8n",
+      "url": "https://replicate.com/seanbiggs/n8n",
+      "username": "seanbiggs",
+      "model_name": "n8n",
+      "full_name": "seanbiggs/n8n",
+      "title": "seanbiggs/n8n\n38 runs"
+    },
+    {
+      "path": "/shreejalmaharjan-27/tiktok-short-captions",
+      "url": "https://replicate.com/shreejalmaharjan-27/tiktok-short-captions",
+      "username": "shreejalmaharjan-27",
+      "model_name": "tiktok-short-captions",
+      "full_name": "shreejalmaharjan-27/tiktok-short-captions",
+      "title": "shreejalmaharjan-27/tiktok-short-captions"
+    },
+    {
+      "path": "/sljeff/dots.ocr",
+      "url": "https://replicate.com/sljeff/dots.ocr",
+      "username": "sljeff",
+      "model_name": "dots.ocr",
+      "full_name": "sljeff/dots.ocr",
+      "title": "sljeff/dots.ocr\nhttps://github.com/sljeff/dots-ocr-client\n1.8k runs"
+    },
+    {
+      "path": "/spuuntries/ilearnmate-icts",
+      "url": "https://replicate.com/spuuntries/ilearnmate-icts",
+      "username": "spuuntries",
+      "model_name": "ilearnmate-icts",
+      "full_name": "spuuntries/ilearnmate-icts",
+      "title": "spuuntries/ilearnmate-icts\n16 runs"
+    },
+    {
+      "path": "/tencentarc/gfpgan",
+      "url": "https://replicate.com/tencentarc/gfpgan",
+      "username": "tencentarc",
+      "model_name": "gfpgan",
+      "full_name": "tencentarc/gfpgan",
+      "title": "tencentarc/gfpgan"
+    },
+    {
+      "path": "/tmappdev/lipsync",
+      "url": "https://replicate.com/tmappdev/lipsync",
+      "username": "tmappdev",
+      "model_name": "lipsync",
+      "full_name": "tmappdev/lipsync",
+      "title": "tmappdev/lipsync\nLipsync model using MuseTalk\n6.5k runs"
+    },
+    {
+      "path": "/topazlabs/video-upscale",
+      "url": "https://replicate.com/topazlabs/video-upscale",
+      "username": "topazlabs",
+      "model_name": "video-upscale",
+      "full_name": "topazlabs/video-upscale",
+      "title": "topazlabs/video-upscale"
+    },
+    {
+      "path": "/tristanbob/text-behind-image",
+      "url": "https://replicate.com/tristanbob/text-behind-image",
+      "username": "tristanbob",
+      "model_name": "text-behind-image",
+      "full_name": "tristanbob/text-behind-image",
+      "title": "tristanbob/text-behind-image\n20 runs"
+    },
+    {
+      "path": "/ultralytics/yolo11n",
+      "url": "https://replicate.com/ultralytics/yolo11n",
+      "username": "ultralytics",
+      "model_name": "yolo11n",
+      "full_name": "ultralytics/yolo11n",
+      "title": "ultralytics/yolo11n\nUltralytics YOLO11n object detection model with 2.6M parameters. Achieves 39.5 mAP50-95 on COCO dataset. Optimized for real-time inference with 1.55 ms speed on T4 GPU..\n54 runs"
+    },
+    {
+      "path": "/ultralytics/yoloe-11s",
+      "url": "https://replicate.com/ultralytics/yoloe-11s",
+      "username": "ultralytics",
+      "model_name": "yoloe-11s",
+      "full_name": "ultralytics/yoloe-11s",
+      "title": "ultralytics/yoloe-11s\nUltralytics YOLOE-L Real-Time Seeing Anything model with 26.2M parameters. Achieves 52.6 mAP50-95 on COCO dataset. Optimized for real-time inference with 6.2 ms speed on T4 GPU..\n34 runs"
+    },
+    {
+      "path": "/ultralytics/yolov8s-worldv2",
+      "url": "https://replicate.com/ultralytics/yolov8s-worldv2",
+      "username": "ultralytics",
+      "model_name": "yolov8s-worldv2",
+      "full_name": "ultralytics/yolov8s-worldv2",
+      "title": "ultralytics/yolov8s-worldv2\nUltralytics YOLOv8s worldv2 Real-Time Open-Vocabulary Object Detection model with 12.7M parameters. Achieves 37.7 mAP50-95 on COCO dataset. Optimized for real-time inference\n49 runs"
+    },
+    {
+      "path": "/vaibhavs10/incredibly-fast-whisper",
+      "url": "https://replicate.com/vaibhavs10/incredibly-fast-whisper",
+      "username": "vaibhavs10",
+      "model_name": "incredibly-fast-whisper",
+      "full_name": "vaibhavs10/incredibly-fast-whisper",
+      "title": "vaibhavs10/incredibly-fast-whisper"
+    },
+    {
+      "path": "/veo-3-apps/json-prompt",
+      "url": "https://replicate.com/veo-3-apps/json-prompt",
+      "username": "veo-3-apps",
+      "model_name": "json-prompt",
+      "full_name": "veo-3-apps/json-prompt",
+      "title": "veo-3-apps/json-prompt\nJSON-style prompter for Veo 3\n42 runs"
+    },
+    {
+      "path": "/veo-3-apps/json-prompt-fast",
+      "url": "https://replicate.com/veo-3-apps/json-prompt-fast",
+      "username": "veo-3-apps",
+      "model_name": "json-prompt-fast",
+      "full_name": "veo-3-apps/json-prompt-fast",
+      "title": "veo-3-apps/json-prompt-fast\nJSON-style prompter for Veo 3 Fast\n34 runs"
+    },
+    {
+      "path": "/veo-3-apps/veo-3-fast-upscaled",
+      "url": "https://replicate.com/veo-3-apps/veo-3-fast-upscaled",
+      "username": "veo-3-apps",
+      "model_name": "veo-3-fast-upscaled",
+      "full_name": "veo-3-apps/veo-3-fast-upscaled",
+      "title": "veo-3-apps/veo-3-fast-upscaled\nVeo 3 Fast with Topaz video upscale\n6 runs"
+    },
+    {
+      "path": "/veo-3-apps/veo-3-portrait",
+      "url": "https://replicate.com/veo-3-apps/veo-3-portrait",
+      "username": "veo-3-apps",
+      "model_name": "veo-3-portrait",
+      "full_name": "veo-3-apps/veo-3-portrait",
+      "title": "veo-3-apps/veo-3-portrait\nVeo 3 in 9:16 for TikTok/Reels/shorts\n81 runs"
+    },
+    {
+      "path": "/victor-upmeet/whisperx",
+      "url": "https://replicate.com/victor-upmeet/whisperx",
+      "username": "victor-upmeet",
+      "model_name": "whisperx",
+      "full_name": "victor-upmeet/whisperx",
+      "title": "victor-upmeet/whisperx"
+    },
+    {
+      "path": "/wan-video/wan-2.2-5b-fast",
+      "url": "https://replicate.com/wan-video/wan-2.2-5b-fast",
+      "username": "wan-video",
+      "model_name": "wan-2.2-5b-fast",
+      "full_name": "wan-video/wan-2.2-5b-fast",
+      "title": "wan-video/wan-2.2-5b-fast\nThe fastest Wan 2.2 text-to-image and image-to-video model\n54.6k runs\nOfficial"
+    },
+    {
+      "path": "/wan-video/wan-2.2-i2v-a14b",
+      "url": "https://replicate.com/wan-video/wan-2.2-i2v-a14b",
+      "username": "wan-video",
+      "model_name": "wan-2.2-i2v-a14b",
+      "full_name": "wan-video/wan-2.2-i2v-a14b",
+      "title": "wan-video/wan-2.2-i2v-a14b\nImage-to-video at 720p and 480p with Wan 2.2 A14B\n13.6K runs\nOfficial"
+    },
+    {
+      "path": "/wan-video/wan-2.2-i2v-fast",
+      "url": "https://replicate.com/wan-video/wan-2.2-i2v-fast",
+      "username": "wan-video",
+      "model_name": "wan-2.2-i2v-fast",
+      "full_name": "wan-video/wan-2.2-i2v-fast",
+      "title": "wan-video/wan-2.2-i2v-fast"
+    },
+    {
+      "path": "/wan-video/wan-2.2-t2v-fast",
+      "url": "https://replicate.com/wan-video/wan-2.2-t2v-fast",
+      "username": "wan-video",
+      "model_name": "wan-2.2-t2v-fast",
+      "full_name": "wan-video/wan-2.2-t2v-fast",
+      "title": "wan-video/wan-2.2-t2v-fast\nA very fast and cheap PrunaAI optimized version of Wan 2.2 A14B text-to-video\n43.8k runs\nOfficial"
+    },
+    {
+      "path": "/wavespeedai/qwen-image",
+      "url": "https://replicate.com/wavespeedai/qwen-image",
+      "username": "wavespeedai",
+      "model_name": "qwen-image",
+      "full_name": "wavespeedai/qwen-image",
+      "title": "wavespeedai/qwen-image\nA 20B MMDiT model for next-gen text-to-image generation\n4.8k runs\nOfficial"
+    },
+    {
+      "path": "/wavespeedai/wan-2.1-i2v-480p",
+      "url": "https://replicate.com/wavespeedai/wan-2.1-i2v-480p",
+      "username": "wavespeedai",
+      "model_name": "wan-2.1-i2v-480p",
+      "full_name": "wavespeedai/wan-2.1-i2v-480p",
+      "title": "wavespeedai/wan-2.1-i2v-480p\nAccelerated inference for Wan 2.1 14B image to video, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n407.8k runs\nOfficial"
+    },
+    {
+      "path": "/wavespeedai/wan-2.1-i2v-720p",
+      "url": "https://replicate.com/wavespeedai/wan-2.1-i2v-720p",
+      "username": "wavespeedai",
+      "model_name": "wan-2.1-i2v-720p",
+      "full_name": "wavespeedai/wan-2.1-i2v-720p",
+      "title": "wavespeedai/wan-2.1-i2v-720p\nAccelerated inference for Wan 2.1 14B image to video with high resolution, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n83.3k runs\nOfficial"
+    },
+    {
+      "path": "/wavespeedai/wan-2.1-t2v-480p",
+      "url": "https://replicate.com/wavespeedai/wan-2.1-t2v-480p",
+      "username": "wavespeedai",
+      "model_name": "wan-2.1-t2v-480p",
+      "full_name": "wavespeedai/wan-2.1-t2v-480p",
+      "title": "wavespeedai/wan-2.1-t2v-480p\nAccelerated inference for Wan 2.1 14B text to video, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n173.2k runs\nOfficial"
+    },
+    {
+      "path": "/wavespeedai/wan-2.1-t2v-720p",
+      "url": "https://replicate.com/wavespeedai/wan-2.1-t2v-720p",
+      "username": "wavespeedai",
+      "model_name": "wan-2.1-t2v-720p",
+      "full_name": "wavespeedai/wan-2.1-t2v-720p",
+      "title": "wavespeedai/wan-2.1-t2v-720p\nAccelerated inference for Wan 2.1 14B text to video with high resolution, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n34.3k runs\nOfficial"
+    },
+    {
+      "path": "/xinntao/gfpgan",
+      "url": "https://replicate.com/xinntao/gfpgan",
+      "username": "xinntao",
+      "model_name": "gfpgan",
+      "full_name": "xinntao/gfpgan",
+      "title": "xinntao/gfpgan\nPractical face restoration algorithm for *old photos* or *AI-generated faces*\n38.2m runs"
+    },
+    {
+      "path": "/yorickvp/llava-13b",
+      "url": "https://replicate.com/yorickvp/llava-13b",
+      "username": "yorickvp",
+      "model_name": "llava-13b",
+      "full_name": "yorickvp/llava-13b",
+      "title": "yorickvp/llava-13b"
+    },
+    {
+      "path": "/zeke/image-to-text-to-image",
+      "url": "https://replicate.com/zeke/image-to-text-to-image",
+      "username": "zeke",
+      "model_name": "image-to-text-to-image",
+      "full_name": "zeke/image-to-text-to-image",
+      "title": "zeke/image-to-text-to-image\n89 runs"
+    },
+    {
+      "path": "/zeke/pingpong-video",
+      "url": "https://replicate.com/zeke/pingpong-video",
+      "username": "zeke",
+      "model_name": "pingpong-video",
+      "full_name": "zeke/pingpong-video",
+      "title": "zeke/pingpong-video\nMake your video file loop continuously, start → end → start\n81 runs"
+    },
+    {
+      "path": "/zeke/trim-video",
+      "url": "https://replicate.com/zeke/trim-video",
+      "username": "zeke",
+      "model_name": "trim-video",
+      "full_name": "zeke/trim-video",
+      "title": "zeke/trim-video\nTrim frames off the beginning and end of your video file\n3 runs"
+    },
+    {
+      "path": "/zsxkib/create-rvc-dataset",
+      "url": "https://replicate.com/zsxkib/create-rvc-dataset",
+      "username": "zsxkib",
+      "model_name": "create-rvc-dataset",
+      "full_name": "zsxkib/create-rvc-dataset",
+      "title": "zsxkib/create-rvc-dataset"
+    },
+    {
+      "path": "/zsxkib/mmaudio",
+      "url": "https://replicate.com/zsxkib/mmaudio",
+      "username": "zsxkib",
+      "model_name": "mmaudio",
+      "full_name": "zsxkib/mmaudio",
+      "title": "zsxkib/mmaudio"
+    },
+    {
+      "path": "/zsxkib/outpainter",
+      "url": "https://replicate.com/zsxkib/outpainter",
+      "username": "zsxkib",
+      "model_name": "outpainter",
+      "full_name": "zsxkib/outpainter",
+      "title": "zsxkib/outpainter\n🎨 Outpaint in each direction (top, bottom, left, right)\n156 runs"
+    },
+    {
+      "path": "/zsxkib/outpainter-to-video",
+      "url": "https://replicate.com/zsxkib/outpainter-to-video",
+      "username": "zsxkib",
+      "model_name": "outpainter-to-video",
+      "full_name": "zsxkib/outpainter-to-video",
+      "title": "zsxkib/outpainter-to-video\n🎥 Outpaint videos (i2v) in each direction (top, bottom, left, right)\n15 runs"
+    },
+    {
+      "path": "/zsxkib/realistic-voice-cloning",
+      "url": "https://replicate.com/zsxkib/realistic-voice-cloning",
+      "username": "zsxkib",
+      "model_name": "realistic-voice-cloning",
+      "full_name": "zsxkib/realistic-voice-cloning",
+      "title": "zsxkib/realistic-voice-cloning"
+    },
+    {
+      "path": "/zsxkib/smart-thinksound",
+      "url": "https://replicate.com/zsxkib/smart-thinksound",
+      "username": "zsxkib",
+      "model_name": "smart-thinksound",
+      "full_name": "zsxkib/smart-thinksound",
+      "title": "zsxkib/smart-thinksound\nAutomatically generates expert ThinkSound prompts by analyzing your video w/ Claude 4 - no more struggling with complex audio descriptions\n466 runs"
+    },
+    {
+      "path": "/zsxkib/wan-2.2-with-sound",
+      "url": "https://replicate.com/zsxkib/wan-2.2-with-sound",
+      "username": "zsxkib",
+      "model_name": "wan-2.2-with-sound",
+      "full_name": "zsxkib/wan-2.2-with-sound",
+      "title": "zsxkib/wan-2.2-with-sound\nwan-video/wan-2.2 (all variants) + topazlabs/video-upscale + zsxkib/smart-thinksound\n31 runs"
+    },
+    {
+      "path": "/zsxkib/yolo-world",
+      "url": "https://replicate.com/zsxkib/yolo-world",
+      "username": "zsxkib",
+      "model_name": "yolo-world",
+      "full_name": "zsxkib/yolo-world",
+      "title": "zsxkib/yolo-world"
+    },
+    {
+      "path": "/zylim0702/qr_code_controlnet",
+      "url": "https://replicate.com/zylim0702/qr_code_controlnet",
+      "username": "zylim0702",
+      "model_name": "qr_code_controlnet",
+      "full_name": "zylim0702/qr_code_controlnet",
+      "title": "zylim0702/qr_code_controlnet"
+    }
+  ]
+}
