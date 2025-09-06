@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Linux | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="active">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#zed-on-linux" class="pagetoc-H1">Zed on Linux</a>
+<a href="#standard-installation" class="pagetoc-H2">标准安装</a>
+<a href="#other-ways-to-install-zed-on-linux" class="pagetoc-H2">在 Linux 上安装 Zed 的其他方式</a>
+<a href="#installing-via-a-package-manager" class="pagetoc-H3">通过包管理器安装</a>
+<a href="#downloading-manually" class="pagetoc-H3">手动下载</a>
+<a href="#uninstalling-zed" class="pagetoc-H2">卸载 Zed</a>
+<a href="#standard-uninstall" class="pagetoc-H3">标准卸载</a>
+<a href="#package-manager" class="pagetoc-H3">包管理器</a>
+<a href="#troubleshooting" class="pagetoc-H2">故障排除</a>
+<a href="#zed-fails-to-start" class="pagetoc-H3">Zed 启动失败</a>
+<a href="#graphics-issues" class="pagetoc-H3">图形问题</a>
+<a href="#i-cant-open-any-files" class="pagetoc-H3">我无法打开任何文件</a>
+<a href="#clicking-links-isnt-working" class="pagetoc-H3">点击链接不起作用</a>
+<a href="#zed-isnt-remembering-my-api-keys" class="pagetoc-H3">Zed 没有记住我的 API 密钥</a>
+<a href="#zed-isnt-remembering-my-login" class="pagetoc-H3">Zed 没有记住我的登录</a>
+<a href="#could-not-start-inotify" class="pagetoc-H3">无法启动 inotify</a>
+<a href="#no-sound-or-wrong-output-device" class="pagetoc-H3">无声音或输出设备错误</a>
+<a href="#forcing-x11-scale-factor" class="pagetoc-H3">强制设置 X11 缩放因子</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="zed-on-linux"><a class="header" href="#zed-on-linux">Zed 在 Linux 上</a></h1>
+<h2 id="standard-installation"><a class="header" href="#standard-installation">标准安装</a></h2>
+<p>对于大多数人，我们推荐使用<a href="https://zed.dev/download">下载</a>页面上的脚本来安装 Zed：</p>
+<pre><code class="language-sh">curl -f https://zed.dev/install.sh | sh
+</code></pre>
+<p>我们还提供 Zed 的预览版本，该版本比稳定版大约提前一周接收更新。您可以使用以下命令安装：</p>
+<pre><code class="language-sh">curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh
+</code></pre>
+<p>通过脚本安装的 Zed 在以下系统上运行最佳：</p>
+<ul>
+<li>有兼容 Vulkan 的 GPU 可用（例如在 M 系列 MacBook 上运行的 Linux）</li>
+<li>具有系统级 glibc（NixOS 和 Alpine 默认情况下没有）
+<ul>
+<li>x86_64 (Intel/AMD)：glibc 版本 &gt;= 2.31 (Ubuntu 20 及更新版本)</li>
+<li>aarch64 (ARM)：glibc 版本 &gt;= 2.35 (Ubuntu 22 及更新版本)</li>
+</ul>
+</li>
+</ul>
+<p>Nix 和 Alpine 都有可用的第三方 Zed 包（虽然它们目前落后几周）。如果您想使用我们的构建，只要安装 glibc 兼容层，它们就可以正常工作。在 NixOS 上，您可以尝试 <a href="https://github.com/Mic92/nix-ld">nix-ld</a>，在 Alpine 上可以使用 <a href="https://wiki.alpinelinux.org/wiki/Running_glibc_programs">gcompat</a>。</p>
+<p>以下情况下您需要从源码构建：</p>
+<ul>
+<li>64 位 Intel 或 64 位 ARM 以外的架构（例如 32 位或 RISC-V 机器）</li>
+<li>所有架构上的 Redhat Enterprise Linux 8.x、Rocky Linux 8、AlmaLinux 8、Amazon Linux 2</li>
+<li>aarch64 架构上的 Redhat Enterprise Linux 9.x、Rocky Linux 9.3、AlmaLinux 8、Amazon Linux 2023（x86_64 没问题）</li>
+</ul>
+<h2 id="other-ways-to-install-zed-on-linux"><a class="header" href="#other-ways-to-install-zed-on-linux">在 Linux 上安装 Zed 的其他方式</a></h2>
+<p>Zed 是开源的，<a href="./development/linux.html">您可以从源码安装</a>。</p>
+<h3 id="installing-via-a-package-manager"><a class="header" href="#installing-via-a-package-manager">通过包管理器安装</a></h3>
+<p>针对各种 Linux 发行版和包管理器，有多个第三方 Zed 包，有时名为 <code>zed-editor</code>。您可能可以使用这些包来安装 Zed：</p>
+<ul>
+<li>Flathub: <a href="https://flathub.org/apps/dev.zed.Zed"><code>dev.zed.Zed</code></a></li>
+<li>Arch: <a href="https://archlinux.org/packages/extra/x86_64/zed/"><code>zed</code></a></li>
+<li>Arch (AUR): <a href="https://aur.archlinux.org/packages/zed-git"><code>zed-git</code></a>, <a href="https://aur.archlinux.org/packages/zed-preview"><code>zed-preview</code></a>, <a href="https://aur.archlinux.org/packages/zed-preview-bin"><code>zed-preview-bin</code></a></li>
+<li>Alpine: <code>zed</code> (<a href="https://pkgs.alpinelinux.org/package/edge/testing/aarch64/zed">aarch64</a>) (<a href="https://pkgs.alpinelinux.org/package/edge/testing/x86_64/zed">x86_64</a>)</li>
+<li>Nix: <code>zed-editor</code> (<a href="https://search.nixos.org/packages?channel=unstable&amp;show=zed-editor">unstable</a>)</li>
+<li>Fedora/Ultramarine (Terra): <a href="https://github.com/terrapkg/packages/tree/frawhide/anda/devs/zed/stable"><code>zed</code></a>, <a href="https://github.com/terrapkg/packages/tree/frawhide/anda/devs/zed/preview"><code>zed-preview</code></a>, <a href="https://github.com/terrapkg/packages/tree/frawhide/anda/devs/zed/nightly"><code>zed-nightly</code></a></li>
+<li>Solus: <a href="https://github.com/getsolus/packages/tree/main/packages/z/zed"><code>zed</code></a></li>
+<li>Parabola: <a href="https://www.parabola.nu/packages/extra/x86_64/zed/"><code>zed</code></a></li>
+<li>Manjaro: <a href="https://packages.manjaro.org/?query=zed"><code>zed</code></a></li>
+<li>ALT Linux (Sisyphus): <a href="https://packages.altlinux.org/en/sisyphus/srpms/zed/"><code>zed</code></a></li>
+<li>AOSC OS: <a href="https://packages.aosc.io/packages/zed"><code>zed</code></a></li>
+</ul>
+<p>查看 <a href="https://repology.org/project/zed-editor/versions">Repology</a> 以获取各个仓库中 Zed 包的列表。</p>
+<p>安装第三方包时，请注意它可能不是完全最新的，并且可能与我们打包的 Zed 略有不同（一个常见的更改是将二进制文件重命名为 <code>zedit</code> 或 <code>zeditor</code> 以避免与其他包冲突）。</p>
+<p>我们很乐意获得您的帮助，让 Zed 面向所有人。如果 Zed 在您的包管理器中尚不可用，而您希望解决这个问题，我们有一些关于<a href="./development/linux.html#notes-for-packaging-zed">如何做到这一点</a>的说明。</p>
+<h3 id="downloading-manually"><a class="header" href="#downloading-manually">手动下载</a></h3>
+<p>如果您愿意，可以通过下载我们预构建的 .tar.gz 文件来安装 Zed。这和我们安装脚本使用的是同一个文件，但您可以通过修改以下说明来自定义安装位置：</p>
+<p>下载 <code>.tar.gz</code> 文件：</p>
+<ul>
+<li><a href="https://zed.dev/api/releases/stable/latest/zed-linux-x86_64.tar.gz">zed-linux-x86_64.tar.gz</a> (<a href="https://zed.dev/api/releases/preview/latest/zed-linux-x86_64.tar.gz">preview</a>)</li>
+<li><a href="https://zed.dev/api/releases/stable/latest/zed-linux-aarch64.tar.gz">zed-linux-aarch64.tar.gz</a>
+(<a href="https://zed.dev/api/releases/preview/latest/zed-linux-aarch64.tar.gz">preview</a>)</li>
+</ul>
+<p>然后确保 tarball 中的 <code>zed</code> 二进制文件在您的路径中。最简单的方法是解包 tarball 并创建符号链接：</p>
+<pre><code class="language-sh">mkdir -p ~/.local
+# 将 zed 提取到 ~/.local/zed.app/
+tar -xvf &lt;path/to/download&gt;.tar.gz -C ~/.local
+# 将 zed 二进制文件链接到 ~/.local/bin（或您 $PATH 中的另一个目录）
+ln -sf ~/.local/zed.app/bin/zed ~/.local/bin/zed
+</code></pre>
+<p>如果您希望与 XDG 兼容的桌面环境集成，您还需要安装 <code>.desktop</code> 文件：</p>
+<pre><code class="language-sh">cp ~/.local/zed.app/share/applications/zed.desktop ~/.local/share/applications/dev.zed.Zed.desktop
+sed -i "s|Icon=zed|Icon=$HOME/.local/zed.app/share/icons/hicolor/512x512/apps/zed.png|g" ~/.local/share/applications/dev.zed.Zed.desktop
+sed -i "s|Exec=zed|Exec=$HOME/.local/zed.app/libexec/zed-editor|g" ~/.local/share/applications/dev.zed.Zed.desktop
+</code></pre>
+<h2 id="uninstalling-zed"><a class="header" href="#uninstalling-zed">卸载 Zed</a></h2>
+<h3 id="standard-uninstall"><a class="header" href="#standard-uninstall">标准卸载</a></h3>
+<p>如果 Zed 是使用默认安装脚本安装的，可以通过向 <code>zed</code> shell 命令提供 <code>--uninstall</code> 标志来卸载</p>
+<pre><code class="language-sh">zed --uninstall
+</code></pre>
+<p>如果没有错误，shell 将提示您是否希望保留您的首选项或删除它们。做出选择后，您应该会看到一条 Zed 成功卸载的消息。</p>
+<p>如果在您的 PATH 中找不到 <code>zed</code> shell 命令，您可以尝试以下命令之一</p>
+<pre><code class="language-sh">$HOME/.local/bin/zed --uninstall
+</code></pre>
+<p>或</p>
+<pre><code class="language-sh">$HOME/.local/zed.app/bin.zed --uninstall
+</code></pre>
+<p>如果在 <code>$HOME/.local/bin/zed</code> 和 <code>$HOME/.local/zed.app/bin.zed</code> 之间没有正确建立符号链接，第一种情况可能会失败。但只要 Zed 是安装在默认位置，第二种情况应该能正常工作。</p>
+<p>如果 Zed 安装在不同的位置，您必须调用存储在该安装目录中的 <code>zed</code> 二进制文件，并以与前面命令相同的格式向其传递 <code>--uninstall</code> 标志。</p>
+<h3 id="package-manager"><a class="header" href="#package-manager">包管理器</a></h3>
+<p>如果 Zed 是使用包管理器安装的，请查阅该包管理器的文档，了解如何卸载包。</p>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">故障排除</a></h2>
+<p>Linux 在各种不同配置的系统上运行。我们主要在纯净的 Ubuntu 设置上测试 Zed，因为这是我们用户使用的最常见的发行版，但我们确实期望它能在各种机器上正常工作。</p>
+<h3 id="zed-fails-to-start"><a class="header" href="#zed-fails-to-start">Zed 启动失败</a></h3>
+<p>如果您看到像 "/lib64/libc.so.6: version 'GLIBC_2.29' not found" 这样的错误，说明您的发行版的 glibc 版本太旧。您可以升级系统，或者<a href="./development/linux.html">从源码安装 Zed</a>。</p>
+<h3 id="graphics-issues"><a class="header" href="#graphics-issues">图形问题</a></h3>
+<h4 id="zed-fails-to-open-windows"><a class="header" href="#zed-fails-to-open-windows">Zed 无法打开窗口</a></h4>
+<p>Zed 需要 GPU 才能有效运行。在底层，我们使用 <a href="https://www.vulkan.org/">Vulkan</a> 与您的 GPU 通信。如果您遇到性能问题，或者 Zed 无法加载，可能是 Vulkan 的问题。</p>
+<p>如果您看到显示 <code>Zed failed to open a window: NoSupportedDeviceFound</code> 的通知，这意味着 Vulkan 无法找到兼容的 GPU。您可以尝试运行 <a href="https://github.com/krh/vkcube">vkcube</a>（通常作为各个发行版中 <code>vulkaninfo</code> 或 <code>vulkan-tools</code> 包的一部分提供）来尝试诊断问题的来源，如下所示：</p>
+<pre><code>vkcube
+</code></pre>
+<blockquote>
+<p><strong><em>注意</em></strong>：通过运行 <code>vkcube -m [x11|wayland]</code> 在 X11 和 Wayland 模式下都试试运行。某些版本的 <code>vkcube</code> 使用 <code>vkcube</code> 在 X11 中运行，使用 <code>vkcube-wayland</code> 在 Wayland 中运行。</p>
+</blockquote>
+<p>这应该输出一行描述您当前图形设置的信息并显示一个旋转的立方体。如果这不起作用，您应该能够通过安装 Vulkan 兼容的 GPU 驱动程序来修复它，但在某些情况下（例如在基于 ARM 的 MacBook 上运行 Linux）尚没有 Vulkan 支持。</p>
+<p>您可以通过在 Zed 日志（<code>~/.local/share/zed/logs/Zed.log</code>）中查找 <code>Using GPU: ...</code> 来了解 Zed 使用的是哪个显卡。</p>
+<p>如果您看到像 <code>ERROR_INITIALIZATION_FAILED</code> 或 <code>GPU Crashed</code> 或 <code>ERROR_SURFACE_LOST_KHR</code> 这样的错误，那么您可能能够通过为您的 GPU 安装不同的驱动程序，或者选择不同的 GPU 运行来解决这个问题。（参见 <a href="https://github.com/zed-industries/zed/issues/14225">#14225</a>）</p>
+<p>在某些系统上，可以使用 <code>/etc/prime-discrete</code> 文件通过 <a href="https://wiki.archlinux.org/title/PRIME">PRIME</a> 强制使用独立 GPU。根据您设置的具体情况，您可能需要将此文件的内容更改为 "on"（强制使用独立显卡）或 "off"（强制使用集成显卡）。</p>
+<p>在其他系统上，您可能能够在运行 Zed 时使用环境变量 <code>DRI_PRIME=1</code> 来强制使用独立 GPU。</p>
+<p>如果您使用的是 AMD GPU 并且 Zed 在选择长行时崩溃，请尝试设置 <code>ZED_PATH_SAMPLE_COUNT=0</code> 环境变量。（参见 <a href="https://github.com/zed-industries/zed/issues/26143">#26143</a>）</p>
+<p>如果您使用的是 AMD GPU，您可能会遇到 'Broken Pipe' 错误。请尝试使用 RADV 或 Mesa 驱动程序。（参见 <a href="https://github.com/zed-industries/zed/issues/13880">#13880</a>）</p>
+<p>如果您使用的是 <code>amdvlk</code>，您可能会发现 zed 只有在使用 <code>sudo $(which zed)</code> 运行时才能打开。要修复这个问题，请删除 <code>amdvlk</code> 和 <code>lib32-amdvlk</code> 包，并安装 mesa/vulkan。（<a href="https://github.com/zed-industries/zed/issues/14141">#14141</a>）。</p>
+<p>获取更多信息，<a href="https://wiki.archlinux.org/title/Vulkan">Arch 的 Vulkan 指南</a>提供了一些好的步骤，适用于大多数发行版。</p>
+<h4 id="forcing-zed-to-use-a-specific-gpu"><a class="header" href="#forcing-zed-to-use-a-specific-gpu">强制 Zed 使用特定 GPU</a></h4>
+<p>有几种不同的方法可以强制 Zed 使用特定的 GPU：</p>
+<h5 id="option-a"><a class="header" href="#option-a">选项 A</a></h5>
+<p>您可以使用 <code>ZED_DEVICE_ID={device_id}</code> 环境变量来指定您希望 Zed 使用的 GPU 的设备 ID。</p>
+<p>您可以通过运行 <code>lspci -nn | grep VGA</code> 来获取 GPU 的设备 ID，该命令将在一行中输出每个 GPU，如下所示：</p>
+<pre><code>08:00.0 VGA compatible controller [0300]: NVIDIA Corporation GA104 [GeForce RTX 3070] [10de:2484] (rev a1)
+</code></pre>
+<p>这里的设备 ID 是 <code>2484</code>。这个值是十六进制的，因此要强制 Zed 使用这个特定的 GPU，您需要这样设置环境变量：</p>
+<pre><code>ZED_DEVICE_ID=0x2484 zed
+</code></pre>
+<p>如果您选择在 <code>.bashrc</code> 或类似文件中全局定义它，请确保导出该变量。</p>
+<h5 id="option-b"><a class="header" href="#option-b">选项 B</a></h5>
+<p>如果您使用的是 Mesa，您可以运行 <code>MESA_VK_DEVICE_SELECT=list zed --foreground</code> 来获取可用 GPU 的列表，然后导出 <code>MESA_VK_DEVICE_SELECT=xxxx:yyyy</code> 来选择特定设备。</p>
+<h5 id="option-c"><a class="header" href="#option-c">选项 C</a></h5>
+<p>使用 <a href="https://github.com/jiriks74/vkdevicechooser">vkdevicechooser</a>。</p>
+<h4 id="reporting-graphics-issues"><a class="header" href="#reporting-graphics-issues">报告图形问题</a></h4>
+<p>如果 Vulkan 配置正确，但 Zed 仍然无法为您工作，请尽可能提供更多信息<a href="https://github.com/zed-industries/zed">提交问题</a>。</p>
+<p>在 GitHub 上报告 Zed 由于图形初始化错误而无法启动的问题时，可能无法按照我们在问题模板中的说明运行 <code>zed: copy system specs into clipboard</code> 命令。我们为这种情况提供了一种替代方法来收集系统规格。</p>
+<p>向 Zed 传递 <code>--system-specs</code> 标志，如下所示</p>
+<pre><code class="language-sh">zed --system-specs
+</code></pre>
+<p>将像这样将系统规格打印到终端。强烈建议将输出原文复制到 GitHub 上的问题中，因为它使用 Markdown 格式来确保输出可读。</p>
+<p>此外，在报告此类问题时提供 Zed 日志的内容非常有益。日志通常位于 <code>~/.local/share/zed/logs/Zed.log</code>。生成有用日志文件的推荐流程如下：</p>
+<pre><code class="language-sh">truncate -s 0 ~/.local/share/zed/logs/Zed.log # 清除日志文件
+ZED_LOG=blade_graphics=info zed .
+cat ~/.local/share/zed/logs/Zed.log
+# 复制输出
+</code></pre>
+<p>或者，如果您已设置了 Zed CLI，您可以执行</p>
+<pre><code class="language-sh">ZED_LOG=blade_graphics=info /path/to/zed/cli --foreground .
+# 复制输出
+</code></pre>
+<p>在将日志粘贴到 GitHub 问题时，强烈建议使用以下模板：</p>
+<blockquote>
+<p><strong><em>注意</em></strong>：模板中的空白字符很重要，如果不保留将会导致格式错误。</p>
+</blockquote>
+<pre><code>&lt;details&gt;&lt;summary&gt;Zed Log&lt;/summary&gt;
+
+```
+{日志内容}
+```
+
+&lt;/details&gt;
+</code></pre>
+<p>这将导致日志默认折叠，使问题更容易阅读。</p>
+<h3 id="i-cant-open-any-files"><a class="header" href="#i-cant-open-any-files">我无法打开任何文件</a></h3>
+<h3 id="clicking-links-isnt-working"><a class="header" href="#clicking-links-isnt-working">点击链接不起作用</a></h3>
+<p>这些功能由 XDG 桌面门户提供，具体包括：</p>
+<ul>
+<li><code>org.freedesktop.portal.FileChooser</code></li>
+<li><code>org.freedesktop.portal.OpenURI</code></li>
+</ul>
+<p>某些窗口管理器（如 <code>Hyprland</code>）默认情况下不提供文件选择器。请参见<a href="https://wiki.archlinux.org/title/XDG_Desktop_Portal#List_of_backends_and_interfaces">此列表</a>作为替代方案的起点。</p>
+<h3 id="zed-isnt-remembering-my-api-keys"><a class="header" href="#zed-isnt-remembering-my-api-keys">Zed 没有记住我的 API 密钥</a></h3>
+<h3 id="zed-isnt-remembering-my-login"><a class="header" href="#zed-isnt-remembering-my-login">Zed 没有记住我的登录</a></h3>
+<p>这些功能也需要 XDG 桌面门户，具体包括：</p>
+<ul>
+<li><code>org.freedesktop.portal.Secret</code> or</li>
+<li><code>org.freedesktop.Secrets</code></li>
+</ul>
+<p>Zed 需要一个地方来安全存储密钥，如您的 Zed 登录 cookie 或 OpenAI API 密钥，我们使用系统提供的密钥链来实现这一点。提供此功能的包示例包括 <code>gnome-keyring</code>、<code>KWallet</code> 和 <code>keepassxc</code> 等。</p>
+<h3 id="could-not-start-inotify"><a class="header" href="#could-not-start-inotify">无法启动 inotify</a></h3>
+<p>Zed 依靠 inotify 来监视您的文件系统变化。如果您无法启动 inotify，那么 Zed 将无法可靠工作。</p>
+<p>如果您看到 "too many open files" 错误，请先尝试 <code>sysctl fs.inotify</code>。</p>
+<ul>
+<li>您应该看到 max_user_instances 为 128 或更高（您可以使用 <code>sudo sysctl fs.inotify.max_user_instances=1024</code> 更改限制）。Zed 只需要 1 个 inotify 实例。</li>
+<li>您应该看到 <code>max_user_watches</code> 为 8000 或更高（您可以使用 <code>sudo sysctl fs.inotify.max_user_watches=64000</code> 更改限制）。Zed 需要为您所有打开项目中的每个目录 + 每个 Git 仓库 + 设置、主题、键位映射、扩展的一些附加页面各提供一个监视。</li>
+</ul>
+<p>您也可能遇到文件描述符不足的问题。您可以使用 <code>ulimit</code> 检查限制，并通过编辑 <code>/etc/security/limits.conf</code> 来更新它们。</p>
+<h3 id="no-sound-or-wrong-output-device"><a class="header" href="#no-sound-or-wrong-output-device">无声音或输出设备错误</a></h3>
+<p>如果您在 Zed 中听不到任何声音，或音频被路由到错误的设备，这可能是由于音频系统之间的不匹配导致的。Zed 依靠 ALSA，而您的系统可能使用的是 PipeWire 或 PulseAudio。要解决这个问题，您需要配置 ALSA 通过 PipeWire/PulseAudio 路由音频。</p>
+<p>如果您的系统使用 PipeWire：</p>
+<ol>
+<li>
+<p><strong>安装 PipeWire ALSA 插件</strong></p>
+<p>在基于 Debian 的系统上，运行：</p>
+<pre><code class="language-bash">sudo apt install pipewire-alsa
+</code></pre>
+</li>
+<li>
+<p><strong>配置 ALSA 使用 PipeWire</strong></p>
+<p>将以下配置添加到您的 ALSA 设置文件中。您可以使用 <code>~/.asoundrc</code>（用户级）或 <code>/etc/asound.conf</code>（系统级）：</p>
+<pre><code class="language-bash">pcm.!default {
+    type pipewire
+}
+
+ctl.!default {
+    type pipewire
+}
+</code></pre>
+</li>
+<li>
+<p><strong>重启系统</strong></p>
+</li>
+</ol>
+<h3 id="forcing-x11-scale-factor"><a class="header" href="#forcing-x11-scale-factor">强制设置 X11 缩放因子</a></h3>
+<p>在 X11 系统上，Zed 会自动检测高 DPI 显示器的适当缩放因子。缩放因子按以下优先级顺序确定：</p>
+<ol>
+<li><code>GPUI_X11_SCALE_FACTOR</code> 环境变量（如果已设置）</li>
+<li>来自 X 资源数据库 (xrdb) 的 <code>Xft.dpi</code></li>
+<li>通过 RandR 根据显示器分辨率和物理尺寸进行自动检测</li>
+</ol>
+<p>如果您想在 Zed 自动检测的基础上自定义缩放因子，您有几个选项：</p>
+<h4 id="check-your-current-scale-factor"><a class="header" href="#check-your-current-scale-factor">检查当前缩放因子</a></h4>
+<p>您可以验证是否已设置 <code>Xft.dpi</code>：</p>
+<pre><code class="language-sh">xrdb -query | grep Xft.dpi
+</code></pre>
+<p>如果此命令没有输出，则 Zed 正在使用 RandR（X11 的显示器管理扩展）根据您显示器报告的分辨率和物理尺寸自动计算缩放因子。</p>
+<h4 id="option-1-set-xftdpi-x-resources-database"><a class="header" href="#option-1-set-xftdpi-x-resources-database">选项 1：设置 Xft.dpi（X 资源数据库）</a></h4>
+<p><code>Xft.dpi</code> 是一个标准的 X11 设置，许多应用程序使用它来实现一致的字体和 UI 缩放。设置此选项可确保 Zed 与其他遵守此设置的 X11 应用程序以相同的方式缩放。</p>
+<p>编辑或创建 <code>~/.Xresources</code> 文件：</p>
+<pre><code class="language-sh">vim ~/.Xresources
+</code></pre>
+<p>添加这行及您所需的 DPI：</p>
+<pre><code class="language-sh">Xft.dpi: 96
+</code></pre>
+<p>常用 DPI 值：</p>
+<ul>
+<li><code>96</code> 用于标准 1x 缩放</li>
+<li><code>144</code> 用于 1.5x 缩放</li>
+<li><code>192</code> 用于 2x 缩放</li>
+<li><code>288</code> 用于 3x 缩放</li>
+</ul>
+<p>加载配置：</p>
+<pre><code class="language-sh">xrdb -merge ~/.Xresources
+</code></pre>
+<p>重启 Zed 使更改生效。</p>
+<h4 id="option-2-use-the-gpui_x11_scale_factor-environment-variable"><a class="header" href="#option-2-use-the-gpui_x11_scale_factor-environment-variable">选项 2：使用 GPUI_X11_SCALE_FACTOR 环境变量</a></h4>
+<p>这个 Zed 特有的环境变量直接设置缩放因子，绕过所有自动检测。</p>
+<pre><code class="language-sh">GPUI_X11_SCALE_FACTOR=1.5 zed
+</code></pre>
+<p>您可以使用小数值（例如 <code>1.25</code>、<code>1.5</code>、<code>2.0</code>）或设置 <code>GPUI_X11_SCALE_FACTOR=randr</code> 来强制使用基于 RandR 的检测，即使在设置了 <code>Xft.dpi</code> 的情况下也是如此。</p>
+<p>要使此设置永久有效，请将其添加到您的 shell 配置文件或桌面条目中。</p>
+<h4 id="option-3-adjust-system-wide-randr-dpi"><a class="header" href="#option-3-adjust-system-wide-randr-dpi">选项 3：调整系统级 RandR DPI</a></h4>
+<p>这会更改整个 X11 会话的报告 DPI，影响 RandR 为所有使用它的应用程序计算缩放的方式。</p>
+<p>将此添加到您的 <code>.xprofile</code> 或 <code>.xinitrc</code> 中：</p>
+<pre><code class="language-sh">xrandr --dpi 192
+</code></pre>
+<p>将 <code>192</code> 替换为您所需的 DPI 值。这会全局影响系统，并在未设置 <code>Xft.dpi</code> 时被 Zed 的自动 RandR 检测使用。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

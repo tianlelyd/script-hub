@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/development/local-collaboration.html",
+  "title": "Local Collaboration | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"local-collaboration\"><a class=\"header\" href=\"#local-collaboration\">Local Collaboration</a></h1>\n<ol>\n<li>\n<p>Ensure you have access to our cloud infrastructure. If you don't have access, you can't collaborate locally at this time.</p>\n</li>\n<li>\n<p>Make sure you've installed Zed's dependencies for your platform:</p>\n</li>\n</ol>\n<ul>\n<li><a href=\"#macos\">macOS</a></li>\n<li><a href=\"#linux\">Linux</a></li>\n<li><a href=\"#backend-windows\">Windows</a></li>\n</ul>\n<p>Note that <code>collab</code> can be compiled only with MSVC toolchain on Windows</p>\n<ol start=\"3\">\n<li>\n<p>Clone down our cloud repository and follow the instructions in the cloud README</p>\n</li>\n<li>\n<p>Setup the local database for your platform:</p>\n</li>\n</ol>\n<ul>\n<li><a href=\"#database-unix\">macOS &amp; Linux</a></li>\n<li><a href=\"#database-windows\">Windows</a></li>\n</ul>\n<ol start=\"5\">\n<li>Run collab:</li>\n</ol>\n<ul>\n<li><a href=\"#run-collab-unix\">macOS &amp; Linux</a></li>\n<li><a href=\"#run-collab-windows\">Windows</a></li>\n</ul>\n<h2 id=\"backend-dependencies\"><a class=\"header\" href=\"#backend-dependencies\">Backend Dependencies</a></h2>\n<p>If you are developing collaborative features of Zed, you'll need to install the dependencies of zed's <code>collab</code> server:</p>\n<ul>\n<li>PostgreSQL</li>\n<li>LiveKit</li>\n<li>Foreman</li>\n</ul>\n<p>You can install these dependencies natively or run them under Docker.</p>\n<h3 id=\"macos\"><a class=\"header\" href=\"#macos\">macOS</a></h3>\n<ol>\n<li>\n<p>Install <a href=\"https://postgresapp.com\">Postgres.app</a> or <a href=\"https://formulae.brew.sh/formula/postgresql@15\">postgresql via homebrew</a>:</p>\n<pre><code class=\"language-sh\">brew install postgresql@15\n</code></pre>\n</li>\n<li>\n<p>Install <a href=\"https://formulae.brew.sh/formula/livekit\">Livekit</a> and <a href=\"https://formulae.brew.sh/formula/foreman\">Foreman</a></p>\n<pre><code class=\"language-sh\">brew install livekit foreman\n</code></pre>\n</li>\n</ol>\n<ul>\n<li>Follow the steps in the <a href=\"https://github.com/zed-industries/zed/blob/main/crates/collab/README.md\">collab README</a> to configure the Postgres database for integration tests</li>\n</ul>\n<p>Alternatively, if you have <a href=\"https://www.docker.com/\">Docker</a> installed you can bring up all the <code>collab</code> dependencies using Docker Compose:</p>\n<h3 id=\"linux\"><a class=\"header\" href=\"#linux\">Linux</a></h3>\n<ol>\n<li>\n<p>Install <a href=\"https://www.postgresql.org/download/linux/\">Postgres</a></p>\n<pre><code class=\"language-sh\">sudo apt-get install postgresql postgresql        # Ubuntu/Debian\nsudo pacman -S postgresql                         # Arch Linux\nsudo dnf install postgresql postgresql-server     # RHEL/Fedora\nsudo zypper install postgresql postgresql-server  # OpenSUSE\n</code></pre>\n</li>\n<li>\n<p>Install <a href=\"https://github.com/livekit/livekit-cli\">Livekit</a></p>\n<pre><code class=\"language-sh\">curl -sSL https://get.livekit.io/cli | bash\n</code></pre>\n</li>\n<li>\n<p>Install <a href=\"https://theforeman.org/manuals/3.15/quickstart_guide.html\">Foreman</a></p>\n</li>\n</ol>\n<h3 id=\"backend-windows\"><a class=\"header\" href=\"#backend-windows\">Windows</a></h3>\n<blockquote>\n<p>This section is still in development. The instructions are not yet complete.</p>\n</blockquote>\n<ul>\n<li>Install <a href=\"https://www.postgresql.org/download/windows/\">Postgres</a></li>\n<li>Install <a href=\"https://github.com/livekit/livekit\">Livekit</a>, optionally you can add the <code>livekit-server</code> binary to your <code>PATH</code>.</li>\n</ul>\n<p>Alternatively, if you have <a href=\"https://www.docker.com/\">Docker</a> installed you can bring up all the <code>collab</code> dependencies using Docker Compose.</p>\n<h3 id=\"Docker\"><a class=\"header\" href=\"#Docker\">Docker</a></h3>\n<p>If you have docker or podman available, you can run the backend dependencies inside containers with Docker Compose:</p>\n<pre><code class=\"language-sh\">docker compose up -d\n</code></pre>\n<h2 id=\"database-setup\"><a class=\"header\" href=\"#database-setup\">Database setup</a></h2>\n<p>Before you can run the <code>collab</code> server locally, you'll need to set up a <code>zed</code> Postgres database.</p>\n<h3 id=\"database-unix\"><a class=\"header\" href=\"#database-unix\">On macOS and Linux</a></h3>\n<pre><code class=\"language-sh\">script/bootstrap\n</code></pre>\n<p>This script will set up the <code>zed</code> Postgres database, and populate it with some users. It requires internet access, because it fetches some users from the GitHub API.</p>\n<p>The script will seed the database with various content defined by:</p>\n<pre><code class=\"language-sh\">cat crates/collab/seed.default.json\n</code></pre>\n<p>To use a different set of admin users, you can create your own version of that json file and export the <code>SEED_PATH</code> environment variable. Note that the usernames listed in the admins list currently must correspond to valid GitHub users.</p>\n<pre><code class=\"language-json\">{\n  \"admins\": [\"admin1\", \"admin2\"],\n  \"channels\": [\"zed\"]\n}\n</code></pre>\n<h3 id=\"database-windows\"><a class=\"header\" href=\"#database-windows\">On Windows</a></h3>\n<pre><code class=\"language-powershell\">.\\script\\bootstrap.ps1\n</code></pre>\n<h2 id=\"testing-collaborative-features-locally\"><a class=\"header\" href=\"#testing-collaborative-features-locally\">Testing collaborative features locally</a></h2>\n<h3 id=\"run-collab-unix\"><a class=\"header\" href=\"#run-collab-unix\">On macOS and Linux</a></h3>\n<p>Ensure that Postgres is configured and running, then run Zed's collaboration server and the <code>livekit</code> dev server:</p>\n<pre><code class=\"language-sh\">foreman start\n# OR\ndocker compose up\n</code></pre>\n<p>Alternatively, if you're not testing voice and screenshare, you can just run <code>collab</code> and <code>cloud</code>, and not the <code>livekit</code> dev server:</p>\n<pre><code class=\"language-sh\">cargo run -p collab -- serve all\n</code></pre>\n<pre><code class=\"language-sh\">cd ../cloud; cargo make dev\n</code></pre>\n<p>In a new terminal, run two or more instances of Zed.</p>\n<pre><code class=\"language-sh\">script/zed-local -3\n</code></pre>\n<p>This script starts one to four instances of Zed, depending on the <code>-2</code>, <code>-3</code> or <code>-4</code> flags. Each instance will be connected to the local <code>collab</code> server, signed in as a different user from <code>.admins.json</code> or <code>.admins.default.json</code>.</p>\n<h3 id=\"run-collab-windows\"><a class=\"header\" href=\"#run-collab-windows\">On Windows</a></h3>\n<p>Since <code>foreman</code> is not available on Windows, you can run the following commands in separate terminals:</p>\n<pre><code class=\"language-powershell\">cargo run --package=collab -- serve all\n</code></pre>\n<p>If you have added the <code>livekit-server</code> binary to your <code>PATH</code>, you can run:</p>\n<pre><code class=\"language-powershell\">livekit-server --dev\n</code></pre>\n<p>Otherwise,</p>\n<pre><code class=\"language-powershell\">.\\path\\to\\livekit-serve.exe --dev\n</code></pre>\n<p>You'll also need to start the cloud server:</p>\n<pre><code class=\"language-powershell\">cd ..\\cloud; cargo make dev\n</code></pre>\n<p>In a new terminal, run two or more instances of Zed.</p>\n<pre><code class=\"language-powershell\">node .\\script\\zed-local -2\n</code></pre>\n<p>Note that this requires <code>node.exe</code> to be in your <code>PATH</code>.</p>\n<h2 id=\"running-a-local-collab-server\"><a class=\"header\" href=\"#running-a-local-collab-server\">Running a local collab server</a></h2>\n<blockquote>\n<p>[!NOTE]\nBecause of recent changes to our authentication system, Zed will not be able to authenticate itself with, and therefore use, a local collab server.</p>\n</blockquote>\n<p>If you want to run your own version of the zed collaboration service, you can, but note that this is still under development, and there is no support for authentication nor extensions.</p>\n<p>Configuration is done through environment variables. By default it will read the configuration from <a href=\"https://github.com/zed-industries/zed/blob/main/crates/collab/.env.toml\"><code>.env.toml</code></a> and you should use that as a guide for setting this up.</p>\n<p>By default Zed assumes that the DATABASE_URL is a Postgres database, but you can make it use Sqlite by compiling with <code>--features sqlite</code> and using a sqlite DATABASE_URL with <code>?mode=rwc</code>.</p>\n<p>To authenticate you must first configure the server by creating a seed.json file that contains at a minimum your github handle. This will be used to create the user on demand.</p>\n<pre><code class=\"language-json\">{\n  \"admins\": [\"nathansobo\"]\n}\n</code></pre>\n<p>By default the collab server will seed the database when first creating it, but if you want to add more users you can explicitly reseed them with <code>SEED_PATH=./seed.json cargo run -p collab seed</code></p>\n<p>Then when running the zed client you must specify two environment variables, <code>ZED_ADMIN_API_TOKEN</code> (which should match the value of <code>API_TOKEN</code> in .env.toml) and <code>ZED_IMPERSONATE</code> (which should match one of the users in your seed.json)</p>\n\n</main>",
+  "content_text": "Local Collaboration\n\n\nEnsure you have access to our cloud infrastructure. If you don't have access, you can't collaborate locally at this time.\n\n\nMake sure you've installed Zed's dependencies for your platform:\n\n\n\nmacOS\nLinux\nWindows\n\nNote that collab can be compiled only with MSVC toolchain on Windows\n\n\nClone down our cloud repository and follow the instructions in the cloud README\n\n\nSetup the local database for your platform:\n\n\n\nmacOS & Linux\nWindows\n\n\nRun collab:\n\n\nmacOS & Linux\nWindows\n\nBackend Dependencies\nIf you are developing collaborative features of Zed, you'll need to install the dependencies of zed's collab server:\n\nPostgreSQL\nLiveKit\nForeman\n\nYou can install these dependencies natively or run them under Docker.\nmacOS\n\n\nInstall Postgres.app or postgresql via homebrew:\nbrew install postgresql@15\n\n\n\nInstall Livekit and Foreman\nbrew install livekit foreman\n\n\n\n\nFollow the steps in the collab README to configure the Postgres database for integration tests\n\nAlternatively, if you have Docker installed you can bring up all the collab dependencies using Docker Compose:\nLinux\n\n\nInstall Postgres\nsudo apt-get install postgresql postgresql        # Ubuntu/Debian\nsudo pacman -S postgresql                         # Arch Linux\nsudo dnf install postgresql postgresql-server     # RHEL/Fedora\nsudo zypper install postgresql postgresql-server  # OpenSUSE\n\n\n\nInstall Livekit\ncurl -sSL https://get.livekit.io/cli | bash\n\n\n\nInstall Foreman\n\n\nWindows\n\nThis section is still in development. The instructions are not yet complete.\n\n\nInstall Postgres\nInstall Livekit, optionally you can add the livekit-server binary to your PATH.\n\nAlternatively, if you have Docker installed you can bring up all the collab dependencies using Docker Compose.\nDocker\nIf you have docker or podman available, you can run the backend dependencies inside containers with Docker Compose:\ndocker compose up -d\n\nDatabase setup\nBefore you can run the collab server locally, you'll need to set up a zed Postgres database.\nOn macOS and Linux\nscript/bootstrap\n\nThis script will set up the zed Postgres database, and populate it with some users. It requires internet access, because it fetches some users from the GitHub API.\nThe script will seed the database with various content defined by:\ncat crates/collab/seed.default.json\n\nTo use a different set of admin users, you can create your own version of that json file and export the SEED_PATH environment variable. Note that the usernames listed in the admins list currently must correspond to valid GitHub users.\n{\n  \"admins\": [\"admin1\", \"admin2\"],\n  \"channels\": [\"zed\"]\n}\n\nOn Windows\n.\\script\\bootstrap.ps1\n\nTesting collaborative features locally\nOn macOS and Linux\nEnsure that Postgres is configured and running, then run Zed's collaboration server and the livekit dev server:\nforeman start\n# OR\ndocker compose up\n\nAlternatively, if you're not testing voice and screenshare, you can just run collab and cloud, and not the livekit dev server:\ncargo run -p collab -- serve all\n\ncd ../cloud; cargo make dev\n\nIn a new terminal, run two or more instances of Zed.\nscript/zed-local -3\n\nThis script starts one to four instances of Zed, depending on the -2, -3 or -4 flags. Each instance will be connected to the local collab server, signed in as a different user from .admins.json or .admins.default.json.\nOn Windows\nSince foreman is not available on Windows, you can run the following commands in separate terminals:\ncargo run --package=collab -- serve all\n\nIf you have added the livekit-server binary to your PATH, you can run:\nlivekit-server --dev\n\nOtherwise,\n.\\path\\to\\livekit-serve.exe --dev\n\nYou'll also need to start the cloud server:\ncd ..\\cloud; cargo make dev\n\nIn a new terminal, run two or more instances of Zed.\nnode .\\script\\zed-local -2\n\nNote that this requires node.exe to be in your PATH.\nRunning a local collab server\n\n[!NOTE]\nBecause of recent changes to our authentication system, Zed will not be able to authenticate itself with, and therefore use, a local collab server.\n\nIf you want to run your own version of the zed collaboration service, you can, but note that this is still under development, and there is no support for authentication nor extensions.\nConfiguration is done through environment variables. By default it will read the configuration from .env.toml and you should use that as a guide for setting this up.\nBy default Zed assumes that the DATABASE_URL is a Postgres database, but you can make it use Sqlite by compiling with --features sqlite and using a sqlite DATABASE_URL with ?mode=rwc.\nTo authenticate you must first configure the server by creating a seed.json file that contains at a minimum your github handle. This will be used to create the user on demand.\n{\n  \"admins\": [\"nathansobo\"]\n}\n\nBy default the collab server will seed the database when first creating it, but if you want to add more users you can explicitly reseed them with SEED_PATH=./seed.json cargo run -p collab seed\nThen when running the zed client you must specify two environment variables, ZED_ADMIN_API_TOKEN (which should match the value of API_TOKEN in .env.toml) and ZED_IMPERSONATE (which should match one of the users in your seed.json)",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:49"
+}

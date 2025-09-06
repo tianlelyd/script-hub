@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/tools.html",
+  "title": "Tools | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"tools\"><a class=\"header\" href=\"#tools\">Tools</a></h1>\n<p>Zed's Agent has access to a variety of tools that allow it to interact with your codebase and perform tasks.</p>\n<h2 id=\"read--search-tools\"><a class=\"header\" href=\"#read--search-tools\">Read &amp; Search Tools</a></h2>\n<h3 id=\"diagnostics\"><a class=\"header\" href=\"#diagnostics\"><code>diagnostics</code></a></h3>\n<p>Gets errors and warnings for either a specific file or the entire project, useful after making edits to determine if further changes are needed.</p>\n<h3 id=\"fetch\"><a class=\"header\" href=\"#fetch\"><code>fetch</code></a></h3>\n<p>Fetches a URL and returns the content as Markdown. Useful for providing docs as context.</p>\n<h3 id=\"find_path\"><a class=\"header\" href=\"#find_path\"><code>find_path</code></a></h3>\n<p>Quickly finds files by matching glob patterns (like \"*<em>/</em>.js\"), returning matching file paths alphabetically.</p>\n<h3 id=\"grep\"><a class=\"header\" href=\"#grep\"><code>grep</code></a></h3>\n<p>Searches file contents across the project using regular expressions, preferred for finding symbols in code without knowing exact file paths.</p>\n<h3 id=\"list_directory\"><a class=\"header\" href=\"#list_directory\"><code>list_directory</code></a></h3>\n<p>Lists files and directories in a given path, providing an overview of filesystem contents.</p>\n<h3 id=\"now\"><a class=\"header\" href=\"#now\"><code>now</code></a></h3>\n<p>Returns the current date and time.</p>\n<h3 id=\"open\"><a class=\"header\" href=\"#open\"><code>open</code></a></h3>\n<p>Opens a file or URL with the default application associated with it on the user's operating system.</p>\n<h3 id=\"read_file\"><a class=\"header\" href=\"#read_file\"><code>read_file</code></a></h3>\n<p>Reads the content of a specified file in the project, allowing access to file contents.</p>\n<h3 id=\"thinking\"><a class=\"header\" href=\"#thinking\"><code>thinking</code></a></h3>\n<p>Allows the Agent to work through problems, brainstorm ideas, or plan without executing actions, useful for complex problem-solving.</p>\n<h3 id=\"web_search\"><a class=\"header\" href=\"#web_search\"><code>web_search</code></a></h3>\n<p>Searches the web for information, providing results with snippets and links from relevant web pages, useful for accessing real-time information.</p>\n<h2 id=\"edit-tools\"><a class=\"header\" href=\"#edit-tools\">Edit Tools</a></h2>\n<h3 id=\"copy_path\"><a class=\"header\" href=\"#copy_path\"><code>copy_path</code></a></h3>\n<p>Copies a file or directory recursively in the project, more efficient than manually reading and writing files when duplicating content.</p>\n<h3 id=\"create_directory\"><a class=\"header\" href=\"#create_directory\"><code>create_directory</code></a></h3>\n<p>Creates a new directory at the specified path within the project, creating all necessary parent directories (similar to <code>mkdir -p</code>).</p>\n<h3 id=\"create_file\"><a class=\"header\" href=\"#create_file\"><code>create_file</code></a></h3>\n<p>Creates a new file at a specified path with given text content, the most efficient way to create new files or completely replace existing ones.</p>\n<h3 id=\"delete_path\"><a class=\"header\" href=\"#delete_path\"><code>delete_path</code></a></h3>\n<p>Deletes a file or directory (including contents recursively) at the specified path and confirms the deletion.</p>\n<h3 id=\"edit_file\"><a class=\"header\" href=\"#edit_file\"><code>edit_file</code></a></h3>\n<p>Edits files by replacing specific text with new content.</p>\n<h3 id=\"move_path\"><a class=\"header\" href=\"#move_path\"><code>move_path</code></a></h3>\n<p>Moves or renames a file or directory in the project, performing a rename if only the filename differs.</p>\n<h3 id=\"terminal\"><a class=\"header\" href=\"#terminal\"><code>terminal</code></a></h3>\n<p>Executes shell commands and returns the combined output, creating a new shell process for each invocation.</p>\n\n</main>",
+  "content_text": "Tools\nZed's Agent has access to a variety of tools that allow it to interact with your codebase and perform tasks.\nRead & Search Tools\ndiagnostics\nGets errors and warnings for either a specific file or the entire project, useful after making edits to determine if further changes are needed.\nfetch\nFetches a URL and returns the content as Markdown. Useful for providing docs as context.\nfind_path\nQuickly finds files by matching glob patterns (like \"*/.js\"), returning matching file paths alphabetically.\ngrep\nSearches file contents across the project using regular expressions, preferred for finding symbols in code without knowing exact file paths.\nlist_directory\nLists files and directories in a given path, providing an overview of filesystem contents.\nnow\nReturns the current date and time.\nopen\nOpens a file or URL with the default application associated with it on the user's operating system.\nread_file\nReads the content of a specified file in the project, allowing access to file contents.\nthinking\nAllows the Agent to work through problems, brainstorm ideas, or plan without executing actions, useful for complex problem-solving.\nweb_search\nSearches the web for information, providing results with snippets and links from relevant web pages, useful for accessing real-time information.\nEdit Tools\ncopy_path\nCopies a file or directory recursively in the project, more efficient than manually reading and writing files when duplicating content.\ncreate_directory\nCreates a new directory at the specified path within the project, creating all necessary parent directories (similar to mkdir -p).\ncreate_file\nCreates a new file at a specified path with given text content, the most efficient way to create new files or completely replace existing ones.\ndelete_path\nDeletes a file or directory (including contents recursively) at the specified path and confirms the deletion.\nedit_file\nEdits files by replacing specific text with new content.\nmove_path\nMoves or renames a file or directory in the project, performing a rename if only the filename differs.\nterminal\nExecutes shell commands and returns the combined output, creating a new shell process for each invocation.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:07"
+}

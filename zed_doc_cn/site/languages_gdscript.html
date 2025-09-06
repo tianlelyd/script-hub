@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>GDScript | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#gdscript" class="pagetoc-H1">GDScript</a>
+<a href="#setup" class="pagetoc-H2">Setup</a>
+<a href="#usage" class="pagetoc-H2">Usage</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="gdscript"><a class="header" href="#gdscript">GDScript</a></h1>
+<p>Godot <a href="https://gdscript.com/">GDScript</a> language support in Zed is provided by the community-maintained <a href="https://github.com/grndctrl/zed-gdscript">GDScript extension</a>.
+Report issues to: <a href="https://github.com/grndctrl/zed-gdscript/issues">https://github.com/grndctrl/zed-gdscript/issues</a></p>
+<ul>
+<li>Tree-sitter: <a href="https://github.com/PrestonKnopp/tree-sitter-gdscript">PrestonKnopp/tree-sitter-gdscript</a> and <a href="https://github.com/PrestonKnopp/tree-sitter-godot-resource">PrestonKnopp/tree-sitter-godot-resource</a></li>
+<li>Language Server: <a href="https://github.com/godotengine/godot">gdscript-language-server</a></li>
+</ul>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<ol>
+<li>Download and install <a href="https://godotengine.org/download/macos/">Godot for MacOS</a>.</li>
+<li>Unzip the Godot.app and drag it into your /Applications folder.</li>
+<li>Open Godot.app and open your project (an example project is fine)</li>
+<li>In Godot, Editor Menu -&gt; Editor Settings; scroll down the left sidebar to <code>Text Editor -&gt; External</code>
+<ol>
+<li>Use External Editor: "✅ On"</li>
+<li>Exec path: <code>/Applications/Zed.app/Contents/MacOS/zed</code></li>
+<li>Exec flags: <code>{project} {file}:{line}:{col}</code></li>
+<li>Close settings to save.</li>
+</ol>
+</li>
+<li>In Godot double click on a *.gd script and Zed will launch</li>
+</ol>
+<!--
+TBD: GDScript Linux setup
+-->
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>When Godot is running, the GDScript extension will connect to the language server provided by the Godot runtime and will provide <code>jump to definition</code>, hover states when you hold cmd and other language server features.</p>
+<blockquote>
+<p>Note: If Zed is already running with an existing workspace, spawning from Godot will fail. Quit Zed and it should work again.</p>
+</blockquote>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

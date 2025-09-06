@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Vim Mode | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="active">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#vim-mode" class="pagetoc-H1">Vim 模式</a>
+<a href="#zeds-vim-mode-design" class="pagetoc-H2">Zed 的 vim 模式设计</a>
+<a href="#core-differences" class="pagetoc-H3">核心区别</a>
+<a href="#enabling-and-disabling-vim-mode" class="pagetoc-H2">启用和禁用 vim 模式</a>
+<a href="#zed-specific-features" class="pagetoc-H2">Zed 特定功能</a>
+<a href="#language-server" class="pagetoc-H3">语言服务器</a>
+<a href="#git" class="pagetoc-H3">Git</a>
+<a href="#treesitter" class="pagetoc-H3">Treesitter</a>
+<a href="#multi-cursor" class="pagetoc-H3">多光标</a>
+<a href="#pane-management" class="pagetoc-H3">面板管理</a>
+<a href="#in-insert-mode" class="pagetoc-H3">在插入模式中</a>
+<a href="#supported-plugins" class="pagetoc-H3">支持的插件</a>
+<a href="#any-bracket-functionality" class="pagetoc-H3">Any Bracket 功能</a>
+<a href="#command-palette" class="pagetoc-H2">命令面板</a>
+<a href="#file-and-window-management" class="pagetoc-H3">文件和窗口管理</a>
+<a href="#ex-commands" class="pagetoc-H3">Ex 命令</a>
+<a href="#navigating-diagnostics" class="pagetoc-H3">导航诊断</a>
+<a href="#git-1" class="pagetoc-H3">Git</a>
+<a href="#jump" class="pagetoc-H3">跳转</a>
+<a href="#replacement" class="pagetoc-H3">替换</a>
+<a href="#editing" class="pagetoc-H3">编辑</a>
+<a href="#set" class="pagetoc-H3">设置</a>
+<a href="#command-mnemonics" class="pagetoc-H3">命令助记符</a>
+<a href="#customizing-key-bindings" class="pagetoc-H2">自定义快捷键绑定</a>
+<a href="#selecting-the-correct-context" class="pagetoc-H3">选择正确的上下文</a>
+<a href="#useful-contexts-for-vim-mode-key-bindings" class="pagetoc-H3">vim 模式快捷键绑定的有用上下文</a>
+<a href="#optional-key-bindings" class="pagetoc-H3">可选快捷键绑定</a>
+<a href="#restoring-common-text-editing-keybindings" class="pagetoc-H3">恢复常用文本编辑快捷键</a>
+<a href="#changing-vim-mode-settings" class="pagetoc-H2">更改 vim 模式设置</a>
+<a href="#useful-core-zed-settings-for-vim-mode" class="pagetoc-H2">适用于 vim 模式的有用核心 Zed 设置</a>
+<a href="#regex-differences" class="pagetoc-H2">正则表达式差异</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="vim-mode"><a class="header" href="#vim-mode">Vim 模式</a></h1>
+<p>Zed 包含一个被称为"vim 模式"的 Vim 仿真层。在本页中，您将学习如何开启或关闭 Zed 的 vim 模式，了解 Zed 提供的工具和命令来帮助您导航和编辑代码，以及如何充分利用 Zed 中的 vim 模式。</p>
+<p>您将学会如何：</p>
+<ul>
+<li>了解 Zed 的 vim 模式与传统 Vim 的核心区别</li>
+<li>启用或禁用 vim 模式</li>
+<li>在 vim 模式中充分利用 Zed 的特定功能</li>
+<li>自定义 vim 模式快捷键绑定</li>
+<li>配置 vim 模式设置</li>
+</ul>
+<p>无论您是 vim 模式的新手，还是希望优化 Zed 体验的经验丰富的 Vim 用户，本指南都将帮助您充分利用 Zed 中模式化编辑的全部功能。</p>
+<h2 id="zeds-vim-mode-design"><a class="header" href="#zeds-vim-mode-design">Zed 的 vim 模式设计</a></h2>
+<p>Vim 模式尝试为 Vim 用户提供熟悉的体验：当有意义时，它会精确复制动作和命令的行为，并使用 Zed 特有的功能来提供"即开即用"的编辑体验，而无需您进行配置。</p>
+<p>这包括对语义导航、多光标或其他通常由插件提供的功能（如环绕文本）的支持。</p>
+<p>因此，Zed 的 vim 模式并不完全复制 Vim，而是将 Vim 的模式化设计与 Zed 的现代功能相结合，提供更流畅的体验。它也是可配置的，所以您可以添加自己的快捷键绑定或覆盖默认设置。</p>
+<h3 id="core-differences"><a class="header" href="#core-differences">核心区别</a></h3>
+<p>vim 模式中有四种类型的功能使用 Zed 的核心功能，这导致了一些行为上的差异：</p>
+<ol>
+<li><strong>动作</strong>：vim 模式使用 Zed 的语义解析来调整每种语言的动作行为。例如，在 Rust 中，使用 <code>%</code> 跳转到匹配括号时也适用于管道字符 <code>|</code>。在 JavaScript 中，<code>w</code> 将 <code>$</code> 视为单词字符。</li>
+<li><strong>可视块选择</strong>：vim 模式使用 Zed 的多光标功能来模拟可视块选择，使块选择更加灵活。例如，在块选择后插入的任何内容都会在每一行实时更新，您可以随时添加或删除光标。</li>
+<li><strong>宏</strong>：vim 模式使用 Zed 的录制系统来实现 vim 宏功能。因此，您可以捕获和重放更复杂的操作，比如自动完成。</li>
+<li><strong>搜索和替换</strong>：vim 模式使用 Zed 的搜索系统，因此正则表达式的语法与 Vim 相比略有不同。<a href="#regex-differences">请查看正则表达式差异部分</a>了解详情。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong>Zed 的 vim 模式基础功能应该已经覆盖了许多使用场景，我们一直在寻求改进。如果您发现工作流程中依赖的功能缺失，请<a href="https://github.com/zed-industries/zed/issues">在 GitHub 上提交问题</a>。</p>
+</blockquote>
+<h2 id="enabling-and-disabling-vim-mode"><a class="header" href="#enabling-and-disabling-vim-mode">启用和禁用 vim 模式</a></h2>
+<p>当您首次打开 Zed 时，您会在欢迎屏幕上看到一个复选框，允许您启用 vim 模式。</p>
+<p>如果您错过了这个选项，您可以随时通过打开命令面板并使用工作区命令 <code>toggle vim mode</code> 来开启或关闭 vim 模式。</p>
+<blockquote>
+<p><strong>注意</strong>：此命令会在您的用户设置中切换以下属性：</p>
+<pre><code class="language-json">{
+  "vim_mode": true
+}
+</code></pre>
+</blockquote>
+<h2 id="zed-specific-features"><a class="header" href="#zed-specific-features">Zed 特定功能</a></h2>
+<p>Zed 构建在现代基础之上，（除其他功能外）使用 tree-sitter 和语言服务器来理解您正在编辑的文件内容，并内置支持多光标功能。</p>
+<p>Vim 模式有几个"核心 Zed"快捷键绑定，可以帮助您充分利用 Zed 的特定功能集。</p>
+<h3 id="language-server"><a class="header" href="#language-server">语言服务器</a></h3>
+<p>以下命令使用语言服务器来帮助您导航和重构代码。</p>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>转到定义</td><td><code>g d</code></td></tr>
+<tr><td>转到声明</td><td><code>g D</code></td></tr>
+<tr><td>转到类型定义</td><td><code>g y</code></td></tr>
+<tr><td>转到实现</td><td><code>g I</code></td></tr>
+<tr><td>重命名（更改定义）</td><td><code>c d</code></td></tr>
+<tr><td>转到当前单词的所有引用</td><td><code>g A</code></td></tr>
+<tr><td>在当前文件中查找符号</td><td><code>g s</code></td></tr>
+<tr><td>在整个项目中查找符号</td><td><code>g S</code></td></tr>
+<tr><td>转到下一个诊断</td><td><code>g ]</code> 或 <code>] d</code></td></tr>
+<tr><td>转到上一个诊断</td><td><code>g [</code> 或 <code>[ d</code></td></tr>
+<tr><td>显示内联错误（悬停）</td><td><code>g h</code></td></tr>
+<tr><td>打开代码操作菜单</td><td><code>g .</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="git"><a class="header" href="#git">Git</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>转到下一个 Git 更改</td><td><code>] c</code></td></tr>
+<tr><td>转到上一个 Git 更改</td><td><code>[ c</code></td></tr>
+<tr><td>展开差异块</td><td><code>d o</code></td></tr>
+<tr><td>切换暂存状态</td><td><code>d O</code></td></tr>
+<tr><td>暂存并转到下一个（在差异视图中）</td><td><code>d u</code></td></tr>
+<tr><td>取消暂存并转到下一个（在差异视图中）</td><td><code>d U</code></td></tr>
+<tr><td>恢复更改</td><td><code>d p</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="treesitter"><a class="header" href="#treesitter">Treesitter</a></h3>
+<p>Treesitter 是 Zed 用于理解代码结构的强大工具。Zed 提供了改变当前光标位置的动作和可用作操作目标的文本对象。</p>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>转到下一个/上一个方法</td><td><code>] m</code> / <code>[ m</code></td></tr>
+<tr><td>转到下一个/上一个方法结尾</td><td><code>] M</code> / <code>[ M</code></td></tr>
+<tr><td>转到下一个/上一个节</td><td><code>] ]</code> / <code>[ [</code></td></tr>
+<tr><td>转到下一个/上一个节结尾</td><td><code>] [</code> / <code>[ ]</code></td></tr>
+<tr><td>转到下一个/上一个注释</td><td><code>] /</code>, <code>] *</code> / <code>[ /</code>, <code>[ *</code></td></tr>
+<tr><td>选择更大的语法节点</td><td><code>[ x</code></td></tr>
+<tr><td>选择更小的语法节点</td><td><code>] x</code></td></tr>
+</tbody></table>
+</div><div class="table-wrapper"><table><thead><tr><th>文本对象</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>类、定义等的外围</td><td><code>a c</code></td></tr>
+<tr><td>类、定义等的内部</td><td><code>i c</code></td></tr>
+<tr><td>函数、方法等的外围</td><td><code>a f</code></td></tr>
+<tr><td>函数、方法等的内部</td><td><code>i f</code></td></tr>
+<tr><td>一个注释</td><td><code>g c</code></td></tr>
+<tr><td>一个参数或列表项等</td><td><code>i a</code></td></tr>
+<tr><td>一个参数或列表项等（包括尾随逗号）</td><td><code>a a</code></td></tr>
+<tr><td>类似 HTML 标签的外围</td><td><code>a t</code></td></tr>
+<tr><td>类似 HTML 标签的内部</td><td><code>i t</code></td></tr>
+<tr><td>当前缩进级别，以及前后各一行</td><td><code>a I</code></td></tr>
+<tr><td>当前缩进级别，以及前一行</td><td><code>a i</code></td></tr>
+<tr><td>当前缩进级别</td><td><code>i i</code></td></tr>
+</tbody></table>
+</div>
+<p>请注意，<code>[m</code> 系列动作目标的定义与 <code>af</code> 定义的边界相同。<code>[[</code> 的目标与 <code>ac</code> 定义的目标相同，但如果没有类，则也会使用函数。类似地，<code>gc</code> 用于查找 <code>[ /</code>。<code>g c</code></p>
+<p>函数、类和注释的定义依赖于语言，可以通过添加 [<code>textobjects.scm</code>] 向扩展添加支持。参数和标签的定义在 tree-sitter 级别上操作，但会在解析树中查找特定模式，目前不能按语言配置。</p>
+<h3 id="multi-cursor"><a class="header" href="#multi-cursor">多光标</a></h3>
+<p>这些命令帮助您在 Zed 中管理多个光标。</p>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>添加选中当前单词下一个副本的光标</td><td><code>g l</code></td></tr>
+<tr><td>添加选中当前单词上一个副本的光标</td><td><code>g L</code></td></tr>
+<tr><td>跳过最新的单词选择，并添加下一个</td><td><code>g &gt;</code></td></tr>
+<tr><td>跳过最新的单词选择，并添加上一个</td><td><code>g &lt;</code></td></tr>
+<tr><td>为当前单词的每个副本添加可视选择</td><td><code>g a</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="pane-management"><a class="header" href="#pane-management">面板管理</a></h3>
+<p>这些命令打开新面板或跳转到特定面板。</p>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>打开项目全局搜索</td><td><code>g /</code></td></tr>
+<tr><td>打开当前搜索摘录</td><td><code>g &lt;space&gt;</code></td></tr>
+<tr><td>在分割中打开当前搜索摘录</td><td><code>&lt;ctrl-w&gt; &lt;space&gt;</code></td></tr>
+<tr><td>在分割中转到定义</td><td><code>&lt;ctrl-w&gt; g d</code></td></tr>
+<tr><td>在分割中转到类型定义</td><td><code>&lt;ctrl-w&gt; g D</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="in-insert-mode"><a class="header" href="#in-insert-mode">在插入模式中</a></h3>
+<p>以下命令帮助您在不离开插入模式的情况下调出 Zed 的完成菜单、请求 GitHub Copilot 建议或打开内联 AI 助手。</p>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>默认快捷键</th></tr></thead><tbody>
+<tr><td>打开完成菜单</td><td><code>ctrl-x ctrl-o</code></td></tr>
+<tr><td>请求 GitHub Copilot 建议（需要配置 GitHub Copilot）</td><td><code>ctrl-x ctrl-c</code></td></tr>
+<tr><td>打开内联 AI 助手（需要配置助手）</td><td><code>ctrl-x ctrl-a</code></td></tr>
+<tr><td>打开代码操作菜单</td><td><code>ctrl-x ctrl-l</code></td></tr>
+<tr><td>隐藏所有建议</td><td><code>ctrl-x ctrl-z</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="supported-plugins"><a class="header" href="#supported-plugins">支持的插件</a></h3>
+<p>Zed 的 vim 模式包含了一些通常由 Vim 生态系统中非常流行的插件提供的功能：</p>
+<ul>
+<li>您可以使用 <code>ys</code>（yank surround）围绕文本对象，使用 <code>cs</code> 更改围绕符，使用 <code>ds</code> 删除围绕符。</li>
+<li>您可以在可视模式中使用 <code>gc</code> 或在普通模式中使用 <code>gcc</code> 来注释和取消注释选中内容。</li>
+<li>项目面板支持许多以 Vim 插件 <code>netrw</code> 为模型的快捷键：使用 <code>hjkl</code> 导航，使用 <code>o</code> 打开文件，使用 <code>t</code> 在新标签中打开文件等。</li>
+<li>您可以在键位映射中添加快捷键绑定来导航“camelCase”名称。<a href="#optional-key-bindings">查看可选快捷键绑定</a>部分了解如何操作。</li>
+<li>您可以使用 <code>gR</code> 来执行 <a href="https://github.com/vim-scripts/ReplaceWithRegister">ReplaceWithRegister</a> 功能。</li>
+<li>您可以使用 <code>cx</code> 实现 <a href="https://github.com/tommcdo/vim-exchange">vim-exchange</a> 功能。请注意，它在可视模式中没有默认绑定，但您可以在键位映射中添加一个（参考<a href="#optional-key-bindings">可选快捷键绑定</a>部分）。</li>
+<li>您可以使用 <a href="https://github.com/jeetsukumaran/vim-indentwise">indent wise</a> 插件的 <code>[-</code>, <code>]-</code>, <code>[+</code>, <code>]+</code>, <code>[=</code>, <code>]=</code> 导航到相对于您光标的缩进深度。</li>
+<li>您可以使用 AnyQuotes 选择引用文本，使用 AnyBrackets 文本对象选择括号文本。Zed 还提供了 MiniQuotes 和 MiniBrackets，它们基于 <a href="https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-ai.md">mini.ai</a> Neovim 插件提供替代选择行为。有关详细信息，请参阅下面的<a href="#quote-and-bracket-text-objects">引号和括号文本对象</a>部分。</li>
+<li>您可以配置 AnyQuotes、AnyBrackets、MiniQuotes 和 MiniBrackets 文本对象，使用不同的选择策略来选择引号和括号文本。有关详细信息，请参阅下面的 <a href="#any-bracket-functionality">Any Bracket 功能</a>部分。</li>
+</ul>
+<h3 id="any-bracket-functionality"><a class="header" href="#any-bracket-functionality">Any Bracket 功能</a></h3>
+<p>Zed 提供两种不同的策略来选择被任何引号或任何括号包围的文本。这些文本对象<strong>默认情况下未启用</strong>，必须在您的键位映射中配置才能使用。</p>
+<h4 id="included-characters"><a class="header" href="#included-characters">包含的字符</a></h4>
+<p>每种文本对象类型都使用特定的字符：</p>
+<div class="table-wrapper"><table><thead><tr><th>文本对象</th><th>字符</th></tr></thead><tbody>
+<tr><td>AnyQuotes/MiniQuotes</td><td>单引号 (<code>'</code>)、双引号 (<code>"</code>)、反引号 (<code>`</code>)</td></tr>
+<tr><td>AnyBrackets/MiniBrackets</td><td>圆括号 (<code>()</code>)、方括号 (<code>[]</code>)、花括号 (<code>{}</code>)、尖括号 (<code>&lt;&gt;</code>)</td></tr>
+</tbody></table>
+</div>
+<p>“Any” 和 “Mini” 变体都使用相同的字符集，但在选择策略上有所不同。</p>
+<h4 id="anyquotes-and-anybrackets-traditional-vim-behavior"><a class="header" href="#anyquotes-and-anybrackets-traditional-vim-behavior">AnyQuotes 和 AnyBrackets（传统 Vim 行为）</a></h4>
+<p>这些文本对象实现了传统的 Vim 行为：</p>
+<ul>
+<li><strong>选择优先级</strong>：首先查找最内层（最近的）引号或括号</li>
+<li><strong>回退机制</strong>：如果找不到，则回退到当前行</li>
+<li><strong>基于字符的匹配</strong>：仅专注于开闭字符，不考虑语法</li>
+<li><strong>原生 Vim 相似性</strong>：在原生 Vim 中，AnyBrackets 匹配像 <code>ci&lt;</code>、<code>ci(</code> 等命令的行为，包括潜在的边缘情况（如将 <code>=&gt;</code> 中的 <code>&gt;</code> 视为闭合分隔符）</li>
+</ul>
+<h4 id="miniquotes-and-minibrackets-miniai-behavior"><a class="header" href="#miniquotes-and-minibrackets-miniai-behavior">MiniQuotes 和 MiniBrackets（mini.ai 行为）</a></h4>
+<p>这些文本对象实现了 <a href="https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-ai.md">mini.ai</a> Neovim 插件的行为：</p>
+<ul>
+<li><strong>选择优先级</strong>：在向外扩展之前首先搜索当前行</li>
+<li><strong>Tree-sitter 集成</strong>：使用 Tree-sitter 查询进行更具上下文意识的选择</li>
+<li><strong>语法感知匹配</strong>：可以区分实际括号和其他上下文中的相似字符（如 <code>=&gt;</code> 中的 <code>&gt;</code>）</li>
+</ul>
+<h4 id="choosing-between-approaches"><a class="header" href="#choosing-between-approaches">在方法之间选择</a></h4>
+<ul>
+<li>
+<p>Use <strong>AnyQuotes/AnyBrackets</strong> if you:</p>
+<ul>
+<li>Prefer traditional Vim behavior</li>
+<li>Want consistent character-based selection prioritizing innermost delimiters</li>
+<li>Need behavior that closely matches vanilla Vim's text objects</li>
+</ul>
+</li>
+<li>
+<p>Use <strong>MiniQuotes/MiniBrackets</strong> if you:</p>
+<ul>
+<li>Prefer the mini.ai plugin behavior</li>
+<li>Want more context-aware selections using Tree-sitter</li>
+<li>Prefer current-line priority when searching</li>
+</ul>
+</li>
+</ul>
+<h4 id="example-configuration"><a class="header" href="#example-configuration">示例配置</a></h4>
+<p>To use these text objects, you need to add bindings to your keymap. Here's an example configuration that makes them available when using text object operators (<code>i</code> and <code>a</code>) or change-surrounds (<code>cs</code>):</p>
+<pre><code class="language-json">{
+  "context": "vim_operator == a || vim_operator == i || vim_operator == cs",
+  "bindings": {
+    // Traditional Vim behavior
+    "q": "vim::AnyQuotes",
+    "b": "vim::AnyBrackets",
+
+    // mini.ai plugin behavior
+    "Q": "vim::MiniQuotes",
+    "B": "vim::MiniBrackets"
+  }
+}
+</code></pre>
+<p>With this configuration, you can use commands like:</p>
+<ul>
+<li><code>cib</code> - Change inside brackets using AnyBrackets behavior</li>
+<li><code>cim</code> - Change inside brackets using MiniBrackets behavior</li>
+<li><code>ciq</code> - Change inside quotes using AnyQuotes behavior</li>
+<li><code>ciM</code> - Change inside quotes using MiniQuotes behavior</li>
+</ul>
+<h2 id="command-palette"><a class="header" href="#command-palette">命令面板</a></h2>
+<p>Vim mode allows you to open Zed's command palette with <code>:</code>. You can then type to access any usual Zed command. Additionally, vim mode adds aliases for popular Vim commands to ensure your muscle memory transfers to Zed. For example, you can write <code>:w</code> or <code>:write</code> to save the file.</p>
+<p>Below, you'll find tables listing the commands you can use in the command palette. We put optional characters in square brackets to indicate that you can omit them.</p>
+<blockquote>
+<p><strong>Note</strong>: We don't emulate the full power of Vim's command line yet. In particular, commands currently do not support arguments. Please <a href="https://github.com/zed-industries/zed">file issues on GitHub</a> as you find things that are missing from the command palette.</p>
+</blockquote>
+<h3 id="file-and-window-management"><a class="header" href="#file-and-window-management">文件和窗口管理</a></h3>
+<p>This table shows commands for managing windows, tabs, and panes. As commands don't support arguments currently, you cannot specify a filename when saving or creating a new file.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:w[rite][!]</code></td><td>Save the current file</td></tr>
+<tr><td><code>:wq[!]</code></td><td>Save the file and close the buffer</td></tr>
+<tr><td><code>:q[uit][!]</code></td><td>Close the buffer</td></tr>
+<tr><td><code>:wa[ll][!]</code></td><td>Save all open files</td></tr>
+<tr><td><code>:wqa[ll][!]</code></td><td>Save all open files and close all buffers</td></tr>
+<tr><td><code>:qa[ll][!]</code></td><td>Close all buffers</td></tr>
+<tr><td><code>:[e]x[it][!]</code></td><td>Close the buffer</td></tr>
+<tr><td><code>:up[date]</code></td><td>Save the current file</td></tr>
+<tr><td><code>:cq</code></td><td>Quit completely (close all running instances of Zed)</td></tr>
+<tr><td><code>:vs[plit]</code></td><td>Split the pane vertically</td></tr>
+<tr><td><code>:sp[lit]</code></td><td>Split the pane horizontally</td></tr>
+<tr><td><code>:new</code></td><td>Create a new file in a horizontal split</td></tr>
+<tr><td><code>:vne[w]</code></td><td>Create a new file in a vertical split</td></tr>
+<tr><td><code>:tabedit</code></td><td>Create a new file in a new tab</td></tr>
+<tr><td><code>:tabnew</code></td><td>Create a new file in a new tab</td></tr>
+<tr><td><code>:tabn[ext]</code></td><td>Go to the next tab</td></tr>
+<tr><td><code>:tabp[rev]</code></td><td>Go to previous tab</td></tr>
+<tr><td><code>:tabc[lose]</code></td><td>Close the current tab</td></tr>
+<tr><td><code>:ls</code></td><td>Show all buffers</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note:</strong> The <code>!</code> character is used to force the command to execute without saving changes or prompting before overwriting a file.</p>
+</blockquote>
+<h3 id="ex-commands"><a class="header" href="#ex-commands">Ex 命令</a></h3>
+<p>These ex commands open Zed's various panels and windows.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Default Shortcut</th></tr></thead><tbody>
+<tr><td>Open the project panel</td><td><code>:E[xplore]</code></td></tr>
+<tr><td>Open the collaboration panel</td><td><code>:C[ollab]</code></td></tr>
+<tr><td>Open the chat panel</td><td><code>:Ch[at]</code></td></tr>
+<tr><td>Open the AI panel</td><td><code>:A[I]</code></td></tr>
+<tr><td>Open the git panel</td><td><code>:G[it]</code></td></tr>
+<tr><td>Open the debug panel</td><td><code>:D[ebug]</code></td></tr>
+<tr><td>Open the notifications panel</td><td><code>:No[tif]</code></td></tr>
+<tr><td>Open the feedback window</td><td><code>:fe[edback]</code></td></tr>
+<tr><td>Open the diagnostics window</td><td><code>:cl[ist]</code></td></tr>
+<tr><td>Open the terminal</td><td><code>:te[rm]</code></td></tr>
+<tr><td>Open the extensions window</td><td><code>:Ext[ensions]</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="navigating-diagnostics"><a class="header" href="#navigating-diagnostics">导航诊断</a></h3>
+<p>These commands navigate diagnostics.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:cn[ext]</code> or <code>:ln[ext]</code></td><td>Go to the next diagnostic</td></tr>
+<tr><td><code>:cp[rev]</code> or <code>:lp[rev]</code></td><td>Go to the previous diagnostics</td></tr>
+<tr><td><code>:cc</code> or <code>:ll</code></td><td>Open the errors page</td></tr>
+</tbody></table>
+</div>
+<h3 id="git-1"><a class="header" href="#git-1">Git</a></h3>
+<p>These commands interact with the version control system git.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:dif[fupdate]</code></td><td>View the diff under the cursor (<code>d o</code> in normal mode)</td></tr>
+<tr><td><code>:rev[ert]</code></td><td>Revert the diff under the cursor (<code>d p</code> in normal mode)</td></tr>
+</tbody></table>
+</div>
+<h3 id="jump"><a class="header" href="#jump">跳转</a></h3>
+<p>These commands jump to specific positions in the file.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:&lt;number&gt;</code></td><td>Jump to a line number</td></tr>
+<tr><td><code>:$</code></td><td>Jump to the end of the file</td></tr>
+<tr><td><code>:/foo</code> and <code>:?foo</code></td><td>Jump to next/prev line matching foo</td></tr>
+</tbody></table>
+</div>
+<h3 id="replacement"><a class="header" href="#replacement">替换</a></h3>
+<p>This command replaces text. It emulates the substitute command in vim. The substitute command uses regular expressions, and Zed uses a slightly different syntax than vim. You can learn more about Zed's syntax below, <a href="#regex-differences">in the regex differences section</a>. Zed will replace only the first occurrence of the search pattern in the current line. To replace all matches append the <code>g</code> flag.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:[range]s/foo/bar/[g]</code></td><td>Replace instances of foo with bar</td></tr>
+</tbody></table>
+</div>
+<h3 id="editing"><a class="header" href="#editing">编辑</a></h3>
+<p>These commands help you edit text.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:j[oin]</code></td><td>Join the current line</td></tr>
+<tr><td><code>:d[elete][l][p]</code></td><td>Delete the current line</td></tr>
+<tr><td><code>:s[ort] [i]</code></td><td>Sort the current selection (with i, case-insensitively)</td></tr>
+<tr><td><code>:y[ank]</code></td><td>Yank (copy) the current selection or line</td></tr>
+</tbody></table>
+</div>
+<h3 id="set"><a class="header" href="#set">设置</a></h3>
+<p>These commands modify editor options locally for the current buffer.</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>:se[t] [no]wrap</code></td><td>Lines longer than the width of the window will wrap and displaying continues on the next line</td></tr>
+<tr><td><code>:se[t] [no]nu[mber]</code></td><td>Print the line number in front of each line</td></tr>
+<tr><td><code>:se[t] [no]r[elative]nu[mber]</code></td><td>Changes the displayed number to be relative to the cursor</td></tr>
+</tbody></table>
+</div>
+<h3 id="command-mnemonics"><a class="header" href="#command-mnemonics">命令助记符</a></h3>
+<p>As any Zed command is available, you may find that it's helpful to remember mnemonics that run the correct command. For example:</p>
+<ul>
+<li><code>:diffs</code> for "toggle all hunk diffs"</li>
+<li><code>:cpp</code> for "copy path to file"</li>
+<li><code>:crp</code> for "copy relative path"</li>
+<li><code>:reveal</code> for "reveal in finder"</li>
+<li><code>:zlog</code> for "open zed log"</li>
+<li><code>:clank</code> for "cancel language server work"</li>
+</ul>
+<h2 id="customizing-key-bindings"><a class="header" href="#customizing-key-bindings">自定义快捷键绑定</a></h2>
+<p>In this section, we'll learn how to customize the key bindings of Zed's vim mode. You'll learn:</p>
+<ul>
+<li>How to select the correct context for your new key bindings.</li>
+<li>Useful contexts for vim mode key bindings.</li>
+<li>Common key bindings to customize for extra productivity.</li>
+</ul>
+<h3 id="selecting-the-correct-context"><a class="header" href="#selecting-the-correct-context">选择正确的上下文</a></h3>
+<p>Zed's key bindings are evaluated only when the <code>"context"</code> property matches your location in the editor. For example, if you add key bindings to the <code>"Editor"</code> context, they will only work when you're editing a file. If you add key bindings to the <code>"Workspace"</code> context, they will work everywhere in Zed. Here's an example of a key binding that saves when you're editing a file:</p>
+<pre><code class="language-json">{
+  "context": "Editor",
+  "bindings": {
+    "ctrl-s": "file::Save"
+  }
+}
+</code></pre>
+<p>Contexts are nested, so when you're editing a file, the context is the <code>"Editor"</code> context, which is inside the <code>"Pane"</code> context, which is inside the <code>"Workspace"</code> context. That's why any key bindings you add to the <code>"Workspace"</code> context will work when you're editing a file. Here's an example:</p>
+<pre><code class="language-json">// This key binding will work when you're editing a file. It comes built into Zed by default as the workspace: save command.
+{
+  "context": "Workspace",
+  "bindings": {
+    "ctrl-s": "file::Save"
+  }
+}
+</code></pre>
+<p>Contexts are expressions. They support boolean operators like <code>&amp;&amp;</code> (and) and <code>||</code> (or). For example, you can use the context <code>"Editor &amp;&amp; vim_mode == normal"</code> to create key bindings that only work when you're editing a file <em>and</em> you're in vim's normal mode.</p>
+<p>Vim mode adds several contexts to the <code>"Editor"</code> context:</p>
+<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Description</th></tr></thead><tbody>
+<tr><td>VimControl</td><td>Indicates that vim keybindings should work. Currently an alias for <code>vim_mode == normal || vim_mode == visual || vim_mode == operator</code>, but the definition may change over time</td></tr>
+<tr><td>vim_mode == normal</td><td>Normal mode</td></tr>
+<tr><td>vim_mode == visual</td><td>Visual mode</td></tr>
+<tr><td>vim_mode == insert</td><td>Insert mode</td></tr>
+<tr><td>vim_mode == replace</td><td>Replace mode</td></tr>
+<tr><td>vim_mode == waiting</td><td>Waiting for an arbitrary key (e.g., after typing <code>f</code> or <code>t</code>)</td></tr>
+<tr><td>vim_mode == operator</td><td>Waiting for another binding to trigger (e.g., after typing <code>c</code> or <code>d</code>)</td></tr>
+<tr><td>vim_operator</td><td>Set to <code>none</code> unless <code>vim_mode == operator</code>, in which case it is set to the current operator's default keybinding (e.g., after typing <code>d</code>, <code>vim_operator == d</code>)</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p><strong>Note</strong>: Contexts are matched only on one level at a time. So it is possible to use the expression <code>"Editor &amp;&amp; vim_mode == normal"</code>, but <code>"Workspace &amp;&amp; vim_mode == normal"</code> will never match because we set the vim context at the <code>"Editor"</code> level.</p>
+</blockquote>
+<h3 id="useful-contexts-for-vim-mode-key-bindings"><a class="header" href="#useful-contexts-for-vim-mode-key-bindings">vim 模式快捷键绑定的有用上下文</a></h3>
+<p>Here's a template with useful vim mode contexts to help you customize your vim mode key bindings. You can copy it and integrate it into your user keymap.</p>
+<pre><code class="language-json">[
+  {
+    "context": "VimControl &amp;&amp; !menu",
+    "bindings": {
+      // Put key bindings here if you want them to work in normal &amp; visual mode.
+    }
+  },
+  {
+    "context": "vim_mode == normal &amp;&amp; !menu",
+    "bindings": {
+      // "shift-y": ["workspace::SendKeystrokes", "y $"] // Use neovim's yank behavior: yank to end of line.
+    }
+  },
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore" // In insert mode, make jk escape to normal mode.
+    }
+  },
+  {
+    "context": "EmptyPane || SharedScreen",
+    "bindings": {
+      // Put key bindings here (in addition to the context above) if you want them to
+      // work when no editor exists.
+      // "space f": "file_finder::Toggle"
+    }
+  }
+]
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>: If you would like to emulate Vim's <code>map</code> commands (<code>nmap</code>, etc.), you can use the action <code>workspace::SendKeystrokes</code> in the correct context.</p>
+</blockquote>
+<h3 id="optional-key-bindings"><a class="header" href="#optional-key-bindings">可选快捷键绑定</a></h3>
+<p>By default, you can navigate between the different files open in the editor with shortcuts like <code>ctrl+w</code> followed by one of <code>hjkl</code> to move to the left, down, up, or right, respectively.</p>
+<p>But you cannot use the same shortcuts to move between all the editor docks (the terminal, project panel, assistant panel, ...). If you want to use the same shortcuts to navigate to the docks, you can add the following key bindings to your user keymap.</p>
+<pre><code class="language-json">{
+  "context": "Dock",
+  "bindings": {
+    "ctrl-w h": "workspace::ActivatePaneLeft",
+    "ctrl-w l": "workspace::ActivatePaneRight",
+    "ctrl-w k": "workspace::ActivatePaneUp",
+    "ctrl-w j": "workspace::ActivatePaneDown"
+    // ... or other keybindings
+  }
+}
+</code></pre>
+<p>Subword motion, which allows you to navigate and select individual words in camelCase or snake_case, is not enabled by default. To enable it, add these bindings to your keymap.</p>
+<pre><code class="language-json">{
+  "context": "VimControl &amp;&amp; !menu &amp;&amp; vim_mode != operator",
+  "bindings": {
+    "w": "vim::NextSubwordStart",
+    "b": "vim::PreviousSubwordStart",
+    "e": "vim::NextSubwordEnd",
+    "g e": "vim::PreviousSubwordEnd"
+  }
+}
+</code></pre>
+<p>Vim mode comes with shortcuts to surround the selection in normal mode (<code>ys</code>), but it doesn't have a shortcut to add surrounds in visual mode. By default, <code>shift-s</code> substitutes the selection (erases the text and enters insert mode). To use <code>shift-s</code> to add surrounds in visual mode, you can add the following object to your keymap.</p>
+<pre><code class="language-json">{
+  "context": "vim_mode == visual",
+  "bindings": {
+    "shift-s": ["vim::PushAddSurrounds", {}]
+  }
+}
+</code></pre>
+<p>In non-modal text editors, cursor navigation typically wraps when moving past line ends. Zed, however, handles this behavior exactly like Vim by default: the cursor stops at line boundaries. If you prefer your cursor to wrap between lines, override these keybindings:</p>
+<pre><code class="language-json">// In VimScript, this would look like this:
+// set whichwrap+=&lt;,&gt;,[,],h,l
+{
+  "context": "VimControl &amp;&amp; !menu",
+  "bindings": {
+    "left": "vim::WrappingLeft",
+    "right": "vim::WrappingRight",
+    "h": "vim::WrappingLeft",
+    "l": "vim::WrappingRight"
+  }
+}
+</code></pre>
+<p>The <a href="https://github.com/justinmk/vim-sneak">Sneak motion</a> feature allows for quick navigation to any two-character sequence in your text. You can enable it by adding the following keybindings to your keymap. By default, the <code>s</code> key is mapped to <code>vim::Substitute</code>. Adding these bindings will override that behavior, so ensure this change aligns with your workflow preferences.</p>
+<pre><code class="language-json">{
+  "context": "vim_mode == normal || vim_mode == visual",
+  "bindings": {
+    "s": "vim::PushSneak",
+    "shift-s": "vim::PushSneakBackward"
+  }
+}
+</code></pre>
+<p>The <a href="https://github.com/tommcdo/vim-exchange">vim-exchange</a> feature does not have a default binding for visual mode, as the <code>shift-x</code> binding conflicts with the default <code>shift-x</code> binding for visual mode (<code>vim::VisualDeleteLine</code>). To assign the default vim-exchange binding, add the following keybinding to your keymap:</p>
+<pre><code class="language-json">{
+  "context": "vim_mode == visual",
+  "bindings": {
+    "shift-x": "vim::Exchange"
+  }
+}
+</code></pre>
+<h3 id="restoring-common-text-editing-keybindings"><a class="header" href="#restoring-common-text-editing-keybindings">恢复常用文本编辑快捷键</a></h3>
+<p>If you're using vim mode on Linux or Windows, you may find it overrides keybindings you can't live without: <code>ctrl+v</code> to paste, <code>ctrl+f</code> to search, etc. You can restore them by copying this data into your keymap:</p>
+<pre><code class="language-json">{
+  "context": "Editor &amp;&amp; !menu",
+  "bindings": {
+    "ctrl-c": "editor::Copy",          // vim default: return to normal mode
+    "ctrl-x": "editor::Cut",           // vim default: decrement
+    "ctrl-v": "editor::Paste",         // vim default: visual block mode
+    "ctrl-y": "editor::Undo",          // vim default: line up
+    "ctrl-f": "buffer_search::Deploy", // vim default: page down
+    "ctrl-o": "workspace::Open",       // vim default: go back
+    "ctrl-s": "workspace::Save",       // vim default: show signature
+    "ctrl-a": "editor::SelectAll",     // vim default: increment
+  }
+},
+</code></pre>
+<h2 id="changing-vim-mode-settings"><a class="header" href="#changing-vim-mode-settings">更改 vim 模式设置</a></h2>
+<p>You can change the following settings to modify vim mode's behavior:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>default_mode</td><td>The default mode to start in. One of "normal", "insert", "replace", "visual", "visual_line", "visual_block", "helix_normal".</td><td>"normal"</td></tr>
+<tr><td>use_system_clipboard</td><td>Determines how system clipboard is used:<br/><ul><li>"always": use for all operations</li><li>"never": only use when explicitly specified</li><li>"on_yank": use for yank operations</li></ul></td><td>"always"</td></tr>
+<tr><td>use_multiline_find</td><td>deprecated</td><td></td></tr>
+<tr><td>use_smartcase_find</td><td>If <code>true</code>, <code>f</code> and <code>t</code> motions are case-insensitive when the target letter is lowercase.</td><td>false</td></tr>
+<tr><td>toggle_relative_line_numbers</td><td>If <code>true</code>, line numbers are relative in normal mode and absolute in insert mode, giving you the best of both options.</td><td>false</td></tr>
+<tr><td>custom_digraphs</td><td>An object that allows you to add custom digraphs. Read below for an example.</td><td>{}</td></tr>
+<tr><td>highlight_on_yank_duration</td><td>The duration of the highlight animation(in ms). Set to <code>0</code> to disable</td><td>200</td></tr>
+</tbody></table>
+</div>
+<p>Here's an example of adding a digraph for the zombie emoji. This allows you to type <code>ctrl-k f z</code> to insert a zombie emoji. You can add as many digraphs as you like.</p>
+<pre><code class="language-json">{
+  "vim": {
+    "custom_digraphs": {
+      "fz": "🧟‍♀️"
+    }
+  }
+}
+</code></pre>
+<p>Here's an example of these settings changed:</p>
+<pre><code class="language-json">{
+  "vim": {
+    "default_mode": "insert",
+    "use_system_clipboard": "never",
+    "use_smartcase_find": true,
+    "toggle_relative_line_numbers": true,
+    "highlight_on_yank_duration": 50,
+    "custom_digraphs": {
+      "fz": "🧟‍♀️"
+    }
+  }
+}
+</code></pre>
+<h2 id="useful-core-zed-settings-for-vim-mode"><a class="header" href="#useful-core-zed-settings-for-vim-mode">适用于 vim 模式的有用核心 Zed 设置</a></h2>
+<p>Here are a few general Zed settings that can help you fine-tune your Vim experience:</p>
+<div class="table-wrapper"><table><thead><tr><th>Property</th><th>Description</th><th>Default Value</th></tr></thead><tbody>
+<tr><td>cursor_blink</td><td>If <code>true</code>, the cursor blinks.</td><td><code>true</code></td></tr>
+<tr><td>relative_line_numbers</td><td>If <code>true</code>, line numbers in the left gutter are relative to the cursor.</td><td><code>false</code></td></tr>
+<tr><td>scrollbar</td><td>Object that controls the scrollbar display. Set to <code>{ "show": "never" }</code> to hide the scroll bar.</td><td><code>{ "show": "auto" }</code></td></tr>
+<tr><td>scroll_beyond_last_line</td><td>If set to <code>"one_page"</code>, allows scrolling up to one page beyond the last line. Set to <code>"off"</code> to prevent this behavior.</td><td><code>"one_page"</code></td></tr>
+<tr><td>vertical_scroll_margin</td><td>The number of lines to keep above or below the cursor when scrolling. Set to <code>0</code> to allow the cursor to go up to the edges of the screen vertically.</td><td><code>3</code></td></tr>
+<tr><td>gutter.line_numbers</td><td>Controls the display of line numbers in the gutter. Set the <code>"line_numbers"</code> property to <code>false</code> to hide line numbers.</td><td><code>true</code></td></tr>
+<tr><td>command_aliases</td><td>Object that defines aliases for commands in the command palette. You can use it to define shortcut names for commands you use often. Read below for examples.</td><td><code>{}</code></td></tr>
+</tbody></table>
+</div>
+<p>Here's an example of these settings changed:</p>
+<pre><code class="language-json">{
+  // Disable cursor blink
+  "cursor_blink": false,
+  // Use relative line numbers
+  "relative_line_numbers": true,
+  // Hide the scroll bar
+  "scrollbar": { "show": "never" },
+  // Prevent the buffer from scrolling beyond the last line
+  "scroll_beyond_last_line": "off",
+  // Allow the cursor to reach the edges of the screen
+  "vertical_scroll_margin": 0,
+  "gutter": {
+    // Disable line numbers completely:
+    "line_numbers": false
+  },
+  "command_aliases": {
+    "W": "w",
+    "Wq": "wq",
+    "Q": "q"
+  }
+}
+</code></pre>
+<p>The <code>command_aliases</code> property is a single object that maps keys or key sequences to vim mode commands. The example above defines multiple aliases: <code>W</code> for <code>w</code>, <code>Wq</code> for <code>wq</code>, and <code>Q</code> for <code>q</code>.</p>
+<h2 id="regex-differences"><a class="header" href="#regex-differences">正则表达式差异</a></h2>
+<p>Zed uses a different regular expression engine from Vim. This means that you will have to use a different syntax in some cases. Here are the most common differences:</p>
+<ul>
+<li><strong>Capture groups</strong>: Vim uses <code>\(</code> and <code>\)</code> to represent capture groups, in Zed these are <code>(</code> and <code>)</code>. On the flip side, in Vim, <code>(</code> and <code>)</code> represent literal parentheses, but in Zed these must be escaped to <code>\(</code> and <code>\)</code>.</li>
+<li><strong>Matches</strong>: When replacing, Vim uses the backslash character followed by a number to represent a matched capture group. For example, <code>\1</code>. Zed uses the dollar sign instead. So, when in Vim you use <code>\0</code> to represent the entire match, in Zed the syntax is <code>$0</code> instead. Same for numbered capture groups: <code>\1</code> in Vim is <code>$1</code> in Zed.</li>
+<li><strong>Global option</strong>: By default, in Vim, regex searches only match the first occurrence on a line, and you append <code>/g</code> at the end of your query to find all matches. In Zed, regex searches are global by default.</li>
+<li><strong>Case sensitivity</strong>: Vim uses <code>/i</code> to indicate a case-insensitive search. In Zed you can either write <code>(?i)</code> at the start of the pattern or toggle case-sensitivity with the shortcut <kbd class="keybinding">alt-cmd-c|alt-c</kbd>.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: To help with the transition, the command palette will fix parentheses and replace groups for you when you write a Vim-style substitute command, <code>:%s//</code>. So, Zed will convert <code>%s:/\(a\)(b)/\1/</code> into a search for "(a)(b)" and a replacement of "$1".</p>
+</blockquote>
+<p>For the full syntax supported by Zed's regex engine <a href="https://docs.rs/regex/latest/regex/#syntax">see the regex crate documentation</a>.</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

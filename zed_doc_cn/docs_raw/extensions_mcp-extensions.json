@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/extensions/mcp-extensions.html",
+  "title": "MCP Server Extensions | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"mcp-server-extensions\"><a class=\"header\" href=\"#mcp-server-extensions\">MCP Server Extensions</a></h1>\n<p><a href=\"../ai/mcp.html\">Model Context Protocol servers</a> can be exposed as extensions for use in the Agent Panel.</p>\n<h2 id=\"defining-mcp-extensions\"><a class=\"header\" href=\"#defining-mcp-extensions\">Defining MCP Extensions</a></h2>\n<p>A given extension may provide one or more MCP servers.\nEach MCP server must be registered in the <code>extension.toml</code>:</p>\n<pre><code class=\"language-toml\">[context_servers.my-context-server]\n</code></pre>\n<p>Then, in the Rust code for your extension, implement the <code>context_server_command</code> method on your extension:</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn context_server_command(\n        &amp;mut self,\n        context_server_id: &amp;ContextServerId,\n        project: &amp;zed::Project,\n    ) -&gt; Result&lt;zed::Command&gt; {\n        Ok(zed::Command {\n            command: get_path_to_context_server_executable()?,\n            args: get_args_for_context_server()?,\n            env: get_env_for_context_server()?,\n        })\n    }\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p>This method should return the command to start up an MCP server, along with any arguments or environment variables necessary for it to function.</p>\n<p>If you need to download the MCP server from an external source—like GitHub Releases or npm—you can also do that in this function.</p>\n<h2 id=\"available-extensions\"><a class=\"header\" href=\"#available-extensions\">Available Extensions</a></h2>\n<p>Check out all the MCP servers that have already been exposed as extensions <a href=\"https://zed.dev/extensions?filter=context-servers\">on Zed's site</a>.</p>\n<p>We recommend taking a look at their repositories as a way to understand how they are generally created and structured.</p>\n<h2 id=\"testing\"><a class=\"header\" href=\"#testing\">Testing</a></h2>\n<p>To test your new MCP server extension, you can <a href=\"./developing-extensions.html#developing-an-extension-locally\">install it as a dev extension</a>.</p>\n\n</main>",
+  "content_text": "MCP Server Extensions\nModel Context Protocol servers can be exposed as extensions for use in the Agent Panel.\nDefining MCP Extensions\nA given extension may provide one or more MCP servers.\nEach MCP server must be registered in the extension.toml:\n[context_servers.my-context-server]\n\nThen, in the Rust code for your extension, implement the context_server_command method on your extension:\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn context_server_command(\n        &mut self,\n        context_server_id: &ContextServerId,\n        project: &zed::Project,\n    ) -> Result<zed::Command> {\n        Ok(zed::Command {\n            command: get_path_to_context_server_executable()?,\n            args: get_args_for_context_server()?,\n            env: get_env_for_context_server()?,\n        })\n    }\n}\n}\nThis method should return the command to start up an MCP server, along with any arguments or environment variables necessary for it to function.\nIf you need to download the MCP server from an external source—like GitHub Releases or npm—you can also do that in this function.\nAvailable Extensions\nCheck out all the MCP servers that have already been exposed as extensions on Zed's site.\nWe recommend taking a look at their repositories as a way to understand how they are generally created and structured.\nTesting\nTo test your new MCP server extension, you can install it as a dev extension.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:59"
+}

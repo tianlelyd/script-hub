@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>REPL | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="active">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#repl" class="pagetoc-H1">REPL</a>
+<a href="#getting-started" class="pagetoc-H2">快速开始</a>
+<a href="#installation" class="pagetoc-H2">安装</a>
+<a href="#using-the-repl" class="pagetoc-H2">使用 REPL</a>
+<a href="#cell-mode" class="pagetoc-H3">单元格模式</a>
+<a href="#language-specific-instructions" class="pagetoc-H2">特定语言说明</a>
+<a href="#python" class="pagetoc-H3">Python</a>
+<a href="#r-ark" class="pagetoc-H3">R (Ark Kernel)</a>
+<a href="#r-xeus" class="pagetoc-H3">R (Xeus Kernel)</a>
+<a href="#typescript-deno" class="pagetoc-H3">Typescript: Deno</a>
+<a href="#julia" class="pagetoc-H3">Julia</a>
+<a href="#scala" class="pagetoc-H3">Scala</a>
+<a href="#changing-kernels" class="pagetoc-H2">更改每种语言使用的内核</a>
+<a href="#debugging-kernelspecs" class="pagetoc-H2">调试内核规格</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="repl"><a class="header" href="#repl">REPL</a></h1>
+<h2 id="getting-started"><a class="header" href="#getting-started">快速开始</a></h2>
+<p>将 <a href="https://docs.jupyter.org/en/latest/projects/kernels.html">Jupyter 内核</a>的强大功能带到您的编辑器中！Zed 内置的 REPL 允许您在编辑器中交互式地运行代码，就像在笔记本中使用您自己的文本文件一样。</p>
+<figure style="width: 100%; margin: 0; overflow: hidden; border-top-left-radius: 2px; border-top-right-radius: 2px;">
+<video controls="" loop="" playsinline="">
+<source src="https://customer-snccc0j9v3kfzkif.cloudflarestream.com/aec66e79f23d6d1a0bee5e388a3f17cc/downloads/default.mp4" type='video/webm; codecs="vp8.0, vorbis"'/>
+<source src="https://customer-snccc0j9v3kfzkif.cloudflarestream.com/aec66e79f23d6d1a0bee5e388a3f17cc/downloads/default.mp4" type='video/mp4; codecs="avc1.4D401E, mp4a.40.2"'/>
+<source src="https://zed.dev/img/post/repl/typescript-deno-kernel-markdown.png" type="image/png"/>
+</video>
+</figure>
+<h2 id="installation"><a class="header" href="#installation">安装</a></h2>
+<p>Zed 支持运行多种语言的代码。开始使用前，您需要为要使用的语言安装内核。</p>
+<p><strong>当前支持的语言：</strong></p>
+<ul>
+<li><a href="#python">Python (ipykernel)</a></li>
+<li><a href="#typescript-deno">TypeScript (Deno)</a></li>
+<li><a href="#r-ark">R (Ark)</a></li>
+<li><a href="#r-xeus">R (Xeus)</a></li>
+<li><a href="#julia">Julia</a></li>
+<li><a href="#scala">Scala (Almond)</a></li>
+</ul>
+<p>安装完成后，您可以在相应的语言文件中或这些语言受支持的其他地方（如 Markdown）开始使用 REPL。如果您最近添加了内核，请运行 <code>repl: refresh kernelspecs</code> 命令使其在编辑器中可用。</p>
+<h2 id="using-the-repl"><a class="header" href="#using-the-repl">使用 REPL</a></h2>
+<p>要启动 REPL，请打开您要使用的语言文件，然后使用 <code>repl: run</code> 命令（在 macOS 上默认为 <code>ctrl-shift-enter</code>）来运行代码块、选中的代码或单行。您也可以点击工具栏中的 REPL 图标。</p>
+<p><code>repl: run</code> 命令将在您的选中内容上执行，结果将显示在选中内容的下方。</p>
+<p>可以使用 <code>repl: clear outputs</code> 命令清除输出，也可以从工具栏中的 REPL 菜单清除。</p>
+<h3 id="cell-mode"><a class="header" href="#cell-mode">单元格模式</a></h3>
+<p>Zed 支持使用 <code># %%</code> 在 Python 中和 <code>// %%</code> 在 TypeScript 中作为单元格分隔符，将<a href="https://jupytext.readthedocs.io/en/latest/formats-scripts.html">笔记本作为脚本</a>使用。这允许您在单个文件中编写代码，并像笔记本一样逐个单元格地运行它。</p>
+<p><code>repl: run</code> 命令将将 <code># %%</code> 标记之间的每个代码块作为单独的单元格运行。</p>
+<pre><code class="language-python"># %% Cell 1
+import time
+import numpy as np
+
+# %% Cell 2
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+from matplotlib import style
+style.use('ggplot')
+</code></pre>
+<h2 id="language-specific-instructions"><a class="header" href="#language-specific-instructions">特定语言说明</a></h2>
+<h3 id="python"><a class="header" href="#python">Python</a></h3>
+<h4 id="global-environment"><a class="header" href="#global-environment">全局环境</a></h4>
+<div class="warning">
+<p>在 macOS 上，您的系统 Python <em>将不会</em>工作。请设置 <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">pyenv</a> 或使用虚拟环境。</p>
+</div>
+<p>要设置当前 Python 以拥有可用的内核，请运行：</p>
+<pre><code class="language-sh">pip install ipykernel
+python -m ipykernel install --user
+</code></pre>
+<h4 id="conda-environment"><a class="header" href="#conda-environment">Conda 环境</a></h4>
+<pre><code class="language-sh">source activate myenv
+conda install ipykernel
+python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+</code></pre>
+<h4 id="virtualenv-with-pip"><a class="header" href="#virtualenv-with-pip">使用 pip 的 Virtualenv</a></h4>
+<pre><code class="language-sh">source activate myenv
+pip install ipykernel
+python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+</code></pre>
+<h3 id="r-ark"><a class="header" href="#r-ark">R (Ark Kernel)</a></h3>
+<p>通过下载适合您操作系统的版本来安装 <a href="https://github.com/posit-dev/ark/releases">Ark</a>。例如，在 macOS 上只需解压 <code>ark</code> 二进制文件并将其放入 <code>/usr/local/bin</code>。然后运行：</p>
+<pre><code class="language-sh">ark --install
+</code></pre>
+<h3 id="r-xeus"><a class="header" href="#r-xeus">R (Xeus Kernel)</a></h3>
+<ul>
+<li>安装 <a href="https://github.com/jupyter-xeus/xeus-r">Xeus-R</a></li>
+<li>为 Zed 安装 R 扩展（在 Zed 扩展中搜索 <code>R</code>）</li>
+</ul>
+<!--
+TBD: Improve R REPL (Ark Kernel) instructions
+-->
+<h3 id="typescript-deno"><a class="header" href="#typescript-deno">Typescript: Deno</a></h3>
+<ul>
+<li><a href="https://docs.deno.com/runtime/manual/getting_started/installation/">安装 Deno</a> 然后安装 Deno jupyter 内核：</li>
+</ul>
+<pre><code class="language-sh">deno jupyter --install
+</code></pre>
+<!--
+TBD: Improve R REPL (Ark Kernel) instructions
+-->
+<h3 id="julia"><a class="header" href="#julia">Julia</a></h3>
+<ul>
+<li>从<a href="https://julialang.org/downloads/">官方网站</a>下载并安装 Julia。</li>
+<li>为 Zed 安装 Julia 扩展（在 Zed 扩展中搜索 <code>Julia</code>）</li>
+</ul>
+<!--
+TBD: Improve Julia REPL instructions
+-->
+<h3 id="scala"><a class="header" href="#scala">Scala</a></h3>
+<ul>
+<li>使用 <code>cs setup</code> (Coursier) <a href="https://www.scala-lang.org/download/">安装 Scala</a>：
+<ul>
+<li><code>brew install coursier/formulas/coursier &amp;&amp; cs setup</code></li>
+</ul>
+</li>
+<li>REPL (Almond) <a href="https://almond.sh/docs/quick-start-install">设置说明</a>：
+<ul>
+<li><code>brew install --cask temurin</code> (Eclipse 基金会官方 OpenJDK 二进制文件)</li>
+<li><code>brew install coursier/formulas/coursier &amp;&amp; cs setup</code></li>
+<li><code>coursier launch --use-bootstrap almond -- --install</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="changing-kernels"><a class="header" href="#changing-kernels">更改每种语言使用的内核</a></h2>
+<p>Zed 会自动检测您系统上可用的内核。如果您需要为某种语言配置不同的默认内核，您可以在 <code>settings.json</code> 中为任何受支持的语言分配内核。</p>
+<pre><code class="language-json">{
+  "jupyter": {
+    "kernel_selections": {
+      "python": "conda-env",
+      "typescript": "deno",
+      "javascript": "deno",
+      "r": "ark"
+    }
+  }
+}
+</code></pre>
+<h2 id="debugging-kernelspecs"><a class="header" href="#debugging-kernelspecs">调试内核规格</a></h2>
+<p>可用的内核通过 <code>repl: sessions</code> 命令显示。要刷新您可以运行的内核，请使用 <code>repl: refresh kernelspecs</code> 命令。</p>
+<p>如果您安装了 <code>jupyter</code>，您可以运行 <code>jupyter kernelspec list</code> 来查看可用的内核。</p>
+<pre><code class="language-sh">$ jupyter kernelspec list
+可用内核：
+  ark                   /Users/z/Library/Jupyter/kernels/ark
+  conda-base            /Users/z/Library/Jupyter/kernels/conda-base
+  deno                  /Users/z/Library/Jupyter/kernels/deno
+  python-chatlab-dev    /Users/z/Library/Jupyter/kernels/python-chatlab-dev
+  python3               /Users/z/Library/Jupyter/kernels/python3
+  ruby                  /Users/z/Library/Jupyter/kernels/ruby
+  rust                  /Users/z/Library/Jupyter/kernels/rust
+</code></pre>
+<blockquote>
+<p>注意：Zed 尽最大努力使用 <code>sys.prefix</code> 和 <code>CONDA_PREFIX</code> 在 Python 环境中查找内核。如果您希望显式控制，请在环境中运行 <code>python -m ipykernel install --user --name myenv --display-name "Python (myenv)"</code> 来直接安装内核。</p>
+</blockquote>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

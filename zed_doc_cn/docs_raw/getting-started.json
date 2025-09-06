@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/getting-started.html",
+  "title": "Getting Started | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"getting-started\"><a class=\"header\" href=\"#getting-started\">Getting Started</a></h1>\n<p>Welcome to Zed! We are excited to have you. Here is a jumping-off point to getting started.</p>\n<h2 id=\"download-zed\"><a class=\"header\" href=\"#download-zed\">Download Zed</a></h2>\n<h3 id=\"macos\"><a class=\"header\" href=\"#macos\">macOS</a></h3>\n<p>Get the latest stable builds via <a href=\"https://zed.dev/download\">the download page</a>. If you want to download our preview build, you can find it on its <a href=\"https://zed.dev/releases/preview\">releases page</a>. After the first manual installation, Zed will periodically check for install updates.</p>\n<p>You can also install Zed stable via Homebrew:</p>\n<pre><code class=\"language-sh\">brew install --cask zed\n</code></pre>\n<p>As well as Zed preview:</p>\n<pre><code class=\"language-sh\">brew install --cask zed@preview\n</code></pre>\n<h3 id=\"linux\"><a class=\"header\" href=\"#linux\">Linux</a></h3>\n<p>For most Linux users, the easiest way to install Zed is through our installation script:</p>\n<pre><code class=\"language-sh\">curl -f https://zed.dev/install.sh | sh\n</code></pre>\n<p>If you'd like to help us test our new features, you can also install our preview build:</p>\n<pre><code class=\"language-sh\">curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh\n</code></pre>\n<p>This script supports <code>x86_64</code> and <code>AArch64</code>, as well as common Linux distributions: Ubuntu, Arch, Debian, RedHat, CentOS, Fedora, and more.</p>\n<p>If Zed is installed using this installation script, it can be uninstalled at any time by running the shell command <code>zed --uninstall</code>. The shell will then prompt you whether you'd like to keep your preferences or delete them. After making a choice, you should see a message that Zed was successfully uninstalled.</p>\n<p>If this script is insufficient for your use case, you run into problems running Zed, or there are errors in uninstalling Zed, please see our <a href=\"./linux.html\">Linux-specific documentation</a>.</p>\n<h2 id=\"command-palette\"><a class=\"header\" href=\"#command-palette\">Command Palette</a></h2>\n<p>The Command Palette is the main way to access pretty much any functionality that's available in Zed. Its keybinding is the first one you should make yourself familiar with. To open it, hit: <kbd class=\"keybinding\">cmd-shift-p|ctrl-shift-p</kbd>.</p>\n<p><img alt=\"The opened Command Palette\" src=\"https://zed.dev/img/features/command-palette.jpg\"/></p>\n<p>Try it! Open the Command Palette and type in <code>new file</code>. You should see the list of commands being filtered down to <code>workspace: new file</code>. Hit return and you end up with a new buffer.</p>\n<p>Any time you see instructions that include commands of the form <code>zed: ...</code> or <code>editor: ...</code> and so on that means you need to execute them in the Command Palette.</p>\n<h2 id=\"cli\"><a class=\"header\" href=\"#cli\">CLI</a></h2>\n<p>Zed has a CLI, on Linux this should come with the distribution's Zed package (binary name can vary from distribution to distribution, <code>zed</code> will be used later for brevity).\nFor macOS, the CLI comes in the same package with the editor binary, and could be installed into the system with the <code>cli: install</code> Zed command which will create a symlink to the <code>/usr/local/bin/zed</code>.\nIt can also be built from source out of the <code>cli</code> crate in this repository.</p>\n<p>Use <code>zed --help</code> to see the full list of capabilities.\nGeneral highlights:</p>\n<ul>\n<li>\n<p>Opening another empty Zed window: <code>zed</code></p>\n</li>\n<li>\n<p>Opening a file or directory in Zed: <code>zed /path/to/entry</code> (use <code>-n</code> to open in the new window)</p>\n</li>\n<li>\n<p>Reading from stdin: <code>ps axf | zed -</code></p>\n</li>\n<li>\n<p>Starting Zed with logs in the terminal: <code>zed --foreground</code></p>\n</li>\n<li>\n<p>Uninstalling Zed and all its related files: <code>zed --uninstall</code></p>\n</li>\n</ul>\n<h2 id=\"configure-zed\"><a class=\"header\" href=\"#configure-zed\">Configure Zed</a></h2>\n<p>To open your custom settings to set things like fonts, formatting settings, per-language settings, and more, use the <kbd class=\"keybinding\">cmd-,|ctrl-,</kbd> keybinding.</p>\n<p>To see all available settings, open the Command Palette with <kbd class=\"keybinding\">cmd-shift-p|ctrl-shift-p</kbd> and search for <code>zed: open default settings</code>.\nYou can also check them all out in the <a href=\"./configuring-zed.html\">Configuring Zed</a> documentation.</p>\n<h2 id=\"configure-ai-in-zed\"><a class=\"header\" href=\"#configure-ai-in-zed\">Configure AI in Zed</a></h2>\n<p>Zed smoothly integrates LLMs in multiple ways across the editor.\nVisit <a href=\"./ai/overview.html\">the AI overview page</a> to learn how to quickly get started with LLMs on Zed.</p>\n<h2 id=\"set-up-your-key-bindings\"><a class=\"header\" href=\"#set-up-your-key-bindings\">Set up your key bindings</a></h2>\n<p>To edit your custom keymap and add or remap bindings, you can either use <kbd class=\"keybinding\">cmd-k cmd-s|ctrl-k ctrl-s</kbd> to spawn the Zed Keymap Editor (<code class=\"hljs\">zed: open keymap editor</code>) or you can directly open your Zed Keymap json (<code>~/.config/zed/keymap.json</code>) with <code class=\"hljs\">zed: open keymap</code>.</p>\n<p>To access the default key binding set, open the Command Palette with <kbd class=\"keybinding\">cmd-shift-p|ctrl-shift-p</kbd> and search for \"zed: open default keymap\". See <a href=\"./key-bindings.html\">Key Bindings</a> for more info.</p>\n\n</main>",
+  "content_text": "Getting Started\nWelcome to Zed! We are excited to have you. Here is a jumping-off point to getting started.\nDownload Zed\nmacOS\nGet the latest stable builds via the download page. If you want to download our preview build, you can find it on its releases page. After the first manual installation, Zed will periodically check for install updates.\nYou can also install Zed stable via Homebrew:\nbrew install --cask zed\n\nAs well as Zed preview:\nbrew install --cask zed@preview\n\nLinux\nFor most Linux users, the easiest way to install Zed is through our installation script:\ncurl -f https://zed.dev/install.sh | sh\n\nIf you'd like to help us test our new features, you can also install our preview build:\ncurl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh\n\nThis script supports x86_64 and AArch64, as well as common Linux distributions: Ubuntu, Arch, Debian, RedHat, CentOS, Fedora, and more.\nIf Zed is installed using this installation script, it can be uninstalled at any time by running the shell command zed --uninstall. The shell will then prompt you whether you'd like to keep your preferences or delete them. After making a choice, you should see a message that Zed was successfully uninstalled.\nIf this script is insufficient for your use case, you run into problems running Zed, or there are errors in uninstalling Zed, please see our Linux-specific documentation.\nCommand Palette\nThe Command Palette is the main way to access pretty much any functionality that's available in Zed. Its keybinding is the first one you should make yourself familiar with. To open it, hit: cmd-shift-p|ctrl-shift-p.\n\nTry it! Open the Command Palette and type in new file. You should see the list of commands being filtered down to workspace: new file. Hit return and you end up with a new buffer.\nAny time you see instructions that include commands of the form zed: ... or editor: ... and so on that means you need to execute them in the Command Palette.\nCLI\nZed has a CLI, on Linux this should come with the distribution's Zed package (binary name can vary from distribution to distribution, zed will be used later for brevity).\nFor macOS, the CLI comes in the same package with the editor binary, and could be installed into the system with the cli: install Zed command which will create a symlink to the /usr/local/bin/zed.\nIt can also be built from source out of the cli crate in this repository.\nUse zed --help to see the full list of capabilities.\nGeneral highlights:\n\n\nOpening another empty Zed window: zed\n\n\nOpening a file or directory in Zed: zed /path/to/entry (use -n to open in the new window)\n\n\nReading from stdin: ps axf | zed -\n\n\nStarting Zed with logs in the terminal: zed --foreground\n\n\nUninstalling Zed and all its related files: zed --uninstall\n\n\nConfigure Zed\nTo open your custom settings to set things like fonts, formatting settings, per-language settings, and more, use the cmd-,|ctrl-, keybinding.\nTo see all available settings, open the Command Palette with cmd-shift-p|ctrl-shift-p and search for zed: open default settings.\nYou can also check them all out in the Configuring Zed documentation.\nConfigure AI in Zed\nZed smoothly integrates LLMs in multiple ways across the editor.\nVisit the AI overview page to learn how to quickly get started with LLMs on Zed.\nSet up your key bindings\nTo edit your custom keymap and add or remap bindings, you can either use cmd-k cmd-s|ctrl-k ctrl-s to spawn the Zed Keymap Editor (zed: open keymap editor) or you can directly open your Zed Keymap json (~/.config/zed/keymap.json) with zed: open keymap.\nTo access the default key binding set, open the Command Palette with cmd-shift-p|ctrl-shift-p and search for \"zed: open default keymap\". See Key Bindings for more info.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:10:56"
+}

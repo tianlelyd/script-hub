@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/plans-and-usage.html",
+  "title": "Plans and Usage | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"plans-and-usage\"><a class=\"header\" href=\"#plans-and-usage\">Plans and Usage</a></h1>\n<p>To view your current usage, you can visit your account at <a href=\"https://zed.dev/account\">zed.dev/account</a>.\nYou’ll also find usage meters in-product when you’re nearing the limit for your plan or trial.</p>\n<h2 id=\"plans\"><a class=\"header\" href=\"#plans\">Available Plans</a></h2>\n<p>For costs and more information on pricing, visit <a href=\"https://zed.dev/pricing\">Zed’s pricing page</a>.</p>\n<p>Please note that if you’re interested in just using Zed as the world’s fastest editor, with no AI or subscription features, you can always do so for free, without <a href=\"../accounts.html\">authentication</a>.</p>\n<h2 id=\"usage\"><a class=\"header\" href=\"#usage\">Usage</a></h2>\n<ul>\n<li>A <code>prompt</code> in Zed is an input from the user, initiated by pressing enter, composed of one or many <code>requests</code>. A <code>prompt</code> can be initiated from the Agent Panel, or via Inline Assist.</li>\n<li>A <code>request</code> in Zed is a response to a <code>prompt</code>, plus any tool calls that are initiated as part of that response. There may be one <code>request</code> per <code>prompt</code>, or many.</li>\n</ul>\n<p>Most models offered by Zed are metered per-prompt.\nSome models that use large context windows and unlimited tool calls (<a href=\"./models.html#burn-mode\">“Burn Mode”</a>) count each individual request within a prompt against your prompt limit, since the agentic work spawned by the prompt is expensive to support.</p>\n<p>See <a href=\"./models.html\">the Models page</a> for a list of which subset of models are metered by request.</p>\n<p>Plans come with a set amount of prompts included, with the number varying depending on the plan you’ve selected.</p>\n<h2 id=\"ubp\"><a class=\"header\" href=\"#ubp\">Usage-Based Pricing</a></h2>\n<p>You may opt in to usage-based pricing for prompts that exceed what is included in your paid plan from <a href=\"https://zed.dev/account\">your account page</a>.</p>\n<p>Usage-based pricing is only available with a paid plan, and is exclusively opt-in.\nFrom the dashboard, you can toggle usage-based pricing for usage exceeding your paid plan.\nYou can also configure a spend limit in USD.\nOnce the spend limit is hit, we’ll stop any further usage until your prompt limit resets.</p>\n<p>We will bill for additional prompts when you’ve made prompts totaling $20, or when your billing date occurs, whichever comes first.</p>\n<p>Cost per request for each model can be found on <a href=\"./models.html\">the models page</a>.</p>\n<h2 id=\"business-usage\"><a class=\"header\" href=\"#business-usage\">Business Usage</a></h2>\n<p>Email <a href=\"mailto:sales@zed.dev\">sales@zed.dev</a> with any questions on business plans, metering, and usage-based pricing.</p>\n\n</main>",
+  "content_text": "Plans and Usage\nTo view your current usage, you can visit your account at zed.dev/account.\nYou’ll also find usage meters in-product when you’re nearing the limit for your plan or trial.\nAvailable Plans\nFor costs and more information on pricing, visit Zed’s pricing page.\nPlease note that if you’re interested in just using Zed as the world’s fastest editor, with no AI or subscription features, you can always do so for free, without authentication.\nUsage\n\nA prompt in Zed is an input from the user, initiated by pressing enter, composed of one or many requests. A prompt can be initiated from the Agent Panel, or via Inline Assist.\nA request in Zed is a response to a prompt, plus any tool calls that are initiated as part of that response. There may be one request per prompt, or many.\n\nMost models offered by Zed are metered per-prompt.\nSome models that use large context windows and unlimited tool calls (“Burn Mode”) count each individual request within a prompt against your prompt limit, since the agentic work spawned by the prompt is expensive to support.\nSee the Models page for a list of which subset of models are metered by request.\nPlans come with a set amount of prompts included, with the number varying depending on the plan you’ve selected.\nUsage-Based Pricing\nYou may opt in to usage-based pricing for prompts that exceed what is included in your paid plan from your account page.\nUsage-based pricing is only available with a paid plan, and is exclusively opt-in.\nFrom the dashboard, you can toggle usage-based pricing for usage exceeding your paid plan.\nYou can also configure a spend limit in USD.\nOnce the spend limit is hit, we’ll stop any further usage until your prompt limit resets.\nWe will bill for additional prompts when you’ve made prompts totaling $20, or when your billing date occurs, whichever comes first.\nCost per request for each model can be found on the models page.\nBusiness Usage\nEmail sales@zed.dev with any questions on business plans, metering, and usage-based pricing.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:32"
+}

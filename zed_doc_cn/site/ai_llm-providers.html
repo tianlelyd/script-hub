@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>LLM Providers | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="active">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#llm-providers" class="pagetoc-H1">LLM Providers</a>
+<a href="#use-your-own-keys" class="pagetoc-H2">Use Your Own Keys</a>
+<a href="#supported-providers" class="pagetoc-H2">Supported Providers</a>
+<a href="#amazon-bedrock" class="pagetoc-H3">Amazon Bedrock</a>
+<a href="#anthropic" class="pagetoc-H3">Anthropic</a>
+<a href="#deepseek" class="pagetoc-H3">DeepSeek</a>
+<a href="#github-copilot-chat" class="pagetoc-H3">GitHub Copilot Chat</a>
+<a href="#google-ai" class="pagetoc-H3">Google AI</a>
+<a href="#lmstudio" class="pagetoc-H3">LM Studio</a>
+<a href="#mistral" class="pagetoc-H3">Mistral</a>
+<a href="#ollama" class="pagetoc-H3">Ollama</a>
+<a href="#openai" class="pagetoc-H3">OpenAI</a>
+<a href="#openai-api-compatible" class="pagetoc-H3">OpenAI API Compatible</a>
+<a href="#openrouter" class="pagetoc-H3">OpenRouter</a>
+<a href="#vercel-v0" class="pagetoc-H3">Vercel v0</a>
+<a href="#xai" class="pagetoc-H3">xAI</a>
+<a href="#custom-provider-endpoint" class="pagetoc-H2">Custom Provider Endpoints</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="llm-providers"><a class="header" href="#llm-providers">LLM 提供商</a></h1>
+<p>要在 Zed 中使用 AI，您需要至少设置一个大型语言模型提供商。</p>
+<p>您可以通过订阅 <a href="./plans-and-usage.html">Zed 的套餐之一</a>，或者使用您已有的支持的提供商 API 密钥来实现。</p>
+<h2 id="use-your-own-keys"><a class="header" href="#use-your-own-keys">使用您自己的密钥</a></h2>
+<p>如果您已经拥有现有 LLM 提供商的 API 密钥——比如 Anthropic 或 OpenAI——您可以将它们添加到 Zed 中，并<strong><em>免费</em></strong>使用 Agent 面板的全部功能。</p>
+<p>要为指定提供商添加现有的 API 密钥，请前往 Agent 面板设置（<code>agent: open settings</code>），找到所需的提供商，将密钥粘贴到输入框中，然后按回车键。</p>
+<blockquote>
+<p>注意：API 密钥<em>不会</em>以明文形式存储在您的 <code>settings.json</code> 中，而是存储在您操作系统的安全凭据存储中。</p>
+</blockquote>
+<h2 id="supported-providers"><a class="header" href="#supported-providers">支持的提供商</a></h2>
+<p>以下是所有支持您使用自己 API 密钥的 LLM 提供商：</p>
+<ul>
+<li><a href="#amazon-bedrock">Amazon Bedrock</a></li>
+<li><a href="#anthropic">Anthropic</a></li>
+<li><a href="#deepseek">DeepSeek</a></li>
+<li><a href="#github-copilot-chat">GitHub Copilot Chat</a></li>
+<li><a href="#google-ai">Google AI</a></li>
+<li><a href="#lmstudio">LM Studio</a></li>
+<li><a href="#mistral">Mistral</a></li>
+<li><a href="#ollama">Ollama</a></li>
+<li><a href="#openai">OpenAI</a></li>
+<li><a href="#openai-api-compatible">OpenAI API Compatible</a></li>
+<li><a href="#openrouter">OpenRouter</a></li>
+<li><a href="#vercel-v0">Vercel</a></li>
+<li><a href="#xai">xAI</a></li>
+</ul>
+<h3 id="amazon-bedrock"><a class="header" href="#amazon-bedrock">Amazon Bedrock</a></h3>
+<blockquote>
+<p>支持与支持流式工具使用的模型一起使用工具。
+更多详细信息可以在 <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html">Amazon Bedrock 的工具使用文档</a>中找到。</p>
+</blockquote>
+<p>要使用 Amazon Bedrock 的模型，需要 AWS 身份验证。
+确保您的凭证设置了以下权限：</p>
+<ul>
+<li><code>bedrock:InvokeModelWithResponseStream</code></li>
+<li><code>bedrock:InvokeModel</code></li>
+</ul>
+<p>您的 IAM 策略应如下所示：</p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+</code></pre>
+<p>完成后，选择以下两种身份验证方法之一：</p>
+<h4 id="authentication-via-named-profile-recommended"><a class="header" href="#authentication-via-named-profile-recommended">通过命名配置文件进行身份验证（推荐）</a></h4>
+<ol>
+<li>确保您已安装 AWS CLI 并使用命名配置文件进行配置</li>
+<li>打开您的 <code>settings.json</code>（<code>zed: open settings</code>）并在 <code>language_models</code> 下包含 <code>bedrock</code> 键，设置如下：
+<pre><code class="language-json">{
+  "language_models": {
+    "bedrock": {
+      "authentication_method": "named_profile",
+      "region": "your-aws-region",
+      "profile": "your-profile-name"
+    }
+  }
+}
+</code></pre>
+</li>
+</ol>
+<h4 id="authentication-via-static-credentials"><a class="header" href="#authentication-via-static-credentials">通过静态凭证进行身份验证</a></h4>
+<p>虽然可以通过 Agent 面板设置 UI 直接输入您的 AWS 访问密钥和密钥来配置，但我们建议使用命名配置文件以获得更好的安全实践。
+要执行此操作：</p>
+<ol>
+<li>在 <a href="https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users">IAM 控制台</a>中创建一个您可以承担的 IAM 用户。</li>
+<li>为该用户创建安全凭证，保存它们并确保安全。</li>
+<li>使用（<code>agent: open settings</code>）打开 Agent 配置，然后转到 Amazon Bedrock 部分</li>
+<li>将步骤 2 中的凭证复制到相应的<strong>访问密钥 ID</strong>、<strong>秘密访问密钥</strong>和<strong>区域</strong>字段中。</li>
+</ol>
+<h4 id="cross-region-inference"><a class="header" href="#cross-region-inference">跨区域推理</a></h4>
+<p>Zed 对 Amazon Bedrock 的实现对所有支持的模型和区域组合都使用<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html">跨区域推理</a>。
+通过跨区域推理，您可以在多个 AWS 区域中分发流量，实现更高的吞吐量。</p>
+<p>例如，如果您从 <code>us-east-1</code> 使用 <code>Claude Sonnet 3.7 Thinking</code>，它可能会在美国各区域中处理，即：<code>us-east-1</code>、<code>us-east-2</code> 或 <code>us-west-2</code>。
+跨区域推理请求保留在数据原始驻留地理位置的 AWS 区域内。
+例如，在美国内发出的请求保留在美国内的 AWS 区域中。</p>
+<p>虽然数据仅存储在源区域中，但在跨区域推理期间，您的输入提示和输出结果可能会移动到源区域之外。
+所有数据都将通过 Amazon 的安全网络加密传输。</p>
+<p>我们将以尽力而为的方式为每个模型支持跨区域推理，请参阅<a href="https://github.com/zed-industries/zed/blob/main/crates/bedrock/src/models.rs#L297">跨区域推理方法代码</a>。</p>
+<p>有关最新的支持区域和模型，请参阅<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html">跨区域推理支持的模型和区域</a>。</p>
+<h3 id="anthropic"><a class="header" href="#anthropic">Anthropic</a></h3>
+<p>您可以通过 Agent 面板中的模型下拉菜单选择 Anthropic 模型来使用它们。</p>
+<ol>
+<li>注册 Anthropic 并<a href="https://console.anthropic.com/settings/keys">创建 API 密钥</a></li>
+<li>确保您的 Anthropic 账户有积分</li>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 Anthropic 部分</li>
+<li>输入您的 Anthropic API 密钥</li>
+</ol>
+<p>即使您为 Claude Pro 付费，您仍然需要<a href="https://console.anthropic.com/settings/plans">为额外的积分付费</a>才能通过 API 使用它。</p>
+<p>如果定义了 <code>ANTHROPIC_API_KEY</code> 环境变量，Zed 也会使用它。</p>
+<h4 id="anthropic-custom-models"><a class="header" href="#anthropic-custom-models">自定义模型</a></h4>
+<p>您可以通过将以下内容添加到您的 Zed <code>settings.json</code> 中来为 Anthropic 提供商添加自定义模型：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "anthropic": {
+      "available_models": [
+        {
+          "name": "claude-3-5-sonnet-20240620",
+          "display_name": "Sonnet 2024-June",
+          "max_tokens": 128000,
+          "max_output_tokens": 2560,
+          "cache_configuration": {
+            "max_cache_anchors": 10,
+            "min_total_token": 10000,
+            "should_speculate": false
+          },
+          "tool_override": "some-model-that-supports-toolcalling"
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>自定义模型将会在 Agent 面板的模型下拉菜单中列出。</p>
+<p>您可以通过将模型配置中的模式更改为 <code>thinking</code> 来配置模型使用<a href="https://docs.anthropic.com/en/docs/about-claude/models/extended-thinking-models">扩展思维</a>（如果它支持的话），例如：</p>
+<pre><code class="language-json">{
+  "name": "claude-sonnet-4-latest",
+  "display_name": "claude-sonnet-4-thinking",
+  "max_tokens": 200000,
+  "mode": {
+    "type": "thinking",
+    "budget_tokens": 4_096
+  }
+}
+</code></pre>
+<h3 id="deepseek"><a class="header" href="#deepseek">DeepSeek</a></h3>
+<ol>
+<li>访问 DeepSeek 平台并<a href="https://platform.deepseek.com/api_keys">创建 API 密钥</a></li>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 DeepSeek 部分</li>
+<li>输入您的 DeepSeek API 密钥</li>
+</ol>
+<p>DeepSeek API 密钥将保存在您的钥匙串中。</p>
+<p>如果定义了 <code>DEEPSEEK_API_KEY</code> 环境变量，Zed 也会使用它。</p>
+<h4 id="deepseek-custom-models"><a class="header" href="#deepseek-custom-models">自定义模型</a></h4>
+<p>Zed 代理预配置为使用常用模型（DeepSeek Chat、DeepSeek Reasoner）的最新版本。
+如果您希望使用备选模型或自定义 API 端点，可以通过向您的 Zed <code>settings.json</code> 添加以下内容来实现：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "deepseek": {
+      "api_url": "https://api.deepseek.com",
+      "available_models": [
+        {
+          "name": "deepseek-chat",
+          "display_name": "DeepSeek Chat",
+          "max_tokens": 64000
+        },
+        {
+          "name": "deepseek-reasoner",
+          "display_name": "DeepSeek Reasoner",
+          "max_tokens": 64000,
+          "max_output_tokens": 4096
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>自定义模型将列在 Agent 面板的模型下拉菜单中。
+如果需要，您也可以修改 <code>api_url</code> 来使用自定义端点。</p>
+<h3 id="github-copilot-chat"><a class="header" href="#github-copilot-chat">GitHub Copilot Chat</a></h3>
+<p>您可以通过在 Agent 面板的模型下拉菜单中选择 GitHub Copilot Chat 来与 Zed 代理一起使用它。</p>
+<ol>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 GitHub Copilot Chat 部分</li>
+<li>点击 <code>Sign in to use GitHub Copilot</code>，按照模态框中显示的步骤操作。</li>
+</ol>
+<p>或者，您可以通过 <code>GH_COPILOT_TOKEN</code> 环境变量提供 OAuth 令牌。</p>
+<blockquote>
+<p><strong>注意</strong>：如果您在下拉菜单中看不到特定模型，您可能需要在您的 <a href="https://github.com/settings/copilot/features">GitHub Copilot 设置</a>中启用它们。</p>
+</blockquote>
+<p>要在 Zed 中使用 Copilot Enterprise（用于代理和自动补全），您必须按照 <a href="./edit-prediction.html#github-copilot-enterprise">配置 GitHub Copilot Enterprise</a> 中的描述配置您的企业端点。</p>
+<h3 id="google-ai"><a class="header" href="#google-ai">Google AI</a></h3>
+<p>您可以通过在 Agent 面板的模型下拉菜单中选择 Gemini 模型来与 Zed 代理一起使用它们。</p>
+<ol>
+<li>转到 Google AI Studio 网站并<a href="https://aistudio.google.com/app/apikey">创建 API 密钥</a>。</li>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 Google AI 部分</li>
+<li>输入您的 Google AI API 密钥并按回车。</li>
+</ol>
+<p>Google AI API 密钥将保存在您的钥匙串中。</p>
+<p>如果定义了 <code>GEMINI_API_KEY</code> 环境变量，Zed 也会使用它。更多信息请参见 Gemini 文档中的<a href="https://ai.google.dev/gemini-api/docs/api-key">使用 Gemini API 密钥</a>。</p>
+<h4 id="google-ai-custom-models"><a class="header" href="#google-ai-custom-models">自定义模型</a></h4>
+<p>默认情况下，Zed 将使用模型的 <code>stable</code> 版本，但您可以使用特定版本的模型，包括<a href="https://ai.google.dev/gemini-api/docs/models/experimental-models">实验性模型</a>。您可以通过向模型添加 <code>mode</code> 配置来配置模型使用<a href="https://ai.google.dev/gemini-api/docs/thinking">思考模式</a>（如果它支持的话）。这对于控制推理令牌使用和响应速度很有用。如果未指定，Gemini 会自动选择思考预算。</p>
+<p>以下是您可以添加到 Zed <code>settings.json</code> 的自定义 Google AI 模型的示例：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "google": {
+      "available_models": [
+        {
+          "name": "gemini-2.5-flash-preview-05-20",
+          "display_name": "Gemini 2.5 Flash (Thinking)",
+          "max_tokens": 1000000,
+          "mode": {
+            "type": "thinking",
+            "budget_tokens": 24000
+          }
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>自定义模型将列在 Agent 面板的模型下拉菜单中。</p>
+<h3 id="lmstudio"><a class="header" href="#lmstudio">LM Studio</a></h3>
+<ol>
+<li>
+<p>下载并安装<a href="https://lmstudio.ai/download">最新版本的 LM Studio</a></p>
+</li>
+<li>
+<p>在应用中按 <code>cmd/ctrl-shift-m</code> 并下载至少一个模型（例如 qwen2.5-coder-7b）。或者，您可以通过 LM Studio CLI 获取模型：</p>
+<pre><code class="language-sh">lms get qwen2.5-coder-7b
+</code></pre>
+</li>
+<li>
+<p>通过执行以下命令确保 LM Studio API 服务器正在运行：</p>
+<pre><code class="language-sh">lms server start
+</code></pre>
+</li>
+</ol>
+<p>提示：设置 <a href="https://lmstudio.ai/docs/advanced/headless#run-the-llm-service-on-machine-login">LM Studio 作为登录项</a>以自动运行 LM Studio 服务器。</p>
+<h3 id="mistral"><a class="header" href="#mistral">Mistral</a></h3>
+<ol>
+<li>访问 Mistral 平台并<a href="https://console.mistral.ai/api-keys/">创建 API 密钥</a></li>
+<li>打开配置视图（<code>agent: open settings</code>）并导航到 Mistral 部分</li>
+<li>输入您的 Mistral API 密钥</li>
+</ol>
+<p>Mistral API 密钥将保存在您的钥匙串中。</p>
+<p>如果定义了 <code>MISTRAL_API_KEY</code> 环境变量，Zed 也会使用它。</p>
+<h4 id="mistral-custom-models"><a class="header" href="#mistral-custom-models">自定义模型</a></h4>
+<p>Zed 代理预配置了几个 Mistral 模型（codestral-latest、mistral-large-latest、mistral-medium-latest、mistral-small-latest、open-mistral-nemo 和 open-codestral-mamba）。
+所有默认模型都支持工具使用。
+如果您希望使用备选模型或自定义其参数，可以通过向您的 Zed <code>settings.json</code> 添加以下内容来实现：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "mistral": {
+      "api_url": "https://api.mistral.ai/v1",
+      "available_models": [
+        {
+          "name": "mistral-tiny-latest",
+          "display_name": "Mistral Tiny",
+          "max_tokens": 32000,
+          "max_output_tokens": 4096,
+          "max_completion_tokens": 1024,
+          "supports_tools": true,
+          "supports_images": false
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>自定义模型将列在 Agent 面板的模型下拉菜单中。</p>
+<h3 id="ollama"><a class="header" href="#ollama">Ollama</a></h3>
+<p>从 <a href="https://ollama.com/download">ollama.com/download</a> 下载并安装 Ollama（Linux 或 macOS），并使用 <code>ollama --version</code> 确保其正在运行。</p>
+<ol>
+<li>
+<p>下载<a href="https://ollama.com/models">可用模型</a>之一，例如 <code>mistral</code>：</p>
+<pre><code class="language-sh">ollama pull mistral
+</code></pre>
+</li>
+<li>
+<p>确保 Ollama 服务器正在运行。您可以通过运行 Ollama.app（macOS）或启动以下命令来启动它：</p>
+<pre><code class="language-sh">ollama serve
+</code></pre>
+</li>
+<li>
+<p>在 Agent 面板中，使用模型下拉菜单选择一个 Ollama 模型。</p>
+</li>
+</ol>
+<h4 id="ollama-context"><a class="header" href="#ollama-context">Ollama 上下文长度</a></h4>
+<p>Zed 预配置了最大上下文长度（<code>max_tokens</code>）以匹配常见模型的能力。
+Zed 向 Ollama 的 API 请求包含此参数作为 <code>num_ctx</code> 参数，但默认值不超过 <code>16384</code>，因此拥有约 16GB RAM 的用户能够开箱即用地使用大多数模型。</p>
+<p>有关完整的默认值集，请参见 <a href="https://github.com/zed-industries/zed/blob/main/crates/ollama/src/ollama.rs">ollama.rs 中的 get_max_tokens</a>。</p>
+<blockquote>
+<p><strong>注意</strong>：Agent 面板中显示的令牌计数仅为估计值，与模型的原生分词器会有所不同。</p>
+</blockquote>
+<p>根据您的硬件或使用情况，您可能希望通过 settings.json 限制或增加特定模型的上下文长度：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "ollama": {
+      "api_url": "http://localhost:11434",
+      "available_models": [
+        {
+          "name": "qwen2.5-coder",
+          "display_name": "qwen 2.5 coder 32K",
+          "max_tokens": 32768,
+          "supports_tools": true,
+          "supports_thinking": true,
+          "supports_images": true
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>如果您指定的上下文长度对于您的硬件来说太大，Ollama 会记录一个错误。
+您可以通过运行以下命令查看这些日志：<code>tail -f ~/.ollama/logs/ollama.log</code>（macOS）或 <code>journalctl -u ollama -f</code>（Linux）。
+根据您机器可用的内存，您可能需要将上下文长度调整为较小的值。</p>
+<p>您还可以为每个可用模型可选择性地指定 <code>keep_alive</code> 的值。
+这可以是一个整数（秒）或者一个字符串持续时间，如 "5m"、"10m"、"1h"、"1d" 等。
+例如，<code>"keep_alive": "120s"</code> 将允许远程服务器在 120 秒后卸载模型（释放 GPU VRAM）。</p>
+<p><code>supports_tools</code> 选项控制模型是否将使用额外的工具。
+如果模型在 Ollama 目录中标记为 <code>tools</code>，应该提供此选项，内置的 <code>Ask</code> 和 <code>Write</code> 配置文件可以使用。
+如果模型在 Ollama 目录中未标记为 <code>tools</code>，此选项仍可以设置为 <code>true</code>；但是，请注意只有 <code>Minimal</code> 内置配置文件会工作。</p>
+<p><code>supports_thinking</code> 选项控制模型是否在产生最终答案之前执行明确的"思考"（推理）过程。
+如果模型在 Ollama 目录中标记为 <code>thinking</code>，设置此选项，您就可以在 Zed 中使用它。</p>
+<p><code>supports_images</code> 选项启用模型的视觉能力，允许它处理对话上下文中包含的图像。
+如果模型在 Ollama 目录中标记为 <code>vision</code>，设置此选项，您就可以在 Zed 中使用它。</p>
+<h3 id="openai"><a class="header" href="#openai">OpenAI</a></h3>
+<ol>
+<li>访问 OpenAI 平台并<a href="https://platform.openai.com/account/api-keys">创建 API 密钥</a></li>
+<li>确保您的 OpenAI 账户有积分</li>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 OpenAI 部分</li>
+<li>输入您的 OpenAI API 密钥</li>
+</ol>
+<p>OpenAI API 密钥将保存在您的钥匙串中。</p>
+<p>如果定义了 <code>OPENAI_API_KEY</code> 环境变量，Zed 也会使用它。</p>
+<h4 id="openai-custom-models"><a class="header" href="#openai-custom-models">自定义模型</a></h4>
+<p>Zed 代理预配置为使用常见模型（GPT-5、GPT-5 mini、o4-mini、GPT-4.1 等）的最新版本。
+要使用备选模型（可能是预览版本），或者如果您希望控制请求参数，可以通过向您的 Zed <code>settings.json</code> 添加以下内容来实现：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "openai": {
+      "available_models": [
+        {
+          "name": "gpt-5",
+          "display_name": "gpt-5 high",
+          "reasoning_effort": "high",
+          "max_tokens": 272000,
+          "max_completion_tokens": 20000
+        },
+        {
+          "name": "gpt-4o-2024-08-06",
+          "display_name": "GPT 4o Summer 2024",
+          "max_tokens": 128000
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>您必须在 <code>max_tokens</code> 参数中提供模型的上下文窗口；这可以在 <a href="https://platform.openai.com/docs/models">OpenAI 模型文档</a>中找到。</p>
+<p>OpenAI <code>o1</code> 模型还应该设置 <code>max_completion_tokens</code> 以避免产生高推理令牌成本。
+自定义模型将列在 Agent 面板的模型下拉菜单中。</p>
+<h3 id="openai-api-compatible"><a class="header" href="#openai-api-compatible">OpenAI API Compatible</a></h3>
+<p>Zed 支持通过为 OpenAI 提供商指定自定义 <code>api_url</code> 和 <code>available_models</code> 来使用 <a href="https://platform.openai.com/docs/api-reference/chat">OpenAI 兼容的 API</a>。
+这对于连接其他托管服务（如 Together AI、Anyscale 等）或本地模型很有用。</p>
+<p>您可以通过 UI 或编辑您的 <code>settings.json</code> 来添加自定义的、OpenAI 兼容的模型。</p>
+<p>要通过 UI 进行操作，请转到 Agent 面板设置（<code>agent: open settings</code>）并查找"LLM Providers"部分标题右侧的"Add Provider"按钮。
+然后，填写模态框中可用的输入字段。</p>
+<p>要通过您的 <code>settings.json</code> 进行操作，请在 <code>language_models</code> 下添加以下代码片段：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "openai_compatible": {
+      // Using Together AI as an example
+      "Together AI": {
+        "api_url": "https://api.together.xyz/v1",
+        "available_models": [
+          {
+            "name": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "display_name": "Together Mixtral 8x7B",
+            "max_tokens": 32768,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+</code></pre>
+<p>默认情况下，OpenAI 兼容模型继承以下能力：</p>
+<ul>
+<li><code>tools</code>: true（支持工具/函数调用）</li>
+<li><code>images</code>: false（不支持图像输入）</li>
+<li><code>parallel_tool_calls</code>: false（不支持 <code>parallel_tool_calls</code> 参数）</li>
+<li><code>prompt_cache_key</code>: false（不支持 <code>prompt_cache_key</code> 参数）</li>
+</ul>
+<p>请注意，LLM API 密钥不存储在您的设置文件中。
+因此，请确保在您的环境变量中设置它（<code>&lt;PROVIDER_NAME&gt;_API_KEY=&lt;your api key&gt;</code>），以便您的设置可以获取它。在上面的示例中，应该是 <code>TOGETHER_AI_API_KEY=&lt;your api key&gt;</code>。</p>
+<h3 id="openrouter"><a class="header" href="#openrouter">OpenRouter</a></h3>
+<p>OpenRouter 通过单一 API 提供多个 AI 模型的访问。它支持兼容模型的工具使用。</p>
+<ol>
+<li>访问 <a href="https://openrouter.ai">OpenRouter</a> 并创建账户</li>
+<li>从您的 <a href="https://openrouter.ai/keys">OpenRouter 密钥页面</a>生成 API 密钥</li>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 OpenRouter 部分</li>
+<li>输入您的 OpenRouter API 密钥</li>
+</ol>
+<p>OpenRouter API 密钥将保存在您的钥匙串中。</p>
+<p>如果定义了 <code>OPENROUTER_API_KEY</code> 环境变量，Zed 也会使用它。</p>
+<h4 id="openrouter-custom-models"><a class="header" href="#openrouter-custom-models">自定义模型</a></h4>
+<p>您可以通过向您的 Zed <code>settings.json</code> 添加以下内容来向 OpenRouter 提供商添加自定义模型：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "open_router": {
+      "api_url": "https://openrouter.ai/api/v1",
+      "available_models": [
+        {
+          "name": "google/gemini-2.0-flash-thinking-exp",
+          "display_name": "Gemini 2.0 Flash (Thinking)",
+          "max_tokens": 200000,
+          "max_output_tokens": 8192,
+          "supports_tools": true,
+          "supports_images": true,
+          "mode": {
+            "type": "thinking",
+            "budget_tokens": 8000
+          }
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>每个模型的可用配置选项包括：</p>
+<ul>
+<li><code>name</code>（必需）：OpenRouter 使用的模型标识符</li>
+<li><code>display_name</code>（可选）：在 UI 中显示的人类可读名称</li>
+<li><code>max_tokens</code>（必需）：模型的上下文窗口大小</li>
+<li><code>max_output_tokens</code>（可选）：模型可以生成的最大令牌数</li>
+<li><code>max_completion_tokens</code>（可选）：最大完成令牌数</li>
+<li><code>supports_tools</code>（可选）：模型是否支持工具/函数调用</li>
+<li><code>supports_images</code>（可选）：模型是否支持图像输入</li>
+<li><code>mode</code>（可选）：思考模型的特殊模式配置</li>
+</ul>
+<p>您可以在 <a href="https://openrouter.ai/models">OpenRouter 模型页面</a>上找到可用的模型及其规格。</p>
+<p>自定义模型将列在 Agent 面板的模型下拉菜单中。</p>
+<h3 id="vercel-v0"><a class="header" href="#vercel-v0">Vercel v0</a></h3>
+<p><a href="https://vercel.com/docs/v0/api">Vercel v0</a> 是一个专门用于生成全栈应用的专家模型，具有针对 Next.js 和 Vercel 等现代技术栈优化的框架感知完成功能。
+它支持文本和图像输入，并提供快速流式响应。</p>
+<p>v0 模型是 <a href="/#openai-api-compatible">OpenAI 兼容模型</a>，但 Vercel 在面板的设置视图中被列为一级提供商。</p>
+<p>要开始在 Zed 中使用它，请确保您先创建了 <a href="https://v0.dev/chat/settings/keys">v0 API 密钥</a>。
+获得密钥后，将其直接粘贴到面板设置视图中的 Vercel 提供商部分。</p>
+<p>然后您应该在 Agent 面板的模型下拉菜单中找到它作为 <code>v0-1.5-md</code>。</p>
+<h3 id="xai"><a class="header" href="#xai">xAI</a></h3>
+<p>Zed 对 <a href="https://x.ai/">xAI</a> 模型提供一级支持。您可以使用您自己的 API 密钥来访问 Grok 模型。</p>
+<ol>
+<li>在 <a href="https://console.x.ai/team/default/api-keys">xAI 控制台中创建 API 密钥</a></li>
+<li>打开设置视图（<code>agent: open settings</code>）并转到 <strong>xAI</strong> 部分</li>
+<li>输入您的 xAI API 密钥</li>
+</ol>
+<p>xAI API 密钥将保存在您的钥匙串中。如果定义了 <code>XAI_API_KEY</code> 环境变量，Zed 也会使用它。</p>
+<blockquote>
+<p><strong>注意：</strong>虽然 xAI API 与 OpenAI 兼容，但 Zed 对其作为专用提供商提供一级支持。为了获得最佳体验，我们建议使用专用的 <code>x_ai</code> 提供商配置而不是 <a href="#openai-api-compatible">OpenAI API Compatible</a> 方法。</p>
+</blockquote>
+<h4 id="xai-custom-models"><a class="header" href="#xai-custom-models">自定义模型</a></h4>
+<p>Zed 代理预配置了常见的 Grok 模型。如果您希望使用备选模型或自定义其参数，可以通过向您的 Zed <code>settings.json</code> 添加以下内容来实现：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "x_ai": {
+      "api_url": "https://api.x.ai/v1",
+      "available_models": [
+        {
+          "name": "grok-1.5",
+          "display_name": "Grok 1.5",
+          "max_tokens": 131072,
+          "max_output_tokens": 8192
+        },
+        {
+          "name": "grok-1.5v",
+          "display_name": "Grok 1.5V (Vision)",
+          "max_tokens": 131072,
+          "max_output_tokens": 8192,
+          "supports_images": true
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<h2 id="custom-provider-endpoint"><a class="header" href="#custom-provider-endpoint">Custom Provider Endpoints</a></h2>
+<p>您可以为不同的提供商使用自定义 API 端点，只要它与提供商的 API 结构兼容。
+要做到这一点，请向您的 <code>settings.json</code> 添加以下内容：</p>
+<pre><code class="language-json">{
+  "language_models": {
+    "some-provider": {
+      "api_url": "http://localhost:11434"
+    }
+  }
+}
+</code></pre>
+<p>目前，<code>some-provider</code> 可以是以下任何一个值：<code>anthropic</code>、<code>google</code>、<code>ollama</code>、<code>openai</code>。</p>
+<p>这是支持模型的相同基础设施，例如支持 <a href="#openai-api-compatible">OpenAI 兼容</a>模型。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

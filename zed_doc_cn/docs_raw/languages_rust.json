@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/languages/rust.html",
+  "title": "Rust | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"rust\"><a class=\"header\" href=\"#rust\">Rust</a></h1>\n<p>Rust support is available natively in Zed.</p>\n<ul>\n<li>Tree-sitter: <a href=\"https://github.com/tree-sitter/tree-sitter-rust\">tree-sitter/tree-sitter-rust</a></li>\n<li>Language Server: <a href=\"https://github.com/rust-lang/rust-analyzer\">rust-lang/rust-analyzer</a></li>\n<li>Debug Adapter: <a href=\"https://github.com/vadimcn/codelldb\">CodeLLDB</a> (primary), <a href=\"https://sourceware.org/gdb/\">GDB</a> (secondary, not available on Apple silicon)</li>\n</ul>\n<!--\nTBD: Polish Rust Docs. Zed is a good rust editor, good Rust docs make it look like we care about Rust (we do!)\nTBD: Users may not know what inlayHints, don't start there.\nTBD: Provide explicit examples not just `....`\n-->\n<h2 id=\"inlay-hints\"><a class=\"header\" href=\"#inlay-hints\">Inlay Hints</a></h2>\n<p>The following configuration can be used to change the inlay hint settings for <code>rust-analyzer</code> in Rust:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"inlayHints\": {\n          \"maxLength\": null,\n          \"lifetimeElisionHints\": {\n            \"enable\": \"skip_trivial\",\n            \"useParameterNames\": true\n          },\n          \"closureReturnTypeHints\": {\n            \"enable\": \"always\"\n          }\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>See <a href=\"https://rust-analyzer.github.io/book/features.html#inlay-hints\">Inlay Hints</a> in the Rust Analyzer Manual for more information.</p>\n<h2 id=\"target-directory\"><a class=\"header\" href=\"#target-directory\">Target directory</a></h2>\n<p>The <code>rust-analyzer</code> target directory can be set in <code>initialization_options</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"rust\": {\n          \"analyzerTargetDir\": true\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>A <code>true</code> setting will set the target directory to <code>target/rust-analyzer</code>. You can set a custom directory with a string like <code>\"target/analyzer\"</code> instead of <code>true</code>.</p>\n<h2 id=\"binary\"><a class=\"header\" href=\"#binary\">Binary</a></h2>\n<p>You can configure which <code>rust-analyzer</code> binary Zed should use.</p>\n<p>By default, Zed will try to find a <code>rust-analyzer</code> in your <code>$PATH</code> and try to use that. If that binary successfully executes <code>rust-analyzer --help</code>, it's used. Otherwise, Zed will fall back to installing its own stable <code>rust-analyzer</code> version and use that.</p>\n<p>If you want to install pre-release <code>rust-analyzer</code> version instead you can instruct Zed to do so by setting <code>pre_release</code> to <code>true</code> in your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"fetch\": {\n        \"pre_release\": true\n      }\n    }\n  }\n}\n</code></pre>\n<p>If you want to disable Zed looking for a <code>rust-analyzer</code> binary, you can set <code>ignore_system_version</code> to <code>true</code> in your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"binary\": {\n        \"ignore_system_version\": true\n      }\n    }\n  }\n}\n</code></pre>\n<p>If you want to use a binary in a custom location, you can specify a <code>path</code> and optional <code>arguments</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"binary\": {\n        \"path\": \"/Users/example/bin/rust-analyzer\",\n        \"arguments\": []\n      }\n    }\n  }\n}\n</code></pre>\n<p>This <code>\"path\"</code> has to be an absolute path.</p>\n<h2 id=\"alternate-targets\"><a class=\"header\" href=\"#alternate-targets\">Alternate Targets</a></h2>\n<p>If want rust-analyzer to provide diagnostics for a target other than you current platform (e.g. for windows when running on macOS) you can use the following Zed lsp settings:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"cargo\": {\n          \"target\": \"x86_64-pc-windows-msvc\"\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>If you are using <code>rustup</code> and you can find a list of available target triples (<code>aarch64-apple-darwin</code>, <code>x86_64-unknown-linux-gnu</code>, etc) by running:</p>\n<pre><code class=\"language-sh\">rustup target list --installed\n</code></pre>\n<h2 id=\"lsp-tasks\"><a class=\"header\" href=\"#lsp-tasks\">LSP tasks</a></h2>\n<p>Zed provides tasks using tree-sitter, but rust-analyzer has an LSP extension method for querying file-related tasks via LSP.\nThis is enabled by default and can be configured as</p>\n<pre><code class=\"language-json\">\"lsp\": {\n  \"rust-analyzer\": {\n    \"enable_lsp_tasks\": true,\n  }\n}\n</code></pre>\n<h2 id=\"manual-cargo-diagnostics-fetch\"><a class=\"header\" href=\"#manual-cargo-diagnostics-fetch\">Manual Cargo Diagnostics fetch</a></h2>\n<p>By default, rust-analyzer has <code>checkOnSave: true</code> enabled, which causes every buffer save to trigger a <code>cargo check --workspace --all-targets</code> command.\nIf disabled with <code>checkOnSave: false</code> (see the example of the server configuration json above), it's still possible to fetch the diagnostics manually, with the <code>editor: run/clear/cancel flycheck</code> commands in Rust files to refresh cargo diagnostics; the project diagnostics editor will also refresh cargo diagnostics with <code>editor: run flycheck</code> command when the setting is enabled.</p>\n<h2 id=\"more-server-configuration\"><a class=\"header\" href=\"#more-server-configuration\">More server configuration</a></h2>\n<!--\nTBD: Is it possible to specify RUSTFLAGS? https://github.com/zed-industries/zed/issues/14334\n-->\n<p>Rust-analyzer <a href=\"https://rust-analyzer.github.io/book/\">manual</a> describes various features and configuration options for rust-analyzer language server.\nRust-analyzer in Zed runs with the default parameters.</p>\n<h3 id=\"large-projects-and-performance\"><a class=\"header\" href=\"#large-projects-and-performance\">Large projects and performance</a></h3>\n<p>One of the main caveats that might cause extensive resource usage on large projects, is the combination of the following features:</p>\n<pre><code>rust-analyzer.checkOnSave (default: true)\n    Run the check command for diagnostics on save.\n</code></pre>\n<pre><code>rust-analyzer.check.workspace (default: true)\n    Whether --workspace should be passed to cargo check. If false, -p &lt;package&gt; will be passed instead.\n</code></pre>\n<pre><code>rust-analyzer.cargo.allTargets (default: true)\n    Pass --all-targets to cargo invocation\n</code></pre>\n<p>Which would mean that every time Zed saves, a <code>cargo check --workspace --all-targets</code> command is run, checking the entire project (workspace), lib, doc, test, bin, bench and <a href=\"https://doc.rust-lang.org/cargo/reference/cargo-targets.html\">other targets</a>.</p>\n<p>While that works fine on small projects, it does not scale well.</p>\n<p>The alternatives would be to use <a href=\"../tasks.html\">tasks</a>, as Zed already provides a <code>cargo check --workspace --all-targets</code> task and the ability to cmd/ctrl-click on the terminal output to navigate to the error, and limit or turn off the check on save feature entirely.</p>\n<p>Check on save feature is responsible for returning part of the diagnostics based on cargo check output, so turning it off will limit rust-analyzer with its own <a href=\"https://rust-analyzer.github.io/book/diagnostics.html\">diagnostics</a>.</p>\n<p>Consider more <code>rust-analyzer.cargo.</code> and <code>rust-analyzer.check.</code> and <code>rust-analyzer.diagnostics.</code> settings from the manual for more fine-grained configuration.\nHere's a snippet for Zed settings.json (the language server will restart automatically after the <code>lsp.rust-analyzer</code> section is edited and saved):</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        // get more cargo-less diagnostics from rust-analyzer,\n        // which might include false-positives (those can be turned off by their names)\n        \"diagnostics\": {\n          \"experimental\": {\n            \"enable\": true\n          }\n        },\n        // To disable the checking entirely\n        // (ignores all cargo and check settings below)\n        \"checkOnSave\": false,\n        // To check the `lib` target only.\n        \"cargo\": {\n          \"allTargets\": false\n        },\n        // Use `-p` instead of `--workspace` for cargo check\n        \"check\": {\n          \"workspace\": false\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<h3 id=\"multi-project-workspaces\"><a class=\"header\" href=\"#multi-project-workspaces\">Multi-project workspaces</a></h3>\n<p>If you want rust-analyzer to analyze multiple Rust projects in the same folder that are not listed in <code>[members]</code> in the Cargo workspace,\nyou can list them in <code>linkedProjects</code> in the local project settings:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"linkedProjects\": [\"./path/to/a/Cargo.toml\", \"./path/to/b/Cargo.toml\"]\n      }\n    }\n  }\n}\n</code></pre>\n<h3 id=\"snippets\"><a class=\"header\" href=\"#snippets\">Snippets</a></h3>\n<p>There's a way get custom completion items from rust-analyzer, that will transform the code according to the snippet body:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"completion\": {\n          \"snippets\": {\n            \"custom\": {\n              \"Arc::new\": {\n                \"postfix\": \"arc\",\n                \"body\": [\"Arc::new(${receiver})\"],\n                \"requires\": \"std::sync::Arc\",\n                \"scope\": \"expr\"\n              },\n              \"Some\": {\n                \"postfix\": \"some\",\n                \"body\": [\"Some(${receiver})\"],\n                \"scope\": \"expr\"\n              },\n              \"Ok\": {\n                \"postfix\": \"ok\",\n                \"body\": [\"Ok(${receiver})\"],\n                \"scope\": \"expr\"\n              },\n              \"Rc::new\": {\n                \"postfix\": \"rc\",\n                \"body\": [\"Rc::new(${receiver})\"],\n                \"requires\": \"std::rc::Rc\",\n                \"scope\": \"expr\"\n              },\n              \"Box::pin\": {\n                \"postfix\": \"boxpin\",\n                \"body\": [\"Box::pin(${receiver})\"],\n                \"requires\": \"std::boxed::Box\",\n                \"scope\": \"expr\"\n              },\n              \"vec!\": {\n                \"postfix\": \"vec\",\n                \"body\": [\"vec![${receiver}]\"],\n                \"description\": \"vec![]\",\n                \"scope\": \"expr\"\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<h2 id=\"debugging\"><a class=\"header\" href=\"#debugging\">Debugging</a></h2>\n<p>Zed supports debugging Rust binaries and tests out of the box. Run <code class=\"hljs\">debugger: start</code> (<kbd class=\"keybinding\">f4|f4</kbd>) to launch one of these preconfigured debug tasks.</p>\n<p>For more control, you can add debug configurations to <code>.zed/debug.json</code>. See the examples below.</p>\n<h3 id=\"build-binary-then-debug\"><a class=\"header\" href=\"#build-binary-then-debug\">Build binary then debug</a></h3>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Build &amp; Debug native binary\",\n    \"build\": {\n      \"command\": \"cargo\",\n      \"args\": [\"build\"]\n    },\n    \"program\": \"$ZED_WORKTREE_ROOT/target/debug/binary\",\n    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust\n    \"sourceLanguages\": [\"rust\"],\n    \"request\": \"launch\",\n    \"adapter\": \"CodeLLDB\"\n  }\n]\n</code></pre>\n<h3 id=\"automatically-locate-a-debug-target-based-on-build-command\"><a class=\"header\" href=\"#automatically-locate-a-debug-target-based-on-build-command\">Automatically locate a debug target based on build command</a></h3>\n<p>When you use <code>cargo build</code> or <code>cargo test</code> as the build command, Zed can infer the path to the output binary.</p>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Build &amp; Debug native binary\",\n    \"adapter\": \"CodeLLDB\",\n    \"build\": {\n      \"command\": \"cargo\",\n      \"args\": [\"build\"]\n    },\n    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust\n    \"sourceLanguages\": [\"rust\"]\n  }\n]\n</code></pre>\n\n</main>",
+  "content_text": "Rust\nRust support is available natively in Zed.\n\nTree-sitter: tree-sitter/tree-sitter-rust\nLanguage Server: rust-lang/rust-analyzer\nDebug Adapter: CodeLLDB (primary), GDB (secondary, not available on Apple silicon)\n\n\nInlay Hints\nThe following configuration can be used to change the inlay hint settings for rust-analyzer in Rust:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"inlayHints\": {\n          \"maxLength\": null,\n          \"lifetimeElisionHints\": {\n            \"enable\": \"skip_trivial\",\n            \"useParameterNames\": true\n          },\n          \"closureReturnTypeHints\": {\n            \"enable\": \"always\"\n          }\n        }\n      }\n    }\n  }\n}\n\nSee Inlay Hints in the Rust Analyzer Manual for more information.\nTarget directory\nThe rust-analyzer target directory can be set in initialization_options:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"rust\": {\n          \"analyzerTargetDir\": true\n        }\n      }\n    }\n  }\n}\n\nA true setting will set the target directory to target/rust-analyzer. You can set a custom directory with a string like \"target/analyzer\" instead of true.\nBinary\nYou can configure which rust-analyzer binary Zed should use.\nBy default, Zed will try to find a rust-analyzer in your $PATH and try to use that. If that binary successfully executes rust-analyzer --help, it's used. Otherwise, Zed will fall back to installing its own stable rust-analyzer version and use that.\nIf you want to install pre-release rust-analyzer version instead you can instruct Zed to do so by setting pre_release to true in your settings.json:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"fetch\": {\n        \"pre_release\": true\n      }\n    }\n  }\n}\n\nIf you want to disable Zed looking for a rust-analyzer binary, you can set ignore_system_version to true in your settings.json:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"binary\": {\n        \"ignore_system_version\": true\n      }\n    }\n  }\n}\n\nIf you want to use a binary in a custom location, you can specify a path and optional arguments:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"binary\": {\n        \"path\": \"/Users/example/bin/rust-analyzer\",\n        \"arguments\": []\n      }\n    }\n  }\n}\n\nThis \"path\" has to be an absolute path.\nAlternate Targets\nIf want rust-analyzer to provide diagnostics for a target other than you current platform (e.g. for windows when running on macOS) you can use the following Zed lsp settings:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"cargo\": {\n          \"target\": \"x86_64-pc-windows-msvc\"\n        }\n      }\n    }\n  }\n}\n\nIf you are using rustup and you can find a list of available target triples (aarch64-apple-darwin, x86_64-unknown-linux-gnu, etc) by running:\nrustup target list --installed\n\nLSP tasks\nZed provides tasks using tree-sitter, but rust-analyzer has an LSP extension method for querying file-related tasks via LSP.\nThis is enabled by default and can be configured as\n\"lsp\": {\n  \"rust-analyzer\": {\n    \"enable_lsp_tasks\": true,\n  }\n}\n\nManual Cargo Diagnostics fetch\nBy default, rust-analyzer has checkOnSave: true enabled, which causes every buffer save to trigger a cargo check --workspace --all-targets command.\nIf disabled with checkOnSave: false (see the example of the server configuration json above), it's still possible to fetch the diagnostics manually, with the editor: run/clear/cancel flycheck commands in Rust files to refresh cargo diagnostics; the project diagnostics editor will also refresh cargo diagnostics with editor: run flycheck command when the setting is enabled.\nMore server configuration\n\nRust-analyzer manual describes various features and configuration options for rust-analyzer language server.\nRust-analyzer in Zed runs with the default parameters.\nLarge projects and performance\nOne of the main caveats that might cause extensive resource usage on large projects, is the combination of the following features:\nrust-analyzer.checkOnSave (default: true)\n    Run the check command for diagnostics on save.\n\nrust-analyzer.check.workspace (default: true)\n    Whether --workspace should be passed to cargo check. If false, -p <package> will be passed instead.\n\nrust-analyzer.cargo.allTargets (default: true)\n    Pass --all-targets to cargo invocation\n\nWhich would mean that every time Zed saves, a cargo check --workspace --all-targets command is run, checking the entire project (workspace), lib, doc, test, bin, bench and other targets.\nWhile that works fine on small projects, it does not scale well.\nThe alternatives would be to use tasks, as Zed already provides a cargo check --workspace --all-targets task and the ability to cmd/ctrl-click on the terminal output to navigate to the error, and limit or turn off the check on save feature entirely.\nCheck on save feature is responsible for returning part of the diagnostics based on cargo check output, so turning it off will limit rust-analyzer with its own diagnostics.\nConsider more rust-analyzer.cargo. and rust-analyzer.check. and rust-analyzer.diagnostics. settings from the manual for more fine-grained configuration.\nHere's a snippet for Zed settings.json (the language server will restart automatically after the lsp.rust-analyzer section is edited and saved):\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        // get more cargo-less diagnostics from rust-analyzer,\n        // which might include false-positives (those can be turned off by their names)\n        \"diagnostics\": {\n          \"experimental\": {\n            \"enable\": true\n          }\n        },\n        // To disable the checking entirely\n        // (ignores all cargo and check settings below)\n        \"checkOnSave\": false,\n        // To check the `lib` target only.\n        \"cargo\": {\n          \"allTargets\": false\n        },\n        // Use `-p` instead of `--workspace` for cargo check\n        \"check\": {\n          \"workspace\": false\n        }\n      }\n    }\n  }\n}\n\nMulti-project workspaces\nIf you want rust-analyzer to analyze multiple Rust projects in the same folder that are not listed in [members] in the Cargo workspace,\nyou can list them in linkedProjects in the local project settings:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"linkedProjects\": [\"./path/to/a/Cargo.toml\", \"./path/to/b/Cargo.toml\"]\n      }\n    }\n  }\n}\n\nSnippets\nThere's a way get custom completion items from rust-analyzer, that will transform the code according to the snippet body:\n{\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"completion\": {\n          \"snippets\": {\n            \"custom\": {\n              \"Arc::new\": {\n                \"postfix\": \"arc\",\n                \"body\": [\"Arc::new(${receiver})\"],\n                \"requires\": \"std::sync::Arc\",\n                \"scope\": \"expr\"\n              },\n              \"Some\": {\n                \"postfix\": \"some\",\n                \"body\": [\"Some(${receiver})\"],\n                \"scope\": \"expr\"\n              },\n              \"Ok\": {\n                \"postfix\": \"ok\",\n                \"body\": [\"Ok(${receiver})\"],\n                \"scope\": \"expr\"\n              },\n              \"Rc::new\": {\n                \"postfix\": \"rc\",\n                \"body\": [\"Rc::new(${receiver})\"],\n                \"requires\": \"std::rc::Rc\",\n                \"scope\": \"expr\"\n              },\n              \"Box::pin\": {\n                \"postfix\": \"boxpin\",\n                \"body\": [\"Box::pin(${receiver})\"],\n                \"requires\": \"std::boxed::Box\",\n                \"scope\": \"expr\"\n              },\n              \"vec!\": {\n                \"postfix\": \"vec\",\n                \"body\": [\"vec![${receiver}]\"],\n                \"description\": \"vec![]\",\n                \"scope\": \"expr\"\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nDebugging\nZed supports debugging Rust binaries and tests out of the box. Run debugger: start (f4|f4) to launch one of these preconfigured debug tasks.\nFor more control, you can add debug configurations to .zed/debug.json. See the examples below.\nBuild binary then debug\n[\n  {\n    \"label\": \"Build & Debug native binary\",\n    \"build\": {\n      \"command\": \"cargo\",\n      \"args\": [\"build\"]\n    },\n    \"program\": \"$ZED_WORKTREE_ROOT/target/debug/binary\",\n    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust\n    \"sourceLanguages\": [\"rust\"],\n    \"request\": \"launch\",\n    \"adapter\": \"CodeLLDB\"\n  }\n]\n\nAutomatically locate a debug target based on build command\nWhen you use cargo build or cargo test as the build command, Zed can infer the path to the output binary.\n[\n  {\n    \"label\": \"Build & Debug native binary\",\n    \"adapter\": \"CodeLLDB\",\n    \"build\": {\n      \"command\": \"cargo\",\n      \"args\": [\"build\"]\n    },\n    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust\n    \"sourceLanguages\": [\"rust\"]\n  }\n]",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:01"
+}

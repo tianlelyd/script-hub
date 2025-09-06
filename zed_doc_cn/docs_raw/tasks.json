@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/tasks.html",
+  "title": "Tasks | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"tasks\"><a class=\"header\" href=\"#tasks\">Tasks</a></h1>\n<p>Zed supports ways to spawn (and rerun) commands using its integrated terminal to output the results. These commands can read a limited subset of Zed state (such as a path to the file currently being edited or selected text).</p>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Example task\",\n    \"command\": \"for i in {1..5}; do echo \\\"Hello $i/5\\\"; sleep 1; done\",\n    //\"args\": [],\n    // Env overrides for the command, will be appended to the terminal's environment from the settings.\n    \"env\": { \"foo\": \"bar\" },\n    // Current working directory to spawn the command into, defaults to current project root.\n    //\"cwd\": \"/path/to/working/directory\",\n    // Whether to use a new terminal tab or reuse the existing one to spawn the process, defaults to `false`.\n    \"use_new_terminal\": false,\n    // Whether to allow multiple instances of the same task to be run, or rather wait for the existing ones to finish, defaults to `false`.\n    \"allow_concurrent_runs\": false,\n    // What to do with the terminal pane and tab, after the command was started:\n    // * `always` — always show the task's pane, and focus the corresponding tab in it (default)\n    // * `no_focus` — always show the task's pane, add the task's tab in it, but don't focus it\n    // * `never` — do not alter focus, but still add/reuse the task's tab in its pane\n    \"reveal\": \"always\",\n    // What to do with the terminal pane and tab, after the command has finished:\n    // * `never` — Do nothing when the command finishes (default)\n    // * `always` — always hide the terminal tab, hide the pane also if it was the last tab in it\n    // * `on_success` — hide the terminal tab on task success only, otherwise behaves similar to `always`\n    \"hide\": \"never\",\n    // Which shell to use when running a task inside the terminal.\n    // May take 3 values:\n    // 1. (default) Use the system's default terminal configuration in /etc/passwd\n    //      \"shell\": \"system\"\n    // 2. A program:\n    //      \"shell\": {\n    //        \"program\": \"sh\"\n    //      }\n    // 3. A program with arguments:\n    //     \"shell\": {\n    //         \"with_arguments\": {\n    //           \"program\": \"/bin/bash\",\n    //           \"args\": [\"--login\"]\n    //         }\n    //     }\n    \"shell\": \"system\",\n    // Whether to show the task line in the output of the spawned task, defaults to `true`.\n    \"show_summary\": true,\n    // Whether to show the command line in the output of the spawned task, defaults to `true`.\n    \"show_output\": true\n    // Represents the tags for inline runnable indicators, or spawning multiple tasks at once.\n    // \"tags\": []\n  }\n]\n</code></pre>\n<p>There are two actions that drive the workflow of using tasks: <code>task: spawn</code> and <code>task: rerun</code>.\n<code>task: spawn</code> opens a modal with all available tasks in the current file.\n<code>task: rerun</code> reruns the most recently spawned task. You can also rerun tasks from the task modal.</p>\n<p>By default, rerunning tasks reuses the same terminal (due to the <code>\"use_new_terminal\": false</code> default) but waits for the previous task to finish before starting (due to the <code>\"allow_concurrent_runs\": false</code> default).</p>\n<p>Keep <code>\"use_new_terminal\": false</code> and set <code>\"allow_concurrent_runs\": true</code> to allow cancelling previous tasks on rerun.</p>\n<h2 id=\"task-templates\"><a class=\"header\" href=\"#task-templates\">Task templates</a></h2>\n<p>Tasks can be defined:</p>\n<ul>\n<li>in the global <code>tasks.json</code> file; such tasks are available in all Zed projects you work on. This file is usually located in <code>~/.config/zed/tasks.json</code>. You can edit them by using the <code>zed: open tasks</code> action.</li>\n<li>in the worktree-specific (local) <code>.zed/tasks.json</code> file; such tasks are available only when working on a project with that worktree included. You can edit worktree-specific tasks by using the <code>zed: open project tasks</code> action.</li>\n<li>on the fly with <a href=\"#oneshot-tasks\">oneshot tasks</a>. These tasks are project-specific and do not persist across sessions.</li>\n<li>by language extension.</li>\n</ul>\n<h2 id=\"variables\"><a class=\"header\" href=\"#variables\">Variables</a></h2>\n<p>Zed tasks act just like your shell; that also means that you can reference environmental variables via sh-esque <code>$VAR_NAME</code> syntax. A couple of additional environmental variables are set for your convenience.\nThese variables allow you to pull information from the current editor and use it in your tasks. The following variables are available:</p>\n<ul>\n<li><code>ZED_COLUMN</code>: current line column</li>\n<li><code>ZED_ROW</code>: current line row</li>\n<li><code>ZED_FILE</code>: absolute path of the currently opened file (e.g. <code>/Users/my-user/path/to/project/src/main.rs</code>)</li>\n<li><code>ZED_FILENAME</code>: filename of the currently opened file (e.g. <code>main.rs</code>)</li>\n<li><code>ZED_DIRNAME</code>: absolute path of the currently opened file with file name stripped (e.g. <code>/Users/my-user/path/to/project/src</code>)</li>\n<li><code>ZED_RELATIVE_FILE</code>: path of the currently opened file, relative to <code>ZED_WORKTREE_ROOT</code> (e.g. <code>src/main.rs</code>)</li>\n<li><code>ZED_RELATIVE_DIR</code>: path of the currently opened file's directory, relative to <code>ZED_WORKTREE_ROOT</code> (e.g. <code>src</code>)</li>\n<li><code>ZED_STEM</code>: stem (filename without extension) of the currently opened file (e.g. <code>main</code>)</li>\n<li><code>ZED_SYMBOL</code>: currently selected symbol; should match the last symbol shown in a symbol breadcrumb (e.g. <code>mod tests &gt; fn test_task_contexts</code>)</li>\n<li><code>ZED_SELECTED_TEXT</code>: currently selected text</li>\n<li><code>ZED_WORKTREE_ROOT</code>: absolute path to the root of the current worktree. (e.g. <code>/Users/my-user/path/to/project</code>)</li>\n<li><code>ZED_CUSTOM_RUST_PACKAGE</code>: (Rust-specific) name of the parent package of $ZED_FILE source file.</li>\n</ul>\n<p>To use a variable in a task, prefix it with a dollar sign (<code>$</code>):</p>\n<pre><code class=\"language-json\">{\n  \"label\": \"echo current file's path\",\n  \"command\": \"echo $ZED_FILE\"\n}\n</code></pre>\n<p>You can also use verbose syntax that allows specifying a default if a given variable is not available: <code>${ZED_FILE:default_value}</code></p>\n<p>These environmental variables can also be used in tasks' <code>cwd</code>, <code>args</code>, and <code>label</code> fields.</p>\n<h3 id=\"variable-quoting\"><a class=\"header\" href=\"#variable-quoting\">Variable Quoting</a></h3>\n<p>When working with paths containing spaces or other special characters, please ensure variables are properly escaped.</p>\n<p>For example, instead of this (which will fail if the path has a space):</p>\n<pre><code class=\"language-json\">{\n  \"label\": \"stat current file\",\n  \"command\": \"stat $ZED_FILE\"\n}\n</code></pre>\n<p>Provide the following:</p>\n<pre><code class=\"language-json\">{\n  \"label\": \"stat current file\",\n  \"command\": \"stat\",\n  \"args\": [\"$ZED_FILE\"]\n}\n</code></pre>\n<p>Or explicitly include escaped quotes like so:</p>\n<pre><code class=\"language-json\">{\n  \"label\": \"stat current file\",\n  \"command\": \"stat \\\"$ZED_FILE\\\"\"\n}\n</code></pre>\n<h2 id=\"oneshot-tasks\"><a class=\"header\" href=\"#oneshot-tasks\">Oneshot tasks</a></h2>\n<p>The same task modal opened via <code>task: spawn</code> supports arbitrary bash-like command execution: type a command inside the modal text field, and use <code>opt-enter</code> to spawn it.</p>\n<p>The task modal persists these ad-hoc commands for the duration of the session, <code>task: rerun</code> will also rerun such tasks if they were the last ones spawned.</p>\n<p>You can also adjust the currently selected task in a modal (<code>tab</code> is the default key binding). Doing so will put its command into a prompt that can then be edited &amp; spawned as a oneshot task.</p>\n<h3 id=\"ephemeral-tasks\"><a class=\"header\" href=\"#ephemeral-tasks\">Ephemeral tasks</a></h3>\n<p>You can use the <code>cmd</code> modifier when spawning a task via a modal; tasks spawned this way will not have their usage count increased (thus, they will not be respawned with <code>task: rerun</code> and they won't have a high rank in the task modal).\nThe intended use of ephemeral tasks is to stay in the flow with continuous <code>task: rerun</code> usage.</p>\n<h2 id=\"custom-keybindings-for-tasks\"><a class=\"header\" href=\"#custom-keybindings-for-tasks\">Custom keybindings for tasks</a></h2>\n<p>You can define your own keybindings for your tasks via an additional argument to <code>task::Spawn</code>. If you wanted to bind the aforementioned <code>echo current file's path</code> task to <code>alt-g</code>, you would add the following snippet in your <a href=\"./key-bindings.html\"><code>keymap.json</code></a> file:</p>\n<pre><code class=\"language-json\">{\n  \"context\": \"Workspace\",\n  \"bindings\": {\n    \"alt-g\": [\"task::Spawn\", { \"task_name\": \"echo current file's path\" }]\n  }\n}\n</code></pre>\n<p>Note that these tasks can also have a 'target' specified to control where the spawned task should show up.\nThis could be useful for launching a terminal application that you want to use in the center area:</p>\n<pre><code class=\"language-json\">// In tasks.json\n{\n  \"label\": \"start lazygit\",\n  \"command\": \"lazygit -p $ZED_WORKTREE_ROOT\"\n}\n</code></pre>\n<pre><code class=\"language-json\">// In keymap.json\n{\n  \"context\": \"Workspace\",\n  \"bindings\": {\n    \"alt-g\": [\n      \"task::Spawn\",\n      { \"task_name\": \"start lazygit\", \"reveal_target\": \"center\" }\n    ]\n  }\n}\n</code></pre>\n<h2 id=\"binding-runnable-tags-to-task-templates\"><a class=\"header\" href=\"#binding-runnable-tags-to-task-templates\">Binding runnable tags to task templates</a></h2>\n<p>Zed supports overriding the default action for inline runnable indicators via workspace-local and global <code>tasks.json</code> file with the following precedence hierarchy:</p>\n<ol>\n<li>Workspace <code>tasks.json</code></li>\n<li>Global <code>tasks.json</code></li>\n<li>Language-provided tag bindings (default).</li>\n</ol>\n<p>To tag a task, add the runnable tag name to the <code>tags</code> field on the task template:</p>\n<pre><code class=\"language-json\">{\n  \"label\": \"echo current file's path\",\n  \"command\": \"echo $ZED_FILE\",\n  \"tags\": [\"rust-test\"]\n}\n</code></pre>\n<p>In doing so, you can change which task is shown in the runnables indicator.</p>\n<h2 id=\"keybindings-to-run-tasks-bound-to-runnables\"><a class=\"header\" href=\"#keybindings-to-run-tasks-bound-to-runnables\">Keybindings to run tasks bound to runnables</a></h2>\n<p>When you have a task definition that is bound to the runnable, you can quickly run it using <a href=\"https://zed.dev/docs/configuring-languages?#code-actions\">Code Actions</a> that you can trigger either via <code>editor: Toggle Code Actions</code> command or by the <code>cmd-.</code>/<code>ctrl-.</code> shortcut. Your task will be the first in the dropdown. The task will run immediately if there are no additional Code Actions for this line.</p>\n\n</main>",
+  "content_text": "Tasks\nZed supports ways to spawn (and rerun) commands using its integrated terminal to output the results. These commands can read a limited subset of Zed state (such as a path to the file currently being edited or selected text).\n[\n  {\n    \"label\": \"Example task\",\n    \"command\": \"for i in {1..5}; do echo \\\"Hello $i/5\\\"; sleep 1; done\",\n    //\"args\": [],\n    // Env overrides for the command, will be appended to the terminal's environment from the settings.\n    \"env\": { \"foo\": \"bar\" },\n    // Current working directory to spawn the command into, defaults to current project root.\n    //\"cwd\": \"/path/to/working/directory\",\n    // Whether to use a new terminal tab or reuse the existing one to spawn the process, defaults to `false`.\n    \"use_new_terminal\": false,\n    // Whether to allow multiple instances of the same task to be run, or rather wait for the existing ones to finish, defaults to `false`.\n    \"allow_concurrent_runs\": false,\n    // What to do with the terminal pane and tab, after the command was started:\n    // * `always` — always show the task's pane, and focus the corresponding tab in it (default)\n    // * `no_focus` — always show the task's pane, add the task's tab in it, but don't focus it\n    // * `never` — do not alter focus, but still add/reuse the task's tab in its pane\n    \"reveal\": \"always\",\n    // What to do with the terminal pane and tab, after the command has finished:\n    // * `never` — Do nothing when the command finishes (default)\n    // * `always` — always hide the terminal tab, hide the pane also if it was the last tab in it\n    // * `on_success` — hide the terminal tab on task success only, otherwise behaves similar to `always`\n    \"hide\": \"never\",\n    // Which shell to use when running a task inside the terminal.\n    // May take 3 values:\n    // 1. (default) Use the system's default terminal configuration in /etc/passwd\n    //      \"shell\": \"system\"\n    // 2. A program:\n    //      \"shell\": {\n    //        \"program\": \"sh\"\n    //      }\n    // 3. A program with arguments:\n    //     \"shell\": {\n    //         \"with_arguments\": {\n    //           \"program\": \"/bin/bash\",\n    //           \"args\": [\"--login\"]\n    //         }\n    //     }\n    \"shell\": \"system\",\n    // Whether to show the task line in the output of the spawned task, defaults to `true`.\n    \"show_summary\": true,\n    // Whether to show the command line in the output of the spawned task, defaults to `true`.\n    \"show_output\": true\n    // Represents the tags for inline runnable indicators, or spawning multiple tasks at once.\n    // \"tags\": []\n  }\n]\n\nThere are two actions that drive the workflow of using tasks: task: spawn and task: rerun.\ntask: spawn opens a modal with all available tasks in the current file.\ntask: rerun reruns the most recently spawned task. You can also rerun tasks from the task modal.\nBy default, rerunning tasks reuses the same terminal (due to the \"use_new_terminal\": false default) but waits for the previous task to finish before starting (due to the \"allow_concurrent_runs\": false default).\nKeep \"use_new_terminal\": false and set \"allow_concurrent_runs\": true to allow cancelling previous tasks on rerun.\nTask templates\nTasks can be defined:\n\nin the global tasks.json file; such tasks are available in all Zed projects you work on. This file is usually located in ~/.config/zed/tasks.json. You can edit them by using the zed: open tasks action.\nin the worktree-specific (local) .zed/tasks.json file; such tasks are available only when working on a project with that worktree included. You can edit worktree-specific tasks by using the zed: open project tasks action.\non the fly with oneshot tasks. These tasks are project-specific and do not persist across sessions.\nby language extension.\n\nVariables\nZed tasks act just like your shell; that also means that you can reference environmental variables via sh-esque $VAR_NAME syntax. A couple of additional environmental variables are set for your convenience.\nThese variables allow you to pull information from the current editor and use it in your tasks. The following variables are available:\n\nZED_COLUMN: current line column\nZED_ROW: current line row\nZED_FILE: absolute path of the currently opened file (e.g. /Users/my-user/path/to/project/src/main.rs)\nZED_FILENAME: filename of the currently opened file (e.g. main.rs)\nZED_DIRNAME: absolute path of the currently opened file with file name stripped (e.g. /Users/my-user/path/to/project/src)\nZED_RELATIVE_FILE: path of the currently opened file, relative to ZED_WORKTREE_ROOT (e.g. src/main.rs)\nZED_RELATIVE_DIR: path of the currently opened file's directory, relative to ZED_WORKTREE_ROOT (e.g. src)\nZED_STEM: stem (filename without extension) of the currently opened file (e.g. main)\nZED_SYMBOL: currently selected symbol; should match the last symbol shown in a symbol breadcrumb (e.g. mod tests > fn test_task_contexts)\nZED_SELECTED_TEXT: currently selected text\nZED_WORKTREE_ROOT: absolute path to the root of the current worktree. (e.g. /Users/my-user/path/to/project)\nZED_CUSTOM_RUST_PACKAGE: (Rust-specific) name of the parent package of $ZED_FILE source file.\n\nTo use a variable in a task, prefix it with a dollar sign ($):\n{\n  \"label\": \"echo current file's path\",\n  \"command\": \"echo $ZED_FILE\"\n}\n\nYou can also use verbose syntax that allows specifying a default if a given variable is not available: ${ZED_FILE:default_value}\nThese environmental variables can also be used in tasks' cwd, args, and label fields.\nVariable Quoting\nWhen working with paths containing spaces or other special characters, please ensure variables are properly escaped.\nFor example, instead of this (which will fail if the path has a space):\n{\n  \"label\": \"stat current file\",\n  \"command\": \"stat $ZED_FILE\"\n}\n\nProvide the following:\n{\n  \"label\": \"stat current file\",\n  \"command\": \"stat\",\n  \"args\": [\"$ZED_FILE\"]\n}\n\nOr explicitly include escaped quotes like so:\n{\n  \"label\": \"stat current file\",\n  \"command\": \"stat \\\"$ZED_FILE\\\"\"\n}\n\nOneshot tasks\nThe same task modal opened via task: spawn supports arbitrary bash-like command execution: type a command inside the modal text field, and use opt-enter to spawn it.\nThe task modal persists these ad-hoc commands for the duration of the session, task: rerun will also rerun such tasks if they were the last ones spawned.\nYou can also adjust the currently selected task in a modal (tab is the default key binding). Doing so will put its command into a prompt that can then be edited & spawned as a oneshot task.\nEphemeral tasks\nYou can use the cmd modifier when spawning a task via a modal; tasks spawned this way will not have their usage count increased (thus, they will not be respawned with task: rerun and they won't have a high rank in the task modal).\nThe intended use of ephemeral tasks is to stay in the flow with continuous task: rerun usage.\nCustom keybindings for tasks\nYou can define your own keybindings for your tasks via an additional argument to task::Spawn. If you wanted to bind the aforementioned echo current file's path task to alt-g, you would add the following snippet in your keymap.json file:\n{\n  \"context\": \"Workspace\",\n  \"bindings\": {\n    \"alt-g\": [\"task::Spawn\", { \"task_name\": \"echo current file's path\" }]\n  }\n}\n\nNote that these tasks can also have a 'target' specified to control where the spawned task should show up.\nThis could be useful for launching a terminal application that you want to use in the center area:\n// In tasks.json\n{\n  \"label\": \"start lazygit\",\n  \"command\": \"lazygit -p $ZED_WORKTREE_ROOT\"\n}\n\n// In keymap.json\n{\n  \"context\": \"Workspace\",\n  \"bindings\": {\n    \"alt-g\": [\n      \"task::Spawn\",\n      { \"task_name\": \"start lazygit\", \"reveal_target\": \"center\" }\n    ]\n  }\n}\n\nBinding runnable tags to task templates\nZed supports overriding the default action for inline runnable indicators via workspace-local and global tasks.json file with the following precedence hierarchy:\n\nWorkspace tasks.json\nGlobal tasks.json\nLanguage-provided tag bindings (default).\n\nTo tag a task, add the runnable tag name to the tags field on the task template:\n{\n  \"label\": \"echo current file's path\",\n  \"command\": \"echo $ZED_FILE\",\n  \"tags\": [\"rust-test\"]\n}\n\nIn doing so, you can change which task is shown in the runnables indicator.\nKeybindings to run tasks bound to runnables\nWhen you have a task definition that is bound to the runnable, you can quickly run it using Code Actions that you can trigger either via editor: Toggle Code Actions command or by the cmd-./ctrl-. shortcut. Your task will be the first in the dropdown. The task will run immediately if there are no additional Code Actions for this line.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:53"
+}

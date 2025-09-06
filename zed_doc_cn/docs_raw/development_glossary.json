@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/development/glossary.html",
+  "title": "Glossary | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"zed-development-glossary\"><a class=\"header\" href=\"#zed-development-glossary\">Zed Development: Glossary</a></h1>\n<p>These are some terms and structures frequently used throughout the zed codebase.</p>\n<p>This is a best effort list and a work in progress.</p>\n<!--\nTBD: Glossary Improvement\n\nQuestions:\n\n- Can we generate this list from doc comments throughout zed?\n- We should have a section that shows the various UI parts and their names. (Can't do that in the channel.)\n-->\n<h2 id=\"naming-conventions\"><a class=\"header\" href=\"#naming-conventions\">Naming conventions</a></h2>\n<p>These are generally true for the whole codebase. Note that Name can be anything\nhere. An example would be <code>AnyElement</code> and <code>LspStore</code>.</p>\n<ul>\n<li><code>AnyName</code>: A type erased version of <em>name</em>. Think <code>Box&lt;dyn NameTrait&gt;</code>.</li>\n<li><code>NameStore</code>: A wrapper type which abstracts over whether operations are running locally or on a remote.</li>\n</ul>\n<h2 id=\"gpui\"><a class=\"header\" href=\"#gpui\">GPUI</a></h2>\n<h3 id=\"state-menagement\"><a class=\"header\" href=\"#state-menagement\">State menagement</a></h3>\n<ul>\n<li><code>App</code>: A singleton which holds the full application state including all the entities. Crucially: <code>App</code> is not <code>Send</code>, which means that <code>App</code> only exists on the thread that created it (which is the main/UI thread, usually). Thus, if you see a <code>&amp;mut App</code>, know that you're on UI thread.</li>\n<li><code>Context</code>: A wrapper around the <code>App</code> struct with specialized behavior for a specific <code>Entity</code>. Think of it as <code>(&amp;mut App, Entity&lt;V&gt;)</code>. The specialized behavior is surfaced in the API surface of <code>Context</code>. E.g., <code>App::spawn</code> takes an <code>AsyncFnOnce(AsyncApp) -&gt; Ret</code>, whereas <code>Context::spawn</code> takes an <code>AsyncFnOnce(WeakEntity&lt;V&gt;, AsyncApp) -&gt; Ret</code>.</li>\n<li><code>AsyncApp</code>: An owned version of <code>App</code> for use in async contexts. This type is <em>still</em> not <code>Send</code> (so <code>AsyncApp</code> = you're on the main thread) and any use of it may be fallible (to account for the fact that the <code>App</code> might've been terminated by the time this closure runs).\nThe convenience of <code>AsyncApp</code> lies in the fact that you usually interface with <code>App</code> via <code>&amp;mut App</code>, which would be inconvenient to use with async closures; <code>AsyncApp</code> is owned, so you can use it in async closures with no sweat.</li>\n<li><code>AppContext</code> A trait which abstracts over <code>App</code>, <code>AsyncApp</code> &amp; <code>Context</code> and their Test versions.</li>\n<li><code>Task</code>: A future running or scheduled to run on the background or foreground\nexecutor. In contradiction to regular Futures Tasks do not need <code>.await</code> to start running. You do need to await them to get the result of the task.</li>\n<li><code>Executor</code>: Used to spawn tasks that run either on the foreground or background thread. Try to run the tasks on the background thread.\n<ul>\n<li><code>BackgroundExecutor</code>: A threadpool running <code>Task</code>s.</li>\n<li><code>ForegroundExecutor</code>: The main thread running <code>Task</code>s.</li>\n</ul>\n</li>\n<li><code>Entity</code>: A strong, well-typed reference to a struct which is managed by gpui. Effectively a pointer/map key into the <code>App::EntityMap</code>.</li>\n<li><code>WeakEntity</code>: A runtime checked reference to an <code>Entity</code> which may no longer exist. Similar to <a href=\"https://doc.rust-lang.org/std/rc/struct.Weak.html\"><code>std::rc::Weak</code></a>.</li>\n<li><code>Global</code>: A singleton type which has only one value, that is stored in the <code>App</code>.</li>\n<li><code>Event</code>: A datatype which can be send by an <code>Entity</code> to subscribers</li>\n<li><code>Action</code>: An event that represents a user's keyboard input that can be handled by listeners\nExample: <code>file finder: toggle</code></li>\n<li><code>Observing</code>: reacting entities notifying they've changed</li>\n<li><code>Subscription</code>: An event handler that is used to react to the changes of state in the application.\n<ol>\n<li>Emitted event handling</li>\n<li>Observing <code>{new,release,on notify}</code> of an entity</li>\n</ol>\n</li>\n</ul>\n<h3 id=\"ui\"><a class=\"header\" href=\"#ui\">UI</a></h3>\n<ul>\n<li><code>View</code>: An <code>Entity</code> which can produce an <code>Element</code> through its implementation of <code>Render</code>.</li>\n<li><code>Element</code>: A type that can be laid out and painted to the screen.</li>\n<li><code>element expression</code>: An expression that builds an element tree, example:</li>\n</ul>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>h_flex()\n    .id(text[i])\n    .relative()\n    .when(selected, |this| {\n        this.child(\n            div()\n                .h_4()\n                .absolute()\n                etc etc\n<span class=\"boring\">}</span></code></pre></pre>\n<ul>\n<li><code>Component</code>: A builder which can be rendered turning it into an <code>Element</code>.</li>\n<li><code>Dispatch tree</code>: TODO</li>\n<li><code>Focus</code>: The place where keystrokes are handled first</li>\n<li><code>Focus tree</code>: Path from the place thats the current focus to the UI Root. Example <img/> TODO</li>\n</ul>\n<h2 id=\"zed-ui\"><a class=\"header\" href=\"#zed-ui\">Zed UI</a></h2>\n<ul>\n<li>\n<p><code>Window</code>: A struct in zed representing a zed window in your desktop environment (see image below). There can be multiple if you have multiple zed instances open. Mostly passed around for rendering.</p>\n</li>\n<li>\n<p><code>Modal</code>: A UI element that floats on top of the rest of the UI</p>\n</li>\n<li>\n<p><code>Picker</code>: A struct representing a list of items in floating on top of the UI (Modal). You can select an item and confirm. What happens on select or confirm is determined by the picker's delegate. (The 'Model' in the image below is a picker.)</p>\n</li>\n<li>\n<p><code>PickerDelegate</code>: A trait used to specialize behavior for a <code>Picker</code>. The <code>Picker</code> stores the <code>PickerDelegate</code> in the field delegate.</p>\n</li>\n<li>\n<p><code>Center</code>: The middle of the zed window, the center is split into multiple <code>Pane</code>s. In the codebase this is a field on the <code>Workspace</code> struct. (see image below).</p>\n</li>\n<li>\n<p><code>Pane</code>: An area in the <code>Center</code> where we can place items, such as an editor, multi-buffer or terminal (see image below).</p>\n</li>\n<li>\n<p><code>Panel</code>: An <code>Entity</code> implementing the <code>Panel</code> trait. These can be placed in a <code>Dock</code>. In the image below we see the: <code>ProjectPanel</code> in the left dock, the <code>DebugPanel</code> in the bottom dock, and <code>AgentPanel</code> in the right dock. Note <code>Editor</code> does not implement <code>Panel</code> and hence is not a <code>Panel</code>.</p>\n</li>\n<li>\n<p><code>Dock</code>: A UI element similar to a <code>Pane</code> which can be opened and hidden. There can be up to 3 docks open at a time, left right and below the center. A dock contains one or more <code>Panel</code>s not <code>Pane</code>s. (see image).\n<img alt=\"image\" height=\"1080\" src=\"https://github.com/user-attachments/assets/2cb1170e-2850-450d-89bb-73622b5d07b2\" width=\"1921\"/></p>\n</li>\n<li>\n<p><code>Project</code>: One or more <code>Worktree</code>s</p>\n</li>\n<li>\n<p><code>Worktree</code>: Represents either local or remote files.\n<img alt=\"image\" height=\"1118\" src=\"https://github.com/user-attachments/assets/da5c58e4-b02e-4038-9736-27e3509fdbfa\" width=\"552\"/></p>\n</li>\n<li>\n<p><a href=\"https://zed.dev/docs/multibuffers\">Multibuffer</a>: A list of Editors, a multi-buffer allows editing multiple files simultaneously. A multi-buffer opens when an operation in Zed returns multiple locations, examples: <em>search</em> or <em>go to definition</em>. See project search in the image below.</p>\n</li>\n</ul>\n<img alt=\"image\" height=\"886\" src=\"https://github.com/user-attachments/assets/d59dcecd-8ab6-4172-8fb6-b1fc3c3eaf9d\" width=\"800\"/>\n<h2 id=\"editor\"><a class=\"header\" href=\"#editor\">Editor</a></h2>\n<ul>\n<li><code>Editor</code>: <em>The</em> text editor, nearly everything in zed is an <code>Editor</code>, even single line inputs. Each pane in the image above contains one or more <code>Editor</code> instances.</li>\n<li><code>Workspace</code>: The root of the window</li>\n<li><code>Entry</code>: A file, dir, pending dir or unloaded dir.</li>\n<li><code>Buffer</code>: The in-memory representation of a 'file' together with relevant data such as syntax trees, git status and diagnostics.</li>\n<li><code>pending selection</code>: You have mouse down and you're dragging but you have not yet released.</li>\n</ul>\n<h2 id=\"collab\"><a class=\"header\" href=\"#collab\">Collab</a></h2>\n<ul>\n<li><code>Collab session</code>: Multiple users working in a shared <code>Project</code></li>\n<li><code>Upstream client</code>: The zed client which has shared their workspace</li>\n<li><code>Downstream client</code>: The zed client joining a shared workspace</li>\n</ul>\n<h2 id=\"debugger\"><a class=\"header\" href=\"#debugger\">Debugger</a></h2>\n<ul>\n<li><code>DapStore</code>: Is an entity that manages debugger sessions</li>\n<li><code>debugger::Session</code>: Is an entity that manages the lifecycle of a debug session and communication with DAPS</li>\n<li><code>BreakpointStore</code>: Is an entity that manages breakpoints states in local and remote instances of Zed</li>\n<li><code>DebugSession</code>: Manages a debug session's UI and running state</li>\n<li><code>RunningState</code>: Directily manages all the views of a debug session</li>\n<li><code>VariableList</code>: The variable and watch list view of a debug session</li>\n<li><code>Console</code>: TODO</li>\n<li><code>Terminal</code>: TODO</li>\n<li><code>BreakpointList</code>: TODO</li>\n</ul>\n\n</main>",
+  "content_text": "Zed Development: Glossary\nThese are some terms and structures frequently used throughout the zed codebase.\nThis is a best effort list and a work in progress.\n\nNaming conventions\nThese are generally true for the whole codebase. Note that Name can be anything\nhere. An example would be AnyElement and LspStore.\n\nAnyName: A type erased version of name. Think Box<dyn NameTrait>.\nNameStore: A wrapper type which abstracts over whether operations are running locally or on a remote.\n\nGPUI\nState menagement\n\nApp: A singleton which holds the full application state including all the entities. Crucially: App is not Send, which means that App only exists on the thread that created it (which is the main/UI thread, usually). Thus, if you see a &mut App, know that you're on UI thread.\nContext: A wrapper around the App struct with specialized behavior for a specific Entity. Think of it as (&mut App, Entity<V>). The specialized behavior is surfaced in the API surface of Context. E.g., App::spawn takes an AsyncFnOnce(AsyncApp) -> Ret, whereas Context::spawn takes an AsyncFnOnce(WeakEntity<V>, AsyncApp) -> Ret.\nAsyncApp: An owned version of App for use in async contexts. This type is still not Send (so AsyncApp = you're on the main thread) and any use of it may be fallible (to account for the fact that the App might've been terminated by the time this closure runs).\nThe convenience of AsyncApp lies in the fact that you usually interface with App via &mut App, which would be inconvenient to use with async closures; AsyncApp is owned, so you can use it in async closures with no sweat.\nAppContext A trait which abstracts over App, AsyncApp & Context and their Test versions.\nTask: A future running or scheduled to run on the background or foreground\nexecutor. In contradiction to regular Futures Tasks do not need .await to start running. You do need to await them to get the result of the task.\nExecutor: Used to spawn tasks that run either on the foreground or background thread. Try to run the tasks on the background thread.\n\nBackgroundExecutor: A threadpool running Tasks.\nForegroundExecutor: The main thread running Tasks.\n\n\nEntity: A strong, well-typed reference to a struct which is managed by gpui. Effectively a pointer/map key into the App::EntityMap.\nWeakEntity: A runtime checked reference to an Entity which may no longer exist. Similar to std::rc::Weak.\nGlobal: A singleton type which has only one value, that is stored in the App.\nEvent: A datatype which can be send by an Entity to subscribers\nAction: An event that represents a user's keyboard input that can be handled by listeners\nExample: file finder: toggle\nObserving: reacting entities notifying they've changed\nSubscription: An event handler that is used to react to the changes of state in the application.\n\nEmitted event handling\nObserving {new,release,on notify} of an entity\n\n\n\nUI\n\nView: An Entity which can produce an Element through its implementation of Render.\nElement: A type that can be laid out and painted to the screen.\nelement expression: An expression that builds an element tree, example:\n\n#![allow(unused)]\nfn main() {\nh_flex()\n    .id(text[i])\n    .relative()\n    .when(selected, |this| {\n        this.child(\n            div()\n                .h_4()\n                .absolute()\n                etc etc\n}\n\nComponent: A builder which can be rendered turning it into an Element.\nDispatch tree: TODO\nFocus: The place where keystrokes are handled first\nFocus tree: Path from the place thats the current focus to the UI Root. Example  TODO\n\nZed UI\n\n\nWindow: A struct in zed representing a zed window in your desktop environment (see image below). There can be multiple if you have multiple zed instances open. Mostly passed around for rendering.\n\n\nModal: A UI element that floats on top of the rest of the UI\n\n\nPicker: A struct representing a list of items in floating on top of the UI (Modal). You can select an item and confirm. What happens on select or confirm is determined by the picker's delegate. (The 'Model' in the image below is a picker.)\n\n\nPickerDelegate: A trait used to specialize behavior for a Picker. The Picker stores the PickerDelegate in the field delegate.\n\n\nCenter: The middle of the zed window, the center is split into multiple Panes. In the codebase this is a field on the Workspace struct. (see image below).\n\n\nPane: An area in the Center where we can place items, such as an editor, multi-buffer or terminal (see image below).\n\n\nPanel: An Entity implementing the Panel trait. These can be placed in a Dock. In the image below we see the: ProjectPanel in the left dock, the DebugPanel in the bottom dock, and AgentPanel in the right dock. Note Editor does not implement Panel and hence is not a Panel.\n\n\nDock: A UI element similar to a Pane which can be opened and hidden. There can be up to 3 docks open at a time, left right and below the center. A dock contains one or more Panels not Panes. (see image).\n\n\n\nProject: One or more Worktrees\n\n\nWorktree: Represents either local or remote files.\n\n\n\nMultibuffer: A list of Editors, a multi-buffer allows editing multiple files simultaneously. A multi-buffer opens when an operation in Zed returns multiple locations, examples: search or go to definition. See project search in the image below.\n\n\n\nEditor\n\nEditor: The text editor, nearly everything in zed is an Editor, even single line inputs. Each pane in the image above contains one or more Editor instances.\nWorkspace: The root of the window\nEntry: A file, dir, pending dir or unloaded dir.\nBuffer: The in-memory representation of a 'file' together with relevant data such as syntax trees, git status and diagnostics.\npending selection: You have mouse down and you're dragging but you have not yet released.\n\nCollab\n\nCollab session: Multiple users working in a shared Project\nUpstream client: The zed client which has shared their workspace\nDownstream client: The zed client joining a shared workspace\n\nDebugger\n\nDapStore: Is an entity that manages debugger sessions\ndebugger::Session: Is an entity that manages the lifecycle of a debug session and communication with DAPS\nBreakpointStore: Is an entity that manages breakpoints states in local and remote instances of Zed\nDebugSession: Manages a debug session's UI and running state\nRunningState: Directily manages all the views of a debug session\nVariableList: The variable and watch list view of a debug session\nConsole: TODO\nTerminal: TODO\nBreakpointList: TODO",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:55"
+}

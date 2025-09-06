@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>模型上下文协议 | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="active">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#model-context-protocol" class="pagetoc-H1">模型上下文协议</a>
+<a href="#installing-mcp-servers" class="pagetoc-H2">安装 MCP 服务器</a>
+<a href="#as-extensions" class="pagetoc-H3">作为扩展</a>
+<a href="#as-custom-servers" class="pagetoc-H3">作为自定义服务器</a>
+<a href="#using-mcp-servers" class="pagetoc-H2">使用 MCP 服务器</a>
+<a href="#installation-check" class="pagetoc-H3">安装检查</a>
+<a href="#using-in-the-agent-panel" class="pagetoc-H3">在 Agent 面板中使用</a>
+<a href="#tool-approval" class="pagetoc-H3">工具批准</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="model-context-protocol"><a class="header" href="#model-context-protocol">模型上下文协议</a></h1>
+<p>Zed 使用 <a href="https://modelcontextprotocol.io/">模型上下文协议</a> 与上下文服务器进行交互。</p>
+<blockquote>
+<p>模型上下文协议 (MCP) 是一个开放的协议，它允许 LLM 应用程序与外部数据源和工具无缝集成。无论您是在构建 AI 驱动的 IDE、增强聊天界面，还是创建自定义 AI 工作流，MCP 都提供了一种标准化的方式来将 LLM 与其所需的上下文连接起来。</p>
+</blockquote>
+<p>查看 <a href="https://www.anthropic.com/news/model-context-protocol">Anthropic 新闻文章</a> 和 <a href="https://zed.dev/blog/mcp">Zed 博客文章</a> 以了解 MCP 的概述。</p>
+<h2 id="installing-mcp-servers"><a class="header" href="#installing-mcp-servers">安装 MCP 服务器</a></h2>
+<h3 id="as-extensions"><a class="header" href="#as-extensions">作为扩展</a></h3>
+<p>在 Zed 中使用 MCP 服务器的方式之一是将它们作为扩展暴露。
+要学习如何创建自己的扩展，请查看 <a href="../extensions/mcp-extensions.html">MCP 服务器扩展</a> 页面以获取更多详细信息。</p>
+<p>感谢我们的优秀社区，许多 MCP 服务器已经被添加为扩展。
+您可以通过以下任一路径查看可用的扩展：</p>
+<ol>
+<li><a href="https://zed.dev/extensions?filter=context-servers">Zed 网站</a></li>
+<li>在应用程序中，打开命令面板并运行 <code>zed: extensions</code> 操作</li>
+<li>在应用程序中，转到 Agent 面板的右上角菜单，并查找 "查看服务器扩展" 菜单项</li>
+</ol>
+<p>无论如何，以下是一些可用的扩展：</p>
+<ul>
+<li><a href="https://zed.dev/extensions/context7-mcp-server">Context7</a></li>
+<li><a href="https://zed.dev/extensions/github-mcp-server">GitHub</a></li>
+<li><a href="https://zed.dev/extensions/puppeteer-mcp-server">Puppeteer</a></li>
+<li><a href="https://zed.dev/extensions/gem">Gem</a></li>
+<li><a href="https://zed.dev/extensions/brave-search-mcp-server">Brave Search</a></li>
+<li><a href="https://github.com/aqrln/prisma-mcp-zed">Prisma</a></li>
+<li><a href="https://zed.dev/extensions/framelink-figma-mcp-server">Framelink Figma</a></li>
+<li><a href="https://zed.dev/extensions/linear-mcp-server">Linear</a></li>
+<li><a href="https://zed.dev/extensions/resend-mcp-server">Resend</a></li>
+</ul>
+<h3 id="as-custom-servers"><a class="header" href="#as-custom-servers">作为自定义服务器</a></h3>
+<p>创建扩展并不是在 Zed 中使用 MCP 服务器的唯一方式。
+您可以通过将它们的命令直接添加到您的 <code>settings.json</code> 来连接它们，如下所示：</p>
+<pre><code class="language-json">{
+  "context_servers": {
+    "your-mcp-server": {
+      "source": "custom",
+      "command": "some-command",
+      "args": ["arg-1", "arg-2"],
+      "env": {}
+    }
+  }
+}
+</code></pre>
+<p>另外，您也可以通过访问 Agent 面板的设置视图（也可通过 <code>agent: open settings</code> 操作访问）来添加自定义服务器。
+在那里，您可以通过单击 "添加自定义服务器" 按钮时出现的模态框来添加它。</p>
+<h2 id="using-mcp-servers"><a class="header" href="#using-mcp-servers">使用 MCP 服务器</a></h2>
+<h3 id="installation-check"><a class="header" href="#installation-check">安装检查</a></h3>
+<p>无论您是将 MCP 服务器作为扩展使用还是直接添加它们，大多数服务器都需要在设置过程中进行一些配置。</p>
+<p>对于扩展情况，Zed 会显示一个模态框，显示正确设置特定服务器所需的内容。
+例如，GitHub MCP 扩展需要您添加一个 <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">个人访问令牌</a>。</p>
+<p>对于自定义服务器情况，请确保查看提供商文档，以确定需要在 JSON 中添加什么类型的命令、参数和环境变量。</p>
+<p>要检查您的 MCP 服务器是否正确安装，请转到 Agent 面板的设置视图并观察其名称旁边的指示灯。
+如果它们运行正常，指示灯将为绿色，其工具提示将显示 "服务器正在运行"。
+如果不是，其他颜色和工具提示信息将指示发生了什么情况。</p>
+<h3 id="using-in-the-agent-panel"><a class="header" href="#using-in-the-agent-panel">在 Agent 面板中使用</a></h3>
+<p>安装完成后，您可以返回 Agent 面板并开始提示。
+按名称提及您的 MCP 服务器有助于 agent 识别它。</p>
+<p>如果您希望确保使用特定的服务器，您可以通过关闭内置工具（所有工具或可能导致冲突的工具）并仅打开来自 MCP 服务器的工具来创建 <a href="./agent-panel.html#custom-profiles">自定义配置文件</a>。</p>
+<p>作为一个例子，<a href="https://container-use.com/agent-integrations#add-container-use-agent-profile-optional">Dagger 团队建议</a>对他们的 <a href="https://zed.dev/extensions/mcp-server-container-use">Container Use MCP 服务器</a>这样做：</p>
+<pre><code class="language-json">"agent": {
+  "profiles": {
+    "container-use": {
+      "name": "Container Use",
+      "tools": {
+        "fetch": true,
+        "thinking": true,
+        "copy_path": false,
+        "find_path": false,
+        "delete_path": false,
+        "create_directory": false,
+        "list_directory": false,
+        "diagnostics": false,
+        "read_file": false,
+        "open": false,
+        "move_path": false,
+        "grep": false,
+        "edit_file": false,
+        "terminal": false
+      },
+      "enable_all_context_servers": false,
+      "context_servers": {
+        "container-use": {
+          "tools": {
+            "environment_create": true,
+            "environment_add_service": true,
+            "environment_update": true,
+            "environment_run_cmd": true,
+            "environment_open": true,
+            "environment_file_write": true,
+            "environment_file_read": true,
+            "environment_file_list": true,
+            "environment_file_delete": true,
+            "environment_checkpoint": true
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="tool-approval"><a class="header" href="#tool-approval">工具批准</a></h3>
+<p>Zed 的 Agent 面板包含 <code>agent.always_allow_tool_actions</code> 设置，如果设置为 <code>false</code>，将要求您为任何编辑尝试以及来自 MCP 服务器的工具调用给予许可。</p>
+<p>您可以通过在 <code>settings.json</code> 中或通过 Agent 面板的设置视图将此键设置为 <code>true</code> 来更改此设置。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

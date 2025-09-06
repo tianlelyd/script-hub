@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/llm-providers.html",
+  "title": "LLM Providers | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"llm-providers\"><a class=\"header\" href=\"#llm-providers\">LLM Providers</a></h1>\n<p>To use AI in Zed, you need to have at least one large language model provider set up.</p>\n<p>You can do that by either subscribing to <a href=\"./plans-and-usage.html\">one of Zed's plans</a>, or by using API keys you already have for the supported providers.</p>\n<h2 id=\"use-your-own-keys\"><a class=\"header\" href=\"#use-your-own-keys\">Use Your Own Keys</a></h2>\n<p>If you already have an API key for an existing LLM provider—say Anthropic or OpenAI, for example—you can insert them into Zed and use the full power of the Agent Panel <strong><em>for free</em></strong>.</p>\n<p>To add an existing API key to a given provider, go to the Agent Panel settings (<code>agent: open settings</code>), look for the desired provider, paste the key into the input, and hit enter.</p>\n<blockquote>\n<p>Note: API keys are <em>not</em> stored as plain text in your <code>settings.json</code>, but rather in your OS's secure credential storage.</p>\n</blockquote>\n<h2 id=\"supported-providers\"><a class=\"header\" href=\"#supported-providers\">Supported Providers</a></h2>\n<p>Here's all the supported LLM providers for which you can use your own API keys:</p>\n<ul>\n<li><a href=\"#amazon-bedrock\">Amazon Bedrock</a></li>\n<li><a href=\"#anthropic\">Anthropic</a></li>\n<li><a href=\"#deepseek\">DeepSeek</a></li>\n<li><a href=\"#github-copilot-chat\">GitHub Copilot Chat</a></li>\n<li><a href=\"#google-ai\">Google AI</a></li>\n<li><a href=\"#lmstudio\">LM Studio</a></li>\n<li><a href=\"#mistral\">Mistral</a></li>\n<li><a href=\"#ollama\">Ollama</a></li>\n<li><a href=\"#openai\">OpenAI</a></li>\n<li><a href=\"#openai-api-compatible\">OpenAI API Compatible</a></li>\n<li><a href=\"#openrouter\">OpenRouter</a></li>\n<li><a href=\"#vercel-v0\">Vercel</a></li>\n<li><a href=\"#xai\">xAI</a></li>\n</ul>\n<h3 id=\"amazon-bedrock\"><a class=\"header\" href=\"#amazon-bedrock\">Amazon Bedrock</a></h3>\n<blockquote>\n<p>Supports tool use with models that support streaming tool use.\nMore details can be found in the <a href=\"https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html\">Amazon Bedrock's Tool Use documentation</a>.</p>\n</blockquote>\n<p>To use Amazon Bedrock's models, an AWS authentication is required.\nEnsure your credentials have the following permissions set up:</p>\n<ul>\n<li><code>bedrock:InvokeModelWithResponseStream</code></li>\n<li><code>bedrock:InvokeModel</code></li>\n</ul>\n<p>Your IAM policy should look similar to:</p>\n<pre><code class=\"language-json\">{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"bedrock:InvokeModel\",\n        \"bedrock:InvokeModelWithResponseStream\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n</code></pre>\n<p>With that done, choose one of the two authentication methods:</p>\n<h4 id=\"authentication-via-named-profile-recommended\"><a class=\"header\" href=\"#authentication-via-named-profile-recommended\">Authentication via Named Profile (Recommended)</a></h4>\n<ol>\n<li>Ensure you have the AWS CLI installed and configured with a named profile</li>\n<li>Open your <code>settings.json</code> (<code>zed: open settings</code>) and include the <code>bedrock</code> key under <code>language_models</code> with the following settings:\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"bedrock\": {\n      \"authentication_method\": \"named_profile\",\n      \"region\": \"your-aws-region\",\n      \"profile\": \"your-profile-name\"\n    }\n  }\n}\n</code></pre>\n</li>\n</ol>\n<h4 id=\"authentication-via-static-credentials\"><a class=\"header\" href=\"#authentication-via-static-credentials\">Authentication via Static Credentials</a></h4>\n<p>While it's possible to configure through the Agent Panel settings UI by entering your AWS access key and secret directly, we recommend using named profiles instead for better security practices.\nTo do this:</p>\n<ol>\n<li>Create an IAM User that you can assume in the <a href=\"https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users\">IAM Console</a>.</li>\n<li>Create security credentials for that User, save them and keep them secure.</li>\n<li>Open the Agent Configuration with (<code>agent: open settings</code>) and go to the Amazon Bedrock section</li>\n<li>Copy the credentials from Step 2 into the respective <strong>Access Key ID</strong>, <strong>Secret Access Key</strong>, and <strong>Region</strong> fields.</li>\n</ol>\n<h4 id=\"cross-region-inference\"><a class=\"header\" href=\"#cross-region-inference\">Cross-Region Inference</a></h4>\n<p>The Zed implementation of Amazon Bedrock uses <a href=\"https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html\">Cross-Region inference</a> for all the models and region combinations that support it.\nWith Cross-Region inference, you can distribute traffic across multiple AWS Regions, enabling higher throughput.</p>\n<p>For example, if you use <code>Claude Sonnet 3.7 Thinking</code> from <code>us-east-1</code>, it may be processed across the US regions, namely: <code>us-east-1</code>, <code>us-east-2</code>, or <code>us-west-2</code>.\nCross-Region inference requests are kept within the AWS Regions that are part of the geography where the data originally resides.\nFor example, a request made within the US is kept within the AWS Regions in the US.</p>\n<p>Although the data remains stored only in the source Region, your input prompts and output results might move outside of your source Region during cross-Region inference.\nAll data will be transmitted encrypted across Amazon's secure network.</p>\n<p>We will support Cross-Region inference for each of the models on a best-effort basis, please refer to the <a href=\"https://github.com/zed-industries/zed/blob/main/crates/bedrock/src/models.rs#L297\">Cross-Region Inference method Code</a>.</p>\n<p>For the most up-to-date supported regions and models, refer to the <a href=\"https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html\">Supported Models and Regions for Cross Region inference</a>.</p>\n<h3 id=\"anthropic\"><a class=\"header\" href=\"#anthropic\">Anthropic</a></h3>\n<p>You can use Anthropic models by choosing them via the model dropdown in the Agent Panel.</p>\n<ol>\n<li>Sign up for Anthropic and <a href=\"https://console.anthropic.com/settings/keys\">create an API key</a></li>\n<li>Make sure that your Anthropic account has credits</li>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the Anthropic section</li>\n<li>Enter your Anthropic API key</li>\n</ol>\n<p>Even if you pay for Claude Pro, you will still have to <a href=\"https://console.anthropic.com/settings/plans\">pay for additional credits</a> to use it via the API.</p>\n<p>Zed will also use the <code>ANTHROPIC_API_KEY</code> environment variable if it's defined.</p>\n<h4 id=\"anthropic-custom-models\"><a class=\"header\" href=\"#anthropic-custom-models\">Custom Models</a></h4>\n<p>You can add custom models to the Anthropic provider by adding the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"anthropic\": {\n      \"available_models\": [\n        {\n          \"name\": \"claude-3-5-sonnet-20240620\",\n          \"display_name\": \"Sonnet 2024-June\",\n          \"max_tokens\": 128000,\n          \"max_output_tokens\": 2560,\n          \"cache_configuration\": {\n            \"max_cache_anchors\": 10,\n            \"min_total_token\": 10000,\n            \"should_speculate\": false\n          },\n          \"tool_override\": \"some-model-that-supports-toolcalling\"\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>Custom models will be listed in the model dropdown in the Agent Panel.</p>\n<p>You can configure a model to use <a href=\"https://docs.anthropic.com/en/docs/about-claude/models/extended-thinking-models\">extended thinking</a> (if it supports it) by changing the mode in your model's configuration to <code>thinking</code>, for example:</p>\n<pre><code class=\"language-json\">{\n  \"name\": \"claude-sonnet-4-latest\",\n  \"display_name\": \"claude-sonnet-4-thinking\",\n  \"max_tokens\": 200000,\n  \"mode\": {\n    \"type\": \"thinking\",\n    \"budget_tokens\": 4_096\n  }\n}\n</code></pre>\n<h3 id=\"deepseek\"><a class=\"header\" href=\"#deepseek\">DeepSeek</a></h3>\n<ol>\n<li>Visit the DeepSeek platform and <a href=\"https://platform.deepseek.com/api_keys\">create an API key</a></li>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the DeepSeek section</li>\n<li>Enter your DeepSeek API key</li>\n</ol>\n<p>The DeepSeek API key will be saved in your keychain.</p>\n<p>Zed will also use the <code>DEEPSEEK_API_KEY</code> environment variable if it's defined.</p>\n<h4 id=\"deepseek-custom-models\"><a class=\"header\" href=\"#deepseek-custom-models\">Custom Models</a></h4>\n<p>The Zed agent comes pre-configured to use the latest version for common models (DeepSeek Chat, DeepSeek Reasoner).\nIf you wish to use alternate models or customize the API endpoint, you can do so by adding the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"deepseek\": {\n      \"api_url\": \"https://api.deepseek.com\",\n      \"available_models\": [\n        {\n          \"name\": \"deepseek-chat\",\n          \"display_name\": \"DeepSeek Chat\",\n          \"max_tokens\": 64000\n        },\n        {\n          \"name\": \"deepseek-reasoner\",\n          \"display_name\": \"DeepSeek Reasoner\",\n          \"max_tokens\": 64000,\n          \"max_output_tokens\": 4096\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>Custom models will be listed in the model dropdown in the Agent Panel.\nYou can also modify the <code>api_url</code> to use a custom endpoint if needed.</p>\n<h3 id=\"github-copilot-chat\"><a class=\"header\" href=\"#github-copilot-chat\">GitHub Copilot Chat</a></h3>\n<p>You can use GitHub Copilot Chat with the Zed agent by choosing it via the model dropdown in the Agent Panel.</p>\n<ol>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the GitHub Copilot Chat section</li>\n<li>Click on <code>Sign in to use GitHub Copilot</code>, follow the steps shown in the modal.</li>\n</ol>\n<p>Alternatively, you can provide an OAuth token via the <code>GH_COPILOT_TOKEN</code> environment variable.</p>\n<blockquote>\n<p><strong>Note</strong>: If you don't see specific models in the dropdown, you may need to enable them in your <a href=\"https://github.com/settings/copilot/features\">GitHub Copilot settings</a>.</p>\n</blockquote>\n<p>To use Copilot Enterprise with Zed (for both agent and completions), you must configure your enterprise endpoint as described in <a href=\"./edit-prediction.html#github-copilot-enterprise\">Configuring GitHub Copilot Enterprise</a>.</p>\n<h3 id=\"google-ai\"><a class=\"header\" href=\"#google-ai\">Google AI</a></h3>\n<p>You can use Gemini models with the Zed agent by choosing it via the model dropdown in the Agent Panel.</p>\n<ol>\n<li>Go to the Google AI Studio site and <a href=\"https://aistudio.google.com/app/apikey\">create an API key</a>.</li>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the Google AI section</li>\n<li>Enter your Google AI API key and press enter.</li>\n</ol>\n<p>The Google AI API key will be saved in your keychain.</p>\n<p>Zed will also use the <code>GEMINI_API_KEY</code> environment variable if it's defined. See <a href=\"https://ai.google.dev/gemini-api/docs/api-key\">Using Gemini API keys</a> in the Gemini docs for more.</p>\n<h4 id=\"google-ai-custom-models\"><a class=\"header\" href=\"#google-ai-custom-models\">Custom Models</a></h4>\n<p>By default, Zed will use <code>stable</code> versions of models, but you can use specific versions of models, including <a href=\"https://ai.google.dev/gemini-api/docs/models/experimental-models\">experimental models</a>. You can configure a model to use <a href=\"https://ai.google.dev/gemini-api/docs/thinking\">thinking mode</a> (if it supports it) by adding a <code>mode</code> configuration to your model. This is useful for controlling reasoning token usage and response speed. If not specified, Gemini will automatically choose the thinking budget.</p>\n<p>Here is an example of a custom Google AI model you could add to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"google\": {\n      \"available_models\": [\n        {\n          \"name\": \"gemini-2.5-flash-preview-05-20\",\n          \"display_name\": \"Gemini 2.5 Flash (Thinking)\",\n          \"max_tokens\": 1000000,\n          \"mode\": {\n            \"type\": \"thinking\",\n            \"budget_tokens\": 24000\n          }\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>Custom models will be listed in the model dropdown in the Agent Panel.</p>\n<h3 id=\"lmstudio\"><a class=\"header\" href=\"#lmstudio\">LM Studio</a></h3>\n<ol>\n<li>\n<p>Download and install <a href=\"https://lmstudio.ai/download\">the latest version of LM Studio</a></p>\n</li>\n<li>\n<p>In the app press <code>cmd/ctrl-shift-m</code> and download at least one model (e.g., qwen2.5-coder-7b). Alternatively, you can get models via the LM Studio CLI:</p>\n<pre><code class=\"language-sh\">lms get qwen2.5-coder-7b\n</code></pre>\n</li>\n<li>\n<p>Make sure the LM Studio API server is running by executing:</p>\n<pre><code class=\"language-sh\">lms server start\n</code></pre>\n</li>\n</ol>\n<p>Tip: Set <a href=\"https://lmstudio.ai/docs/advanced/headless#run-the-llm-service-on-machine-login\">LM Studio as a login item</a> to automate running the LM Studio server.</p>\n<h3 id=\"mistral\"><a class=\"header\" href=\"#mistral\">Mistral</a></h3>\n<ol>\n<li>Visit the Mistral platform and <a href=\"https://console.mistral.ai/api-keys/\">create an API key</a></li>\n<li>Open the configuration view (<code>agent: open settings</code>) and navigate to the Mistral section</li>\n<li>Enter your Mistral API key</li>\n</ol>\n<p>The Mistral API key will be saved in your keychain.</p>\n<p>Zed will also use the <code>MISTRAL_API_KEY</code> environment variable if it's defined.</p>\n<h4 id=\"mistral-custom-models\"><a class=\"header\" href=\"#mistral-custom-models\">Custom Models</a></h4>\n<p>The Zed agent comes pre-configured with several Mistral models (codestral-latest, mistral-large-latest, mistral-medium-latest, mistral-small-latest, open-mistral-nemo, and open-codestral-mamba).\nAll the default models support tool use.\nIf you wish to use alternate models or customize their parameters, you can do so by adding the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"mistral\": {\n      \"api_url\": \"https://api.mistral.ai/v1\",\n      \"available_models\": [\n        {\n          \"name\": \"mistral-tiny-latest\",\n          \"display_name\": \"Mistral Tiny\",\n          \"max_tokens\": 32000,\n          \"max_output_tokens\": 4096,\n          \"max_completion_tokens\": 1024,\n          \"supports_tools\": true,\n          \"supports_images\": false\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>Custom models will be listed in the model dropdown in the Agent Panel.</p>\n<h3 id=\"ollama\"><a class=\"header\" href=\"#ollama\">Ollama</a></h3>\n<p>Download and install Ollama from <a href=\"https://ollama.com/download\">ollama.com/download</a> (Linux or macOS) and ensure it's running with <code>ollama --version</code>.</p>\n<ol>\n<li>\n<p>Download one of the <a href=\"https://ollama.com/models\">available models</a>, for example, for <code>mistral</code>:</p>\n<pre><code class=\"language-sh\">ollama pull mistral\n</code></pre>\n</li>\n<li>\n<p>Make sure that the Ollama server is running. You can start it either via running Ollama.app (macOS) or launching:</p>\n<pre><code class=\"language-sh\">ollama serve\n</code></pre>\n</li>\n<li>\n<p>In the Agent Panel, select one of the Ollama models using the model dropdown.</p>\n</li>\n</ol>\n<h4 id=\"ollama-context\"><a class=\"header\" href=\"#ollama-context\">Ollama Context Length</a></h4>\n<p>Zed has pre-configured maximum context lengths (<code>max_tokens</code>) to match the capabilities of common models.\nZed API requests to Ollama include this as the <code>num_ctx</code> parameter, but the default values do not exceed <code>16384</code> so users with ~16GB of RAM are able to use most models out of the box.</p>\n<p>See <a href=\"https://github.com/zed-industries/zed/blob/main/crates/ollama/src/ollama.rs\">get_max_tokens in ollama.rs</a> for a complete set of defaults.</p>\n<blockquote>\n<p><strong>Note</strong>: Token counts displayed in the Agent Panel are only estimates and will differ from the model's native tokenizer.</p>\n</blockquote>\n<p>Depending on your hardware or use-case you may wish to limit or increase the context length for a specific model via settings.json:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"ollama\": {\n      \"api_url\": \"http://localhost:11434\",\n      \"available_models\": [\n        {\n          \"name\": \"qwen2.5-coder\",\n          \"display_name\": \"qwen 2.5 coder 32K\",\n          \"max_tokens\": 32768,\n          \"supports_tools\": true,\n          \"supports_thinking\": true,\n          \"supports_images\": true\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>If you specify a context length that is too large for your hardware, Ollama will log an error.\nYou can watch these logs by running: <code>tail -f ~/.ollama/logs/ollama.log</code> (macOS) or <code>journalctl -u ollama -f</code> (Linux).\nDepending on the memory available on your machine, you may need to adjust the context length to a smaller value.</p>\n<p>You may also optionally specify a value for <code>keep_alive</code> for each available model.\nThis can be an integer (seconds) or alternatively a string duration like \"5m\", \"10m\", \"1h\", \"1d\", etc.\nFor example, <code>\"keep_alive\": \"120s\"</code> will allow the remote server to unload the model (freeing up GPU VRAM) after 120 seconds.</p>\n<p>The <code>supports_tools</code> option controls whether the model will use additional tools.\nIf the model is tagged with <code>tools</code> in the Ollama catalog, this option should be supplied, and the built-in profiles <code>Ask</code> and <code>Write</code> can be used.\nIf the model is not tagged with <code>tools</code> in the Ollama catalog, this option can still be supplied with the value <code>true</code>; however, be aware that only the <code>Minimal</code> built-in profile will work.</p>\n<p>The <code>supports_thinking</code> option controls whether the model will perform an explicit \"thinking\" (reasoning) pass before producing its final answer.\nIf the model is tagged with <code>thinking</code> in the Ollama catalog, set this option and you can use it in Zed.</p>\n<p>The <code>supports_images</code> option enables the model's vision capabilities, allowing it to process images included in the conversation context.\nIf the model is tagged with <code>vision</code> in the Ollama catalog, set this option and you can use it in Zed.</p>\n<h3 id=\"openai\"><a class=\"header\" href=\"#openai\">OpenAI</a></h3>\n<ol>\n<li>Visit the OpenAI platform and <a href=\"https://platform.openai.com/account/api-keys\">create an API key</a></li>\n<li>Make sure that your OpenAI account has credits</li>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the OpenAI section</li>\n<li>Enter your OpenAI API key</li>\n</ol>\n<p>The OpenAI API key will be saved in your keychain.</p>\n<p>Zed will also use the <code>OPENAI_API_KEY</code> environment variable if it's defined.</p>\n<h4 id=\"openai-custom-models\"><a class=\"header\" href=\"#openai-custom-models\">Custom Models</a></h4>\n<p>The Zed agent comes pre-configured to use the latest version for common models (GPT-5, GPT-5 mini, o4-mini, GPT-4.1, and others).\nTo use alternate models, perhaps a preview release, or if you wish to control the request parameters, you can do so by adding the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"openai\": {\n      \"available_models\": [\n        {\n          \"name\": \"gpt-5\",\n          \"display_name\": \"gpt-5 high\",\n          \"reasoning_effort\": \"high\",\n          \"max_tokens\": 272000,\n          \"max_completion_tokens\": 20000\n        },\n        {\n          \"name\": \"gpt-4o-2024-08-06\",\n          \"display_name\": \"GPT 4o Summer 2024\",\n          \"max_tokens\": 128000\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>You must provide the model's context window in the <code>max_tokens</code> parameter; this can be found in the <a href=\"https://platform.openai.com/docs/models\">OpenAI model documentation</a>.</p>\n<p>OpenAI <code>o1</code> models should set <code>max_completion_tokens</code> as well to avoid incurring high reasoning token costs.\nCustom models will be listed in the model dropdown in the Agent Panel.</p>\n<h3 id=\"openai-api-compatible\"><a class=\"header\" href=\"#openai-api-compatible\">OpenAI API Compatible</a></h3>\n<p>Zed supports using <a href=\"https://platform.openai.com/docs/api-reference/chat\">OpenAI compatible APIs</a> by specifying a custom <code>api_url</code> and <code>available_models</code> for the OpenAI provider.\nThis is useful for connecting to other hosted services (like Together AI, Anyscale, etc.) or local models.</p>\n<p>You can add a custom, OpenAI-compatible model either via the UI or by editing your <code>settings.json</code>.</p>\n<p>To do it via the UI, go to the Agent Panel settings (<code>agent: open settings</code>) and look for the \"Add Provider\" button to the right of the \"LLM Providers\" section title.\nThen, fill up the input fields available in the modal.</p>\n<p>To do it via your <code>settings.json</code>, add the following snippet under <code>language_models</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"openai_compatible\": {\n      // Using Together AI as an example\n      \"Together AI\": {\n        \"api_url\": \"https://api.together.xyz/v1\",\n        \"available_models\": [\n          {\n            \"name\": \"mistralai/Mixtral-8x7B-Instruct-v0.1\",\n            \"display_name\": \"Together Mixtral 8x7B\",\n            \"max_tokens\": 32768,\n            \"capabilities\": {\n              \"tools\": true,\n              \"images\": false,\n              \"parallel_tool_calls\": false,\n              \"prompt_cache_key\": false\n            }\n          }\n        ]\n      }\n    }\n  }\n}\n</code></pre>\n<p>By default, OpenAI-compatible models inherit the following capabilities:</p>\n<ul>\n<li><code>tools</code>: true (supports tool/function calling)</li>\n<li><code>images</code>: false (does not support image inputs)</li>\n<li><code>parallel_tool_calls</code>: false (does not support <code>parallel_tool_calls</code> parameter)</li>\n<li><code>prompt_cache_key</code>: false (does not support <code>prompt_cache_key</code> parameter)</li>\n</ul>\n<p>Note that LLM API keys aren't stored in your settings file.\nSo, ensure you have it set in your environment variables (<code>&lt;PROVIDER_NAME&gt;_API_KEY=&lt;your api key&gt;</code>) so your settings can pick it up. In the example above, it would be <code>TOGETHER_AI_API_KEY=&lt;your api key&gt;</code>.</p>\n<h3 id=\"openrouter\"><a class=\"header\" href=\"#openrouter\">OpenRouter</a></h3>\n<p>OpenRouter provides access to multiple AI models through a single API. It supports tool use for compatible models.</p>\n<ol>\n<li>Visit <a href=\"https://openrouter.ai\">OpenRouter</a> and create an account</li>\n<li>Generate an API key from your <a href=\"https://openrouter.ai/keys\">OpenRouter keys page</a></li>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the OpenRouter section</li>\n<li>Enter your OpenRouter API key</li>\n</ol>\n<p>The OpenRouter API key will be saved in your keychain.</p>\n<p>Zed will also use the <code>OPENROUTER_API_KEY</code> environment variable if it's defined.</p>\n<h4 id=\"openrouter-custom-models\"><a class=\"header\" href=\"#openrouter-custom-models\">Custom Models</a></h4>\n<p>You can add custom models to the OpenRouter provider by adding the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"open_router\": {\n      \"api_url\": \"https://openrouter.ai/api/v1\",\n      \"available_models\": [\n        {\n          \"name\": \"google/gemini-2.0-flash-thinking-exp\",\n          \"display_name\": \"Gemini 2.0 Flash (Thinking)\",\n          \"max_tokens\": 200000,\n          \"max_output_tokens\": 8192,\n          \"supports_tools\": true,\n          \"supports_images\": true,\n          \"mode\": {\n            \"type\": \"thinking\",\n            \"budget_tokens\": 8000\n          }\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<p>The available configuration options for each model are:</p>\n<ul>\n<li><code>name</code> (required): The model identifier used by OpenRouter</li>\n<li><code>display_name</code> (optional): A human-readable name shown in the UI</li>\n<li><code>max_tokens</code> (required): The model's context window size</li>\n<li><code>max_output_tokens</code> (optional): Maximum tokens the model can generate</li>\n<li><code>max_completion_tokens</code> (optional): Maximum completion tokens</li>\n<li><code>supports_tools</code> (optional): Whether the model supports tool/function calling</li>\n<li><code>supports_images</code> (optional): Whether the model supports image inputs</li>\n<li><code>mode</code> (optional): Special mode configuration for thinking models</li>\n</ul>\n<p>You can find available models and their specifications on the <a href=\"https://openrouter.ai/models\">OpenRouter models page</a>.</p>\n<p>Custom models will be listed in the model dropdown in the Agent Panel.</p>\n<h3 id=\"vercel-v0\"><a class=\"header\" href=\"#vercel-v0\">Vercel v0</a></h3>\n<p><a href=\"https://vercel.com/docs/v0/api\">Vercel v0</a> is an expert model for generating full-stack apps, with framework-aware completions optimized for modern stacks like Next.js and Vercel.\nIt supports text and image inputs and provides fast streaming responses.</p>\n<p>The v0 models are <a href=\"/#openai-api-compatible\">OpenAI-compatible models</a>, but Vercel is listed as first-class provider in the panel's settings view.</p>\n<p>To start using it with Zed, ensure you have first created a <a href=\"https://v0.dev/chat/settings/keys\">v0 API key</a>.\nOnce you have it, paste it directly into the Vercel provider section in the panel's settings view.</p>\n<p>You should then find it as <code>v0-1.5-md</code> in the model dropdown in the Agent Panel.</p>\n<h3 id=\"xai\"><a class=\"header\" href=\"#xai\">xAI</a></h3>\n<p>Zed has first-class support for <a href=\"https://x.ai/\">xAI</a> models. You can use your own API key to access Grok models.</p>\n<ol>\n<li><a href=\"https://console.x.ai/team/default/api-keys\">Create an API key in the xAI Console</a></li>\n<li>Open the settings view (<code>agent: open settings</code>) and go to the <strong>xAI</strong> section</li>\n<li>Enter your xAI API key</li>\n</ol>\n<p>The xAI API key will be saved in your keychain. Zed will also use the <code>XAI_API_KEY</code> environment variable if it's defined.</p>\n<blockquote>\n<p><strong>Note:</strong> While the xAI API is OpenAI-compatible, Zed has first-class support for it as a dedicated provider. For the best experience, we recommend using the dedicated <code>x_ai</code> provider configuration instead of the <a href=\"#openai-api-compatible\">OpenAI API Compatible</a> method.</p>\n</blockquote>\n<h4 id=\"xai-custom-models\"><a class=\"header\" href=\"#xai-custom-models\">Custom Models</a></h4>\n<p>The Zed agent comes pre-configured with common Grok models. If you wish to use alternate models or customize their parameters, you can do so by adding the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"x_ai\": {\n      \"api_url\": \"https://api.x.ai/v1\",\n      \"available_models\": [\n        {\n          \"name\": \"grok-1.5\",\n          \"display_name\": \"Grok 1.5\",\n          \"max_tokens\": 131072,\n          \"max_output_tokens\": 8192\n        },\n        {\n          \"name\": \"grok-1.5v\",\n          \"display_name\": \"Grok 1.5V (Vision)\",\n          \"max_tokens\": 131072,\n          \"max_output_tokens\": 8192,\n          \"supports_images\": true\n        }\n      ]\n    }\n  }\n}\n</code></pre>\n<h2 id=\"custom-provider-endpoint\"><a class=\"header\" href=\"#custom-provider-endpoint\">Custom Provider Endpoints</a></h2>\n<p>You can use a custom API endpoint for different providers, as long as it's compatible with the provider's API structure.\nTo do so, add the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language_models\": {\n    \"some-provider\": {\n      \"api_url\": \"http://localhost:11434\"\n    }\n  }\n}\n</code></pre>\n<p>Currently, <code>some-provider</code> can be any of the following values: <code>anthropic</code>, <code>google</code>, <code>ollama</code>, <code>openai</code>.</p>\n<p>This is the same infrastructure that powers models that are, for example, <a href=\"#openai-api-compatible\">OpenAI-compatible</a>.</p>\n\n</main>",
+  "content_text": "LLM Providers\nTo use AI in Zed, you need to have at least one large language model provider set up.\nYou can do that by either subscribing to one of Zed's plans, or by using API keys you already have for the supported providers.\nUse Your Own Keys\nIf you already have an API key for an existing LLM provider—say Anthropic or OpenAI, for example—you can insert them into Zed and use the full power of the Agent Panel for free.\nTo add an existing API key to a given provider, go to the Agent Panel settings (agent: open settings), look for the desired provider, paste the key into the input, and hit enter.\n\nNote: API keys are not stored as plain text in your settings.json, but rather in your OS's secure credential storage.\n\nSupported Providers\nHere's all the supported LLM providers for which you can use your own API keys:\n\nAmazon Bedrock\nAnthropic\nDeepSeek\nGitHub Copilot Chat\nGoogle AI\nLM Studio\nMistral\nOllama\nOpenAI\nOpenAI API Compatible\nOpenRouter\nVercel\nxAI\n\nAmazon Bedrock\n\nSupports tool use with models that support streaming tool use.\nMore details can be found in the Amazon Bedrock's Tool Use documentation.\n\nTo use Amazon Bedrock's models, an AWS authentication is required.\nEnsure your credentials have the following permissions set up:\n\nbedrock:InvokeModelWithResponseStream\nbedrock:InvokeModel\n\nYour IAM policy should look similar to:\n{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"bedrock:InvokeModel\",\n        \"bedrock:InvokeModelWithResponseStream\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n\nWith that done, choose one of the two authentication methods:\nAuthentication via Named Profile (Recommended)\n\nEnsure you have the AWS CLI installed and configured with a named profile\nOpen your settings.json (zed: open settings) and include the bedrock key under language_models with the following settings:\n{\n  \"language_models\": {\n    \"bedrock\": {\n      \"authentication_method\": \"named_profile\",\n      \"region\": \"your-aws-region\",\n      \"profile\": \"your-profile-name\"\n    }\n  }\n}\n\n\n\nAuthentication via Static Credentials\nWhile it's possible to configure through the Agent Panel settings UI by entering your AWS access key and secret directly, we recommend using named profiles instead for better security practices.\nTo do this:\n\nCreate an IAM User that you can assume in the IAM Console.\nCreate security credentials for that User, save them and keep them secure.\nOpen the Agent Configuration with (agent: open settings) and go to the Amazon Bedrock section\nCopy the credentials from Step 2 into the respective Access Key ID, Secret Access Key, and Region fields.\n\nCross-Region Inference\nThe Zed implementation of Amazon Bedrock uses Cross-Region inference for all the models and region combinations that support it.\nWith Cross-Region inference, you can distribute traffic across multiple AWS Regions, enabling higher throughput.\nFor example, if you use Claude Sonnet 3.7 Thinking from us-east-1, it may be processed across the US regions, namely: us-east-1, us-east-2, or us-west-2.\nCross-Region inference requests are kept within the AWS Regions that are part of the geography where the data originally resides.\nFor example, a request made within the US is kept within the AWS Regions in the US.\nAlthough the data remains stored only in the source Region, your input prompts and output results might move outside of your source Region during cross-Region inference.\nAll data will be transmitted encrypted across Amazon's secure network.\nWe will support Cross-Region inference for each of the models on a best-effort basis, please refer to the Cross-Region Inference method Code.\nFor the most up-to-date supported regions and models, refer to the Supported Models and Regions for Cross Region inference.\nAnthropic\nYou can use Anthropic models by choosing them via the model dropdown in the Agent Panel.\n\nSign up for Anthropic and create an API key\nMake sure that your Anthropic account has credits\nOpen the settings view (agent: open settings) and go to the Anthropic section\nEnter your Anthropic API key\n\nEven if you pay for Claude Pro, you will still have to pay for additional credits to use it via the API.\nZed will also use the ANTHROPIC_API_KEY environment variable if it's defined.\nCustom Models\nYou can add custom models to the Anthropic provider by adding the following to your Zed settings.json:\n{\n  \"language_models\": {\n    \"anthropic\": {\n      \"available_models\": [\n        {\n          \"name\": \"claude-3-5-sonnet-20240620\",\n          \"display_name\": \"Sonnet 2024-June\",\n          \"max_tokens\": 128000,\n          \"max_output_tokens\": 2560,\n          \"cache_configuration\": {\n            \"max_cache_anchors\": 10,\n            \"min_total_token\": 10000,\n            \"should_speculate\": false\n          },\n          \"tool_override\": \"some-model-that-supports-toolcalling\"\n        }\n      ]\n    }\n  }\n}\n\nCustom models will be listed in the model dropdown in the Agent Panel.\nYou can configure a model to use extended thinking (if it supports it) by changing the mode in your model's configuration to thinking, for example:\n{\n  \"name\": \"claude-sonnet-4-latest\",\n  \"display_name\": \"claude-sonnet-4-thinking\",\n  \"max_tokens\": 200000,\n  \"mode\": {\n    \"type\": \"thinking\",\n    \"budget_tokens\": 4_096\n  }\n}\n\nDeepSeek\n\nVisit the DeepSeek platform and create an API key\nOpen the settings view (agent: open settings) and go to the DeepSeek section\nEnter your DeepSeek API key\n\nThe DeepSeek API key will be saved in your keychain.\nZed will also use the DEEPSEEK_API_KEY environment variable if it's defined.\nCustom Models\nThe Zed agent comes pre-configured to use the latest version for common models (DeepSeek Chat, DeepSeek Reasoner).\nIf you wish to use alternate models or customize the API endpoint, you can do so by adding the following to your Zed settings.json:\n{\n  \"language_models\": {\n    \"deepseek\": {\n      \"api_url\": \"https://api.deepseek.com\",\n      \"available_models\": [\n        {\n          \"name\": \"deepseek-chat\",\n          \"display_name\": \"DeepSeek Chat\",\n          \"max_tokens\": 64000\n        },\n        {\n          \"name\": \"deepseek-reasoner\",\n          \"display_name\": \"DeepSeek Reasoner\",\n          \"max_tokens\": 64000,\n          \"max_output_tokens\": 4096\n        }\n      ]\n    }\n  }\n}\n\nCustom models will be listed in the model dropdown in the Agent Panel.\nYou can also modify the api_url to use a custom endpoint if needed.\nGitHub Copilot Chat\nYou can use GitHub Copilot Chat with the Zed agent by choosing it via the model dropdown in the Agent Panel.\n\nOpen the settings view (agent: open settings) and go to the GitHub Copilot Chat section\nClick on Sign in to use GitHub Copilot, follow the steps shown in the modal.\n\nAlternatively, you can provide an OAuth token via the GH_COPILOT_TOKEN environment variable.\n\nNote: If you don't see specific models in the dropdown, you may need to enable them in your GitHub Copilot settings.\n\nTo use Copilot Enterprise with Zed (for both agent and completions), you must configure your enterprise endpoint as described in Configuring GitHub Copilot Enterprise.\nGoogle AI\nYou can use Gemini models with the Zed agent by choosing it via the model dropdown in the Agent Panel.\n\nGo to the Google AI Studio site and create an API key.\nOpen the settings view (agent: open settings) and go to the Google AI section\nEnter your Google AI API key and press enter.\n\nThe Google AI API key will be saved in your keychain.\nZed will also use the GEMINI_API_KEY environment variable if it's defined. See Using Gemini API keys in the Gemini docs for more.\nCustom Models\nBy default, Zed will use stable versions of models, but you can use specific versions of models, including experimental models. You can configure a model to use thinking mode (if it supports it) by adding a mode configuration to your model. This is useful for controlling reasoning token usage and response speed. If not specified, Gemini will automatically choose the thinking budget.\nHere is an example of a custom Google AI model you could add to your Zed settings.json:\n{\n  \"language_models\": {\n    \"google\": {\n      \"available_models\": [\n        {\n          \"name\": \"gemini-2.5-flash-preview-05-20\",\n          \"display_name\": \"Gemini 2.5 Flash (Thinking)\",\n          \"max_tokens\": 1000000,\n          \"mode\": {\n            \"type\": \"thinking\",\n            \"budget_tokens\": 24000\n          }\n        }\n      ]\n    }\n  }\n}\n\nCustom models will be listed in the model dropdown in the Agent Panel.\nLM Studio\n\n\nDownload and install the latest version of LM Studio\n\n\nIn the app press cmd/ctrl-shift-m and download at least one model (e.g., qwen2.5-coder-7b). Alternatively, you can get models via the LM Studio CLI:\nlms get qwen2.5-coder-7b\n\n\n\nMake sure the LM Studio API server is running by executing:\nlms server start\n\n\n\nTip: Set LM Studio as a login item to automate running the LM Studio server.\nMistral\n\nVisit the Mistral platform and create an API key\nOpen the configuration view (agent: open settings) and navigate to the Mistral section\nEnter your Mistral API key\n\nThe Mistral API key will be saved in your keychain.\nZed will also use the MISTRAL_API_KEY environment variable if it's defined.\nCustom Models\nThe Zed agent comes pre-configured with several Mistral models (codestral-latest, mistral-large-latest, mistral-medium-latest, mistral-small-latest, open-mistral-nemo, and open-codestral-mamba).\nAll the default models support tool use.\nIf you wish to use alternate models or customize their parameters, you can do so by adding the following to your Zed settings.json:\n{\n  \"language_models\": {\n    \"mistral\": {\n      \"api_url\": \"https://api.mistral.ai/v1\",\n      \"available_models\": [\n        {\n          \"name\": \"mistral-tiny-latest\",\n          \"display_name\": \"Mistral Tiny\",\n          \"max_tokens\": 32000,\n          \"max_output_tokens\": 4096,\n          \"max_completion_tokens\": 1024,\n          \"supports_tools\": true,\n          \"supports_images\": false\n        }\n      ]\n    }\n  }\n}\n\nCustom models will be listed in the model dropdown in the Agent Panel.\nOllama\nDownload and install Ollama from ollama.com/download (Linux or macOS) and ensure it's running with ollama --version.\n\n\nDownload one of the available models, for example, for mistral:\nollama pull mistral\n\n\n\nMake sure that the Ollama server is running. You can start it either via running Ollama.app (macOS) or launching:\nollama serve\n\n\n\nIn the Agent Panel, select one of the Ollama models using the model dropdown.\n\n\nOllama Context Length\nZed has pre-configured maximum context lengths (max_tokens) to match the capabilities of common models.\nZed API requests to Ollama include this as the num_ctx parameter, but the default values do not exceed 16384 so users with ~16GB of RAM are able to use most models out of the box.\nSee get_max_tokens in ollama.rs for a complete set of defaults.\n\nNote: Token counts displayed in the Agent Panel are only estimates and will differ from the model's native tokenizer.\n\nDepending on your hardware or use-case you may wish to limit or increase the context length for a specific model via settings.json:\n{\n  \"language_models\": {\n    \"ollama\": {\n      \"api_url\": \"http://localhost:11434\",\n      \"available_models\": [\n        {\n          \"name\": \"qwen2.5-coder\",\n          \"display_name\": \"qwen 2.5 coder 32K\",\n          \"max_tokens\": 32768,\n          \"supports_tools\": true,\n          \"supports_thinking\": true,\n          \"supports_images\": true\n        }\n      ]\n    }\n  }\n}\n\nIf you specify a context length that is too large for your hardware, Ollama will log an error.\nYou can watch these logs by running: tail -f ~/.ollama/logs/ollama.log (macOS) or journalctl -u ollama -f (Linux).\nDepending on the memory available on your machine, you may need to adjust the context length to a smaller value.\nYou may also optionally specify a value for keep_alive for each available model.\nThis can be an integer (seconds) or alternatively a string duration like \"5m\", \"10m\", \"1h\", \"1d\", etc.\nFor example, \"keep_alive\": \"120s\" will allow the remote server to unload the model (freeing up GPU VRAM) after 120 seconds.\nThe supports_tools option controls whether the model will use additional tools.\nIf the model is tagged with tools in the Ollama catalog, this option should be supplied, and the built-in profiles Ask and Write can be used.\nIf the model is not tagged with tools in the Ollama catalog, this option can still be supplied with the value true; however, be aware that only the Minimal built-in profile will work.\nThe supports_thinking option controls whether the model will perform an explicit \"thinking\" (reasoning) pass before producing its final answer.\nIf the model is tagged with thinking in the Ollama catalog, set this option and you can use it in Zed.\nThe supports_images option enables the model's vision capabilities, allowing it to process images included in the conversation context.\nIf the model is tagged with vision in the Ollama catalog, set this option and you can use it in Zed.\nOpenAI\n\nVisit the OpenAI platform and create an API key\nMake sure that your OpenAI account has credits\nOpen the settings view (agent: open settings) and go to the OpenAI section\nEnter your OpenAI API key\n\nThe OpenAI API key will be saved in your keychain.\nZed will also use the OPENAI_API_KEY environment variable if it's defined.\nCustom Models\nThe Zed agent comes pre-configured to use the latest version for common models (GPT-5, GPT-5 mini, o4-mini, GPT-4.1, and others).\nTo use alternate models, perhaps a preview release, or if you wish to control the request parameters, you can do so by adding the following to your Zed settings.json:\n{\n  \"language_models\": {\n    \"openai\": {\n      \"available_models\": [\n        {\n          \"name\": \"gpt-5\",\n          \"display_name\": \"gpt-5 high\",\n          \"reasoning_effort\": \"high\",\n          \"max_tokens\": 272000,\n          \"max_completion_tokens\": 20000\n        },\n        {\n          \"name\": \"gpt-4o-2024-08-06\",\n          \"display_name\": \"GPT 4o Summer 2024\",\n          \"max_tokens\": 128000\n        }\n      ]\n    }\n  }\n}\n\nYou must provide the model's context window in the max_tokens parameter; this can be found in the OpenAI model documentation.\nOpenAI o1 models should set max_completion_tokens as well to avoid incurring high reasoning token costs.\nCustom models will be listed in the model dropdown in the Agent Panel.\nOpenAI API Compatible\nZed supports using OpenAI compatible APIs by specifying a custom api_url and available_models for the OpenAI provider.\nThis is useful for connecting to other hosted services (like Together AI, Anyscale, etc.) or local models.\nYou can add a custom, OpenAI-compatible model either via the UI or by editing your settings.json.\nTo do it via the UI, go to the Agent Panel settings (agent: open settings) and look for the \"Add Provider\" button to the right of the \"LLM Providers\" section title.\nThen, fill up the input fields available in the modal.\nTo do it via your settings.json, add the following snippet under language_models:\n{\n  \"language_models\": {\n    \"openai_compatible\": {\n      // Using Together AI as an example\n      \"Together AI\": {\n        \"api_url\": \"https://api.together.xyz/v1\",\n        \"available_models\": [\n          {\n            \"name\": \"mistralai/Mixtral-8x7B-Instruct-v0.1\",\n            \"display_name\": \"Together Mixtral 8x7B\",\n            \"max_tokens\": 32768,\n            \"capabilities\": {\n              \"tools\": true,\n              \"images\": false,\n              \"parallel_tool_calls\": false,\n              \"prompt_cache_key\": false\n            }\n          }\n        ]\n      }\n    }\n  }\n}\n\nBy default, OpenAI-compatible models inherit the following capabilities:\n\ntools: true (supports tool/function calling)\nimages: false (does not support image inputs)\nparallel_tool_calls: false (does not support parallel_tool_calls parameter)\nprompt_cache_key: false (does not support prompt_cache_key parameter)\n\nNote that LLM API keys aren't stored in your settings file.\nSo, ensure you have it set in your environment variables (<PROVIDER_NAME>_API_KEY=<your api key>) so your settings can pick it up. In the example above, it would be TOGETHER_AI_API_KEY=<your api key>.\nOpenRouter\nOpenRouter provides access to multiple AI models through a single API. It supports tool use for compatible models.\n\nVisit OpenRouter and create an account\nGenerate an API key from your OpenRouter keys page\nOpen the settings view (agent: open settings) and go to the OpenRouter section\nEnter your OpenRouter API key\n\nThe OpenRouter API key will be saved in your keychain.\nZed will also use the OPENROUTER_API_KEY environment variable if it's defined.\nCustom Models\nYou can add custom models to the OpenRouter provider by adding the following to your Zed settings.json:\n{\n  \"language_models\": {\n    \"open_router\": {\n      \"api_url\": \"https://openrouter.ai/api/v1\",\n      \"available_models\": [\n        {\n          \"name\": \"google/gemini-2.0-flash-thinking-exp\",\n          \"display_name\": \"Gemini 2.0 Flash (Thinking)\",\n          \"max_tokens\": 200000,\n          \"max_output_tokens\": 8192,\n          \"supports_tools\": true,\n          \"supports_images\": true,\n          \"mode\": {\n            \"type\": \"thinking\",\n            \"budget_tokens\": 8000\n          }\n        }\n      ]\n    }\n  }\n}\n\nThe available configuration options for each model are:\n\nname (required): The model identifier used by OpenRouter\ndisplay_name (optional): A human-readable name shown in the UI\nmax_tokens (required): The model's context window size\nmax_output_tokens (optional): Maximum tokens the model can generate\nmax_completion_tokens (optional): Maximum completion tokens\nsupports_tools (optional): Whether the model supports tool/function calling\nsupports_images (optional): Whether the model supports image inputs\nmode (optional): Special mode configuration for thinking models\n\nYou can find available models and their specifications on the OpenRouter models page.\nCustom models will be listed in the model dropdown in the Agent Panel.\nVercel v0\nVercel v0 is an expert model for generating full-stack apps, with framework-aware completions optimized for modern stacks like Next.js and Vercel.\nIt supports text and image inputs and provides fast streaming responses.\nThe v0 models are OpenAI-compatible models, but Vercel is listed as first-class provider in the panel's settings view.\nTo start using it with Zed, ensure you have first created a v0 API key.\nOnce you have it, paste it directly into the Vercel provider section in the panel's settings view.\nYou should then find it as v0-1.5-md in the model dropdown in the Agent Panel.\nxAI\nZed has first-class support for xAI models. You can use your own API key to access Grok models.\n\nCreate an API key in the xAI Console\nOpen the settings view (agent: open settings) and go to the xAI section\nEnter your xAI API key\n\nThe xAI API key will be saved in your keychain. Zed will also use the XAI_API_KEY environment variable if it's defined.\n\nNote: While the xAI API is OpenAI-compatible, Zed has first-class support for it as a dedicated provider. For the best experience, we recommend using the dedicated x_ai provider configuration instead of the OpenAI API Compatible method.\n\nCustom Models\nThe Zed agent comes pre-configured with common Grok models. If you wish to use alternate models or customize their parameters, you can do so by adding the following to your Zed settings.json:\n{\n  \"language_models\": {\n    \"x_ai\": {\n      \"api_url\": \"https://api.x.ai/v1\",\n      \"available_models\": [\n        {\n          \"name\": \"grok-1.5\",\n          \"display_name\": \"Grok 1.5\",\n          \"max_tokens\": 131072,\n          \"max_output_tokens\": 8192\n        },\n        {\n          \"name\": \"grok-1.5v\",\n          \"display_name\": \"Grok 1.5V (Vision)\",\n          \"max_tokens\": 131072,\n          \"max_output_tokens\": 8192,\n          \"supports_images\": true\n        }\n      ]\n    }\n  }\n}\n\nCustom Provider Endpoints\nYou can use a custom API endpoint for different providers, as long as it's compatible with the provider's API structure.\nTo do so, add the following to your settings.json:\n{\n  \"language_models\": {\n    \"some-provider\": {\n      \"api_url\": \"http://localhost:11434\"\n    }\n  }\n}\n\nCurrently, some-provider can be any of the following values: anthropic, google, ollama, openai.\nThis is the same infrastructure that powers models that are, for example, OpenAI-compatible.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:25"
+}

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>编辑预测 | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="active">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#edit-prediction" class="pagetoc-H1">编辑预测</a>
+<a href="#configuring-zeta" class="pagetoc-H2">配置 Zeta</a>
+<a href="#switching-modes" class="pagetoc-H3">切换模式</a>
+<a href="#edit-predictions-conflict" class="pagetoc-H3">与其他 tab 操作的冲突</a>
+<a href="#edit-predictions-keybinding" class="pagetoc-H2">配置编辑预测快捷键</a>
+<a href="#keybinding-example-always-use-alt-tab" class="pagetoc-H3">快捷键示例：始终使用 Alt-Tab</a>
+<a href="#keybinding-example-displaying-tab-and-alt-tab-on-linux" class="pagetoc-H3">快捷键示例：在 Linux 上显示 Tab 和 Alt-Tab</a>
+<a href="#edit-predictions-missing-keybinding" class="pagetoc-H3">缺少快捷键</a>
+<a href="#disabling-automatic-edit-prediction" class="pagetoc-H2">禁用自动编辑预测</a>
+<a href="#on-buffers" class="pagetoc-H3">在缓冲区上</a>
+<a href="#for-specific-languages" class="pagetoc-H3">针对特定语言</a>
+<a href="#in-specific-directories" class="pagetoc-H3">在特定目录中</a>
+<a href="#turning-off-completely" class="pagetoc-H3">完全关闭</a>
+<a href="#github-copilot" class="pagetoc-H2">配置 GitHub Copilot</a>
+<a href="#github-copilot-enterprise" class="pagetoc-H3">使用 GitHub Copilot 企业版</a>
+<a href="#supermaven" class="pagetoc-H2">配置 Supermaven</a>
+<a href="#see-also" class="pagetoc-H2">参见</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="edit-prediction"><a class="header" href="#edit-prediction">编辑预测</a></h1>
+<p>编辑预测是 Zed 通过 AI 预测您想要编写代码的原生机制。
+每次按键都会向我们的 <a href="https://huggingface.co/zed-industries/zeta">开源、开放数据集的 Zeta 模型</a> 发送一个新请求，它会返回单行或多行建议，可以通过按 <code>tab</code> 快速接受。</p>
+<h2 id="configuring-zeta"><a class="header" href="#configuring-zeta">配置 Zeta</a></h2>
+<p>Zed 的编辑预测最初通过标题栏上的横幅进行介绍。
+点击它会带您到一个模态框，其中有一个按钮（“启用编辑预测”），可以将 <code>zed</code> 设置为您的 <code>edit_prediction_provider</code>。</p>
+<p><img alt="入门横幅和模态框" src="https://zed.dev/img/edit-prediction/docs.webp"/></p>
+<p>但是，如果您没有遇到该横幅，Zed 的编辑预测是默认的编辑预测提供者，您应该在状态栏中立即看到它。</p>
+<h3 id="switching-modes"><a class="header" href="#switching-modes">切换模式</a></h3>
+<p>Zed 的编辑预测提供两种不同的显示模式：</p>
+<ol>
+<li><code>eager</code>（默认）：只要与语言服务器完成不冲突，就在内联显示预测</li>
+<li><code>subtle</code>：仅在按住修饰键（默认为 <code>alt</code>）时内联显示预测</li>
+</ol>
+<p>通过 <code>mode</code> 键在它们之间切换：</p>
+<pre><code class="language-json">"edit_predictions": {
+  "mode": "eager" | "subtle"
+},
+</code></pre>
+<p>或者通过状态栏菜单直接通过 UI 操作：</p>
+<p><img alt="编辑预测状态栏菜单，包含模式切换。" src="https://zed.dev/img/edit-prediction/status-bar-menu.webp"/></p>
+<h3 id="edit-predictions-conflict"><a class="header" href="#edit-predictions-conflict">与其他 <code>tab</code> 操作的冲突</a></h3>
+<p>默认情况下，当 <code>tab</code> 通常执行不同操作时，Zed 需要修饰键来接受预测：</p>
+<ol>
+<li>当语言服务器完成菜单可见时。</li>
+<li>当光标不在正确的缩进级别时。</li>
+</ol>
+<p>在这些情况下，使用 <code>alt-tab</code> 来接受预测。当语言服务器完成菜单打开时，首先按住 <code>alt</code> 会使其暂时消失，以便在缓冲区内预览预测。</p>
+<p>在 Linux 上，<code>alt-tab</code> 通常被窗口管理器用于切换窗口，因此提供 <code>alt-l</code> 作为接受预测的默认绑定。<code>tab</code> 和 <code>alt-tab</code> 也可以使用，但默认不显示。</p>
+<p><code class="hljs">editor: accept partial edit prediction</code> (<kbd class="keybinding">ctrl-cmd-right|alt-right</kbd>) 可以用于接受当前编辑预测直到下一个单词边界。</p>
+<p>参见下面的 <a href="#github-copilot">配置 GitHub Copilot</a> 和 <a href="#supermaven">配置 Supermaven</a> 部分以了解其他提供者的配置。这些提供者只支持在当前光标处插入文本，而 Zeta 模型提供多种预测，包括删除。</p>
+<h2 id="edit-predictions-keybinding"><a class="header" href="#edit-predictions-keybinding">配置编辑预测快捷键</a></h2>
+<p>默认情况下，使用 <code>tab</code> 来接受编辑预测。您可以通过在键盘映射中插入以下内容来使用另一个快捷键：</p>
+<pre><code class="language-json">{
+  "context": "Editor &amp;&amp; edit_prediction",
+  "bindings": {
+    // 这里我们也允许使用 `alt-enter` 来接受预测
+    "alt-enter": "editor::AcceptEditPrediction"
+  }
+}
+</code></pre>
+<p>当出现 <a href="#edit-predictions-conflict">与 <code>tab</code> 键的冲突</a>时，Zed 使用不同的上下文来接受快捷键（<code>edit_prediction_conflict</code>）。如果您想使用不同的快捷键，可以在您的键盘映射中插入以下内容：</p>
+<pre><code class="language-json">{
+  "context": "Editor &amp;&amp; edit_prediction_conflict",
+  "bindings": {
+    "ctrl-enter": "editor::AcceptEditPrediction" // 修改快捷键的示例
+  }
+}
+</code></pre>
+<p>如果您的快捷键包含修饰键（上例中的 <code>ctrl</code>），它还将用于预览编辑预测并暂时隐藏语言服务器完成菜单。</p>
+<p>您也可以将此操作绑定到没有修饰键的快捷键。在这种情况下，Zed 将使用默认修饰键（<code>alt</code>）来预览编辑预测。</p>
+<pre><code class="language-json">{
+  "context": "Editor &amp;&amp; edit_prediction_conflict",
+  "bindings": {
+    // 这里我们绑定 tab 来接受，即使有语言服务器完成
+    // 或光标不在正确的缩进级别
+    "tab": "editor::AcceptEditPrediction"
+  }
+}
+</code></pre>
+<p>要在有语言服务器完成菜单时保持使用修饰键来接受预测，但允许 <code>tab</code> 无论光标位置如何都能接受预测，您可以使用 <code>showing_completions</code> 进一步指定上下文：</p>
+<pre><code class="language-json">{
+  "context": "Editor &amp;&amp; edit_prediction_conflict &amp;&amp; !showing_completions",
+  "bindings": {
+    // 这里我们不需要修饰键，除非有语言服务器完成
+    "tab": "editor::AcceptEditPrediction"
+  }
+}
+</code></pre>
+<h3 id="keybinding-example-always-use-alt-tab"><a class="header" href="#keybinding-example-always-use-alt-tab">快捷键示例：始终使用 Alt-Tab</a></h3>
+<p>下面的快捷键示例使 <code>alt-tab</code> 始终被使用，而不是有时使用 <code>tab</code>。您可能希望这样做，以便只需一个快捷键来接受编辑预测，因为 <code>tab</code> 的行为因上下文而异。</p>
+<pre><code class="language-json">  {
+    "context": "Editor &amp;&amp; edit_prediction",
+    "bindings": {
+      "alt-tab": "editor::AcceptEditPrediction"
+    }
+  },
+  // 将 `tab` 绑定回其原始行为。
+  {
+    "context": "Editor",
+    "bindings": {
+      "tab": "editor::Tab"
+    }
+  },
+  {
+    "context": "Editor &amp;&amp; showing_completions",
+    "bindings": {
+      "tab": "editor::ComposeCompletion"
+    }
+  },
+</code></pre>
+<p>如果在 <code>settings.json</code> 中设置了 <code>"vim_mode": true</code>，则需要在上述设置之后添加额外的绑定，以使 <code>tab</code> 返回其原始行为：</p>
+<pre><code class="language-json">  {
+    "context": "(VimControl &amp;&amp; !menu) || vim_mode == replace || vim_mode == waiting",
+    "bindings": {
+      "tab": "vim::Tab"
+    }
+  },
+  {
+    "context": "vim_mode == literal",
+    "bindings": {
+      "tab": ["vim::Literal", ["tab", "\u0009"]]
+    }
+  },
+</code></pre>
+<h3 id="keybinding-example-displaying-tab-and-alt-tab-on-linux"><a class="header" href="#keybinding-example-displaying-tab-and-alt-tab-on-linux">快捷键示例：在 Linux 上显示 Tab 和 Alt-Tab</a></h3>
+<p>虽然在 Linux 上支持 <code>tab</code> 和 <code>alt-tab</code>，但显示的是 <code>alt-l</code>。如果您的窗口管理器没有保留 <code>alt-tab</code>，并且您希望使用 <code>tab</code> 和 <code>alt-tab</code>，请在 <code>keymap.json</code> 中包含这些绑定：</p>
+<pre><code class="language-json">  {
+    "context": "Editor &amp;&amp; edit_prediction",
+    "bindings": {
+      "tab": "editor::AcceptEditPrediction",
+      // 可选：这使默认的 `alt-l` 绑定不起作用。
+      "alt-l": null
+    }
+  },
+  {
+    "context": "Editor &amp;&amp; edit_prediction_conflict",
+    "bindings": {
+      "alt-tab": "editor::AcceptEditPrediction",
+      // 可选：这使默认的 `alt-l` 绑定不起作用。
+      "alt-l": null
+    }
+  },
+</code></pre>
+<h3 id="edit-predictions-missing-keybinding"><a class="header" href="#edit-predictions-missing-keybinding">缺少快捷键</a></h3>
+<p>Zed 在 <code>Editor &amp;&amp; edit_prediction</code> 和 <code>Editor &amp;&amp; edit_prediction_conflict</code> 上下文中都需要为 <code class="hljs">editor: accept edit prediction</code> 操作至少设置一个快捷键（<a href="#edit-predictions-keybinding">上面了解更多</a>）。</p>
+<p>如果您之前在全局上下文中将默认快捷键绑定到不同的操作，您将无法预览或接受编辑预测。例如：</p>
+<pre><code class="language-json">[
+  // 您的键盘映射
+  {
+    "bindings": {
+      // 全局将 `alt-tab` 绑定到不同的操作
+      "alt-tab": "menu::SelectNext"
+    }
+  }
+]
+</code></pre>
+<p>要解决这个问题，您可以指定自己的快捷键来接受编辑预测：</p>
+<pre><code class="language-json">[
+  // ...
+  {
+    "context": "Editor &amp;&amp; edit_prediction_conflict",
+    "bindings": {
+      "alt-l": "editor::AcceptEditPrediction"
+    }
+  }
+]
+</code></pre>
+<p>如果您想使用默认快捷键，可以通过将您的快捷键移动到更具体的上下文或将其更改为其他内容来释放它。</p>
+<h2 id="disabling-automatic-edit-prediction"><a class="header" href="#disabling-automatic-edit-prediction">禁用自动编辑预测</a></h2>
+<p>您可以在不同级别上禁用编辑预测显示，包括完全不开启。</p>
+<p>或者，如果您将 Zed 设置为您的提供者，请考虑 <a href="#switching-modes">使用精细模式</a>。</p>
+<h3 id="on-buffers"><a class="header" href="#on-buffers">在缓冲区上</a></h3>
+<p>为了不让预测在您输入时自动出现，请在 <code>settings.json</code> 中设置：</p>
+<pre><code class="language-json">{
+  "show_edit_predictions": false
+}
+</code></pre>
+<p>这将隐藏有预测可用的所有指示，无论您处于 <a href="#switching-modes">哪种显示模式</a>（仅在您将 Zed 作为提供者时有效）。
+但是，您仍然可以通过执行 <code class="hljs">editor: show edit prediction</code> 或按 <kbd class="keybinding">alt-tab|alt-l</kbd> 来手动触发编辑预测。</p>
+<h3 id="for-specific-languages"><a class="header" href="#for-specific-languages">针对特定语言</a></h3>
+<p>要在使用特定语言时不让预测在您输入时自动出现，请在 <code>settings.json</code> 中设置：</p>
+<pre><code class="language-json">{
+  "language": {
+    "python": {
+      "show_edit_predictions": false
+    }
+  }
+}
+</code></pre>
+<h3 id="in-specific-directories"><a class="header" href="#in-specific-directories">在特定目录中</a></h3>
+<p>要针对特定目录或文件禁用编辑预测，请在 <code>settings.json</code> 中设置：</p>
+<pre><code class="language-json">{
+  "edit_predictions": {
+    "disabled_globs": ["~/.config/zed/settings.json"]
+  }
+}
+</code></pre>
+<h3 id="turning-off-completely"><a class="header" href="#turning-off-completely">完全关闭</a></h3>
+<p>要在所有提供者中完全关闭编辑预测，请明确将设置设置为 <code>none</code>，如下所示：</p>
+<pre><code class="language-json">"features": {
+  "edit_prediction_provider": "none"
+},
+</code></pre>
+<h2 id="github-copilot"><a class="header" href="#github-copilot">配置 GitHub Copilot</a></h2>
+<p>要使用 GitHub Copilot 作为您的提供者，请在 <code>settings.json</code> 中设置：</p>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "copilot"
+  }
+}
+</code></pre>
+<p>您应该能够通过点击状态栏中的 Copilot 图标并按照设置说明登录到 GitHub Copilot。</p>
+<h3 id="github-copilot-enterprise"><a class="header" href="#github-copilot-enterprise">使用 GitHub Copilot 企业版</a></h3>
+<p>如果您的组织使用 GitHub Copilot 企业版，您可以通过在 <code>settings.json</code> 中指定企业 URI 来配置 Zed 使用您的企业实例：</p>
+<pre><code class="language-json">{
+  "edit_predictions": {
+    "copilot": {
+      "enterprise_uri": "https://your.enterprise.domain"
+    }
+  }
+}
+</code></pre>
+<p>将 <code>"https://your.enterprise.domain"</code> 替换为 GitHub 企业版管理员提供的 URL（例如，<code>https://foo.ghe.com</code>）。</p>
+<p>设置后，Zed 将通过您的企业端点路由 Copilot 请求。当您通过点击状态栏中的 Copilot 图标登录时，您将被重定向到您配置的企业 URL 以完成身份验证。所有其他 Copilot 功能和用法保持不变。</p>
+<p>Copilot 可以提供多个完成选项，可以使用以下操作进行导航：</p>
+<ul>
+<li><code class="hljs">editor: next edit prediction</code> (<kbd class="keybinding">alt-tab|alt-]</kbd>)：循环到下一个编辑预测</li>
+<li><code class="hljs">editor: previous edit prediction</code> (<kbd class="keybinding">alt-shift-tab|alt-[</kbd>)：循环到上一个编辑预测</li>
+</ul>
+<h2 id="supermaven"><a class="header" href="#supermaven">配置 Supermaven</a></h2>
+<p>要使用 Supermaven 作为您的提供者，请在 <code>settings.json</code> 中设置：</p>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "supermaven"
+  }
+}
+</code></pre>
+<p>您应该能够通过点击状态栏中的 Supermaven 图标并按照设置说明登录到 Supermaven。</p>
+<h2 id="see-also"><a class="header" href="#see-also">参见</a></h2>
+<p>您也可以使用 <a href="./agent-panel.html">Agent 面板</a> 或 <a href="./inline-assistant.html">内联助手</a> 来与语言模型交互，参阅 <a href="./overview.html">AI 文档</a> 以获取有关 Zed 中其他 AI 功能的更多信息。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

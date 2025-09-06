@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/configuring-languages.html",
+  "title": "Configuring Languages | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"configuring-supported-languages\"><a class=\"header\" href=\"#configuring-supported-languages\">Configuring supported languages</a></h1>\n<p>Zed offers powerful customization options for each programming language it supports. This guide will walk you through the various ways you can tailor your coding experience to your preferences and project requirements.</p>\n<p>Zed's language support is built on two main technologies:</p>\n<ol>\n<li>Tree-sitter: This handles syntax highlighting and structure-based features like the outline panel.</li>\n<li>Language Server Protocol (LSP): This provides semantic features such as code completion and diagnostics.</li>\n</ol>\n<p>These components work together to provide Zed's language capabilities.</p>\n<p>In this guide, we'll cover:</p>\n<ul>\n<li>Language-specific settings</li>\n<li>File associations</li>\n<li>Working with language servers</li>\n<li>Formatting and linting configuration</li>\n<li>Customizing syntax highlighting and themes</li>\n<li>Advanced language features</li>\n</ul>\n<p>By the end of this guide, you should know how to configure and customize supported languages in Zed.</p>\n<p>For a comprehensive list of languages supported by Zed and their specific configurations, see our <a href=\"./languages.html\">Supported Languages</a> page. To go further, you could explore developing your own extensions to add support for additional languages or enhance existing functionality. For more information on creating language extensions, see our <a href=\"./extensions/languages.html\">Language Extensions</a> guide.</p>\n<h2 id=\"language-specific-settings\"><a class=\"header\" href=\"#language-specific-settings\">Language-specific Settings</a></h2>\n<p>Zed allows you to override global settings for individual languages. These custom configurations are defined in your <code>settings.json</code> file under the <code>languages</code> key.</p>\n<p>Here's an example of language-specific settings:</p>\n<pre><code class=\"language-json\">\"languages\": {\n  \"Python\": {\n    \"tab_size\": 4,\n    \"formatter\": \"language_server\",\n    \"format_on_save\": \"on\"\n  },\n  \"JavaScript\": {\n    \"tab_size\": 2,\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"prettier\",\n        \"arguments\": [\"--stdin-filepath\", \"{buffer_path}\"]\n      }\n    }\n  }\n}\n</code></pre>\n<p>You can customize a wide range of settings for each language, including:</p>\n<ul>\n<li><a href=\"./configuring-zed.html#tab-size\"><code>tab_size</code></a>: The number of spaces for each indentation level</li>\n<li><a href=\"./configuring-zed.html#formatter\"><code>formatter</code></a>: The tool used for code formatting</li>\n<li><a href=\"./configuring-zed.html#format-on-save\"><code>format_on_save</code></a>: Whether to automatically format code when saving</li>\n<li><a href=\"./configuring-zed.html#enable-language-server\"><code>enable_language_server</code></a>: Toggle language server support</li>\n<li><a href=\"./configuring-zed.html#hard-tabs\"><code>hard_tabs</code></a>: Use tabs instead of spaces for indentation</li>\n<li><a href=\"./configuring-zed.html#preferred-line-length\"><code>preferred_line_length</code></a>: The recommended maximum line length</li>\n<li><a href=\"./configuring-zed.html#soft-wrap\"><code>soft_wrap</code></a>: How to wrap long lines of code</li>\n<li><a href=\"./configuring-zed.html#show-completions-on-input\"><code>show_completions_on_input</code></a>: Whether or not to show completions as you type</li>\n<li><a href=\"./configuring-zed.html#show-completion-documentation\"><code>show_completion_documentation</code></a>: Whether to display inline and alongside documentation for items in the completions menu</li>\n</ul>\n<p>These settings allow you to maintain specific coding styles across different languages and projects.</p>\n<h2 id=\"file-associations\"><a class=\"header\" href=\"#file-associations\">File Associations</a></h2>\n<p>Zed automatically detects file types based on their extensions, but you can customize these associations to fit your workflow.</p>\n<p>To set up custom file associations, use the <a href=\"./configuring-zed.html#file-types\"><code>file_types</code></a> setting in your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">\"file_types\": {\n  \"C++\": [\"c\"],\n  \"TOML\": [\"MyLockFile\"],\n  \"Dockerfile\": [\"Dockerfile*\"]\n}\n</code></pre>\n<p>This configuration tells Zed to:</p>\n<ul>\n<li>Treat <code>.c</code> files as C++ instead of C</li>\n<li>Recognize files named \"MyLockFile\" as TOML</li>\n<li>Apply Dockerfile syntax to any file starting with \"Dockerfile\"</li>\n</ul>\n<p>You can use glob patterns for more flexible matching, allowing you to handle complex naming conventions in your projects.</p>\n<h2 id=\"working-with-language-servers\"><a class=\"header\" href=\"#working-with-language-servers\">Working with Language Servers</a></h2>\n<p>Language servers are a crucial part of Zed's intelligent coding features, providing capabilities like auto-completion, go-to-definition, and real-time error checking.</p>\n<h3 id=\"what-are-language-servers\"><a class=\"header\" href=\"#what-are-language-servers\">What are Language Servers?</a></h3>\n<p>Language servers implement the Language Server Protocol (LSP), which standardizes communication between the editor and language-specific tools. This allows Zed to support advanced features for multiple programming languages without implementing each feature separately.</p>\n<p>Some key features provided by language servers include:</p>\n<ul>\n<li>Code completion</li>\n<li>Error checking and diagnostics</li>\n<li>Code navigation (go to definition, find references)</li>\n<li>Code actions (Rename, extract method)</li>\n<li>Hover information</li>\n<li>Workspace symbol search</li>\n</ul>\n<h3 id=\"managing-language-servers\"><a class=\"header\" href=\"#managing-language-servers\">Managing Language Servers</a></h3>\n<p>Zed simplifies language server management for users:</p>\n<ol>\n<li>\n<p>Automatic Download: When you open a file with a matching file type, Zed automatically downloads the appropriate language server. Zed may prompt you to install an extension for known file types.</p>\n</li>\n<li>\n<p>Storage Location:</p>\n<ul>\n<li>macOS: <code>~/Library/Application Support/Zed/languages</code></li>\n<li>Linux: <code>$XDG_DATA_HOME/languages</code>, <code>$FLATPAK_XDG_DATA_HOME/languages</code>, or <code>$HOME/.local/share</code></li>\n</ul>\n</li>\n<li>\n<p>Automatic Updates: Zed keeps your language servers up-to-date, ensuring you always have the latest features and improvements.</p>\n</li>\n</ol>\n<h3 id=\"choosing-language-servers\"><a class=\"header\" href=\"#choosing-language-servers\">Choosing Language Servers</a></h3>\n<p>Some languages in Zed offer multiple language server options. You might have multiple extensions installed that bundle language servers targeting the same language, potentially leading to overlapping capabilities. To ensure you get the functionality you prefer, Zed allows you to prioritize which language servers are used and in what order.</p>\n<p>You can specify your preference using the <code>language_servers</code> setting:</p>\n<pre><code class=\"language-json\">  \"languages\": {\n    \"PHP\": {\n      \"language_servers\": [\"intelephense\", \"!phpactor\", \"...\"]\n    }\n  }\n</code></pre>\n<p>In this example:</p>\n<ul>\n<li><code>intelephense</code> is set as the primary language server</li>\n<li><code>phpactor</code> is disabled (note the <code>!</code> prefix)</li>\n<li><code>...</code> expands to the rest of the language servers that are registered for PHP</li>\n</ul>\n<p>This configuration allows you to tailor the language server setup to your specific needs, ensuring that you get the most suitable functionality for your development workflow.</p>\n<h3 id=\"configuring-language-servers\"><a class=\"header\" href=\"#configuring-language-servers\">Configuring Language Servers</a></h3>\n<p>Many language servers accept custom configuration options. You can set these in the <code>lsp</code> section of your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"check\": {\n          \"command\": \"clippy\"\n        }\n      }\n    }\n  }\n</code></pre>\n<p>This example configures the Rust Analyzer to use Clippy for additional linting when saving files.</p>\n<h4 id=\"nested-objects\"><a class=\"header\" href=\"#nested-objects\">Nested objects</a></h4>\n<p>When configuring language server options in Zed, it's important to use nested objects rather than dot-delimited strings. This is particularly relevant when working with more complex configurations. Let's look at a real-world example using the TypeScript language server:</p>\n<p>Suppose you want to configure the following settings for TypeScript:</p>\n<ul>\n<li>Enable strict null checks</li>\n<li>Set the target ECMAScript version to ES2020</li>\n</ul>\n<p>Here's how you would structure these settings in Zed's <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">\"lsp\": {\n  \"typescript-language-server\": {\n    \"initialization_options\": {\n      // These are not supported (VSCode dotted style):\n      // \"preferences.strictNullChecks\": true,\n      // \"preferences.target\": \"ES2020\"\n      //\n      // These is correct (nested notation):\n      \"preferences\": {\n        \"strictNullChecks\": true,\n        \"target\": \"ES2020\"\n      },\n    }\n  }\n}\n</code></pre>\n<h4 id=\"possible-configuration-options\"><a class=\"header\" href=\"#possible-configuration-options\">Possible configuration options</a></h4>\n<p>Depending on how a particular language server is implemented, they may depend on different configuration options, both specified in the LSP.</p>\n<ul>\n<li><a href=\"https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#version_3_17_0\">initializationOptions</a></li>\n</ul>\n<p>Sent once during language server startup, requires server's restart to reapply changes.</p>\n<p>For example, rust-analyzer and clangd rely on this way of configuring only.</p>\n<pre><code class=\"language-json\">  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"checkOnSave\": false\n      }\n    }\n  }\n</code></pre>\n<ul>\n<li><a href=\"https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#workspace_configuration\">Configuration Request</a></li>\n</ul>\n<p>May be queried by the server multiple times.\nMost of the servers would rely on this way of configuring only.</p>\n<pre><code class=\"language-json\">\"lsp\": {\n  \"tailwindcss-language-server\": {\n    \"settings\": {\n      \"tailwindCSS\": {\n        \"emmetCompletions\": true,\n      },\n    }\n  }\n}\n</code></pre>\n<p>Apart of the LSP-related server configuration options, certain servers in Zed allow configuring the way binary is launched by Zed.</p>\n<p>Language servers are automatically downloaded or launched if found in your path, if you wish to specify an explicit alternate binary you can specify that in settings:</p>\n<pre><code class=\"language-json\">  \"lsp\": {\n    \"rust-analyzer\": {\n      \"binary\": {\n        // Whether to fetch the binary from the internet, or attempt to find locally.\n        \"ignore_system_version\": false,\n        \"path\": \"/path/to/langserver/bin\",\n        \"arguments\": [\"--option\", \"value\"],\n        \"env\": {\n          \"FOO\": \"BAR\"\n        }\n      }\n    }\n  }\n</code></pre>\n<h3 id=\"enabling-or-disabling-language-servers\"><a class=\"header\" href=\"#enabling-or-disabling-language-servers\">Enabling or Disabling Language Servers</a></h3>\n<p>You can toggle language server support globally or per-language:</p>\n<pre><code class=\"language-json\">  \"languages\": {\n    \"Markdown\": {\n      \"enable_language_server\": false\n    }\n  }\n</code></pre>\n<p>This disables the language server for Markdown files, which can be useful for performance in large documentation projects. You can configure this globally in your <code>~/.config/zed/settings.json</code> or inside a <code>.zed/settings.json</code> in your project directory.</p>\n<h2 id=\"formatting-and-linting\"><a class=\"header\" href=\"#formatting-and-linting\">Formatting and Linting</a></h2>\n<p>Zed provides support for code formatting and linting to maintain consistent code style and catch potential issues early.</p>\n<h3 id=\"configuring-formatters\"><a class=\"header\" href=\"#configuring-formatters\">Configuring Formatters</a></h3>\n<p>Zed supports both built-in and external formatters. See <a href=\"./configuring-zed.html#formatter\"><code>formatter</code></a> docs for more. You can configure formatters globally or per-language in your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">\"languages\": {\n  \"JavaScript\": {\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"prettier\",\n        \"arguments\": [\"--stdin-filepath\", \"{buffer_path}\"]\n      }\n    },\n    \"format_on_save\": \"on\"\n  },\n  \"Rust\": {\n    \"formatter\": \"language_server\",\n    \"format_on_save\": \"on\"\n  }\n}\n</code></pre>\n<p>This example uses Prettier for JavaScript and the language server's formatter for Rust, both set to format on save.</p>\n<p>To disable formatting for a specific language:</p>\n<pre><code class=\"language-json\">\"languages\": {\n  \"Markdown\": {\n    \"format_on_save\": \"off\"\n  }\n}\n</code></pre>\n<h3 id=\"setting-up-linters\"><a class=\"header\" href=\"#setting-up-linters\">Setting Up Linters</a></h3>\n<p>Linting in Zed is typically handled by language servers. Many language servers allow you to configure linting rules:</p>\n<pre><code class=\"language-json\">\"lsp\": {\n  \"eslint\": {\n    \"settings\": {\n      \"codeActionOnSave\": {\n        \"rules\": [\"import/order\"]\n      }\n    }\n  }\n}\n</code></pre>\n<p>This configuration sets up ESLint to organize imports on save for JavaScript files.</p>\n<p>To run linter fixes automatically on save:</p>\n<pre><code class=\"language-json\">\"languages\": {\n  \"JavaScript\": {\n    \"code_actions_on_format\": {\n      \"source.fixAll.eslint\": true\n    }\n  }\n}\n</code></pre>\n<h3 id=\"integrating-formatting-and-linting\"><a class=\"header\" href=\"#integrating-formatting-and-linting\">Integrating Formatting and Linting</a></h3>\n<p>Zed allows you to run both formatting and linting on save. Here's an example that uses Prettier for formatting and ESLint for linting JavaScript files:</p>\n<pre><code class=\"language-json\">\"languages\": {\n  \"JavaScript\": {\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"prettier\",\n        \"arguments\": [\"--stdin-filepath\", \"{buffer_path}\"]\n      }\n    },\n    \"code_actions_on_format\": {\n      \"source.fixAll.eslint\": true\n    },\n    \"format_on_save\": \"on\"\n  }\n}\n</code></pre>\n<h3 id=\"troubleshooting\"><a class=\"header\" href=\"#troubleshooting\">Troubleshooting</a></h3>\n<p>If you encounter issues with formatting or linting:</p>\n<ol>\n<li>Check Zed's log file for error messages (Use the command palette: <code>zed: open log</code>)</li>\n<li>Ensure external tools (formatters, linters) are correctly installed and in your PATH</li>\n<li>Verify configurations in both Zed settings and language-specific config files (e.g., <code>.eslintrc</code>, <code>.prettierrc</code>)</li>\n</ol>\n<h2 id=\"syntax-highlighting-and-themes\"><a class=\"header\" href=\"#syntax-highlighting-and-themes\">Syntax Highlighting and Themes</a></h2>\n<p>Zed offers customization options for syntax highlighting and themes, allowing you to tailor the visual appearance of your code.</p>\n<h3 id=\"customizing-syntax-highlighting\"><a class=\"header\" href=\"#customizing-syntax-highlighting\">Customizing Syntax Highlighting</a></h3>\n<p>Zed uses Tree-sitter grammars for syntax highlighting. Override the default highlighting using the <code>experimental.theme_overrides</code> setting.</p>\n<p>This example makes comments italic and changes the color of strings:</p>\n<pre><code class=\"language-json\">\"experimental.theme_overrides\": {\n  \"syntax\": {\n    \"comment\": {\n      \"font_style\": \"italic\"\n    },\n    \"string\": {\n      \"color\": \"#00AA00\"\n    }\n  }\n}\n</code></pre>\n<h3 id=\"selecting-and-customizing-themes\"><a class=\"header\" href=\"#selecting-and-customizing-themes\">Selecting and Customizing Themes</a></h3>\n<p>Change your theme:</p>\n<ol>\n<li>Use the theme selector (<kbd class=\"keybinding\">cmd-k cmd-t|ctrl-k ctrl-t</kbd>)</li>\n<li>Or set it in your <code>settings.json</code>:</li>\n</ol>\n<pre><code class=\"language-json\">\"theme\": {\n  \"mode\": \"dark\",\n  \"dark\": \"One Dark\",\n  \"light\": \"GitHub Light\"\n}\n</code></pre>\n<p>Create custom themes by creating a JSON file in <code>~/.config/zed/themes/</code>. Zed will automatically detect and make available any themes in this directory.</p>\n<h3 id=\"using-theme-extensions\"><a class=\"header\" href=\"#using-theme-extensions\">Using Theme Extensions</a></h3>\n<p>Zed supports theme extensions. Browse and install theme extensions from the Extensions panel (<kbd class=\"keybinding\">cmd-shift-x|ctrl-shift-x</kbd>).</p>\n<p>To create your own theme extension, refer to the <a href=\"./extensions/themes.html\">Developing Theme Extensions</a> guide.</p>\n<h2 id=\"using-language-server-features\"><a class=\"header\" href=\"#using-language-server-features\">Using Language Server Features</a></h2>\n<h3 id=\"inlay-hints\"><a class=\"header\" href=\"#inlay-hints\">Inlay Hints</a></h3>\n<p>Inlay hints provide additional information inline in your code, such as parameter names or inferred types. Configure inlay hints in your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">\"inlay_hints\": {\n  \"enabled\": true,\n  \"show_type_hints\": true,\n  \"show_parameter_hints\": true,\n  \"show_other_hints\": true\n}\n</code></pre>\n<p>For language-specific inlay hint settings, refer to the documentation for each language.</p>\n<h3 id=\"code-actions\"><a class=\"header\" href=\"#code-actions\">Code Actions</a></h3>\n<p>Code actions provide quick fixes and refactoring options. Access code actions using the <code>editor: Toggle Code Actions</code> command or by clicking the lightbulb icon that appears next to your cursor when actions are available.</p>\n<h3 id=\"go-to-definition-and-references\"><a class=\"header\" href=\"#go-to-definition-and-references\">Go To Definition and References</a></h3>\n<p>Use these commands to navigate your codebase:</p>\n<ul>\n<li><code>editor: Go to Definition</code> (<kbd>f12|f12</kbd>)</li>\n<li><code>editor: Go to Type Definition</code> (<kbd>cmd-f12|ctrl-f12</kbd>)</li>\n<li><code>editor: Find All References</code> (<kbd>shift-f12|shift-f12</kbd>)</li>\n</ul>\n<h3 id=\"rename-symbol\"><a class=\"header\" href=\"#rename-symbol\">Rename Symbol</a></h3>\n<p>To rename a symbol across your project:</p>\n<ol>\n<li>Place your cursor on the symbol</li>\n<li>Use the <code>editor: Rename Symbol</code> command (<kbd>f2|f2</kbd>)</li>\n<li>Enter the new name and press Enter</li>\n</ol>\n<p>These features depend on the capabilities of the language server for each language.</p>\n<p>When renaming a symbol that spans multiple files, Zed will open a preview in a multibuffer. This allows you to review all the changes across your project before applying them. To confirm the rename, simply save the multibuffer. If you decide not to proceed with the rename, you can undo the changes or close the multibuffer without saving.</p>\n<h3 id=\"hover-information\"><a class=\"header\" href=\"#hover-information\">Hover Information</a></h3>\n<p>Use the <code>editor: Show Hover</code> command to display information about the symbol under the cursor. This often includes type information, documentation, and links to relevant resources.</p>\n<h3 id=\"workspace-symbol-search\"><a class=\"header\" href=\"#workspace-symbol-search\">Workspace Symbol Search</a></h3>\n<p>The <code>workspace: Open Symbol</code> command allows you to search for symbols (functions, classes, variables) across your entire project. This is useful for quickly navigating large codebases.</p>\n<h3 id=\"code-completion\"><a class=\"header\" href=\"#code-completion\">Code Completion</a></h3>\n<p>Zed provides intelligent code completion suggestions as you type. You can manually trigger completion with the <code>editor: Show Completions</code> command. Use <kbd>tab|tab</kbd> or <kbd>enter|enter</kbd> to accept suggestions.</p>\n<h3 id=\"diagnostics\"><a class=\"header\" href=\"#diagnostics\">Diagnostics</a></h3>\n<p>Language servers provide real-time diagnostics (errors, warnings, hints) as you code. View all diagnostics for your project using the <code>diagnostics: Toggle</code> command.</p>\n\n</main>",
+  "content_text": "Configuring supported languages\nZed offers powerful customization options for each programming language it supports. This guide will walk you through the various ways you can tailor your coding experience to your preferences and project requirements.\nZed's language support is built on two main technologies:\n\nTree-sitter: This handles syntax highlighting and structure-based features like the outline panel.\nLanguage Server Protocol (LSP): This provides semantic features such as code completion and diagnostics.\n\nThese components work together to provide Zed's language capabilities.\nIn this guide, we'll cover:\n\nLanguage-specific settings\nFile associations\nWorking with language servers\nFormatting and linting configuration\nCustomizing syntax highlighting and themes\nAdvanced language features\n\nBy the end of this guide, you should know how to configure and customize supported languages in Zed.\nFor a comprehensive list of languages supported by Zed and their specific configurations, see our Supported Languages page. To go further, you could explore developing your own extensions to add support for additional languages or enhance existing functionality. For more information on creating language extensions, see our Language Extensions guide.\nLanguage-specific Settings\nZed allows you to override global settings for individual languages. These custom configurations are defined in your settings.json file under the languages key.\nHere's an example of language-specific settings:\n\"languages\": {\n  \"Python\": {\n    \"tab_size\": 4,\n    \"formatter\": \"language_server\",\n    \"format_on_save\": \"on\"\n  },\n  \"JavaScript\": {\n    \"tab_size\": 2,\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"prettier\",\n        \"arguments\": [\"--stdin-filepath\", \"{buffer_path}\"]\n      }\n    }\n  }\n}\n\nYou can customize a wide range of settings for each language, including:\n\ntab_size: The number of spaces for each indentation level\nformatter: The tool used for code formatting\nformat_on_save: Whether to automatically format code when saving\nenable_language_server: Toggle language server support\nhard_tabs: Use tabs instead of spaces for indentation\npreferred_line_length: The recommended maximum line length\nsoft_wrap: How to wrap long lines of code\nshow_completions_on_input: Whether or not to show completions as you type\nshow_completion_documentation: Whether to display inline and alongside documentation for items in the completions menu\n\nThese settings allow you to maintain specific coding styles across different languages and projects.\nFile Associations\nZed automatically detects file types based on their extensions, but you can customize these associations to fit your workflow.\nTo set up custom file associations, use the file_types setting in your settings.json:\n\"file_types\": {\n  \"C++\": [\"c\"],\n  \"TOML\": [\"MyLockFile\"],\n  \"Dockerfile\": [\"Dockerfile*\"]\n}\n\nThis configuration tells Zed to:\n\nTreat .c files as C++ instead of C\nRecognize files named \"MyLockFile\" as TOML\nApply Dockerfile syntax to any file starting with \"Dockerfile\"\n\nYou can use glob patterns for more flexible matching, allowing you to handle complex naming conventions in your projects.\nWorking with Language Servers\nLanguage servers are a crucial part of Zed's intelligent coding features, providing capabilities like auto-completion, go-to-definition, and real-time error checking.\nWhat are Language Servers?\nLanguage servers implement the Language Server Protocol (LSP), which standardizes communication between the editor and language-specific tools. This allows Zed to support advanced features for multiple programming languages without implementing each feature separately.\nSome key features provided by language servers include:\n\nCode completion\nError checking and diagnostics\nCode navigation (go to definition, find references)\nCode actions (Rename, extract method)\nHover information\nWorkspace symbol search\n\nManaging Language Servers\nZed simplifies language server management for users:\n\n\nAutomatic Download: When you open a file with a matching file type, Zed automatically downloads the appropriate language server. Zed may prompt you to install an extension for known file types.\n\n\nStorage Location:\n\nmacOS: ~/Library/Application Support/Zed/languages\nLinux: $XDG_DATA_HOME/languages, $FLATPAK_XDG_DATA_HOME/languages, or $HOME/.local/share\n\n\n\nAutomatic Updates: Zed keeps your language servers up-to-date, ensuring you always have the latest features and improvements.\n\n\nChoosing Language Servers\nSome languages in Zed offer multiple language server options. You might have multiple extensions installed that bundle language servers targeting the same language, potentially leading to overlapping capabilities. To ensure you get the functionality you prefer, Zed allows you to prioritize which language servers are used and in what order.\nYou can specify your preference using the language_servers setting:\n  \"languages\": {\n    \"PHP\": {\n      \"language_servers\": [\"intelephense\", \"!phpactor\", \"...\"]\n    }\n  }\n\nIn this example:\n\nintelephense is set as the primary language server\nphpactor is disabled (note the ! prefix)\n... expands to the rest of the language servers that are registered for PHP\n\nThis configuration allows you to tailor the language server setup to your specific needs, ensuring that you get the most suitable functionality for your development workflow.\nConfiguring Language Servers\nMany language servers accept custom configuration options. You can set these in the lsp section of your settings.json:\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"check\": {\n          \"command\": \"clippy\"\n        }\n      }\n    }\n  }\n\nThis example configures the Rust Analyzer to use Clippy for additional linting when saving files.\nNested objects\nWhen configuring language server options in Zed, it's important to use nested objects rather than dot-delimited strings. This is particularly relevant when working with more complex configurations. Let's look at a real-world example using the TypeScript language server:\nSuppose you want to configure the following settings for TypeScript:\n\nEnable strict null checks\nSet the target ECMAScript version to ES2020\n\nHere's how you would structure these settings in Zed's settings.json:\n\"lsp\": {\n  \"typescript-language-server\": {\n    \"initialization_options\": {\n      // These are not supported (VSCode dotted style):\n      // \"preferences.strictNullChecks\": true,\n      // \"preferences.target\": \"ES2020\"\n      //\n      // These is correct (nested notation):\n      \"preferences\": {\n        \"strictNullChecks\": true,\n        \"target\": \"ES2020\"\n      },\n    }\n  }\n}\n\nPossible configuration options\nDepending on how a particular language server is implemented, they may depend on different configuration options, both specified in the LSP.\n\ninitializationOptions\n\nSent once during language server startup, requires server's restart to reapply changes.\nFor example, rust-analyzer and clangd rely on this way of configuring only.\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"initialization_options\": {\n        \"checkOnSave\": false\n      }\n    }\n  }\n\n\nConfiguration Request\n\nMay be queried by the server multiple times.\nMost of the servers would rely on this way of configuring only.\n\"lsp\": {\n  \"tailwindcss-language-server\": {\n    \"settings\": {\n      \"tailwindCSS\": {\n        \"emmetCompletions\": true,\n      },\n    }\n  }\n}\n\nApart of the LSP-related server configuration options, certain servers in Zed allow configuring the way binary is launched by Zed.\nLanguage servers are automatically downloaded or launched if found in your path, if you wish to specify an explicit alternate binary you can specify that in settings:\n  \"lsp\": {\n    \"rust-analyzer\": {\n      \"binary\": {\n        // Whether to fetch the binary from the internet, or attempt to find locally.\n        \"ignore_system_version\": false,\n        \"path\": \"/path/to/langserver/bin\",\n        \"arguments\": [\"--option\", \"value\"],\n        \"env\": {\n          \"FOO\": \"BAR\"\n        }\n      }\n    }\n  }\n\nEnabling or Disabling Language Servers\nYou can toggle language server support globally or per-language:\n  \"languages\": {\n    \"Markdown\": {\n      \"enable_language_server\": false\n    }\n  }\n\nThis disables the language server for Markdown files, which can be useful for performance in large documentation projects. You can configure this globally in your ~/.config/zed/settings.json or inside a .zed/settings.json in your project directory.\nFormatting and Linting\nZed provides support for code formatting and linting to maintain consistent code style and catch potential issues early.\nConfiguring Formatters\nZed supports both built-in and external formatters. See formatter docs for more. You can configure formatters globally or per-language in your settings.json:\n\"languages\": {\n  \"JavaScript\": {\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"prettier\",\n        \"arguments\": [\"--stdin-filepath\", \"{buffer_path}\"]\n      }\n    },\n    \"format_on_save\": \"on\"\n  },\n  \"Rust\": {\n    \"formatter\": \"language_server\",\n    \"format_on_save\": \"on\"\n  }\n}\n\nThis example uses Prettier for JavaScript and the language server's formatter for Rust, both set to format on save.\nTo disable formatting for a specific language:\n\"languages\": {\n  \"Markdown\": {\n    \"format_on_save\": \"off\"\n  }\n}\n\nSetting Up Linters\nLinting in Zed is typically handled by language servers. Many language servers allow you to configure linting rules:\n\"lsp\": {\n  \"eslint\": {\n    \"settings\": {\n      \"codeActionOnSave\": {\n        \"rules\": [\"import/order\"]\n      }\n    }\n  }\n}\n\nThis configuration sets up ESLint to organize imports on save for JavaScript files.\nTo run linter fixes automatically on save:\n\"languages\": {\n  \"JavaScript\": {\n    \"code_actions_on_format\": {\n      \"source.fixAll.eslint\": true\n    }\n  }\n}\n\nIntegrating Formatting and Linting\nZed allows you to run both formatting and linting on save. Here's an example that uses Prettier for formatting and ESLint for linting JavaScript files:\n\"languages\": {\n  \"JavaScript\": {\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"prettier\",\n        \"arguments\": [\"--stdin-filepath\", \"{buffer_path}\"]\n      }\n    },\n    \"code_actions_on_format\": {\n      \"source.fixAll.eslint\": true\n    },\n    \"format_on_save\": \"on\"\n  }\n}\n\nTroubleshooting\nIf you encounter issues with formatting or linting:\n\nCheck Zed's log file for error messages (Use the command palette: zed: open log)\nEnsure external tools (formatters, linters) are correctly installed and in your PATH\nVerify configurations in both Zed settings and language-specific config files (e.g., .eslintrc, .prettierrc)\n\nSyntax Highlighting and Themes\nZed offers customization options for syntax highlighting and themes, allowing you to tailor the visual appearance of your code.\nCustomizing Syntax Highlighting\nZed uses Tree-sitter grammars for syntax highlighting. Override the default highlighting using the experimental.theme_overrides setting.\nThis example makes comments italic and changes the color of strings:\n\"experimental.theme_overrides\": {\n  \"syntax\": {\n    \"comment\": {\n      \"font_style\": \"italic\"\n    },\n    \"string\": {\n      \"color\": \"#00AA00\"\n    }\n  }\n}\n\nSelecting and Customizing Themes\nChange your theme:\n\nUse the theme selector (cmd-k cmd-t|ctrl-k ctrl-t)\nOr set it in your settings.json:\n\n\"theme\": {\n  \"mode\": \"dark\",\n  \"dark\": \"One Dark\",\n  \"light\": \"GitHub Light\"\n}\n\nCreate custom themes by creating a JSON file in ~/.config/zed/themes/. Zed will automatically detect and make available any themes in this directory.\nUsing Theme Extensions\nZed supports theme extensions. Browse and install theme extensions from the Extensions panel (cmd-shift-x|ctrl-shift-x).\nTo create your own theme extension, refer to the Developing Theme Extensions guide.\nUsing Language Server Features\nInlay Hints\nInlay hints provide additional information inline in your code, such as parameter names or inferred types. Configure inlay hints in your settings.json:\n\"inlay_hints\": {\n  \"enabled\": true,\n  \"show_type_hints\": true,\n  \"show_parameter_hints\": true,\n  \"show_other_hints\": true\n}\n\nFor language-specific inlay hint settings, refer to the documentation for each language.\nCode Actions\nCode actions provide quick fixes and refactoring options. Access code actions using the editor: Toggle Code Actions command or by clicking the lightbulb icon that appears next to your cursor when actions are available.\nGo To Definition and References\nUse these commands to navigate your codebase:\n\neditor: Go to Definition (f12|f12)\neditor: Go to Type Definition (cmd-f12|ctrl-f12)\neditor: Find All References (shift-f12|shift-f12)\n\nRename Symbol\nTo rename a symbol across your project:\n\nPlace your cursor on the symbol\nUse the editor: Rename Symbol command (f2|f2)\nEnter the new name and press Enter\n\nThese features depend on the capabilities of the language server for each language.\nWhen renaming a symbol that spans multiple files, Zed will open a preview in a multibuffer. This allows you to review all the changes across your project before applying them. To confirm the rename, simply save the multibuffer. If you decide not to proceed with the rename, you can undo the changes or close the multibuffer without saving.\nHover Information\nUse the editor: Show Hover command to display information about the symbol under the cursor. This often includes type information, documentation, and links to relevant resources.\nWorkspace Symbol Search\nThe workspace: Open Symbol command allows you to search for symbols (functions, classes, variables) across your entire project. This is useful for quickly navigating large codebases.\nCode Completion\nZed provides intelligent code completion suggestions as you type. You can manually trigger completion with the editor: Show Completions command. Use tab|tab or enter|enter to accept suggestions.\nDiagnostics\nLanguage servers provide real-time diagnostics (errors, warnings, hints) as you code. View all diagnostics for your project using the diagnostics: Toggle command.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:14"
+}

@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/development/debuggers.html",
+  "title": "Using Debuggers | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"using-a-debugger\"><a class=\"header\" href=\"#using-a-debugger\">Using a debugger</a></h1>\n<blockquote>\n<p><strong>DISCLAIMER</strong>: This is not documentation for <a href=\"../debugger.html\">configuring Zed's debugger</a>.\nRather, it is intended to provide information on how to use a debugger while developing Zed itself to both Zed employees and external contributors.</p>\n</blockquote>\n<h2 id=\"using-zeds-built-in-debugger\"><a class=\"header\" href=\"#using-zeds-built-in-debugger\">Using Zed's built-in debugger</a></h2>\n<p>While the Zed project is open you can open the <code>New Process Modal</code> and select the <code>Debug</code> tab. There you can see to debug configurations to debug Zed with, one for GDB and one for LLDB. Select the configuration you want and Zed will build and launch the binary.</p>\n<p>Please note, GDB isn't supported on arm Macbooks</p>\n<h2 id=\"release-build-profile-considerations\"><a class=\"header\" href=\"#release-build-profile-considerations\">Release build profile considerations</a></h2>\n<p>By default, builds using the release profile (release is the profile used for production builds, i.e. nightly, preview, and stable) include limited debug info.</p>\n<p>This is done by setting the <code>profile.(release).debug</code> field in the root <code>Cargo.toml</code> field to <code>\"limited\"</code>.</p>\n<p>The official documentation for the <code>debug</code> field can be found <a href=\"https://doc.rust-lang.org/cargo/reference/profiles.html#debug\">here</a>.\nBut the TLDR is that <code>\"limited\"</code> strips type and variable level debug info.</p>\n<p>In release builds, this is done to reduce the binary size, as type and variable level debug info is not required, and does not impact the usability of generated stack traces.</p>\n<p>However, while the type and variable level debug info is not required for good stack traces, it is very important for a good experience using debuggers,\nas without the type and variable level debug info, the debugger has no way to resolve local variables, inspect them, format them using pretty-printers, etc.</p>\n<p>Therefore, in order to use a debugger to it's fullest extent when debugging a release build, you must compile a new Zed binary, with full debug info.</p>\n<p>The simplest way to do this, is to use the <code>--config</code> flag to override the <code>debug</code> field in the root <code>Cargo.toml</code> file when running <code>cargo run</code> or <code>cargo build</code> like so:</p>\n<pre><code class=\"language-sh\">cargo run --config 'profile.release.debug=\"full\"'\ncargo build --config 'profile.release.debug=\"full\"'\n</code></pre>\n<blockquote>\n<p>If you wish to avoid passing the <code>--config</code> flag on every invocation of <code>cargo</code>. You may also change the section in the <a href=\"https://github.com/zed-industries/zed/blob/main/Cargo.toml\">root <code>Cargo.toml</code></a></p>\n<p>from</p>\n<pre><code class=\"language-toml\">[profile.release]\ndebug = \"limited\"\n</code></pre>\n<p>to</p>\n<pre><code class=\"language-toml\">[profile.release]\ndebug = \"full\"\n</code></pre>\n<p>This will ensure all invocations of <code>cargo run --release</code> or <code>cargo build --release</code> will compile with full debug info.</p>\n<p><strong>WARNING:</strong> Make sure to avoid committing these changes!</p>\n</blockquote>\n<h2 id=\"running-zed-with-a-shell-debugger-gdblldb\"><a class=\"header\" href=\"#running-zed-with-a-shell-debugger-gdblldb\">Running Zed with a shell debugger GDB/LLDB</a></h2>\n<h3 id=\"background\"><a class=\"header\" href=\"#background\">Background</a></h3>\n<p>When installing rust through rustup, (the recommended way to do so when developing Zed, see the documentation for getting started on your platform <a href=\"../development.html\">here</a>)\na few additional scripts are installed and put on your path to assist with debugging binaries compiled with rust.</p>\n<p>These are <code>rust-gdb</code> and <code>rust-lldb</code> respectively.</p>\n<p>You can read more information about these scripts and why they are useful <a href=\"https://michaelwoerister.github.io/2015/03/27/rust-xxdb.html\">here</a> if you are interested.</p>\n<p>However, the summary is that they are simple shell scripts that wrap the standard <code>gdb</code> and <code>lldb</code> commands, injecting the relevant commands and flags to enable additional\nrust-specific features such as pretty-printers and type information.</p>\n<p>Therefore, in order to use <code>rust-gdb</code> or <code>rust-lldb</code>, you must have <code>gdb</code> or <code>lldb</code> installed on your system. If you don't have them installed, you will need to install them in a manner appropriate for your platform.</p>\n<p>According to the <a href=\"https://michaelwoerister.github.io/2015/03/27/rust-xxdb.html\">previously linked article</a>, \"The minimum supported debugger versions are GDB 7.7 and LLDB 310. However, the general rule is: the newer the better.\" Therefore, it is recommended to install the latest version of <code>gdb</code> or <code>lldb</code> if possible.</p>\n<blockquote>\n<p><strong>Note</strong>: <code>rust-gdb</code> is not installed by default on Windows, as <code>gdb</code> support for windows is not very stable. It is recommended to use <code>lldb</code> with <code>rust-lldb</code> instead on Windows.</p>\n</blockquote>\n<p>If you are unfamiliar with <code>gdb</code> or <code>lldb</code>, you can learn more about them <a href=\"https://www.gnu.org/software/gdb/\">here</a> and <a href=\"https://lldb.llvm.org/\">here</a> respectively.</p>\n<h3 id=\"usage-with-zed\"><a class=\"header\" href=\"#usage-with-zed\">Usage with Zed</a></h3>\n<p>After following the steps above for including full debug info when compiling Zed,\nYou can either run <code>rust-gdb</code> or <code>rust-lldb</code> on the compiled Zed binary after building it with <code>cargo build</code>, by running one of the following commands:</p>\n<pre><code>rust-gdb target/debug/zed\nrust-lldb target/debug/zed\n</code></pre>\n<p>Alternatively, you can attach to a running instance of Zed (such as an instance of Zed started using <code>cargo run</code>) by running one of the following commands:</p>\n<pre><code>rust-gdb -p &lt;pid&gt;\nrust-lldb -p &lt;pid&gt;\n</code></pre>\n<p>Where <code>&lt;pid&gt;</code> is the process ID of the Zed instance you want to attach to.</p>\n<p>To get the process ID of a running Zed instance, you can use your systems process management tools such as <code>Task Manager</code> on windows or <code>Activity Monitor</code> on MacOS.</p>\n<p>Alternatively, you can run the <code>ps aux | grep zed</code> command on MacOS and Linux or <code>Get-Process | Select-Object Id, ProcessName</code> in an instance of PowerShell on Windows.</p>\n<h4 id=\"debugging-panics-and-crashes\"><a class=\"header\" href=\"#debugging-panics-and-crashes\">Debugging Panics and Crashes</a></h4>\n<p>Debuggers can be an excellent tool for debugging the cause of panics and crashes in all programs, including Zed.</p>\n<p>By default, when a process that <code>gdb</code> or <code>lldb</code> is attached to hits an exception such as a panic, the debugger will automatically stop at the point of the panic and allow you to inspect the state of the program.</p>\n<p>Most likely, the point at which the debugger stops will be deep in the rust standard library panic or exception handling code, so you will need to navigate up the stack trace to find the actual cause of the panic.</p>\n<p>This can be accomplished using the <code>backtrace</code> command in combination with the <code>frame select</code> command in <code>lldb</code>, with similar commands available in <code>gdb</code>.</p>\n<p>Once the program is stopped, you will not be able to continue execution as you can before an exception is hit. However, you can jump around to different stack frames, and inspect the values of variables and expressions\nwithin each frame, which can be very useful in identifying the root cause of the crash.</p>\n<p>You can find additional information on debugging Zed crashes <a href=\"./debugging-crashes.html\">here</a>.</p>\n\n</main>",
+  "content_text": "Using a debugger\n\nDISCLAIMER: This is not documentation for configuring Zed's debugger.\nRather, it is intended to provide information on how to use a debugger while developing Zed itself to both Zed employees and external contributors.\n\nUsing Zed's built-in debugger\nWhile the Zed project is open you can open the New Process Modal and select the Debug tab. There you can see to debug configurations to debug Zed with, one for GDB and one for LLDB. Select the configuration you want and Zed will build and launch the binary.\nPlease note, GDB isn't supported on arm Macbooks\nRelease build profile considerations\nBy default, builds using the release profile (release is the profile used for production builds, i.e. nightly, preview, and stable) include limited debug info.\nThis is done by setting the profile.(release).debug field in the root Cargo.toml field to \"limited\".\nThe official documentation for the debug field can be found here.\nBut the TLDR is that \"limited\" strips type and variable level debug info.\nIn release builds, this is done to reduce the binary size, as type and variable level debug info is not required, and does not impact the usability of generated stack traces.\nHowever, while the type and variable level debug info is not required for good stack traces, it is very important for a good experience using debuggers,\nas without the type and variable level debug info, the debugger has no way to resolve local variables, inspect them, format them using pretty-printers, etc.\nTherefore, in order to use a debugger to it's fullest extent when debugging a release build, you must compile a new Zed binary, with full debug info.\nThe simplest way to do this, is to use the --config flag to override the debug field in the root Cargo.toml file when running cargo run or cargo build like so:\ncargo run --config 'profile.release.debug=\"full\"'\ncargo build --config 'profile.release.debug=\"full\"'\n\n\nIf you wish to avoid passing the --config flag on every invocation of cargo. You may also change the section in the root Cargo.toml\nfrom\n[profile.release]\ndebug = \"limited\"\n\nto\n[profile.release]\ndebug = \"full\"\n\nThis will ensure all invocations of cargo run --release or cargo build --release will compile with full debug info.\nWARNING: Make sure to avoid committing these changes!\n\nRunning Zed with a shell debugger GDB/LLDB\nBackground\nWhen installing rust through rustup, (the recommended way to do so when developing Zed, see the documentation for getting started on your platform here)\na few additional scripts are installed and put on your path to assist with debugging binaries compiled with rust.\nThese are rust-gdb and rust-lldb respectively.\nYou can read more information about these scripts and why they are useful here if you are interested.\nHowever, the summary is that they are simple shell scripts that wrap the standard gdb and lldb commands, injecting the relevant commands and flags to enable additional\nrust-specific features such as pretty-printers and type information.\nTherefore, in order to use rust-gdb or rust-lldb, you must have gdb or lldb installed on your system. If you don't have them installed, you will need to install them in a manner appropriate for your platform.\nAccording to the previously linked article, \"The minimum supported debugger versions are GDB 7.7 and LLDB 310. However, the general rule is: the newer the better.\" Therefore, it is recommended to install the latest version of gdb or lldb if possible.\n\nNote: rust-gdb is not installed by default on Windows, as gdb support for windows is not very stable. It is recommended to use lldb with rust-lldb instead on Windows.\n\nIf you are unfamiliar with gdb or lldb, you can learn more about them here and here respectively.\nUsage with Zed\nAfter following the steps above for including full debug info when compiling Zed,\nYou can either run rust-gdb or rust-lldb on the compiled Zed binary after building it with cargo build, by running one of the following commands:\nrust-gdb target/debug/zed\nrust-lldb target/debug/zed\n\nAlternatively, you can attach to a running instance of Zed (such as an instance of Zed started using cargo run) by running one of the following commands:\nrust-gdb -p <pid>\nrust-lldb -p <pid>\n\nWhere <pid> is the process ID of the Zed instance you want to attach to.\nTo get the process ID of a running Zed instance, you can use your systems process management tools such as Task Manager on windows or Activity Monitor on MacOS.\nAlternatively, you can run the ps aux | grep zed command on MacOS and Linux or Get-Process | Select-Object Id, ProcessName in an instance of PowerShell on Windows.\nDebugging Panics and Crashes\nDebuggers can be an excellent tool for debugging the cause of panics and crashes in all programs, including Zed.\nBy default, when a process that gdb or lldb is attached to hits an exception such as a panic, the debugger will automatically stop at the point of the panic and allow you to inspect the state of the program.\nMost likely, the point at which the debugger stops will be deep in the rust standard library panic or exception handling code, so you will need to navigate up the stack trace to find the actual cause of the panic.\nThis can be accomplished using the backtrace command in combination with the frame select command in lldb, with similar commands available in gdb.\nOnce the program is stopped, you will not be able to continue execution as you can before an exception is hit. However, you can jump around to different stack frames, and inspect the values of variables and expressions\nwithin each frame, which can be very useful in identifying the root cause of the crash.\nYou can find additional information on debugging Zed crashes here.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:52"
+}

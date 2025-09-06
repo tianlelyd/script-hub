@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/diagnostics.html",
+  "title": "Diagnostics | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"diagnostics\"><a class=\"header\" href=\"#diagnostics\">Diagnostics</a></h1>\n<p>Zed gets its diagnostics from the language servers and supports both push and pull variants of the LSP which makes it compatible with all existing language servers.</p>\n<h1 id=\"regular-diagnostics\"><a class=\"header\" href=\"#regular-diagnostics\">Regular diagnostics</a></h1>\n<p>By default, Zed displays all diagnostics as underlined text in the editor and the scrollbar.</p>\n<p>Editor diagnostics could be filtered with the</p>\n<pre><code class=\"language-json5\">\"diagnostics_max_severity\": null\n</code></pre>\n<p>editor setting (possible values: <code>\"off\"</code>, <code>\"error\"</code>, <code>\"warning\"</code>, <code>\"info\"</code>, <code>\"hint\"</code>, <code>null</code> (default, all diagnostics)).</p>\n<p>The scrollbar ones are configured with the</p>\n<pre><code class=\"language-json5\">\"scrollbar\": {\n  \"diagnostics\": \"all\",\n}\n</code></pre>\n<p>configuration (possible values: <code>\"none\"</code>, <code>\"error\"</code>, <code>\"warning\"</code>, <code>\"information\"</code>, <code>\"all\"</code> (default))</p>\n<p>The diagnostics could be hovered to display a tooltip with full, rendered diagnostic message.\nOr, <code>editor::GoToDiagnostic</code> and <code>editor::GoToPreviousDiagnostic</code> could be used to navigate between diagnostics in the editor, showing a popover for the currently active diagnostic.</p>\n<h1 id=\"inline-diagnostics-error-lens\"><a class=\"header\" href=\"#inline-diagnostics-error-lens\">Inline diagnostics (Error lens)</a></h1>\n<p>Zed supports showing diagnostic as lens to the right of the code.\nThis is disabled by default, but can either be temporarily turned on (or off) using the editor menu, or permanently, using the</p>\n<pre><code class=\"language-json5\">\"diagnostics\": {\n  \"inline\": {\n    \"enabled\": true,\n    \"max_severity\": null, // same values as the `diagnostics_max_severity` from the editor settings\n  }\n}\n</code></pre>\n<h1 id=\"other-ui-places\"><a class=\"header\" href=\"#other-ui-places\">Other UI places</a></h1>\n<h2 id=\"project-panel\"><a class=\"header\" href=\"#project-panel\">Project Panel</a></h2>\n<p>Project panel can have its entries coloured based on the severity of the diagnostics in the file.</p>\n<p>To configure, use</p>\n<pre><code class=\"language-json5\">\"project_panel\": {\n  \"show_diagnostics\": \"all\",\n}\n</code></pre>\n<p>configuration (possible values: <code>\"off\"</code>, <code>\"errors\"</code>, <code>\"all\"</code> (default))</p>\n<h2 id=\"editor-tabs\"><a class=\"header\" href=\"#editor-tabs\">Editor tabs</a></h2>\n<p>Similar to the project panel, editor tabs can be colorized with the</p>\n<pre><code class=\"language-json5\">\"tabs\": {\n  \"show_diagnostics\": \"off\",\n}\n</code></pre>\n<p>configuration (possible values: <code>\"off\"</code> (default), <code>\"errors\"</code>, <code>\"all\"</code>)</p>\n\n</main>",
+  "content_text": "Diagnostics\nZed gets its diagnostics from the language servers and supports both push and pull variants of the LSP which makes it compatible with all existing language servers.\nRegular diagnostics\nBy default, Zed displays all diagnostics as underlined text in the editor and the scrollbar.\nEditor diagnostics could be filtered with the\n\"diagnostics_max_severity\": null\n\neditor setting (possible values: \"off\", \"error\", \"warning\", \"info\", \"hint\", null (default, all diagnostics)).\nThe scrollbar ones are configured with the\n\"scrollbar\": {\n  \"diagnostics\": \"all\",\n}\n\nconfiguration (possible values: \"none\", \"error\", \"warning\", \"information\", \"all\" (default))\nThe diagnostics could be hovered to display a tooltip with full, rendered diagnostic message.\nOr, editor::GoToDiagnostic and editor::GoToPreviousDiagnostic could be used to navigate between diagnostics in the editor, showing a popover for the currently active diagnostic.\nInline diagnostics (Error lens)\nZed supports showing diagnostic as lens to the right of the code.\nThis is disabled by default, but can either be temporarily turned on (or off) using the editor menu, or permanently, using the\n\"diagnostics\": {\n  \"inline\": {\n    \"enabled\": true,\n    \"max_severity\": null, // same values as the `diagnostics_max_severity` from the editor settings\n  }\n}\n\nOther UI places\nProject Panel\nProject panel can have its entries coloured based on the severity of the diagnostics in the file.\nTo configure, use\n\"project_panel\": {\n  \"show_diagnostics\": \"all\",\n}\n\nconfiguration (possible values: \"off\", \"errors\", \"all\" (default))\nEditor tabs\nSimilar to the project panel, editor tabs can be colorized with the\n\"tabs\": {\n  \"show_diagnostics\": \"off\",\n}\n\nconfiguration (possible values: \"off\" (default), \"errors\", \"all\")",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:50"
+}

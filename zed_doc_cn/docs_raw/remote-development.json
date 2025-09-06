@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/remote-development.html",
+  "title": "Remote Development | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"remote-development\"><a class=\"header\" href=\"#remote-development\">Remote Development</a></h1>\n<p>Remote Development allows you to code at the speed of thought, even when your codebase is not on your local machine. You use Zed locally so the UI is immediately responsive, but offload heavy computation to the development server so that you can work effectively.</p>\n<h2 id=\"overview\"><a class=\"header\" href=\"#overview\">Overview</a></h2>\n<p>Remote development requires two computers, your local machine that runs the Zed UI and the remote server which runs a Zed headless server. The two communicate over SSH, so you will need to be able to SSH from your local machine into the remote server to use this feature.</p>\n<p><img alt=\"Architectural overview of Zed Remote Development\" src=\"https://zed.dev/img/remote-development/diagram.png\"/></p>\n<p>On your local machine, Zed runs its UI, talks to language models, uses Tree-sitter to parse and syntax-highlight code, and store unsaved changes and recent projects. The source code, language servers, tasks, and the terminal all run on the remote server.</p>\n<blockquote>\n<p><strong>Note:</strong> The original version of remote development sent traffic via Zed's servers. As of Zed v0.157 you can no-longer use that mode.</p>\n</blockquote>\n<h2 id=\"setup\"><a class=\"header\" href=\"#setup\">Setup</a></h2>\n<ol>\n<li>Download and install the latest <a href=\"https://zed.dev/releases\">Zed</a>. You need at least Zed v0.159.</li>\n<li>Use <kbd class=\"keybinding\">ctrl-cmd-shift-o|alt-ctrl-shift-o</kbd> to open the \"Remote Projects\" dialog.</li>\n<li>Click \"Connect New Server\" and enter the command you use to SSH into the server. See <a href=\"#supported-ssh-options\">Supported SSH options</a> for options you can pass.</li>\n<li>Your local machine will attempt to connect to the remote server using the <code>ssh</code> binary on your path. Assuming the connection is successful, Zed will download the server on the remote host and start it.</li>\n<li>Once the Zed server is running, you will be prompted to choose a path to open on the remote server.\n<blockquote>\n<p><strong>Note:</strong> Zed does not currently handle opening very large directories (for example, <code>/</code> or <code>~</code> that may have &gt;100,000 files) very well. We are working on improving this, but suggest in the meantime opening only specific projects, or subfolders of very large mono-repos.</p>\n</blockquote>\n</li>\n</ol>\n<p>For simple cases where you don't need any SSH arguments, you can run <code>zed ssh://[&lt;user&gt;@]&lt;host&gt;[:&lt;port&gt;]/&lt;path&gt;</code> to open a remote folder/file directly. If you'd like to hotlink into an SSH project, use a link of the format: <code>zed://ssh/[&lt;user&gt;@]&lt;host&gt;[:&lt;port&gt;]/&lt;path&gt;</code>.</p>\n<h2 id=\"supported-platforms\"><a class=\"header\" href=\"#supported-platforms\">Supported platforms</a></h2>\n<p>The remote machine must be able to run Zed's server. The following platforms should work, though note that we have not exhaustively tested every Linux distribution:</p>\n<ul>\n<li>macOS Catalina or later (Intel or Apple Silicon)</li>\n<li>Linux (x86_64 or arm64, we do not yet support 32-bit platforms)</li>\n<li>Windows is not yet supported.</li>\n</ul>\n<h2 id=\"configuration\"><a class=\"header\" href=\"#configuration\">Configuration</a></h2>\n<p>The list of remote servers is stored in your settings file <kbd class=\"keybinding\">cmd-,|ctrl-,</kbd>. You can edit this list using the Remote Projects dialog <kbd class=\"keybinding\">ctrl-cmd-shift-o|alt-ctrl-shift-o</kbd>, which provides some robustness - for example it checks that the connection can be established before writing it to the settings file.</p>\n<pre><code class=\"language-json\">{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"projects\": [{ \"paths\": [\"~/code/zed/zed\"] }]\n    }\n  ]\n}\n</code></pre>\n<p>Zed shells out to the <code>ssh</code> on your path, and so it will inherit any configuration you have in <code>~/.ssh/config</code> for the given host. That said, if you need to override anything you can configure the following additional options on each connection:</p>\n<pre><code class=\"language-json\">{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"projects\": [{ \"paths\": [\"~/code/zed/zed\"] }],\n      // any argument to pass to the ssh master process\n      \"args\": [\"-i\", \"~/.ssh/work_id_file\"],\n      \"port\": 22, // defaults to 22\n      // defaults to your username on your local machine\n      \"username\": \"me\"\n    }\n  ]\n}\n</code></pre>\n<p>There are two additional Zed-specific options per connection, <code>upload_binary_over_ssh</code> and <code>nickname</code>:</p>\n<pre><code class=\"language-json\">{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"projects\": [{ \"paths\": [\"~/code/zed/zed\"] }],\n      // by default Zed will download the server binary from the internet on the remote.\n      // When this is true, it'll be downloaded to your laptop and uploaded over SSH.\n      // This is useful when your remote server has restricted internet access.\n      \"upload_binary_over_ssh\": true,\n      // Shown in the Zed UI to help distinguish multiple hosts.\n      \"nickname\": \"lil-linux\"\n    }\n  ]\n}\n</code></pre>\n<p>If you use the command line to open a connection to a host by doing <code>zed ssh://192.168.1.10/~/.vimrc</code>, then extra options are read from your settings file by finding the first connection that matches the host/username/port of the URL on the command line.</p>\n<p>Additionally it's worth noting that while you can pass a password on the command line <code>zed ssh://user:password@host/~</code>, we do not support writing a password to your settings file. If you're connecting repeatedly to the same host, you should configure key-based authentication.</p>\n<h2 id=\"port-forwarding\"><a class=\"header\" href=\"#port-forwarding\">Port forwarding</a></h2>\n<p>If you'd like to be able to connect to ports on your remote server from your local machine, you can configure port forwarding in your settings file. This is particularly useful for developing websites so you can load the site in your browser while working.</p>\n<pre><code class=\"language-json\">{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"port_forwards\": [{ \"local_port\": 8080, \"remote_port\": 80 }]\n    }\n  ]\n}\n</code></pre>\n<p>This will cause requests from your local machine to <code>localhost:8080</code> to be forwarded to the remote machine's port 80. Under the hood this uses the <code>-L</code> argument to ssh.</p>\n<p>By default these ports are bound to localhost, so other computers in the same network as your development machine cannot access them. You can set the local_host to bind to a different interface, for example, 0.0.0.0 will bind to all local interfaces.</p>\n<pre><code class=\"language-json\">{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"port_forwards\": [\n        {\n          \"local_port\": 8080,\n          \"remote_port\": 80,\n          \"local_host\": \"0.0.0.0\"\n        }\n      ]\n    }\n  ]\n}\n</code></pre>\n<p>These ports also default to the <code>localhost</code> interface on the remote host. If you need to change this, you can also set the remote host:</p>\n<pre><code class=\"language-json\">{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"port_forwards\": [\n        {\n          \"local_port\": 8080,\n          \"remote_port\": 80,\n          \"remote_host\": \"docker-host\"\n        }\n      ]\n    }\n  ]\n}\n</code></pre>\n<h2 id=\"zed-settings\"><a class=\"header\" href=\"#zed-settings\">Zed settings</a></h2>\n<p>When opening a remote project there are three relevant settings locations:</p>\n<ul>\n<li>The local Zed settings (in <code>~/.zed/settings.json</code> on macOS or <code>~/.config/zed/settings.json</code> on Linux) on your local machine.</li>\n<li>The server Zed settings (in the same place) on the remote server.</li>\n<li>The project settings (in <code>.zed/settings.json</code> or <code>.editorconfig</code> of your project)</li>\n</ul>\n<p>Both the local Zed and the server Zed read the project settings, but they are not aware of the other's main <code>settings.json</code>.</p>\n<p>Depending on the kind of setting you want to make, which settings file you should use:</p>\n<ul>\n<li>Project settings should be used for things that affect the project: indentation settings, which formatter / language server to use, etc.</li>\n<li>Server settings should be used for things that affect the server: paths to language servers, etc.</li>\n<li>Local settings should be used for things that affect the UI: font size, etc.</li>\n</ul>\n<p>In addition any extensions you have installed locally will be propagated to the remote server. This means that language servers, etc. will run correctly.</p>\n<h2 id=\"initializing-the-remote-server\"><a class=\"header\" href=\"#initializing-the-remote-server\">Initializing the remote server</a></h2>\n<p>Once you provide the SSH options, Zed shells out to <code>ssh</code> on your local machine to create a ControlMaster connection with the options you provide.</p>\n<p>Any prompts that SSH needs will be shown in the UI, so you can verify host keys, type key passwords, etc.</p>\n<p>Once the master connection is established, Zed will check to see if the remote server binary is present in <code>~/.zed_server</code> on the remote, and that its version matches the current version of Zed that you're using.</p>\n<p>If it is not there or the version mismatches, Zed will try to download the latest version. By default, it will download from <code>https://zed.dev</code> directly, but if you set: <code>{\"upload_binary_over_ssh\":true}</code> in your settings for that server, it will download the binary to your local machine and then upload it to the remote server.</p>\n<p>If you'd like to maintain the server binary yourself you can. You can either download our prebuilt versions from <a href=\"https://github.com/zed-industries/zed/releases\">GitHub</a>, or <a href=\"https://zed.dev/docs/development\">build your own</a> with <code>cargo build -p remote_server --release</code>. If you do this, you must upload it to <code>~/.zed_server/zed-remote-server-{RELEASE_CHANNEL}-{VERSION}</code> on the server, for example <code>~/.zed_server/zed-remote-server-stable-0.181.6</code>. The version must exactly match the version of Zed itself you are using.</p>\n<h2 id=\"maintaining-the-ssh-connection\"><a class=\"header\" href=\"#maintaining-the-ssh-connection\">Maintaining the SSH connection</a></h2>\n<p>Once the server is initialized. Zed will create new SSH connections (reusing the existing ControlMaster) to run the remote development server.</p>\n<p>Each connection tries to run the development server in proxy mode. This mode will start the daemon if it is not running, and reconnect to it if it is. This way when your connection drops and is restarted, you can continue to work without interruption.</p>\n<p>In the case that reconnecting fails, the daemon will not be re-used. That said, unsaved changes are by default persisted locally, so that you do not lose work. You can always reconnect to the project at a later date and Zed will restore unsaved changes.</p>\n<p>If you are struggling with connection issues, you should be able to see more information in the Zed log <code>cmd-shift-p Open Log</code>. If you are seeing things that are unexpected, please file a <a href=\"https://github.com/zed-industries/zed/issues/new\">GitHub issue</a> or reach out in the #remoting-feedback channel in the <a href=\"https://zed.dev/community-links\">Zed Discord</a>.</p>\n<h2 id=\"supported-ssh-options\"><a class=\"header\" href=\"#supported-ssh-options\">Supported SSH Options</a></h2>\n<p>Under the hood, Zed shells out to the <code>ssh</code> binary to connect to the remote server. We create one SSH control master per project, and use then use that to multiplex SSH connections for the Zed protocol itself, any terminals you open and tasks you run. We read settings from your SSH config file, but if you want to specify additional options to the SSH control master you can configure Zed to set them.</p>\n<p>When typing in the \"Connect New Server\" dialog, you can use bash-style quoting to pass options containing a space. Once you have created a server it will be added to the <code>\"ssh_connections\": []</code> array in your settings file. You can edit the settings file directly to make changes to SSH connections.</p>\n<p>Supported options:</p>\n<ul>\n<li><code>-p</code> / <code>-l</code> - these are equivalent to passing the port and the username in the host string.</li>\n<li><code>-L</code> / <code>-R</code> for port forwarding</li>\n<li><code>-i</code> - to use a specific key file</li>\n<li><code>-o</code> - to set custom options</li>\n<li><code>-J</code> / <code>-w</code> - to proxy the SSH connection</li>\n<li><code>-F</code> for specifying an <code>ssh_config</code></li>\n<li>And also... <code>-4</code>, <code>-6</code>, <code>-A</code>, <code>-B</code>, <code>-C</code>, <code>-D</code>, <code>-I</code>, <code>-K</code>, <code>-P</code>, <code>-X</code>, <code>-Y</code>, <code>-a</code>, <code>-b</code>, <code>-c</code>, <code>-i</code>, <code>-k</code>, <code>-l</code>, <code>-m</code>, <code>-o</code>, <code>-p</code>, <code>-w</code>, <code>-x</code>, <code>-y</code></li>\n</ul>\n<p>Note that we deliberately disallow some options (for example <code>-t</code> or <code>-T</code>) that Zed will set for you.</p>\n<h2 id=\"known-limitations\"><a class=\"header\" href=\"#known-limitations\">Known Limitations</a></h2>\n<ul>\n<li>You can't open files from the remote Terminal by typing the <code>zed</code> command.</li>\n</ul>\n<h2 id=\"feedback\"><a class=\"header\" href=\"#feedback\">Feedback</a></h2>\n<p>Please join the #remoting-feedback channel in the <a href=\"https://zed.dev/community-links\">Zed Discord</a>.</p>\n\n</main>",
+  "content_text": "Remote Development\nRemote Development allows you to code at the speed of thought, even when your codebase is not on your local machine. You use Zed locally so the UI is immediately responsive, but offload heavy computation to the development server so that you can work effectively.\nOverview\nRemote development requires two computers, your local machine that runs the Zed UI and the remote server which runs a Zed headless server. The two communicate over SSH, so you will need to be able to SSH from your local machine into the remote server to use this feature.\n\nOn your local machine, Zed runs its UI, talks to language models, uses Tree-sitter to parse and syntax-highlight code, and store unsaved changes and recent projects. The source code, language servers, tasks, and the terminal all run on the remote server.\n\nNote: The original version of remote development sent traffic via Zed's servers. As of Zed v0.157 you can no-longer use that mode.\n\nSetup\n\nDownload and install the latest Zed. You need at least Zed v0.159.\nUse ctrl-cmd-shift-o|alt-ctrl-shift-o to open the \"Remote Projects\" dialog.\nClick \"Connect New Server\" and enter the command you use to SSH into the server. See Supported SSH options for options you can pass.\nYour local machine will attempt to connect to the remote server using the ssh binary on your path. Assuming the connection is successful, Zed will download the server on the remote host and start it.\nOnce the Zed server is running, you will be prompted to choose a path to open on the remote server.\n\nNote: Zed does not currently handle opening very large directories (for example, / or ~ that may have >100,000 files) very well. We are working on improving this, but suggest in the meantime opening only specific projects, or subfolders of very large mono-repos.\n\n\n\nFor simple cases where you don't need any SSH arguments, you can run zed ssh://[<user>@]<host>[:<port>]/<path> to open a remote folder/file directly. If you'd like to hotlink into an SSH project, use a link of the format: zed://ssh/[<user>@]<host>[:<port>]/<path>.\nSupported platforms\nThe remote machine must be able to run Zed's server. The following platforms should work, though note that we have not exhaustively tested every Linux distribution:\n\nmacOS Catalina or later (Intel or Apple Silicon)\nLinux (x86_64 or arm64, we do not yet support 32-bit platforms)\nWindows is not yet supported.\n\nConfiguration\nThe list of remote servers is stored in your settings file cmd-,|ctrl-,. You can edit this list using the Remote Projects dialog ctrl-cmd-shift-o|alt-ctrl-shift-o, which provides some robustness - for example it checks that the connection can be established before writing it to the settings file.\n{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"projects\": [{ \"paths\": [\"~/code/zed/zed\"] }]\n    }\n  ]\n}\n\nZed shells out to the ssh on your path, and so it will inherit any configuration you have in ~/.ssh/config for the given host. That said, if you need to override anything you can configure the following additional options on each connection:\n{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"projects\": [{ \"paths\": [\"~/code/zed/zed\"] }],\n      // any argument to pass to the ssh master process\n      \"args\": [\"-i\", \"~/.ssh/work_id_file\"],\n      \"port\": 22, // defaults to 22\n      // defaults to your username on your local machine\n      \"username\": \"me\"\n    }\n  ]\n}\n\nThere are two additional Zed-specific options per connection, upload_binary_over_ssh and nickname:\n{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"projects\": [{ \"paths\": [\"~/code/zed/zed\"] }],\n      // by default Zed will download the server binary from the internet on the remote.\n      // When this is true, it'll be downloaded to your laptop and uploaded over SSH.\n      // This is useful when your remote server has restricted internet access.\n      \"upload_binary_over_ssh\": true,\n      // Shown in the Zed UI to help distinguish multiple hosts.\n      \"nickname\": \"lil-linux\"\n    }\n  ]\n}\n\nIf you use the command line to open a connection to a host by doing zed ssh://192.168.1.10/~/.vimrc, then extra options are read from your settings file by finding the first connection that matches the host/username/port of the URL on the command line.\nAdditionally it's worth noting that while you can pass a password on the command line zed ssh://user:password@host/~, we do not support writing a password to your settings file. If you're connecting repeatedly to the same host, you should configure key-based authentication.\nPort forwarding\nIf you'd like to be able to connect to ports on your remote server from your local machine, you can configure port forwarding in your settings file. This is particularly useful for developing websites so you can load the site in your browser while working.\n{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"port_forwards\": [{ \"local_port\": 8080, \"remote_port\": 80 }]\n    }\n  ]\n}\n\nThis will cause requests from your local machine to localhost:8080 to be forwarded to the remote machine's port 80. Under the hood this uses the -L argument to ssh.\nBy default these ports are bound to localhost, so other computers in the same network as your development machine cannot access them. You can set the local_host to bind to a different interface, for example, 0.0.0.0 will bind to all local interfaces.\n{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"port_forwards\": [\n        {\n          \"local_port\": 8080,\n          \"remote_port\": 80,\n          \"local_host\": \"0.0.0.0\"\n        }\n      ]\n    }\n  ]\n}\n\nThese ports also default to the localhost interface on the remote host. If you need to change this, you can also set the remote host:\n{\n  \"ssh_connections\": [\n    {\n      \"host\": \"192.168.1.10\",\n      \"port_forwards\": [\n        {\n          \"local_port\": 8080,\n          \"remote_port\": 80,\n          \"remote_host\": \"docker-host\"\n        }\n      ]\n    }\n  ]\n}\n\nZed settings\nWhen opening a remote project there are three relevant settings locations:\n\nThe local Zed settings (in ~/.zed/settings.json on macOS or ~/.config/zed/settings.json on Linux) on your local machine.\nThe server Zed settings (in the same place) on the remote server.\nThe project settings (in .zed/settings.json or .editorconfig of your project)\n\nBoth the local Zed and the server Zed read the project settings, but they are not aware of the other's main settings.json.\nDepending on the kind of setting you want to make, which settings file you should use:\n\nProject settings should be used for things that affect the project: indentation settings, which formatter / language server to use, etc.\nServer settings should be used for things that affect the server: paths to language servers, etc.\nLocal settings should be used for things that affect the UI: font size, etc.\n\nIn addition any extensions you have installed locally will be propagated to the remote server. This means that language servers, etc. will run correctly.\nInitializing the remote server\nOnce you provide the SSH options, Zed shells out to ssh on your local machine to create a ControlMaster connection with the options you provide.\nAny prompts that SSH needs will be shown in the UI, so you can verify host keys, type key passwords, etc.\nOnce the master connection is established, Zed will check to see if the remote server binary is present in ~/.zed_server on the remote, and that its version matches the current version of Zed that you're using.\nIf it is not there or the version mismatches, Zed will try to download the latest version. By default, it will download from https://zed.dev directly, but if you set: {\"upload_binary_over_ssh\":true} in your settings for that server, it will download the binary to your local machine and then upload it to the remote server.\nIf you'd like to maintain the server binary yourself you can. You can either download our prebuilt versions from GitHub, or build your own with cargo build -p remote_server --release. If you do this, you must upload it to ~/.zed_server/zed-remote-server-{RELEASE_CHANNEL}-{VERSION} on the server, for example ~/.zed_server/zed-remote-server-stable-0.181.6. The version must exactly match the version of Zed itself you are using.\nMaintaining the SSH connection\nOnce the server is initialized. Zed will create new SSH connections (reusing the existing ControlMaster) to run the remote development server.\nEach connection tries to run the development server in proxy mode. This mode will start the daemon if it is not running, and reconnect to it if it is. This way when your connection drops and is restarted, you can continue to work without interruption.\nIn the case that reconnecting fails, the daemon will not be re-used. That said, unsaved changes are by default persisted locally, so that you do not lose work. You can always reconnect to the project at a later date and Zed will restore unsaved changes.\nIf you are struggling with connection issues, you should be able to see more information in the Zed log cmd-shift-p Open Log. If you are seeing things that are unexpected, please file a GitHub issue or reach out in the #remoting-feedback channel in the Zed Discord.\nSupported SSH Options\nUnder the hood, Zed shells out to the ssh binary to connect to the remote server. We create one SSH control master per project, and use then use that to multiplex SSH connections for the Zed protocol itself, any terminals you open and tasks you run. We read settings from your SSH config file, but if you want to specify additional options to the SSH control master you can configure Zed to set them.\nWhen typing in the \"Connect New Server\" dialog, you can use bash-style quoting to pass options containing a space. Once you have created a server it will be added to the \"ssh_connections\": [] array in your settings file. You can edit the settings file directly to make changes to SSH connections.\nSupported options:\n\n-p / -l - these are equivalent to passing the port and the username in the host string.\n-L / -R for port forwarding\n-i - to use a specific key file\n-o - to set custom options\n-J / -w - to proxy the SSH connection\n-F for specifying an ssh_config\nAnd also... -4, -6, -A, -B, -C, -D, -I, -K, -P, -X, -Y, -a, -b, -c, -i, -k, -l, -m, -o, -p, -w, -x, -y\n\nNote that we deliberately disallow some options (for example -t or -T) that Zed will set for you.\nKnown Limitations\n\nYou can't open files from the remote Terminal by typing the zed command.\n\nFeedback\nPlease join the #remoting-feedback channel in the Zed Discord.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:55"
+}

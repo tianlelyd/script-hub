@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/agent-panel.html",
+  "title": "Agent Panel | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"agent-panel\"><a class=\"header\" href=\"#agent-panel\">Agent Panel</a></h1>\n<p>The Agent Panel allows you to interact with many LLMs and coding agents that can help with in various types of tasks, such as generating code, codebase understanding, and other general inquiries like writing emails, documentation, and more.</p>\n<p>To open it, use the <code>agent: new thread</code> action in <a href=\"../getting-started.html#command-palette\">the Command Palette</a> or click the ✨ (sparkles) icon in the status bar.</p>\n<h2 id=\"getting-started\"><a class=\"header\" href=\"#getting-started\">Getting Started</a></h2>\n<p>If you're using the Agent Panel for the first time, you need to have at least one LLM provider or external agent configured.\nYou can do that by:</p>\n<ol>\n<li><a href=\"https://zed.dev/pricing\">subscribing to our Pro plan</a>, so you have access to our hosted models</li>\n<li><a href=\"./llm-providers.html#use-your-own-keys\">bringing your own API keys</a> for your desired provider</li>\n<li>using an external agent like <a href=\"./external-agents.html#gemini-cli\">Gemini CLI</a> or <a href=\"./external-agents.html#claude-code\">Claude Code</a></li>\n</ol>\n<h2 id=\"overview\"><a class=\"header\" href=\"#overview\">Overview</a></h2>\n<p>With an LLM provider or an external agent configured, type at the message editor and hit <code>enter</code> to submit your prompt.\nIf you need extra room to type, you can expand the message editor with <kbd class=\"keybinding\">shift-alt-escape|shift-alt-escape</kbd>.</p>\n<p>You should start to see the responses stream in with indications of <a href=\"./tools.html\">which tools</a> the model is using to fulfill your prompt.\nFrom this point on, you can interact with the many supported features outlined below.</p>\n<blockquote>\n<p>Note that for external agents, like <a href=\"./external-agents.html#gemini-cli\">Gemini CLI</a> or <a href=\"./external-agents.html#claude-code\">Claude Code</a>, some of the features outlined below are <em>not</em> currently supported—for example, <em>restoring threads from history</em>, <em>checkpoints</em>, <em>token usage display</em>, <em>model selection</em>, and others. All of them should hopefully be supported in the future.</p>\n</blockquote>\n<h3 id=\"new-thread\"><a class=\"header\" href=\"#new-thread\">Creating New Threads</a></h3>\n<p>By default, the Agent Panel uses Zed's first-party agent.</p>\n<p>To change that, go to the plus button in the top-right of the Agent Panel and choose another option.\nYou choose to create a new <a href=\"./text-threads.html\">Text Thread</a> or, if you have <a href=\"./external-agents.html\">external agents</a> connected, you can create new threads with them.</p>\n<h3 id=\"editing-messages\"><a class=\"header\" href=\"#editing-messages\">Editing Messages</a></h3>\n<p>Any message that you send to the AI is editable.\nYou can click on the card that contains your message and re-submit it with an adjusted prompt and/or new pieces of context.</p>\n<h3 id=\"checkpoints\"><a class=\"header\" href=\"#checkpoints\">Checkpoints</a></h3>\n<p>Every time the AI performs an edit, you should see a \"Restore Checkpoint\" button to the top of your message, allowing you to return your code base to the state it was in prior to that message.</p>\n<p>The checkpoint button appears even if you interrupt the thread midway through an edit attempt, as this is likely a moment when you've identified that the agent is not heading in the right direction and you want to revert back.</p>\n<h3 id=\"navigating-history\"><a class=\"header\" href=\"#navigating-history\">Navigating History</a></h3>\n<p>To quickly navigate through recently opened threads, use the <kbd class=\"keybinding\">cmd-shift-j|ctrl-shift-j</kbd> binding, when focused on the panel's editor, or click the menu icon button at the top right of the panel to open the dropdown that shows you the six most recent threads.</p>\n<p>The items in this menu function similarly to tabs, and closing them doesn’t delete the thread; instead, it simply removes them from the recent list.</p>\n<p>To view all historical conversations, reach for the <code>View All</code> option from within the same menu or via the <kbd class=\"keybinding\">cmd-shift-h|ctrl-shift-h</kbd> binding.</p>\n<h3 id=\"following-the-agent\"><a class=\"header\" href=\"#following-the-agent\">Following the Agent</a></h3>\n<p>Zed is built with collaboration natively integrated.\nThis approach extends to collaboration with AI as well.\nTo follow the agent reading through your codebase and performing edits, click on the \"crosshair\" icon button at the bottom left of the panel.</p>\n<p>You can also do that with the keyboard by pressing the <code>cmd</code>/<code>ctrl</code> modifier with <code>enter</code> when submitting a message.</p>\n<h3 id=\"get-notified\"><a class=\"header\" href=\"#get-notified\">Get Notified</a></h3>\n<p>If you send a prompt to the Agent and then move elsewhere, thus putting Zed in the background, you can be notified of whether its response is finished either via:</p>\n<ul>\n<li>a visual notification that appears in the top right of your screen</li>\n<li>or a sound notification</li>\n</ul>\n<p>Both notification methods can be used together or individually according to your preference.</p>\n<p>You can customize their behavior, including turning them off entirely, by using the <code>agent.notify_when_agent_waiting</code> and <code>agent.play_sound_when_agent_done</code> settings keys.</p>\n<h3 id=\"reviewing-changes\"><a class=\"header\" href=\"#reviewing-changes\">Reviewing Changes</a></h3>\n<p>Once the agent has made changes to your project, the panel will surface which files, and how many of them, have been edited.</p>\n<p>To see which files specifically have been edited, expand the accordion bar that shows up right above the message editor or click the <code>Review Changes</code> button (<kbd class=\"keybinding\">shift-ctrl-r|shift-ctrl-r</kbd>), which opens a multi-buffer tab with all changes.</p>\n<p>You're able to reject or accept each individual change hunk, or the whole set of changes made by the agent.</p>\n<p>Edit diffs also appear in individual buffers.\nSo, if your active tab had edits made by the AI, you'll see diffs with the same accept/reject controls as in the multi-buffer.</p>\n<h2 id=\"adding-context\"><a class=\"header\" href=\"#adding-context\">Adding Context</a></h2>\n<p>Although Zed's agent is very efficient at reading through your code base to autonomously pick up relevant files, directories, and other context, manually adding context is still encouraged as a way to speed up and improve the AI's response quality.</p>\n<p>To add any file, directory, symbol, previous threads, rules files, or even web pages as context, type <code>@</code> to mention them in the editor.</p>\n<p>Pasting images as context is also supported by the Agent Panel.</p>\n<h3 id=\"token-usage\"><a class=\"header\" href=\"#token-usage\">Token Usage</a></h3>\n<p>Zed surfaces how many tokens you are consuming for your currently active thread nearby the profile selector in the panel's message editor.\nDepending on how many pieces of context you add, your token consumption can grow rapidly.</p>\n<p>With that in mind, once you get close to the model's context window, a banner appears below the message editor suggesting to start a new thread with the current one summarized and added as context.\nYou can also do this at any time with an ongoing thread via the \"Agent Options\" menu on the top right.</p>\n<h2 id=\"changing-models\"><a class=\"header\" href=\"#changing-models\">Changing Models</a></h2>\n<p>After you've configured your LLM providers—either via <a href=\"./llm-providers.html#use-your-own-keys\">a custom API key</a> or through <a href=\"./models.html\">Zed's hosted models</a>—you can switch between them by clicking on the model selector on the message editor or by using the <kbd class=\"keybinding\">cmd-alt-/|ctrl-alt-/</kbd> keybinding.</p>\n<h2 id=\"using-tools\"><a class=\"header\" href=\"#using-tools\">Using Tools</a></h2>\n<p>The new Agent Panel supports tool calling, which enables agentic editing.\nZed comes with <a href=\"./tools.html\">several built-in tools</a> that allow models to perform tasks such as searching through your codebase, editing files, running commands, and others.</p>\n<p>You can also extend the set of available tools via <a href=\"./mcp.html\">MCP Servers</a>.</p>\n<h3 id=\"profiles\"><a class=\"header\" href=\"#profiles\">Profiles</a></h3>\n<p>Profiles act as a way to group tools.\nZed offers three built-in profiles and you can create as many custom ones as you want.</p>\n<h4 id=\"built-in-profiles\"><a class=\"header\" href=\"#built-in-profiles\">Built-in Profiles</a></h4>\n<ul>\n<li><code>Write</code>: A profile with tools to allow the LLM to write to your files and run terminal commands. This one essentially has all built-in tools turned on.</li>\n<li><code>Ask</code>: A profile with read-only tools. Best for asking questions about your code base without the concern of the agent making changes.</li>\n<li><code>Minimal</code>: A profile with no tools. Best for general conversations with the LLM where no knowledge of your code base is necessary.</li>\n</ul>\n<p>You can explore the exact tools enabled in each profile by clicking on the profile selector button &gt; <code>Configure Profiles…</code> &gt; the one you want to check out.</p>\n<h4 id=\"custom-profiles\"><a class=\"header\" href=\"#custom-profiles\">Custom Profiles</a></h4>\n<p>You can create a custom profile via the <code>Configure Profiles…</code> option in the profile selector.\nFrom here, you can choose to <code>Add New Profile</code> or fork an existing one with a custom name and your preferred set of tools.</p>\n<p>You can also override built-in profiles.\nWith a built-in profile selected, in the profile selector, navigate to <code>Configure Tools</code>, and select the tools you'd like.</p>\n<p>Zed will store this profile in your settings using the same profile name as the default you overrode.</p>\n<p>All custom profiles can be edited via the UI or by hand under the <code>assistant.profiles</code> key in your <code>settings.json</code> file.</p>\n<h3 id=\"tool-approval\"><a class=\"header\" href=\"#tool-approval\">Tool Approval</a></h3>\n<p>Zed's Agent Panel surfaces the <code>agent.always_allow_tool_actions</code> setting that, if turned to <code>false</code>, will require you to give permission to any editing attempt as well as tool calls coming from MCP servers.</p>\n<p>You can change that by setting this key to <code>true</code> in either your <code>settings.json</code> or via the Agent Panel's settings view.</p>\n<h3 id=\"model-support\"><a class=\"header\" href=\"#model-support\">Model Support</a></h3>\n<p>Tool calling needs to be individually supported by each model and model provider.\nTherefore, despite the presence of tools, some models may not have the ability to pick them up yet in Zed.\nYou should see a \"No tools\" label if you select a model that falls into this case.</p>\n<p>We want to support all of them, though!\nWe may prioritize which ones to focus on based on popularity and user feedback, so feel free to help and contribute to fast-track those that don't fit this bill.</p>\n<p>All <a href=\"./models.html\">Zed's hosted models</a> support tool calling out-of-the-box.</p>\n<h3 id=\"mcp-servers\"><a class=\"header\" href=\"#mcp-servers\">MCP Servers</a></h3>\n<p>Similarly to the built-in tools, some models may not support all tools included in a given MCP Server.\nZed's UI will inform about this via a warning icon that appears close to the model selector.</p>\n<h2 id=\"text-threads\"><a class=\"header\" href=\"#text-threads\">Text Threads</a></h2>\n<p><a href=\"./text-threads.html\">\"Text Threads\"</a> present your conversation with the LLM in a different format—as raw text.\nWith text threads, you have full control over the conversation data.\nYou can remove and edit responses from the LLM, swap roles, and include more context earlier in the conversation.</p>\n<p>For users who have been with us for some time, you'll notice that text threads are our original assistant panel—users love it for the control it offers.\nWe do not plan to deprecate text threads, but it should be noted that if you want the AI to write to your code base autonomously, that's only available in the newer, and now default, \"Threads\".</p>\n<h2 id=\"errors-and-debugging\"><a class=\"header\" href=\"#errors-and-debugging\">Errors and Debugging</a></h2>\n<p>In case of any error or strange LLM response behavior, the best way to help the Zed team debug is by reaching for the <code>agent: open thread as markdown</code> action and attaching that data as part of your issue on GitHub.</p>\n<p>You can also open threads as Markdown by clicking on the file icon button, to the right of the thumbs down button, when focused on the panel's editor.</p>\n<h2 id=\"feedback\"><a class=\"header\" href=\"#feedback\">Feedback</a></h2>\n<p>Every change we make to Zed's system prompt and tool set, needs to be backed by a thorough eval with good scores.</p>\n<p>Every time the LLM performs a weird change or investigates a certain topic in your code base incorrectly, it's an indication that there's an improvement opportunity.</p>\n<blockquote>\n<p>Note that rating responses will send your data related to that response to Zed's servers.\nSee <a href=\"./ai-improvement.html\">AI Improvement</a> and <a href=\"./privacy-and-security.html\">Privacy and Security</a> for more information about Zed's approach to AI improvement, privacy, and security.\n<strong><em>If you don't want data persisted on Zed's servers, don't rate</em></strong>. We will not collect data for improving our Agentic offering without you explicitly rating responses.</p>\n</blockquote>\n<p>The best way you can help influence the next change to Zed's system prompt and tools is by rating the LLM's response via the thumbs up/down buttons at the end of every response.\nIn case of a thumbs down, a new text area will show up where you can add more specifics about what happened.</p>\n<p>You can provide feedback on the thread at any point after the agent responds, and multiple times within the same thread.</p>\n\n</main>",
+  "content_text": "Agent Panel\nThe Agent Panel allows you to interact with many LLMs and coding agents that can help with in various types of tasks, such as generating code, codebase understanding, and other general inquiries like writing emails, documentation, and more.\nTo open it, use the agent: new thread action in the Command Palette or click the ✨ (sparkles) icon in the status bar.\nGetting Started\nIf you're using the Agent Panel for the first time, you need to have at least one LLM provider or external agent configured.\nYou can do that by:\n\nsubscribing to our Pro plan, so you have access to our hosted models\nbringing your own API keys for your desired provider\nusing an external agent like Gemini CLI or Claude Code\n\nOverview\nWith an LLM provider or an external agent configured, type at the message editor and hit enter to submit your prompt.\nIf you need extra room to type, you can expand the message editor with shift-alt-escape|shift-alt-escape.\nYou should start to see the responses stream in with indications of which tools the model is using to fulfill your prompt.\nFrom this point on, you can interact with the many supported features outlined below.\n\nNote that for external agents, like Gemini CLI or Claude Code, some of the features outlined below are not currently supported—for example, restoring threads from history, checkpoints, token usage display, model selection, and others. All of them should hopefully be supported in the future.\n\nCreating New Threads\nBy default, the Agent Panel uses Zed's first-party agent.\nTo change that, go to the plus button in the top-right of the Agent Panel and choose another option.\nYou choose to create a new Text Thread or, if you have external agents connected, you can create new threads with them.\nEditing Messages\nAny message that you send to the AI is editable.\nYou can click on the card that contains your message and re-submit it with an adjusted prompt and/or new pieces of context.\nCheckpoints\nEvery time the AI performs an edit, you should see a \"Restore Checkpoint\" button to the top of your message, allowing you to return your code base to the state it was in prior to that message.\nThe checkpoint button appears even if you interrupt the thread midway through an edit attempt, as this is likely a moment when you've identified that the agent is not heading in the right direction and you want to revert back.\nNavigating History\nTo quickly navigate through recently opened threads, use the cmd-shift-j|ctrl-shift-j binding, when focused on the panel's editor, or click the menu icon button at the top right of the panel to open the dropdown that shows you the six most recent threads.\nThe items in this menu function similarly to tabs, and closing them doesn’t delete the thread; instead, it simply removes them from the recent list.\nTo view all historical conversations, reach for the View All option from within the same menu or via the cmd-shift-h|ctrl-shift-h binding.\nFollowing the Agent\nZed is built with collaboration natively integrated.\nThis approach extends to collaboration with AI as well.\nTo follow the agent reading through your codebase and performing edits, click on the \"crosshair\" icon button at the bottom left of the panel.\nYou can also do that with the keyboard by pressing the cmd/ctrl modifier with enter when submitting a message.\nGet Notified\nIf you send a prompt to the Agent and then move elsewhere, thus putting Zed in the background, you can be notified of whether its response is finished either via:\n\na visual notification that appears in the top right of your screen\nor a sound notification\n\nBoth notification methods can be used together or individually according to your preference.\nYou can customize their behavior, including turning them off entirely, by using the agent.notify_when_agent_waiting and agent.play_sound_when_agent_done settings keys.\nReviewing Changes\nOnce the agent has made changes to your project, the panel will surface which files, and how many of them, have been edited.\nTo see which files specifically have been edited, expand the accordion bar that shows up right above the message editor or click the Review Changes button (shift-ctrl-r|shift-ctrl-r), which opens a multi-buffer tab with all changes.\nYou're able to reject or accept each individual change hunk, or the whole set of changes made by the agent.\nEdit diffs also appear in individual buffers.\nSo, if your active tab had edits made by the AI, you'll see diffs with the same accept/reject controls as in the multi-buffer.\nAdding Context\nAlthough Zed's agent is very efficient at reading through your code base to autonomously pick up relevant files, directories, and other context, manually adding context is still encouraged as a way to speed up and improve the AI's response quality.\nTo add any file, directory, symbol, previous threads, rules files, or even web pages as context, type @ to mention them in the editor.\nPasting images as context is also supported by the Agent Panel.\nToken Usage\nZed surfaces how many tokens you are consuming for your currently active thread nearby the profile selector in the panel's message editor.\nDepending on how many pieces of context you add, your token consumption can grow rapidly.\nWith that in mind, once you get close to the model's context window, a banner appears below the message editor suggesting to start a new thread with the current one summarized and added as context.\nYou can also do this at any time with an ongoing thread via the \"Agent Options\" menu on the top right.\nChanging Models\nAfter you've configured your LLM providers—either via a custom API key or through Zed's hosted models—you can switch between them by clicking on the model selector on the message editor or by using the cmd-alt-/|ctrl-alt-/ keybinding.\nUsing Tools\nThe new Agent Panel supports tool calling, which enables agentic editing.\nZed comes with several built-in tools that allow models to perform tasks such as searching through your codebase, editing files, running commands, and others.\nYou can also extend the set of available tools via MCP Servers.\nProfiles\nProfiles act as a way to group tools.\nZed offers three built-in profiles and you can create as many custom ones as you want.\nBuilt-in Profiles\n\nWrite: A profile with tools to allow the LLM to write to your files and run terminal commands. This one essentially has all built-in tools turned on.\nAsk: A profile with read-only tools. Best for asking questions about your code base without the concern of the agent making changes.\nMinimal: A profile with no tools. Best for general conversations with the LLM where no knowledge of your code base is necessary.\n\nYou can explore the exact tools enabled in each profile by clicking on the profile selector button > Configure Profiles… > the one you want to check out.\nCustom Profiles\nYou can create a custom profile via the Configure Profiles… option in the profile selector.\nFrom here, you can choose to Add New Profile or fork an existing one with a custom name and your preferred set of tools.\nYou can also override built-in profiles.\nWith a built-in profile selected, in the profile selector, navigate to Configure Tools, and select the tools you'd like.\nZed will store this profile in your settings using the same profile name as the default you overrode.\nAll custom profiles can be edited via the UI or by hand under the assistant.profiles key in your settings.json file.\nTool Approval\nZed's Agent Panel surfaces the agent.always_allow_tool_actions setting that, if turned to false, will require you to give permission to any editing attempt as well as tool calls coming from MCP servers.\nYou can change that by setting this key to true in either your settings.json or via the Agent Panel's settings view.\nModel Support\nTool calling needs to be individually supported by each model and model provider.\nTherefore, despite the presence of tools, some models may not have the ability to pick them up yet in Zed.\nYou should see a \"No tools\" label if you select a model that falls into this case.\nWe want to support all of them, though!\nWe may prioritize which ones to focus on based on popularity and user feedback, so feel free to help and contribute to fast-track those that don't fit this bill.\nAll Zed's hosted models support tool calling out-of-the-box.\nMCP Servers\nSimilarly to the built-in tools, some models may not support all tools included in a given MCP Server.\nZed's UI will inform about this via a warning icon that appears close to the model selector.\nText Threads\n\"Text Threads\" present your conversation with the LLM in a different format—as raw text.\nWith text threads, you have full control over the conversation data.\nYou can remove and edit responses from the LLM, swap roles, and include more context earlier in the conversation.\nFor users who have been with us for some time, you'll notice that text threads are our original assistant panel—users love it for the control it offers.\nWe do not plan to deprecate text threads, but it should be noted that if you want the AI to write to your code base autonomously, that's only available in the newer, and now default, \"Threads\".\nErrors and Debugging\nIn case of any error or strange LLM response behavior, the best way to help the Zed team debug is by reaching for the agent: open thread as markdown action and attaching that data as part of your issue on GitHub.\nYou can also open threads as Markdown by clicking on the file icon button, to the right of the thumbs down button, when focused on the panel's editor.\nFeedback\nEvery change we make to Zed's system prompt and tool set, needs to be backed by a thorough eval with good scores.\nEvery time the LLM performs a weird change or investigates a certain topic in your code base incorrectly, it's an indication that there's an improvement opportunity.\n\nNote that rating responses will send your data related to that response to Zed's servers.\nSee AI Improvement and Privacy and Security for more information about Zed's approach to AI improvement, privacy, and security.\nIf you don't want data persisted on Zed's servers, don't rate. We will not collect data for improving our Agentic offering without you explicitly rating responses.\n\nThe best way you can help influence the next change to Zed's system prompt and tools is by rating the LLM's response via the thumbs up/down buttons at the end of every response.\nIn case of a thumbs down, a new text area will show up where you can add more specifics about what happened.\nYou can provide feedback on the thread at any point after the agent responds, and multiple times within the same thread.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:04"
+}

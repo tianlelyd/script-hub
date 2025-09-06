@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/collaboration.html",
+  "title": "Collaboration | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"collaboration\"><a class=\"header\" href=\"#collaboration\">Collaboration</a></h1>\n<p>Only collaborate with people that you trust. Since sharing a project gives them access to your local file system, you should not share projects with people you do not trust; they could potentially do some nasty things.</p>\n<p>In the future, we will do more to prevent this type of access beyond the shared project and add more control over what collaborators can do, but for now, only collaborate with people you trust.</p>\n<h2 id=\"adding-a-collaborator-to-a-call\"><a class=\"header\" href=\"#adding-a-collaborator-to-a-call\">Adding a collaborator to a call</a></h2>\n<p>Before you can collaborate, you'll need to add a collaborator to your contacts. To do this:</p>\n<ol>\n<li>Open the contacts menu by clicking on the <code>Show contacts menu</code> button in the upper right-hand corner of the window or by running <code>collab: toggle contacts menu</code> (<code>cmd-shift-c</code>).</li>\n<li>Click the add button to the right of the search box.</li>\n<li>Search for the contact you want to add using their GitHub handle. Note: the person you are trying to add as a contact must be an existing Zed user.</li>\n</ol>\n<h3 id=\"inviting-a-collaborator\"><a class=\"header\" href=\"#inviting-a-collaborator\">Inviting a collaborator</a></h3>\n<p>You can add an existing Zed user as a contact from the contacts menu, deployed from the <code>Show contacts menu</code> button in the upper right-hand corner of the window or by <code>collab: toggle contacts menu</code> (<code>cmd-shift-c</code>) and then clicking the <code>Search for new contact</code> button to the right of the search box.</p>\n<p><img alt=\"Inviting a collaborator to the current project\" src=\"https://zed.dev/img/collaboration/add-a-collaborator.png\"/></p>\n<p>When you invite a collaborator to a project not in a call they will receive a notification to join, and a new call is created.</p>\n<p><img alt=\"Receiving an invite to join a call\" src=\"https://zed.dev/img/collaboration/receiving-an-invite.jpg\"/></p>\n<h3 id=\"inviting-non-zed-users\"><a class=\"header\" href=\"#inviting-non-zed-users\">Inviting non-Zed users</a></h3>\n<p>If someone you want to collaborate with has not yet signed up for Zed, they will need to <a href=\"https://zed.dev/download\">download the app</a> and sign in for the first time before you can add them. Identity is tied to GitHub accounts, so new users will need to authenticate with GitHub in order to sign into Zed.</p>\n<h3 id=\"voice-chat\"><a class=\"header\" href=\"#voice-chat\">Voice chat</a></h3>\n<p>When joining a call, Zed will automatically share your microphone with other users in the call, if your OS allows it. This isn't tied to your project. You can disable this for your client via the <a href=\"./configuring-zed.html#calls\"><code>mute_on_join</code></a> setting.</p>\n<h2 id=\"collaborating-on-a-project\"><a class=\"header\" href=\"#collaborating-on-a-project\">Collaborating on a project</a></h2>\n<h3 id=\"share-a-project\"><a class=\"header\" href=\"#share-a-project\">Share a project</a></h3>\n<p>When you invite a collaborator to join your project, a new call begins. Your Zed windows will show the call participants in the title bar of the window.</p>\n<p><img alt=\"A new Zed call with two collaborators\" src=\"https://zed.dev/img/collaboration/new-call.png\"/></p>\n<p>Collaborators in the same project as you are in color, and have a cursor color. Collaborators in other projects are shown in gray. Collaborators that have access to the current project will have their own cursor color under their avatar.</p>\n<p>We aim to eliminate the distinction between local and remote projects as much as possible. Collaborators can open, edit, and save files, perform searches, interact with the language server, etc. Guests have a read-only view of the project, including access to language server info.</p>\n<h4 id=\"unshared-projects\"><a class=\"header\" href=\"#unshared-projects\">Unshared Projects</a></h4>\n<p>If a collaborator is currently in a project that is not shared, you will not be able to jump to their project or follow them until they either share the project or return to a project that is shared.</p>\n<p>If you are in a project that isn't shared, others will not be able to join it or see its contents.</p>\n<h3 id=\"follow-a-collaborator\"><a class=\"header\" href=\"#follow-a-collaborator\">Follow a collaborator</a></h3>\n<p>To follow a collaborator, click on their avatar in the top right of the window. You can also cycle through collaborators using <code>workspace: follow next collaborator</code> (<code>ctrl-alt-cmd-f</code>).</p>\n<p>When you join a project, you'll immediately start following the collaborator that invited you.</p>\n<p><img alt=\"Automatically following the person inviting us to a project\" src=\"https://zed.dev/img/collaboration/joining-a-call.png\"/></p>\n<p>When you are in a pane that is following a collaborator, you will:</p>\n<ul>\n<li>follow their cursor and scroll position</li>\n<li>follow them to other files in the same project</li>\n<li>instantly swap to viewing their screen in that pane, if they are sharing their screen and leave the project</li>\n</ul>\n<p>If you move your cursor or make an edit in that pane, you will stop following.</p>\n<p>To start following again, you can click on a collaborator's avatar or cycle through following different participants by pressing <code>workspace: follow next collaborator</code> (<code>ctrl-alt-cmd-f</code>).</p>\n<h4 id=\"how-following-works\"><a class=\"header\" href=\"#how-following-works\">How following works</a></h4>\n<p>Following is confined to a particular pane. When a pane is following a collaborator, it is outlined in their cursor color.</p>\n<p>This pane-specific behavior allows you to follow someone in one pane while navigating independently in another and can be an effective layout for some collaboration styles.</p>\n<h3 id=\"sharing-your-screen\"><a class=\"header\" href=\"#sharing-your-screen\">Sharing your screen</a></h3>\n<p>Share your screen with collaborators in the current call by clicking on the <code>Share screen</code> button in the top right of the window.</p>\n<p>Collaborators will see your screen if they are following you and you start viewing a window outside Zed or a project that is not shared.</p>\n<p>Collaborators can see your entire screen when you are screen sharing, so be careful not to share anything you don't want to share. Remember to stop screen sharing when you are finished.</p>\n<p>Call participants can open a dedicated tab for your screen share by opening the contacts menu in the top right and clicking on the <code>Screen</code> entry if you are sharing your screen.</p>\n<h3 id=\"adding-a-project\"><a class=\"header\" href=\"#adding-a-project\">Adding a project</a></h3>\n<p>You can add a project to a call by clicking on the <code>Share</code> button next to the project name in the title bar.</p>\n<h3 id=\"removing-a-project\"><a class=\"header\" href=\"#removing-a-project\">Removing a project</a></h3>\n<p>You can remove a project from a call by clicking on the <code>Unshare</code> button next to the project name in the title bar.</p>\n<p>Collaborators that are currently in that project will be disconnected from the project and will not be able to rejoin it unless you share it again.</p>\n<h3 id=\"following-a-collaborators-terminal\"><a class=\"header\" href=\"#following-a-collaborators-terminal\">Following a collaborator's terminal</a></h3>\n<p>You can follow what a collaborator is doing in their terminal by having them share their screen and following it.</p>\n<p>In the future, we plan to allow you to collaborate in the terminal directly in a shared project.</p>\n<h3 id=\"leave-call\"><a class=\"header\" href=\"#leave-call\">Leave call</a></h3>\n<p>You can leave a call by opening the contacts menu in the top right and clicking on the <code>Leave call</code> button.</p>\n\n</main>",
+  "content_text": "Collaboration\nOnly collaborate with people that you trust. Since sharing a project gives them access to your local file system, you should not share projects with people you do not trust; they could potentially do some nasty things.\nIn the future, we will do more to prevent this type of access beyond the shared project and add more control over what collaborators can do, but for now, only collaborate with people you trust.\nAdding a collaborator to a call\nBefore you can collaborate, you'll need to add a collaborator to your contacts. To do this:\n\nOpen the contacts menu by clicking on the Show contacts menu button in the upper right-hand corner of the window or by running collab: toggle contacts menu (cmd-shift-c).\nClick the add button to the right of the search box.\nSearch for the contact you want to add using their GitHub handle. Note: the person you are trying to add as a contact must be an existing Zed user.\n\nInviting a collaborator\nYou can add an existing Zed user as a contact from the contacts menu, deployed from the Show contacts menu button in the upper right-hand corner of the window or by collab: toggle contacts menu (cmd-shift-c) and then clicking the Search for new contact button to the right of the search box.\n\nWhen you invite a collaborator to a project not in a call they will receive a notification to join, and a new call is created.\n\nInviting non-Zed users\nIf someone you want to collaborate with has not yet signed up for Zed, they will need to download the app and sign in for the first time before you can add them. Identity is tied to GitHub accounts, so new users will need to authenticate with GitHub in order to sign into Zed.\nVoice chat\nWhen joining a call, Zed will automatically share your microphone with other users in the call, if your OS allows it. This isn't tied to your project. You can disable this for your client via the mute_on_join setting.\nCollaborating on a project\nShare a project\nWhen you invite a collaborator to join your project, a new call begins. Your Zed windows will show the call participants in the title bar of the window.\n\nCollaborators in the same project as you are in color, and have a cursor color. Collaborators in other projects are shown in gray. Collaborators that have access to the current project will have their own cursor color under their avatar.\nWe aim to eliminate the distinction between local and remote projects as much as possible. Collaborators can open, edit, and save files, perform searches, interact with the language server, etc. Guests have a read-only view of the project, including access to language server info.\nUnshared Projects\nIf a collaborator is currently in a project that is not shared, you will not be able to jump to their project or follow them until they either share the project or return to a project that is shared.\nIf you are in a project that isn't shared, others will not be able to join it or see its contents.\nFollow a collaborator\nTo follow a collaborator, click on their avatar in the top right of the window. You can also cycle through collaborators using workspace: follow next collaborator (ctrl-alt-cmd-f).\nWhen you join a project, you'll immediately start following the collaborator that invited you.\n\nWhen you are in a pane that is following a collaborator, you will:\n\nfollow their cursor and scroll position\nfollow them to other files in the same project\ninstantly swap to viewing their screen in that pane, if they are sharing their screen and leave the project\n\nIf you move your cursor or make an edit in that pane, you will stop following.\nTo start following again, you can click on a collaborator's avatar or cycle through following different participants by pressing workspace: follow next collaborator (ctrl-alt-cmd-f).\nHow following works\nFollowing is confined to a particular pane. When a pane is following a collaborator, it is outlined in their cursor color.\nThis pane-specific behavior allows you to follow someone in one pane while navigating independently in another and can be an effective layout for some collaboration styles.\nSharing your screen\nShare your screen with collaborators in the current call by clicking on the Share screen button in the top right of the window.\nCollaborators will see your screen if they are following you and you start viewing a window outside Zed or a project that is not shared.\nCollaborators can see your entire screen when you are screen sharing, so be careful not to share anything you don't want to share. Remember to stop screen sharing when you are finished.\nCall participants can open a dedicated tab for your screen share by opening the contacts menu in the top right and clicking on the Screen entry if you are sharing your screen.\nAdding a project\nYou can add a project to a call by clicking on the Share button next to the project name in the title bar.\nRemoving a project\nYou can remove a project from a call by clicking on the Unshare button next to the project name in the title bar.\nCollaborators that are currently in that project will be disconnected from the project and will not be able to rejoin it unless you share it again.\nFollowing a collaborator's terminal\nYou can follow what a collaborator is doing in their terminal by having them share their screen and following it.\nIn the future, we plan to allow you to collaborate in the terminal directly in a shared project.\nLeave call\nYou can leave a call by opening the contacts menu in the top right and clicking on the Leave call button.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:43"
+}

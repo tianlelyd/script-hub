@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/extensions/languages.html",
+  "title": "Language Extensions | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"language-extensions\"><a class=\"header\" href=\"#language-extensions\">Language Extensions</a></h1>\n<p>Language support in Zed has several components:</p>\n<ul>\n<li>Language metadata and configuration</li>\n<li>Grammar</li>\n<li>Queries</li>\n<li>Language servers</li>\n</ul>\n<h2 id=\"language-metadata\"><a class=\"header\" href=\"#language-metadata\">Language Metadata</a></h2>\n<p>Each language supported by Zed must be defined in a subdirectory inside the <code>languages</code> directory of your extension.</p>\n<p>This subdirectory must contain a file called <code>config.toml</code> file with the following structure:</p>\n<pre><code class=\"language-toml\">name = \"My Language\"\ngrammar = \"my-language\"\npath_suffixes = [\"myl\"]\nline_comments = [\"# \"]\n</code></pre>\n<ul>\n<li><code>name</code> (required) is the human readable name that will show up in the Select Language dropdown.</li>\n<li><code>grammar</code> (required) is the name of a grammar. Grammars are registered separately, described below.</li>\n<li><code>path_suffixes</code> is an array of file suffixes that should be associated with this language. Unlike <code>file_types</code> in settings, this does not support glob patterns.</li>\n<li><code>line_comments</code> is an array of strings that are used to identify line comments in the language. This is used for the <code>editor::ToggleComments</code> keybind: <kbd class=\"keybinding\">cmd-/|ctrl-/</kbd> for toggling lines of code.</li>\n<li><code>tab_size</code> defines the indentation/tab size used for this language (default is <code>4</code>).</li>\n<li><code>hard_tabs</code> whether to indent with tabs (<code>true</code>) or spaces (<code>false</code>, the default).</li>\n<li><code>first_line_pattern</code> is a regular expression, that in addition to <code>path_suffixes</code> (above) or <code>file_types</code> in settings can be used to match files which should use this language. For example Zed uses this to identify Shell Scripts by matching the <a href=\"https://github.com/zed-industries/zed/blob/main/crates/languages/src/bash/config.toml\">shebangs lines</a> in the first line of a script.</li>\n<li><code>debuggers</code> is an array of strings that are used to identify debuggers in the language. When launching a debugger's <code>New Process Modal</code>, Zed will order available debuggers by the order of entries in this array.</li>\n</ul>\n<!--\nTBD: Document `language_name/config.toml` keys\n\n- autoclose_before\n- brackets (start, end, close, newline, not_in: [\"comment\", \"string\"])\n- word_characters\n- prettier_parser_name\n- opt_into_language_servers\n- code_fence_block_name\n- scope_opt_in_language_servers\n- increase_indent_pattern, decrease_indent_pattern\n- collapsed_placeholder\n- auto_indent_on_paste, auto_indent_using_last_non_empty_line\n- overrides: `[overrides.element]`, `[overrides.string]`\n-->\n<h2 id=\"grammar\"><a class=\"header\" href=\"#grammar\">Grammar</a></h2>\n<p>Zed uses the <a href=\"https://tree-sitter.github.io\">Tree-sitter</a> parsing library to provide built-in language-specific features. There are grammars available for many languages, and you can also <a href=\"https://tree-sitter.github.io/tree-sitter/creating-parsers#writing-the-grammar\">develop your own grammar</a>. A growing list of Zed features are built using pattern matching over syntax trees with Tree-sitter queries. As mentioned above, every language that is defined in an extension must specify the name of a Tree-sitter grammar that is used for parsing. These grammars are then registered separately in extensions' <code>extension.toml</code> file, like this:</p>\n<pre><code class=\"language-toml\">[grammars.gleam]\nrepository = \"https://github.com/gleam-lang/tree-sitter-gleam\"\nrev = \"58b7cac8fc14c92b0677c542610d8738c373fa81\"\n</code></pre>\n<p>The <code>repository</code> field must specify a repository where the Tree-sitter grammar should be loaded from, and the <code>rev</code> field must contain a Git revision to use, such as the SHA of a Git commit. If you're developing an extension locally and want to load a grammar from the local filesystem, you can use a <code>file://</code> URL for <code>repository</code>. An extension can provide multiple grammars by referencing multiple tree-sitter repositories.</p>\n<h2 id=\"tree-sitter-queries\"><a class=\"header\" href=\"#tree-sitter-queries\">Tree-sitter Queries</a></h2>\n<p>Zed uses the syntax tree produced by the <a href=\"https://tree-sitter.github.io\">Tree-sitter</a> query language to implement\nseveral features:</p>\n<ul>\n<li>Syntax highlighting</li>\n<li>Bracket matching</li>\n<li>Code outline/structure</li>\n<li>Auto-indentation</li>\n<li>Code injections</li>\n<li>Syntax overrides</li>\n<li>Text redactions</li>\n<li>Runnable code detection</li>\n<li>Selecting classes, functions, etc.</li>\n</ul>\n<p>The following sections elaborate on how <a href=\"https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax\">Tree-sitter queries</a> enable these\nfeatures in Zed, using <a href=\"https://www.json.org/json-en.html\">JSON syntax</a> as a guiding example.</p>\n<h3 id=\"syntax-highlighting\"><a class=\"header\" href=\"#syntax-highlighting\">Syntax highlighting</a></h3>\n<p>In Tree-sitter, the <code>highlights.scm</code> file defines syntax highlighting rules for a particular syntax.</p>\n<p>Here's an example from a <code>highlights.scm</code> for JSON:</p>\n<pre><code class=\"language-scheme\">(string) @string\n\n(pair\n  key: (string) @property.json_key)\n\n(number) @number\n</code></pre>\n<p>This query marks strings, object keys, and numbers for highlighting. The following is a comprehensive list of captures supported by themes:</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@attribute</td><td>Captures attributes</td></tr>\n<tr><td>@boolean</td><td>Captures boolean values</td></tr>\n<tr><td>@comment</td><td>Captures comments</td></tr>\n<tr><td>@comment.doc</td><td>Captures documentation comments</td></tr>\n<tr><td>@constant</td><td>Captures constants</td></tr>\n<tr><td>@constructor</td><td>Captures constructors</td></tr>\n<tr><td>@embedded</td><td>Captures embedded content</td></tr>\n<tr><td>@emphasis</td><td>Captures emphasized text</td></tr>\n<tr><td>@emphasis.strong</td><td>Captures strongly emphasized text</td></tr>\n<tr><td>@enum</td><td>Captures enumerations</td></tr>\n<tr><td>@function</td><td>Captures functions</td></tr>\n<tr><td>@hint</td><td>Captures hints</td></tr>\n<tr><td>@keyword</td><td>Captures keywords</td></tr>\n<tr><td>@label</td><td>Captures labels</td></tr>\n<tr><td>@link_text</td><td>Captures link text</td></tr>\n<tr><td>@link_uri</td><td>Captures link URIs</td></tr>\n<tr><td>@number</td><td>Captures numeric values</td></tr>\n<tr><td>@operator</td><td>Captures operators</td></tr>\n<tr><td>@predictive</td><td>Captures predictive text</td></tr>\n<tr><td>@preproc</td><td>Captures preprocessor directives</td></tr>\n<tr><td>@primary</td><td>Captures primary elements</td></tr>\n<tr><td>@property</td><td>Captures properties</td></tr>\n<tr><td>@punctuation</td><td>Captures punctuation</td></tr>\n<tr><td>@punctuation.bracket</td><td>Captures brackets</td></tr>\n<tr><td>@punctuation.delimiter</td><td>Captures delimiters</td></tr>\n<tr><td>@punctuation.list_marker</td><td>Captures list markers</td></tr>\n<tr><td>@punctuation.special</td><td>Captures special punctuation</td></tr>\n<tr><td>@string</td><td>Captures string literals</td></tr>\n<tr><td>@string.escape</td><td>Captures escaped characters in strings</td></tr>\n<tr><td>@string.regex</td><td>Captures regular expressions</td></tr>\n<tr><td>@string.special</td><td>Captures special strings</td></tr>\n<tr><td>@string.special.symbol</td><td>Captures special symbols</td></tr>\n<tr><td>@tag</td><td>Captures tags</td></tr>\n<tr><td>@tag.doctype</td><td>Captures doctypes (e.g., in HTML)</td></tr>\n<tr><td>@text.literal</td><td>Captures literal text</td></tr>\n<tr><td>@title</td><td>Captures titles</td></tr>\n<tr><td>@type</td><td>Captures types</td></tr>\n<tr><td>@variable</td><td>Captures variables</td></tr>\n<tr><td>@variable.special</td><td>Captures special variables</td></tr>\n<tr><td>@variant</td><td>Captures variants</td></tr>\n</tbody></table>\n</div>\n<h3 id=\"bracket-matching\"><a class=\"header\" href=\"#bracket-matching\">Bracket matching</a></h3>\n<p>The <code>brackets.scm</code> file defines matching brackets.</p>\n<p>Here's an example from a <code>brackets.scm</code> file for JSON:</p>\n<pre><code class=\"language-scheme\">(\"[\" @open \"]\" @close)\n(\"{\" @open \"}\" @close)\n(\"\\\"\" @open \"\\\"\" @close)\n</code></pre>\n<p>This query identifies opening and closing brackets, braces, and quotation marks.</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@open</td><td>Captures opening brackets, braces, and quotes</td></tr>\n<tr><td>@close</td><td>Captures closing brackets, braces, and quotes</td></tr>\n</tbody></table>\n</div>\n<h3 id=\"code-outlinestructure\"><a class=\"header\" href=\"#code-outlinestructure\">Code outline/structure</a></h3>\n<p>The <code>outline.scm</code> file defines the structure for the code outline.</p>\n<p>Here's an example from an <code>outline.scm</code> file for JSON:</p>\n<pre><code class=\"language-scheme\">(pair\n  key: (string (string_content) @name)) @item\n</code></pre>\n<p>This query captures object keys for the outline structure.</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@name</td><td>Captures the content of object keys</td></tr>\n<tr><td>@item</td><td>Captures the entire key-value pair</td></tr>\n<tr><td>@context</td><td>Captures elements that provide context for the outline item</td></tr>\n<tr><td>@context.extra</td><td>Captures additional contextual information for the outline item</td></tr>\n<tr><td>@annotation</td><td>Captures nodes that annotate outline item (doc comments, attributes, decorators)<sup class=\"footnote-reference\"><a href=\"#1\">1</a></sup></td></tr>\n</tbody></table>\n</div>\n<div class=\"footnote-definition\" id=\"1\"><sup class=\"footnote-definition-label\">1</sup>\n<p>These annotations are used by Assistant when generating code modification steps.</p>\n</div>\n<h3 id=\"auto-indentation\"><a class=\"header\" href=\"#auto-indentation\">Auto-indentation</a></h3>\n<p>The <code>indents.scm</code> file defines indentation rules.</p>\n<p>Here's an example from an <code>indents.scm</code> file for JSON:</p>\n<pre><code class=\"language-scheme\">(array \"]\" @end) @indent\n(object \"}\" @end) @indent\n</code></pre>\n<p>This query marks the end of arrays and objects for indentation purposes.</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@end</td><td>Captures closing brackets and braces</td></tr>\n<tr><td>@indent</td><td>Captures entire arrays and objects for indentation</td></tr>\n</tbody></table>\n</div>\n<h3 id=\"code-injections\"><a class=\"header\" href=\"#code-injections\">Code injections</a></h3>\n<p>The <code>injections.scm</code> file defines rules for embedding one language within another, such as code blocks in Markdown or SQL queries in Python strings.</p>\n<p>Here's an example from an <code>injections.scm</code> file for Markdown:</p>\n<pre><code class=\"language-scheme\">(fenced_code_block\n  (info_string\n    (language) @injection.language)\n  (code_fence_content) @injection.content)\n\n((inline) @content\n (#set! injection.language \"markdown-inline\"))\n</code></pre>\n<p>This query identifies fenced code blocks, capturing the language specified in the info string and the content within the block. It also captures inline content and sets its language to \"markdown-inline\".</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@injection.language</td><td>Captures the language identifier for a code block</td></tr>\n<tr><td>@injection.content</td><td>Captures the content to be treated as a different language</td></tr>\n</tbody></table>\n</div>\n<p>Note that we couldn't use JSON as an example here because it doesn't support language injections.</p>\n<h3 id=\"syntax-overrides\"><a class=\"header\" href=\"#syntax-overrides\">Syntax overrides</a></h3>\n<p>The <code>overrides.scm</code> file defines syntactic <em>scopes</em> that can be used to override certain editor settings within specific language constructs.</p>\n<p>For example, there is a language-specific setting called <code>word_characters</code> that controls which non-alphabetic characters are considered part of a word, for example when you double click to select a variable. In JavaScript, \"$\" and \"#\" are considered word characters.</p>\n<p>There is also a language-specific setting called <code>completion_query_characters</code> that controls which characters trigger autocomplete suggestions. In JavaScript, when your cursor is within a <em>string</em>, \"-\" is should be considered a completion query character. To achieve this, the JavaScript <code>overrides.scm</code> file contains the following pattern:</p>\n<pre><code class=\"language-scheme\">[\n  (string)\n  (template_string)\n] @string\n</code></pre>\n<p>And the JavaScript <code>config.toml</code> contains this setting:</p>\n<pre><code class=\"language-toml\">word_characters = [\"#\", \"$\"]\n\n[overrides.string]\ncompletion_query_characters = [\"-\"]\n</code></pre>\n<p>You can also disable certain auto-closing brackets in a specific scope. For example, to prevent auto-closing <code>'</code> within strings, you could put the following in the JavaScript <code>config.toml</code>:</p>\n<pre><code class=\"language-toml\">brackets = [\n  { start = \"'\", end = \"'\", close = true, newline = false, not_in = [\"string\"] },\n  # other pairs...\n]\n</code></pre>\n<h4 id=\"range-inclusivity\"><a class=\"header\" href=\"#range-inclusivity\">Range inclusivity</a></h4>\n<p>By default, the ranges defined in <code>overrides.scm</code> are <em>exclusive</em>. So in the case above, if you cursor was <em>outside</em> the quotation marks delimiting the string, the <code>string</code> scope would not take effect. Sometimes, you may want to make the range <em>inclusive</em>. You can do this by adding the <code>.inclusive</code> suffix to the capture name in the query.</p>\n<p>For example, in JavaScript, we also disable auto-closing of single quotes within comments. And the comment scope must extend all the way to the newline after a line comment. To achieve this, the JavaScript <code>overrides.scm</code> contains the following pattern:</p>\n<pre><code class=\"language-scheme\">(comment) @comment.inclusive\n</code></pre>\n<h3 id=\"text-objects\"><a class=\"header\" href=\"#text-objects\">Text objects</a></h3>\n<p>The <code>textobjects.scm</code> file defines rules for navigating by text objects. This was added in Zed v0.165 and is currently used only in Vim mode.</p>\n<p>Vim provides two levels of granularity for navigating around files. Section-by-section with <code>[]</code> etc., and method-by-method with <code>]m</code> etc. Even languages that don't support functions and classes can work well by defining similar concepts. For example CSS defines a rule-set as a method, and a media-query as a class.</p>\n<p>For languages with closures, these typically should not count as functions in Zed. This is best-effort however, as languages like Javascript do not syntactically differentiate syntactically between closures and top-level function declarations.</p>\n<p>For languages with declarations like C, provide queries that match <code>@class.around</code> or <code>@function.around</code>. The <code>if</code> and <code>ic</code> text objects will default to these if there is no inside.</p>\n<p>If you are not sure what to put in textobjects.scm, both <a href=\"https://github.com/nvim-treesitter/nvim-treesitter-textobjects\">nvim-treesitter-textobjects</a>, and the <a href=\"https://github.com/helix-editor/helix\">Helix editor</a> have queries for many languages. You can refer to the Zed <a href=\"https://github.com/zed-industries/zed/tree/main/crates/languages/src\">built-in languages</a> to see how to adapt these.</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th><th>Vim mode</th></tr></thead><tbody>\n<tr><td>@function.around</td><td>An entire function definition or equivalent small section of a file.</td><td><code>[m</code>, <code>]m</code>, <code>[M</code>,<code>]M</code> motions. <code>af</code> text object</td></tr>\n<tr><td>@function.inside</td><td>The function body (the stuff within the braces).</td><td><code>if</code> text object</td></tr>\n<tr><td>@class.around</td><td>An entire class definition or equivalent large section of a file.</td><td><code>[[</code>, <code>]]</code>, <code>[]</code>, <code>][</code> motions. <code>ac</code> text object</td></tr>\n<tr><td>@class.inside</td><td>The contents of a class definition.</td><td><code>ic</code> text object</td></tr>\n<tr><td>@comment.around</td><td>An entire comment (e.g. all adjacent line comments, or a block comment)</td><td><code>gc</code> text object</td></tr>\n<tr><td>@comment.inside</td><td>The contents of a comment</td><td><code>igc</code> text object (rarely supported)</td></tr>\n</tbody></table>\n</div>\n<p>For example:</p>\n<pre><code class=\"language-scheme\">; include only the content of the method in the function\n(method_definition\n    body: (_\n        \"{\"\n        (_)* @function.inside\n        \"}\")) @function.around\n\n; match function.around for declarations with no body\n(function_signature_item) @function.around\n\n; join all adjacent comments into one\n(comment)+ @comment.around\n</code></pre>\n<h3 id=\"text-redactions\"><a class=\"header\" href=\"#text-redactions\">Text redactions</a></h3>\n<p>The <code>redactions.scm</code> file defines text redaction rules. When collaborating and sharing your screen, it makes sure that certain syntax nodes are rendered in a redacted mode to avoid them from leaking.</p>\n<p>Here's an example from a <code>redactions.scm</code> file for JSON:</p>\n<pre><code class=\"language-scheme\">(pair value: (number) @redact)\n(pair value: (string) @redact)\n(array (number) @redact)\n(array (string) @redact)\n</code></pre>\n<p>This query marks number and string values in key-value pairs and arrays for redaction.</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@redact</td><td>Captures values to be redacted</td></tr>\n</tbody></table>\n</div>\n<h3 id=\"runnable-code-detection\"><a class=\"header\" href=\"#runnable-code-detection\">Runnable code detection</a></h3>\n<p>The <code>runnables.scm</code> file defines rules for detecting runnable code.</p>\n<p>Here's an example from an <code>runnables.scm</code> file for JSON:</p>\n<pre><code class=\"language-scheme\">(\n    (document\n        (object\n            (pair\n                key: (string\n                    (string_content) @_name\n                    (#eq? @_name \"scripts\")\n                )\n                value: (object\n                    (pair\n                        key: (string (string_content) @run @script)\n                    )\n                )\n            )\n        )\n    )\n    (#set! tag package-script)\n    (#set! tag composer-script)\n)\n</code></pre>\n<p>This query detects runnable scripts in package.json and composer.json files.</p>\n<p>The <code>@run</code> capture specifies where the run button should appear in the editor. Other captures, except those prefixed with an underscore, are exposed as environment variables with a prefix of <code>ZED_CUSTOM_$(capture_name)</code> when running the code.</p>\n<div class=\"table-wrapper\"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>\n<tr><td>@_name</td><td>Captures the \"scripts\" key</td></tr>\n<tr><td>@run</td><td>Captures the script name</td></tr>\n<tr><td>@script</td><td>Also captures the script name (for different purposes)</td></tr>\n</tbody></table>\n</div><!--\nTBD: `#set! tag`\n-->\n<h2 id=\"language-servers\"><a class=\"header\" href=\"#language-servers\">Language Servers</a></h2>\n<p>Zed uses the <a href=\"https://microsoft.github.io/language-server-protocol/\">Language Server Protocol</a> to provide advanced language support.</p>\n<p>An extension may provide any number of language servers. To provide a language server from your extension, add an entry to your <code>extension.toml</code> with the name of your language server and the language(s) it applies to:</p>\n<pre><code class=\"language-toml\">[language_servers.my-language-server]\nname = \"My Language LSP\"\nlanguages = [\"My Language\"]\n</code></pre>\n<p>Then, in the Rust code for your extension, implement the <code>language_server_command</code> method on your extension:</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn language_server_command(\n        &amp;mut self,\n        language_server_id: &amp;LanguageServerId,\n        worktree: &amp;zed::Worktree,\n    ) -&gt; Result&lt;zed::Command&gt; {\n        Ok(zed::Command {\n            command: get_path_to_language_server_executable()?,\n            args: get_args_for_language_server()?,\n            env: get_env_for_language_server()?,\n        })\n    }\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p>You can customize the handling of the language server using several optional methods in the <code>Extension</code> trait. For example, you can control how completions are styled using the <code>label_for_completion</code> method. For a complete list of methods, see the <a href=\"https://docs.rs/zed_extension_api\">API docs for the Zed extension API</a>.</p>\n<h3 id=\"multi-language-support\"><a class=\"header\" href=\"#multi-language-support\">Multi-Language Support</a></h3>\n<p>If your language server supports additional languages, you can use <code>language_ids</code> to map Zed <code>languages</code> to the desired <a href=\"https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem\">LSP-specific <code>languageId</code></a> identifiers:</p>\n<pre><code class=\"language-toml\">\n[language-servers.my-language-server]\nname = \"Whatever LSP\"\nlanguages = [\"JavaScript\", \"HTML\", \"CSS\"]\n\n[language-servers.my-language-server.language_ids]\n\"JavaScript\" = \"javascript\"\n\"TSX\" = \"typescriptreact\"\n\"HTML\" = \"html\"\n\"CSS\" = \"css\"\n</code></pre>\n\n</main>",
+  "content_text": "Language Extensions\nLanguage support in Zed has several components:\n\nLanguage metadata and configuration\nGrammar\nQueries\nLanguage servers\n\nLanguage Metadata\nEach language supported by Zed must be defined in a subdirectory inside the languages directory of your extension.\nThis subdirectory must contain a file called config.toml file with the following structure:\nname = \"My Language\"\ngrammar = \"my-language\"\npath_suffixes = [\"myl\"]\nline_comments = [\"# \"]\n\n\nname (required) is the human readable name that will show up in the Select Language dropdown.\ngrammar (required) is the name of a grammar. Grammars are registered separately, described below.\npath_suffixes is an array of file suffixes that should be associated with this language. Unlike file_types in settings, this does not support glob patterns.\nline_comments is an array of strings that are used to identify line comments in the language. This is used for the editor::ToggleComments keybind: cmd-/|ctrl-/ for toggling lines of code.\ntab_size defines the indentation/tab size used for this language (default is 4).\nhard_tabs whether to indent with tabs (true) or spaces (false, the default).\nfirst_line_pattern is a regular expression, that in addition to path_suffixes (above) or file_types in settings can be used to match files which should use this language. For example Zed uses this to identify Shell Scripts by matching the shebangs lines in the first line of a script.\ndebuggers is an array of strings that are used to identify debuggers in the language. When launching a debugger's New Process Modal, Zed will order available debuggers by the order of entries in this array.\n\n\nGrammar\nZed uses the Tree-sitter parsing library to provide built-in language-specific features. There are grammars available for many languages, and you can also develop your own grammar. A growing list of Zed features are built using pattern matching over syntax trees with Tree-sitter queries. As mentioned above, every language that is defined in an extension must specify the name of a Tree-sitter grammar that is used for parsing. These grammars are then registered separately in extensions' extension.toml file, like this:\n[grammars.gleam]\nrepository = \"https://github.com/gleam-lang/tree-sitter-gleam\"\nrev = \"58b7cac8fc14c92b0677c542610d8738c373fa81\"\n\nThe repository field must specify a repository where the Tree-sitter grammar should be loaded from, and the rev field must contain a Git revision to use, such as the SHA of a Git commit. If you're developing an extension locally and want to load a grammar from the local filesystem, you can use a file:// URL for repository. An extension can provide multiple grammars by referencing multiple tree-sitter repositories.\nTree-sitter Queries\nZed uses the syntax tree produced by the Tree-sitter query language to implement\nseveral features:\n\nSyntax highlighting\nBracket matching\nCode outline/structure\nAuto-indentation\nCode injections\nSyntax overrides\nText redactions\nRunnable code detection\nSelecting classes, functions, etc.\n\nThe following sections elaborate on how Tree-sitter queries enable these\nfeatures in Zed, using JSON syntax as a guiding example.\nSyntax highlighting\nIn Tree-sitter, the highlights.scm file defines syntax highlighting rules for a particular syntax.\nHere's an example from a highlights.scm for JSON:\n(string) @string\n\n(pair\n  key: (string) @property.json_key)\n\n(number) @number\n\nThis query marks strings, object keys, and numbers for highlighting. The following is a comprehensive list of captures supported by themes:\nCaptureDescription\n@attributeCaptures attributes\n@booleanCaptures boolean values\n@commentCaptures comments\n@comment.docCaptures documentation comments\n@constantCaptures constants\n@constructorCaptures constructors\n@embeddedCaptures embedded content\n@emphasisCaptures emphasized text\n@emphasis.strongCaptures strongly emphasized text\n@enumCaptures enumerations\n@functionCaptures functions\n@hintCaptures hints\n@keywordCaptures keywords\n@labelCaptures labels\n@link_textCaptures link text\n@link_uriCaptures link URIs\n@numberCaptures numeric values\n@operatorCaptures operators\n@predictiveCaptures predictive text\n@preprocCaptures preprocessor directives\n@primaryCaptures primary elements\n@propertyCaptures properties\n@punctuationCaptures punctuation\n@punctuation.bracketCaptures brackets\n@punctuation.delimiterCaptures delimiters\n@punctuation.list_markerCaptures list markers\n@punctuation.specialCaptures special punctuation\n@stringCaptures string literals\n@string.escapeCaptures escaped characters in strings\n@string.regexCaptures regular expressions\n@string.specialCaptures special strings\n@string.special.symbolCaptures special symbols\n@tagCaptures tags\n@tag.doctypeCaptures doctypes (e.g., in HTML)\n@text.literalCaptures literal text\n@titleCaptures titles\n@typeCaptures types\n@variableCaptures variables\n@variable.specialCaptures special variables\n@variantCaptures variants\n\n\nBracket matching\nThe brackets.scm file defines matching brackets.\nHere's an example from a brackets.scm file for JSON:\n(\"[\" @open \"]\" @close)\n(\"{\" @open \"}\" @close)\n(\"\\\"\" @open \"\\\"\" @close)\n\nThis query identifies opening and closing brackets, braces, and quotation marks.\nCaptureDescription\n@openCaptures opening brackets, braces, and quotes\n@closeCaptures closing brackets, braces, and quotes\n\n\nCode outline/structure\nThe outline.scm file defines the structure for the code outline.\nHere's an example from an outline.scm file for JSON:\n(pair\n  key: (string (string_content) @name)) @item\n\nThis query captures object keys for the outline structure.\nCaptureDescription\n@nameCaptures the content of object keys\n@itemCaptures the entire key-value pair\n@contextCaptures elements that provide context for the outline item\n@context.extraCaptures additional contextual information for the outline item\n@annotationCaptures nodes that annotate outline item (doc comments, attributes, decorators)1\n\n\n1\nThese annotations are used by Assistant when generating code modification steps.\n\nAuto-indentation\nThe indents.scm file defines indentation rules.\nHere's an example from an indents.scm file for JSON:\n(array \"]\" @end) @indent\n(object \"}\" @end) @indent\n\nThis query marks the end of arrays and objects for indentation purposes.\nCaptureDescription\n@endCaptures closing brackets and braces\n@indentCaptures entire arrays and objects for indentation\n\n\nCode injections\nThe injections.scm file defines rules for embedding one language within another, such as code blocks in Markdown or SQL queries in Python strings.\nHere's an example from an injections.scm file for Markdown:\n(fenced_code_block\n  (info_string\n    (language) @injection.language)\n  (code_fence_content) @injection.content)\n\n((inline) @content\n (#set! injection.language \"markdown-inline\"))\n\nThis query identifies fenced code blocks, capturing the language specified in the info string and the content within the block. It also captures inline content and sets its language to \"markdown-inline\".\nCaptureDescription\n@injection.languageCaptures the language identifier for a code block\n@injection.contentCaptures the content to be treated as a different language\n\n\nNote that we couldn't use JSON as an example here because it doesn't support language injections.\nSyntax overrides\nThe overrides.scm file defines syntactic scopes that can be used to override certain editor settings within specific language constructs.\nFor example, there is a language-specific setting called word_characters that controls which non-alphabetic characters are considered part of a word, for example when you double click to select a variable. In JavaScript, \"$\" and \"#\" are considered word characters.\nThere is also a language-specific setting called completion_query_characters that controls which characters trigger autocomplete suggestions. In JavaScript, when your cursor is within a string, \"-\" is should be considered a completion query character. To achieve this, the JavaScript overrides.scm file contains the following pattern:\n[\n  (string)\n  (template_string)\n] @string\n\nAnd the JavaScript config.toml contains this setting:\nword_characters = [\"#\", \"$\"]\n\n[overrides.string]\ncompletion_query_characters = [\"-\"]\n\nYou can also disable certain auto-closing brackets in a specific scope. For example, to prevent auto-closing ' within strings, you could put the following in the JavaScript config.toml:\nbrackets = [\n  { start = \"'\", end = \"'\", close = true, newline = false, not_in = [\"string\"] },\n  # other pairs...\n]\n\nRange inclusivity\nBy default, the ranges defined in overrides.scm are exclusive. So in the case above, if you cursor was outside the quotation marks delimiting the string, the string scope would not take effect. Sometimes, you may want to make the range inclusive. You can do this by adding the .inclusive suffix to the capture name in the query.\nFor example, in JavaScript, we also disable auto-closing of single quotes within comments. And the comment scope must extend all the way to the newline after a line comment. To achieve this, the JavaScript overrides.scm contains the following pattern:\n(comment) @comment.inclusive\n\nText objects\nThe textobjects.scm file defines rules for navigating by text objects. This was added in Zed v0.165 and is currently used only in Vim mode.\nVim provides two levels of granularity for navigating around files. Section-by-section with [] etc., and method-by-method with ]m etc. Even languages that don't support functions and classes can work well by defining similar concepts. For example CSS defines a rule-set as a method, and a media-query as a class.\nFor languages with closures, these typically should not count as functions in Zed. This is best-effort however, as languages like Javascript do not syntactically differentiate syntactically between closures and top-level function declarations.\nFor languages with declarations like C, provide queries that match @class.around or @function.around. The if and ic text objects will default to these if there is no inside.\nIf you are not sure what to put in textobjects.scm, both nvim-treesitter-textobjects, and the Helix editor have queries for many languages. You can refer to the Zed built-in languages to see how to adapt these.\nCaptureDescriptionVim mode\n@function.aroundAn entire function definition or equivalent small section of a file.[m, ]m, [M,]M motions. af text object\n@function.insideThe function body (the stuff within the braces).if text object\n@class.aroundAn entire class definition or equivalent large section of a file.[[, ]], [], ][ motions. ac text object\n@class.insideThe contents of a class definition.ic text object\n@comment.aroundAn entire comment (e.g. all adjacent line comments, or a block comment)gc text object\n@comment.insideThe contents of a commentigc text object (rarely supported)\n\n\nFor example:\n; include only the content of the method in the function\n(method_definition\n    body: (_\n        \"{\"\n        (_)* @function.inside\n        \"}\")) @function.around\n\n; match function.around for declarations with no body\n(function_signature_item) @function.around\n\n; join all adjacent comments into one\n(comment)+ @comment.around\n\nText redactions\nThe redactions.scm file defines text redaction rules. When collaborating and sharing your screen, it makes sure that certain syntax nodes are rendered in a redacted mode to avoid them from leaking.\nHere's an example from a redactions.scm file for JSON:\n(pair value: (number) @redact)\n(pair value: (string) @redact)\n(array (number) @redact)\n(array (string) @redact)\n\nThis query marks number and string values in key-value pairs and arrays for redaction.\nCaptureDescription\n@redactCaptures values to be redacted\n\n\nRunnable code detection\nThe runnables.scm file defines rules for detecting runnable code.\nHere's an example from an runnables.scm file for JSON:\n(\n    (document\n        (object\n            (pair\n                key: (string\n                    (string_content) @_name\n                    (#eq? @_name \"scripts\")\n                )\n                value: (object\n                    (pair\n                        key: (string (string_content) @run @script)\n                    )\n                )\n            )\n        )\n    )\n    (#set! tag package-script)\n    (#set! tag composer-script)\n)\n\nThis query detects runnable scripts in package.json and composer.json files.\nThe @run capture specifies where the run button should appear in the editor. Other captures, except those prefixed with an underscore, are exposed as environment variables with a prefix of ZED_CUSTOM_$(capture_name) when running the code.\nCaptureDescription\n@_nameCaptures the \"scripts\" key\n@runCaptures the script name\n@scriptAlso captures the script name (for different purposes)\n\n\nLanguage Servers\nZed uses the Language Server Protocol to provide advanced language support.\nAn extension may provide any number of language servers. To provide a language server from your extension, add an entry to your extension.toml with the name of your language server and the language(s) it applies to:\n[language_servers.my-language-server]\nname = \"My Language LSP\"\nlanguages = [\"My Language\"]\n\nThen, in the Rust code for your extension, implement the language_server_command method on your extension:\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn language_server_command(\n        &mut self,\n        language_server_id: &LanguageServerId,\n        worktree: &zed::Worktree,\n    ) -> Result<zed::Command> {\n        Ok(zed::Command {\n            command: get_path_to_language_server_executable()?,\n            args: get_args_for_language_server()?,\n            env: get_env_for_language_server()?,\n        })\n    }\n}\n}\nYou can customize the handling of the language server using several optional methods in the Extension trait. For example, you can control how completions are styled using the label_for_completion method. For a complete list of methods, see the API docs for the Zed extension API.\nMulti-Language Support\nIf your language server supports additional languages, you can use language_ids to map Zed languages to the desired LSP-specific languageId identifiers:\n\n[language-servers.my-language-server]\nname = \"Whatever LSP\"\nlanguages = [\"JavaScript\", \"HTML\", \"CSS\"]\n\n[language-servers.my-language-server.language_ids]\n\"JavaScript\" = \"javascript\"\n\"TSX\" = \"typescriptreact\"\n\"HTML\" = \"html\"\n\"CSS\" = \"css\"",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:48"
+}

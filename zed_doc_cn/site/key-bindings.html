@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Key bindings | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="active">快捷键绑定</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">代码补全</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">环境</a></li>
+<li class="chapter-item"><a href="repl.html" class="">交互式环境</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">LLM 提供商</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">计划与使用</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">隐私与安全</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">AI 改进</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">语言支持</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">斜线命令</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">MCP 扩展</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">语言</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">开发</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">macOS</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">FreeBSD</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">发布版本</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#key-bindings" class="pagetoc-H1">快捷键绑定</a>
+<a href="#predefined-keymaps" class="pagetoc-H2">预定义键盘映射</a>
+<a href="#user-keymaps" class="pagetoc-H2">用户键盘映射</a>
+<a href="#keybinding-syntax" class="pagetoc-H3">快捷键绑定语法</a>
+<a href="#contexts" class="pagetoc-H3">上下文</a>
+<a href="#actions" class="pagetoc-H3">操作</a>
+<a href="#precedence" class="pagetoc-H3">优先级</a>
+<a href="#non-qwerty-keyboards" class="pagetoc-H3">非 QWERTY 键盘</a>
+<a href="#linux" class="pagetoc-H3">Linux</a>
+<a href="#tips-and-tricks" class="pagetoc-H2">技巧和窍门</a>
+<a href="#disabling-a-binding" class="pagetoc-H3">禁用绑定</a>
+<a href="#remapping-keys" class="pagetoc-H3">重新映射键</a>
+<a href="#forward-keys-to-terminal" class="pagetoc-H3">将键转发到终端</a>
+<a href="#task-key-bindings" class="pagetoc-H3">任务快捷键绑定</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="key-bindings"><a class="header" href="#key-bindings">快捷键绑定</a></h1>
+<p>Zed 拥有非常可定制的快捷键绑定系统 — 您可以调整所有设置，让它们完全按照您的习惯工作！</p>
+<h2 id="predefined-keymaps"><a class="header" href="#predefined-keymaps">预定义键盘映射</a></h2>
+<p>如果您习惯特定编辑器的默认设置，可以在<a href="./configuring-zed.html">设置文件</a>中设置 <code>base_keymap</code>。我们目前支持：</p>
+<ul>
+<li>VSCode（默认）</li>
+<li>Atom</li>
+<li>Emacs（测试版）</li>
+<li>JetBrains</li>
+<li>SublimeText</li>
+<li>TextMate</li>
+<li>None（禁用<em>所有</em>快捷键绑定）</li>
+</ul>
+<p>您也可以启用 <code>vim_mode</code> 或 <code>helix_mode</code>，这会添加模态绑定。有关更多信息，请参阅 <a href="./vim.html">Vim 模式</a>和 <a href="./helix.html">Helix 模式</a>的文档。</p>
+<h2 id="user-keymaps"><a class="header" href="#user-keymaps">用户键盘映射</a></h2>
+<p>Zed 从 <code>~/.config/zed/keymap.json</code> 读取您的快捷键映射。您可以通过命令面板中的 <code class="hljs">zed: open keymap</code> 在 Zed 中打开该文件，或使用 <kbd class="keybinding">cmd-k cmd-s|ctrl-k ctrl-s</kbd> 启动 Zed 快捷键编辑器（<code class="hljs">zed: open keymap editor</code>）。</p>
+<p>该文件包含一个带有 <code>"bindings"</code> 的 JSON 对象数组。如果没有设置 <code>"context"</code>，绑定总是活跃的。如果设置了，则绑定仅在<a href="#contexts">上下文匹配</a>时才活跃。</p>
+<p>在每个绑定部分中，<a href="#keybinding-syntax">按键序列</a>被映射到一个<a href="#actions">操作</a>。如果检测到冲突，将按照<a href="#precedence">下述方式</a>解决。</p>
+<p>如果您使用的是非 QWERTY 拉丁字符键盘，您可能需要将 <code>use_key_equivalents</code> 设置为 <code>true</code>。有关更多信息，请参阅<a href="#non-qwerty-keyboards">非 QWERTY 键盘</a>。</p>
+<p>例如：</p>
+<pre><code class="language-json">[
+  {
+    "bindings": {
+      "ctrl-right": "editor::SelectLargerSyntaxNode",
+      "ctrl-left": "editor::SelectSmallerSyntaxNode"
+    }
+  },
+  {
+    "context": "ProjectPanel &amp;&amp; not_editing",
+    "bindings": {
+      "o": "project_panel::Open"
+    }
+  }
+]
+</code></pre>
+<p>您可以在 <a href="https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-macos.json">MacOS</a> 或 <a href="https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-linux.json">Linux</a> 的默认快捷键映射中查看所有 Zed 的默认绑定。</p>
+<p>如果您想调试自定义快捷键映射的问题，可以从命令面板使用 <code>dev: Open Key Context View</code>。如果遇到您认为应该工作但不工作的情况，请在 <a href="https://github.com/zed-industries/zed">GitHub 上提出问题</a>。</p>
+<h3 id="keybinding-syntax"><a class="header" href="#keybinding-syntax">快捷键绑定语法</a></h3>
+<p>Zed 能够匹配不仅仅是单个按键，还可以匹配按顺序输入的按键序列。<code>"bindings"</code> 映射中的每个键都是由空格分隔的按键序列。</p>
+<p>每个按键都是修饰符后跟一个键的序列。修饰符包括：</p>
+<ul>
+<li><code>ctrl-</code> 控制键</li>
+<li><code>cmd-</code>、<code>win-</code> 或 <code>super-</code> 平台修饰符（macOS 上的 Command 键，Windows 上的 Windows 键，Linux 上的 Super 键）</li>
+<li><code>alt-</code> Alt 键（macOS 上的 option 键）</li>
+<li><code>shift-</code> Shift 键</li>
+<li><code>fn-</code> 功能键</li>
+<li><code>secondary-</code> 等同于在 macOS 上运行 Zed 时的 <code>cmd</code> 和在 Windows 和 Linux 上的 <code>ctrl</code></li>
+</ul>
+<p>按键可以是键盘生成的任何单个 Unicode 代码点（例如 <code>a</code>、<code>0</code>、<code>£</code> 或 <code>ç</code>），或任何命名的键（<code>tab</code>、<code>f1</code>、<code>shift</code> 或 <code>cmd</code>）。如果您使用的是非拉丁字符布局（例如西里尔字母），您可以绑定到西里尔字符，或按下 <code>cmd</code> 键时该键生成的拉丁字符。</p>
+<p>一些示例：</p>
+<pre><code class="language-json"> "bindings": {
+   "cmd-k cmd-s": "zed::OpenKeymap", // 匹配 ⌘-k 然后 ⌘-s
+   "space e": "editor::Complete", // 输入空格然后 e
+   "ç": "editor::Complete", // 匹配 ⌥-c
+   "shift shift": "file_finder::Toggle", // 匹配按下并释放 shift 键两次
+ }
+</code></pre>
+<p><code>shift-</code> 修饰符只能与字母组合使用，表示大写版本。例如 <code>shift-g</code> 匹配输入 <code>G</code>。虽然在许多键盘上使用 shift 来输入标点符号如 <code>(</code>，但该按键不被视为已修饰，因此 <code>shift-(</code> 不匹配。</p>
+<p><code>alt-</code> 修饰符可以在许多布局上用于生成不同的键。例如在 macOS 美国键盘上，组合 <code>alt-c</code> 输入 <code>ç</code>。您可以在快捷键映射文件中匹配任一个，但按照惯例 Zed 将此组合拼写为 <code>alt-c</code>。</p>
+<p>可以匹配单独按下修饰符键。例如 <code>shift shift</code> 可以用来实现 JetBrains 全局搜索快捷键。在这种情况下，绑定在按键释放时发生而不是按下时。</p>
+<h3 id="contexts"><a class="header" href="#contexts">上下文</a></h3>
+<p>如果绑定组有一个 <code>"context"</code> 键，它将与 Zed 中当前活跃的上下文进行匹配。</p>
+<p>Zed 的上下文组成一个树状结构，根节点是 <code>Workspace</code>。工作区包含窗格和面板，窗格包含编辑器等。查看某一时刻活跃上下文的最简单方法是使用键上下文视图，您可以在命令面板中使用 <code>dev: Open Key Context View</code> 访问它。</p>
+<p>例如：</p>
+<pre><code># 在编辑器中，可能看起来像这样：
+Workspace os=macos keyboard_layout=com.apple.keylayout.QWERTY
+  Pane
+    Editor mode=full extension=md vim_mode=insert
+
+# 在项目面板中
+Workspace os=macos
+  Dock
+    ProjectPanel not_editing
+</code></pre>
+<p>上下文表达式可以包含以下语法：</p>
+<ul>
+<li><code>X &amp;&amp; Y</code>、<code>X || Y</code> 用于逻辑与/或两个条件</li>
+<li><code>!X</code> 用于检查条件为假</li>
+<li><code>(X)</code> 用于分组</li>
+<li><code>X &gt; Y</code> 如果树中的祖先匹配 X 且当前层匹配 Y 则匹配</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li><code>"context": "Editor"</code> - 匹配任何编辑器（包括内联输入）</li>
+<li><code>"context": "Editor &amp;&amp; mode=full"</code> - 匹配用于编辑代码的主编辑器</li>
+<li><code>"context": "!Editor &amp;&amp; !Terminal"</code> - 匹配除了编辑器或终端获得焦点之外的任何地方</li>
+<li><code>"context": "os=macos &gt; Editor"</code> - 匹配 macOS 上的任何编辑器</li>
+</ul>
+<p>值得注意的是，属性只在定义它们的节点上可用。这意味着如果您想要（例如）仅在调试器停止且处于 vim 普通模式时启用快捷键绑定，您需要使用 <code>debugger_stopped &gt; vim_mode == normal</code>。</p>
+<p>注意：在 Zed v0.197.x 之前，! 操作符一次只查看一个节点，<code>&gt;</code> 表示"父级"而不是"祖先"。这意味着 <code>!Editor</code> 会匹配上下文 <code>Workspace &gt; Pane &gt; Editor</code>，因为（令人困惑的是）Pane 匹配 <code>!Editor</code>，而 <code>os=macos &gt; Editor</code> 不会匹配上下文 <code>Workspace &gt; Pane &gt; Editor</code>，因为存在中间的 <code>Pane</code> 节点。</p>
+<p>如果您使用 Vim 模式，我们有关于 <a href="./vim.html#contexts">vim 模式如何影响上下文</a>的信息。Helix 模式建立在 Vim 模式之上并使用相同的上下文。</p>
+<h3 id="actions"><a class="header" href="#actions">操作</a></h3>
+<p>几乎所有 Zed 的功能都作为操作暴露出来。虽然没有明确记录的列表，但您可以通过在命令面板中搜索、查看 <a href="https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-macos.json">MacOS</a> 或 <a href="https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-linux.json">Linux</a> 的默认快捷键映射，或在快捷键映射文件中使用 Zed 的自动完成功能来找到大部分操作。</p>
+<p>大多数操作不需要任何参数，因此您可以将它们绑定为字符串：<code>"ctrl-a": "language_selector::Toggle"</code>。一些操作需要单个参数，必须绑定为数组：<code>"cmd-1": ["workspace::ActivatePane", 0]</code>。一些操作需要多个参数，绑定为字符串和对象的数组：<code>"ctrl-a": ["pane::DeploySearch", { "replace_enabled": true }]</code>。</p>
+<h3 id="precedence"><a class="header" href="#precedence">优先级</a></h3>
+<p>当多个快捷键绑定具有相同的按键序列且同时活跃时，优先级通过以下两种方式解决：</p>
+<ul>
+<li>匹配上下文树中较低节点的绑定获胜。这意味着如果您有一个上下文为 <code>Editor</code> 的绑定，它将优先于上下文为 <code>Workspace</code> 的绑定。没有上下文的绑定在树的最低级别匹配。</li>
+<li>如果有多个绑定在树的同一级别匹配，则后定义的绑定优先。由于用户快捷键绑定在系统快捷键绑定之后加载，这允许用户绑定优先于内置绑定。</li>
+</ul>
+<p>另一种冲突是当您有两个绑定，其中一个是另一个的前缀时。例如，如果您有 <code>"ctrl-w":"editor::DeleteToNextWordEnd"</code> 和 <code>"ctrl-w left":"editor::DeleteToEndOfLine"</code>。</p>
+<p>当这种情况发生，且两个绑定在当前上下文中都活跃时，Zed 会在您输入 <code>ctrl-w</code> 后等待 1 秒钟，看看您是否要输入 <code>left</code>。如果您没有输入任何内容，或者输入了不同的键，则会触发 <code>DeleteToNextWordEnd</code>。如果您确实输入了，则会触发 <code>DeleteToEndOfLine</code>。</p>
+<h3 id="non-qwerty-keyboards"><a class="header" href="#non-qwerty-keyboards">非 QWERTY 键盘</a></h3>
+<p>Zed 对非 QWERTY 键盘的支持仍在进行中。</p>
+<p>如果您的键盘可以输入完整的 ASCII 范围（DVORAK、COLEMAK 等），那么快捷键应该按预期工作。</p>
+<p>否则，请继续阅读...</p>
+<h4 id="macos"><a class="header" href="#macos">macOS</a></h4>
+<p>在西里尔字母、希伯来语、亚美尼亚语和其他大多为非 ASCII 的键盘上，macOS 在按住 <code>cmd</code> 时自动将键映射到 ASCII 范围。Zed 更进一步，它总是可以将按键匹配到 ASCII 布局或真实布局，无论修饰符如何，也无论 <code>use_key_equivalents</code> 设置如何。例如在泰语键盘上，按下 <code>ctrl-ๆ</code> 将匹配与 <code>ctrl-q</code> 或 <code>ctrl-ๆ</code> 相关联的绑定。</p>
+<p>在支持扩展拉丁字母的键盘上（法语 AZERTY、德语 QWERTZ 等），通常无法在不使用 <code>option</code> 的情况下输入整个 ASCII 范围。这引入了歧义，<code>option-2</code> 产生 <code>@</code>。为了确保所有内置键盘快捷键仍然可以在这些键盘上输入，我们会移动快捷键绑定。例如，在 QWERTY 上绑定到 <code>@</code> 的快捷键在西班牙语布局上移动到 <code>"</code>。此映射基于 macOS 系统默认值，可以通过从命令面板运行 <code>dev: Open Key Context View</code> 查看。</p>
+<p>如果您在个人快捷键映射中定义快捷键，您可以通过在快捷键映射中将 <code>use_key_equivalents</code> 设置为 <code>true</code> 来选择加入键等效映射：</p>
+<pre><code class="language-json">[
+  {
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-&gt;": "editor::Indent" // 当德语 QWERTZ 键盘激活时解析为 ctrl-:
+    }
+  }
+]
+</code></pre>
+<h3 id="linux"><a class="header" href="#linux">Linux</a></h3>
+<p>从 v0.196.0 开始，在 Linux 上，如果您输入的键不产生 ASCII 字符，我们会使用 QWERTY 布局等效键进行快捷键操作。这意味着许多快捷键可以在许多布局上输入。</p>
+<p>我们还没有移动快捷键以确保所有内置快捷键都可以在每个布局上输入；所以如果有一些 ASCII 字符无法输入，而您的键盘布局在需要输入它们的相同键上有不同的 ASCII 字符，您可能需要添加自定义快捷键绑定来使其工作。我们确实打算在某个时候修复这个问题，非常欢迎帮助！</p>
+<h2 id="tips-and-tricks"><a class="header" href="#tips-and-tricks">技巧和窍门</a></h2>
+<h3 id="disabling-a-binding"><a class="header" href="#disabling-a-binding">禁用绑定</a></h3>
+<p>如果您希望给定的绑定在给定上下文中什么都不做，您可以使用 <code>null</code> 作为操作。如果您意外按下快捷键并想要禁用它，或者如果您想要输入该序列会输入的字符，或者如果您想要禁用以该键开始的多键绑定，这很有用。</p>
+<pre><code class="language-json">[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-r": null // cmd-r will do nothing when the Workspace context is active
+    }
+  }
+]
+</code></pre>
+<p><code>null</code> 绑定遵循与普通操作相同的优先级规则。因此也会禁用树中更高层匹配的所有绑定。如果您希望树中更高层的绑定优先于较低的绑定，您需要将其重新绑定到您想要的上下文中的操作。</p>
+<p>当您指定的操作是有条件的并且会传播时，这对防止 Zed 回退到默认快捷键绑定很有用。例如，<code>buffer_search::DeployReplace</code> 仅在搜索栏不可见时触发。如果搜索栏可见，它会传播并触发为该绑定设置的默认操作，例如打开右侧停靠栏。为了防止这种情况发生：</p>
+<pre><code class="language-json">[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-r": null // cmd-r will do nothing when the search bar is in view
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-r": "buffer_search::DeployReplace" // cmd-r will deploy replace when the search bar is not in view
+    }
+  }
+]
+</code></pre>
+<h3 id="remapping-keys"><a class="header" href="#remapping-keys">重新映射键</a></h3>
+<p>一个常见的请求是能够将单个键击映射到序列。您可以使用 <code>workspace::SendKeystrokes</code> 操作来实现这一点。</p>
+<pre><code class="language-json">[
+  {
+    "bindings": {
+      // Move down four times
+      "alt-down": ["workspace::SendKeystrokes", "down down down down"],
+      // Expand the selection (editor::SelectLargerSyntaxNode);
+      // copy to the clipboard; and then undo the selection expansion.
+      "cmd-alt-c": [
+        "workspace::SendKeystrokes",
+        "ctrl-shift-right ctrl-shift-right ctrl-shift-right cmd-c ctrl-shift-left ctrl-shift-left ctrl-shift-left"
+      ]
+    }
+  },
+  {
+    "context": "Editor &amp;&amp; vim_mode == insert",
+    "bindings": {
+      "j k": ["workspace::SendKeystrokes", "escape"]
+    }
+  }
+]
+</code></pre>
+<p>这有一些限制，值得注意：</p>
+<ul>
+<li>任何异步操作都不会在您的所有快捷键绑定被分发之后发生。例如，这意味着虽然您可以使用绑定打开文件（如 <code>cmd-alt-r</code> 示例），但您不能发送进一步的键击并期望它们被新视图解释。</li>
+<li>其他异步操作的例子包括：打开命令面板、与语言服务器通信、更改缓冲区的语言、任何访问网络的操作。</li>
+<li>一次最多可以模拟 100 个键。</li>
+</ul>
+<p><code>SendKeystrokes</code> 的参数是由空格分隔的键击列表（使用上述相同的语法）。由于解析键击的方式，任何不被识别为键击的段都将逐字发送到当前聚焦的输入字段。</p>
+<p>如果 <code>SendKeystrokes</code> 的参数包含用于触发它的绑定，它将使用该绑定的次高优先级定义。这允许您扩展快捷键绑定的默认行为。</p>
+<h3 id="forward-keys-to-terminal"><a class="header" href="#forward-keys-to-terminal">将键转发到终端</a></h3>
+<p>如果您使用 Linux 或 Windows，您可能发现自己希望将组合键转发到内置终端而不是由 Zed 处理。</p>
+<p>例如，<code>ctrl-n</code> 在 Linux 上的 Zed 中创建新标签页。如果您希望在终端获得焦点时将 <code>ctrl-n</code> 发送到内置终端，请将以下内容添加到您的快捷键映射中：</p>
+<pre><code class="language-json">{
+  "context": "Terminal",
+  "bindings": {
+    "ctrl-n": ["terminal::SendKeystroke", "ctrl-n"]
+  }
+}
+</code></pre>
+<h3 id="task-key-bindings"><a class="header" href="#task-key-bindings">任务快捷键绑定</a></h3>
+<p>您也可以将键绑定到启动在 tasks.json 中定义的 Zed 任务。
+有关更多信息，请参阅<a href="tasks.html#custom-keybindings-for-tasks">任务文档</a>。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

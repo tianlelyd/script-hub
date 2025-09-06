@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/git.html",
+  "title": "Git | Zed Editor Git integration documentation",
+  "content": "<main>\n\n<h1 id=\"git\"><a class=\"header\" href=\"#git\">Git</a></h1>\n<p>Zed currently offers a set of fundamental Git features, with support coming in the future for more advanced ones, like conflict resolution tools, line by line staging, and more.</p>\n<p>Here's an overview of all currently supported features:</p>\n<ul>\n<li>Committing</li>\n<li>Staging, pushing, pulling, and fetching</li>\n<li>Project Diff: A multibuffer view of all changes</li>\n<li>Diff indicators in buffers and editor scrollbars</li>\n<li>Inline diff toggle and reverts in the editor for unstaged changes</li>\n<li>Git status in the Project Panel</li>\n<li>Branch creating and switching</li>\n<li>Git blame viewing</li>\n</ul>\n<h2 id=\"git-panel\"><a class=\"header\" href=\"#git-panel\">Git Panel</a></h2>\n<p>The Git Panel gives you a birds-eye view of the state of your working tree and of Git's staging area.</p>\n<p>You can open the Git Panel using <code class=\"hljs\">git panel: toggle focus</code>, or by clicking the Git icon in the status bar.</p>\n<p>In the panel you can see the state of your project at a glance—which repository and branch are active, what files have changed and the current staging state of each file.</p>\n<p>Zed monitors your repository so that changes you make on the command line are instantly reflected.</p>\n<h2 id=\"project-diff\"><a class=\"header\" href=\"#project-diff\">Project Diff</a></h2>\n<p>You can see all of the changes captured by Git in Zed by opening the Project Diff (<kbd class=\"keybinding\">ctrl-g d|ctrl-g d</kbd>), accessible via the <code class=\"hljs\">git: diff</code> action in the Command Palette or the Git Panel.</p>\n<p>All of the changes displayed in the Project Diff behave exactly the same as any other multibuffer: they are all editable excerpts of files.</p>\n<p>You can stage or unstage each hunk as well as a whole file by hitting the buttons on the tab bar or their corresponding keybindings.</p>\n<!-- Add media -->\n<h2 id=\"fetch-push-and-pull\"><a class=\"header\" href=\"#fetch-push-and-pull\">Fetch, push, and pull</a></h2>\n<p>Fetch, push, or pull from your Git repository in Zed via the buttons available on the Git Panel or via the Command Palette by looking at the respective actions: <code class=\"hljs\">git: fetch</code>, <code class=\"hljs\">git: push</code>, and <code class=\"hljs\">git: pull</code>.</p>\n<h2 id=\"staging-workflow\"><a class=\"header\" href=\"#staging-workflow\">Staging Workflow</a></h2>\n<p>Zed has two primary staging workflows, using either the Project Diff or the panel directly.</p>\n<h3 id=\"using-the-project-diff\"><a class=\"header\" href=\"#using-the-project-diff\">Using the Project Diff</a></h3>\n<p>In the Project Diff view, you can focus on each hunk and stage them individually by clicking on the tab bar buttons or via the keybindings <code class=\"hljs\">git: stage and next</code> (<kbd class=\"keybinding\">cmd-y|alt-y</kbd>).</p>\n<p>Similarly, stage all hunks at the same time with the <code class=\"hljs\">git: stage all</code> (<kbd class=\"keybinding\">cmd-ctrl-y|ctrl-space</kbd>) keybinding and then immediately commit with <code class=\"hljs\">git: commit</code> (<kbd class=\"keybinding\">cmd-enter|ctrl-enter</kbd>).</p>\n<h3 id=\"using-the-git-panel\"><a class=\"header\" href=\"#using-the-git-panel\">Using the Git Panel</a></h3>\n<p>From the panel, you can simply type a commit message and hit the commit button, or <code class=\"hljs\">git: commit</code>. This will automatically stage all tracked files (indicated by a <code>[·]</code> in the entry's checkbox) and commit them.</p>\n<!-- Show a set of changes with default staged -->\n<p>Entries can be staged using each individual entry's checkbox. All changes can be staged using the button at the top of the panel, or <code class=\"hljs\">git: stage all</code>.</p>\n<!-- Add media -->\n<h2 id=\"committing\"><a class=\"header\" href=\"#committing\">Committing</a></h2>\n<p>Zed offers two commit textareas:</p>\n<ol>\n<li>The first one is available right at the bottom of the Git Panel. Hitting <kbd class=\"keybinding\">cmd-enter|ctrl-enter</kbd> immediately commits all of your staged changes.</li>\n<li>The second is available via the action <code class=\"hljs\">git: expand commit editor</code> or via hitting the <kbd class=\"keybinding\">shift-escape|</kbd> while focused in the Git Panel commit textarea.</li>\n</ol>\n<h3 id=\"undoing-a-commit\"><a class=\"header\" href=\"#undoing-a-commit\">Undoing a Commit</a></h3>\n<p>As soon as you commit in Zed, in the Git Panel, you'll see a bar right under the commit textarea, which will show the recently submitted commit.\nIn there, you can use the \"Uncommit\" button, which performs the <code>git reset HEADˆ--soft</code> command.</p>\n<h2 id=\"ai-support-in-git\"><a class=\"header\" href=\"#ai-support-in-git\">AI Support in Git</a></h2>\n<p>Zed currently supports LLM-powered commit message generation.\nYou can ask AI to generate a commit message by focusing on the message editor within the Git Panel and either clicking on the pencil icon in the bottom left, or reaching for the <code class=\"hljs\">git: generate commit message</code> (<kbd class=\"keybinding\">alt-tab|alt-l</kbd>) keybinding.</p>\n<blockquote>\n<p>Note that you need to have an LLM provider configured. Visit <a href=\"./ai/configuration.html\">the AI configuration page</a> to learn how to do so.</p>\n</blockquote>\n<p>You can specify your preferred model to use by providing a <code>commit_message_model</code> agent setting. See <a href=\"./ai/agent-settings.html#feature-specific-models\">Feature-specific models</a> for more information.</p>\n<pre><code class=\"language-json\">{\n  \"agent\": {\n    \"version\": \"2\",\n    \"commit_message_model\": {\n      \"provider\": \"anthropic\",\n      \"model\": \"claude-3-5-haiku\"\n    }\n  }\n}\n</code></pre>\n<!-- Add media -->\n<p>More advanced AI integration with Git features may come in the future.</p>\n<h2 id=\"git-integrations\"><a class=\"header\" href=\"#git-integrations\">Git Integrations</a></h2>\n<p>Zed integrates with popular Git hosting services to ensure that Git commit hashes and references to Issues, Pull Requests, and Merge Requests become clickable links.</p>\n<p>Zed currently supports links to the hosted versions of\n<a href=\"https://github.com\">GitHub</a>,\n<a href=\"https://gitlab.com\">GitLab</a>,\n<a href=\"https://bitbucket.org\">Bitbucket</a>,\n<a href=\"https://sr.ht\">SourceHut</a> and\n<a href=\"https://codeberg.org\">Codeberg</a>.</p>\n<p>Zed also has a Copy Permalink feature to create a permanent link to a code snippet on your Git hosting service.\nThese links are useful for sharing a specific line or range of lines in a file at a specific commit.\nTrigger this action via the <a href=\"./getting-started.html#command-palette\">Command Palette</a> (search for <code>permalink</code>),\nby creating a <a href=\"key-bindings.html#custom-key-bindings\">custom key bindings</a> to the\n<code>editor::CopyPermalinkToLine</code> or <code>editor::OpenPermalinkToLine</code> actions\nor by simply right clicking and selecting <code>Copy Permalink</code> with line(s) selected in your editor.</p>\n<h2 id=\"diff-hunk-keyboard-shortcuts\"><a class=\"header\" href=\"#diff-hunk-keyboard-shortcuts\">Diff Hunk Keyboard Shortcuts</a></h2>\n<p>When viewing files with changes, Zed displays diff hunks that can be expanded or collapsed for detailed review:</p>\n<ul>\n<li><strong>Expand all diff hunks</strong>: <code class=\"hljs\">editor: expand all diff hunks</code> (<kbd class=\"keybinding\">cmd-\"|ctrl-\"</kbd>)</li>\n<li><strong>Collapse all diff hunks</strong>: Press <code>Escape</code> (bound to <code class=\"hljs\">editor: cancel</code>)</li>\n<li><strong>Toggle selected diff hunks</strong>: <code class=\"hljs\">editor: toggle selected diff hunks</code> (<kbd class=\"keybinding\">cmd-'|ctrl-'</kbd>)</li>\n<li><strong>Navigate between hunks</strong>: <code class=\"hljs\">editor: go to hunk</code> and <code class=\"hljs\">editor: go to previous hunk</code></li>\n</ul>\n<blockquote>\n<p><strong>Tip:</strong> The <code>Escape</code> key is the quickest way to collapse all expanded diff hunks and return to an overview of your changes.</p>\n</blockquote>\n<h2 id=\"action-reference\"><a class=\"header\" href=\"#action-reference\">Action Reference</a></h2>\n<div class=\"table-wrapper\"><table><thead><tr><th>Action</th><th>Keybinding</th></tr></thead><tbody>\n<tr><td><code class=\"hljs\">git: add</code></td><td><div>No default binding</div></td></tr>\n<tr><td><code class=\"hljs\">git: stage all</code></td><td><kbd class=\"keybinding\">cmd-ctrl-y</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: unstage all</code></td><td><kbd class=\"keybinding\">cmd-ctrl-shift-y</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: toggle staged</code></td><td><kbd class=\"keybinding\">space</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: stage and next</code></td><td><kbd class=\"keybinding\">cmd-y</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: unstage and next</code></td><td><kbd class=\"keybinding\">cmd-shift-y</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: commit</code></td><td><kbd class=\"keybinding\">cmd-enter</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: expand commit editor</code></td><td><kbd class=\"keybinding\">shift-escape</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: push</code></td><td><kbd class=\"keybinding\">ctrl-g up</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: force push</code></td><td><kbd class=\"keybinding\">ctrl-g shift-up</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: pull</code></td><td><kbd class=\"keybinding\">ctrl-g down</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: fetch</code></td><td><kbd class=\"keybinding\">ctrl-g ctrl-g</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: diff</code></td><td><kbd class=\"keybinding\">ctrl-g d</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: restore</code></td><td><kbd class=\"keybinding\">cmd-alt-z</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: restore file</code></td><td><kbd class=\"keybinding\">cmd-delete</kbd></td></tr>\n<tr><td><code class=\"hljs\">git: branch</code></td><td><div>No default binding</div></td></tr>\n<tr><td><code class=\"hljs\">git: switch</code></td><td><div>No default binding</div></td></tr>\n<tr><td><code class=\"hljs\">git: checkout branch</code></td><td><div>No default binding</div></td></tr>\n<tr><td><code class=\"hljs\">git: blame</code></td><td><kbd class=\"keybinding\">cmd-alt-g b</kbd></td></tr>\n<tr><td><code class=\"hljs\">editor: toggle git blame inline</code></td><td><div>No default binding</div></td></tr>\n<tr><td><code class=\"hljs\">editor: expand all diff hunks</code></td><td><kbd class=\"keybinding\">cmd-\"</kbd></td></tr>\n<tr><td><code class=\"hljs\">editor: toggle selected diff hunks</code></td><td><kbd class=\"keybinding\">cmd-'</kbd></td></tr>\n</tbody></table>\n</div>\n<blockquote>\n<p>Not all actions have default keybindings, but can be bound by <a href=\"./key-bindings.html#user-keymaps\">customizing your keymap</a>.</p>\n</blockquote>\n<h2 id=\"git-cli-configuration\"><a class=\"header\" href=\"#git-cli-configuration\">Git CLI Configuration</a></h2>\n<p>If you would like to also use Zed for your <a href=\"https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_core_editor\">git commit message editor</a> when committing from the command line you can use <code>zed --wait</code>:</p>\n<pre><code class=\"language-sh\">git config --global core.editor \"zed --wait\"\n</code></pre>\n<p>Or add the following to your shell environment (in <code>~/.zshrc</code>, <code>~/.bashrc</code>, etc):</p>\n<pre><code class=\"language-sh\">export GIT_EDITOR=\"zed --wait\"\n</code></pre>\n\n</main>",
+  "content_text": "Git\nZed currently offers a set of fundamental Git features, with support coming in the future for more advanced ones, like conflict resolution tools, line by line staging, and more.\nHere's an overview of all currently supported features:\n\nCommitting\nStaging, pushing, pulling, and fetching\nProject Diff: A multibuffer view of all changes\nDiff indicators in buffers and editor scrollbars\nInline diff toggle and reverts in the editor for unstaged changes\nGit status in the Project Panel\nBranch creating and switching\nGit blame viewing\n\nGit Panel\nThe Git Panel gives you a birds-eye view of the state of your working tree and of Git's staging area.\nYou can open the Git Panel using git panel: toggle focus, or by clicking the Git icon in the status bar.\nIn the panel you can see the state of your project at a glance—which repository and branch are active, what files have changed and the current staging state of each file.\nZed monitors your repository so that changes you make on the command line are instantly reflected.\nProject Diff\nYou can see all of the changes captured by Git in Zed by opening the Project Diff (ctrl-g d|ctrl-g d), accessible via the git: diff action in the Command Palette or the Git Panel.\nAll of the changes displayed in the Project Diff behave exactly the same as any other multibuffer: they are all editable excerpts of files.\nYou can stage or unstage each hunk as well as a whole file by hitting the buttons on the tab bar or their corresponding keybindings.\n\nFetch, push, and pull\nFetch, push, or pull from your Git repository in Zed via the buttons available on the Git Panel or via the Command Palette by looking at the respective actions: git: fetch, git: push, and git: pull.\nStaging Workflow\nZed has two primary staging workflows, using either the Project Diff or the panel directly.\nUsing the Project Diff\nIn the Project Diff view, you can focus on each hunk and stage them individually by clicking on the tab bar buttons or via the keybindings git: stage and next (cmd-y|alt-y).\nSimilarly, stage all hunks at the same time with the git: stage all (cmd-ctrl-y|ctrl-space) keybinding and then immediately commit with git: commit (cmd-enter|ctrl-enter).\nUsing the Git Panel\nFrom the panel, you can simply type a commit message and hit the commit button, or git: commit. This will automatically stage all tracked files (indicated by a [·] in the entry's checkbox) and commit them.\n\nEntries can be staged using each individual entry's checkbox. All changes can be staged using the button at the top of the panel, or git: stage all.\n\nCommitting\nZed offers two commit textareas:\n\nThe first one is available right at the bottom of the Git Panel. Hitting cmd-enter|ctrl-enter immediately commits all of your staged changes.\nThe second is available via the action git: expand commit editor or via hitting the shift-escape| while focused in the Git Panel commit textarea.\n\nUndoing a Commit\nAs soon as you commit in Zed, in the Git Panel, you'll see a bar right under the commit textarea, which will show the recently submitted commit.\nIn there, you can use the \"Uncommit\" button, which performs the git reset HEADˆ--soft command.\nAI Support in Git\nZed currently supports LLM-powered commit message generation.\nYou can ask AI to generate a commit message by focusing on the message editor within the Git Panel and either clicking on the pencil icon in the bottom left, or reaching for the git: generate commit message (alt-tab|alt-l) keybinding.\n\nNote that you need to have an LLM provider configured. Visit the AI configuration page to learn how to do so.\n\nYou can specify your preferred model to use by providing a commit_message_model agent setting. See Feature-specific models for more information.\n{\n  \"agent\": {\n    \"version\": \"2\",\n    \"commit_message_model\": {\n      \"provider\": \"anthropic\",\n      \"model\": \"claude-3-5-haiku\"\n    }\n  }\n}\n\n\nMore advanced AI integration with Git features may come in the future.\nGit Integrations\nZed integrates with popular Git hosting services to ensure that Git commit hashes and references to Issues, Pull Requests, and Merge Requests become clickable links.\nZed currently supports links to the hosted versions of\nGitHub,\nGitLab,\nBitbucket,\nSourceHut and\nCodeberg.\nZed also has a Copy Permalink feature to create a permanent link to a code snippet on your Git hosting service.\nThese links are useful for sharing a specific line or range of lines in a file at a specific commit.\nTrigger this action via the Command Palette (search for permalink),\nby creating a custom key bindings to the\neditor::CopyPermalinkToLine or editor::OpenPermalinkToLine actions\nor by simply right clicking and selecting Copy Permalink with line(s) selected in your editor.\nDiff Hunk Keyboard Shortcuts\nWhen viewing files with changes, Zed displays diff hunks that can be expanded or collapsed for detailed review:\n\nExpand all diff hunks: editor: expand all diff hunks (cmd-\"|ctrl-\")\nCollapse all diff hunks: Press Escape (bound to editor: cancel)\nToggle selected diff hunks: editor: toggle selected diff hunks (cmd-'|ctrl-')\nNavigate between hunks: editor: go to hunk and editor: go to previous hunk\n\n\nTip: The Escape key is the quickest way to collapse all expanded diff hunks and return to an overview of your changes.\n\nAction Reference\nActionKeybinding\ngit: addNo default binding\ngit: stage allcmd-ctrl-y\ngit: unstage allcmd-ctrl-shift-y\ngit: toggle stagedspace\ngit: stage and nextcmd-y\ngit: unstage and nextcmd-shift-y\ngit: commitcmd-enter\ngit: expand commit editorshift-escape\ngit: pushctrl-g up\ngit: force pushctrl-g shift-up\ngit: pullctrl-g down\ngit: fetchctrl-g ctrl-g\ngit: diffctrl-g d\ngit: restorecmd-alt-z\ngit: restore filecmd-delete\ngit: branchNo default binding\ngit: switchNo default binding\ngit: checkout branchNo default binding\ngit: blamecmd-alt-g b\neditor: toggle git blame inlineNo default binding\neditor: expand all diff hunkscmd-\"\neditor: toggle selected diff hunkscmd-'\n\n\n\nNot all actions have default keybindings, but can be bound by customizing your keymap.\n\nGit CLI Configuration\nIf you would like to also use Zed for your git commit message editor when committing from the command line you can use zed --wait:\ngit config --global core.editor \"zed --wait\"\n\nOr add the following to your shell environment (in ~/.zshrc, ~/.bashrc, etc):\nexport GIT_EDITOR=\"zed --wait\"",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:45"
+}

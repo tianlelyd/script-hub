@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/telemetry.html",
+  "title": "Telemetry | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"telemetry-in-zed\"><a class=\"header\" href=\"#telemetry-in-zed\">Telemetry in Zed</a></h1>\n<p>Zed collects anonymous telemetry data to help the team understand how people are using the application and to see what sort of issues they are experiencing.</p>\n<h2 id=\"configuring-telemetry-settings\"><a class=\"header\" href=\"#configuring-telemetry-settings\">Configuring Telemetry Settings</a></h2>\n<p>You have full control over what data is sent out by Zed.\nTo enable or disable some or all telemetry types, open your <code>settings.json</code> file via <code class=\"hljs\">zed: open settings</code>(<kbd class=\"keybinding\">cmd-,|ctrl-,</kbd>) from the command palette.</p>\n<p>Insert and tweak the following:</p>\n<pre><code class=\"language-json\">\"telemetry\": {\n    \"diagnostics\": false,\n    \"metrics\": false\n},\n</code></pre>\n<h2 id=\"dataflow\"><a class=\"header\" href=\"#dataflow\">Dataflow</a></h2>\n<p>Telemetry is sent from the application to our servers. Data is proxied through our servers to enable us to easily switch analytics services. We currently use:</p>\n<ul>\n<li><a href=\"https://sentry.io\">Sentry</a>: Crash-monitoring service - stores diagnostic events</li>\n<li><a href=\"https://snowflake.com\">Snowflake</a>: Data warehouse - stores both diagnostic and metric events</li>\n<li><a href=\"https://www.hex.tech\">Hex</a>: Dashboards and data exploration - accesses data stored in Snowflake</li>\n<li><a href=\"https://www.amplitude.com\">Amplitude</a>: Dashboards and data exploration - accesses data stored in Snowflake</li>\n</ul>\n<h2 id=\"types-of-telemetry\"><a class=\"header\" href=\"#types-of-telemetry\">Types of Telemetry</a></h2>\n<h3 id=\"diagnostics\"><a class=\"header\" href=\"#diagnostics\">Diagnostics</a></h3>\n<p>Crash reports consist of a <a href=\"https://learn.microsoft.com/en-us/windows/win32/debug/minidump-files\">minidump</a> and some extra debug information. Reports are sent on the first application launch after the crash occurred. We've built dashboards that allow us to visualize the frequency and severity of issues experienced by users. Having these reports sent automatically allows us to begin implementing fixes without the user needing to file a report in our issue tracker. The plots in the dashboards also give us an informal measurement of the stability of Zed.</p>\n<p>You can see what extra data is sent alongside the minidump in the <code>Panic</code> struct in <a href=\"https://github.com/zed-industries/zed/blob/main/crates/telemetry_events/src/telemetry_events.rs\">crates/telemetry_events/src/telemetry_events.rs</a> in the Zed repo. You can find additional information in the <a href=\"./development/debugging-crashes.html\">Debugging Crashes</a> documentation.</p>\n<h3 id=\"client-metrics\"><a class=\"header\" href=\"#client-metrics\">Client-Side Usage Data</a></h3>\n<p>To improve Zed and understand how it is being used in the wild, Zed optionally collects usage data like the following:</p>\n<ul>\n<li>(a) file extensions of opened files;</li>\n<li>(b) features and tools You use within the Editor;</li>\n<li>(c) project statistics (e.g., number of files); and</li>\n<li>(d) frameworks detected in Your projects</li>\n</ul>\n<p>Usage Data does not include any of Your software code or sensitive project details. Metric events are reported over HTTPS, and requests are rate-limited to avoid using significant network bandwidth.</p>\n<p>Usage Data is associated with a secure random telemetry ID which may be linked to Your email address. This linkage currently serves two purposes: (1) it allows Zed to analyze usage patterns over time while maintaining Your privacy; and (2) it enables Zed to reach out to specific user groups for feedback and improvement suggestions.</p>\n<p>You can audit the metrics data that Zed has reported by running the command <code class=\"hljs\">zed: open telemetry log</code> from the command palette, or clicking <code>Help &gt; View Telemetry Log</code> in the application menu.</p>\n<p>You can see the full list of the event types and exactly the data sent for each by inspecting the <code>Event</code> enum and the associated structs in <a href=\"https://github.com/zed-industries/zed/blob/main/crates/telemetry_events/src/telemetry_events.rs\">crates/telemetry_events/src/telemetry_events.rs</a> in the Zed repository.</p>\n<h3 id=\"metrics\"><a class=\"header\" href=\"#metrics\">Server-Side Usage Data</a></h3>\n<p>When using Zed's hosted services, we may collect, generate, and Process data to allow us to support users and improve our hosted offering. Examples include metadata around rate limiting and billing metrics/token usage. Zed does not persistently store user content or use user content to evaluate and/or improve our AI features, unless it is explicitly shared with Zed, and we have a zero-data retention agreement with Anthropic.</p>\n<p>You can see more about our stance on data collection (and that any prompt data shared with Zed is explicitly opt-in) at <a href=\"./ai/ai-improvement.html\">AI Improvement</a>.</p>\n<h2 id=\"concerns-and-questions\"><a class=\"header\" href=\"#concerns-and-questions\">Concerns and Questions</a></h2>\n<p>If you have concerns about telemetry, please feel free to <a href=\"https://github.com/zed-industries/zed/issues/new/choose\">open an issue</a>.</p>\n\n</main>",
+  "content_text": "Telemetry in Zed\nZed collects anonymous telemetry data to help the team understand how people are using the application and to see what sort of issues they are experiencing.\nConfiguring Telemetry Settings\nYou have full control over what data is sent out by Zed.\nTo enable or disable some or all telemetry types, open your settings.json file via zed: open settings(cmd-,|ctrl-,) from the command palette.\nInsert and tweak the following:\n\"telemetry\": {\n    \"diagnostics\": false,\n    \"metrics\": false\n},\n\nDataflow\nTelemetry is sent from the application to our servers. Data is proxied through our servers to enable us to easily switch analytics services. We currently use:\n\nSentry: Crash-monitoring service - stores diagnostic events\nSnowflake: Data warehouse - stores both diagnostic and metric events\nHex: Dashboards and data exploration - accesses data stored in Snowflake\nAmplitude: Dashboards and data exploration - accesses data stored in Snowflake\n\nTypes of Telemetry\nDiagnostics\nCrash reports consist of a minidump and some extra debug information. Reports are sent on the first application launch after the crash occurred. We've built dashboards that allow us to visualize the frequency and severity of issues experienced by users. Having these reports sent automatically allows us to begin implementing fixes without the user needing to file a report in our issue tracker. The plots in the dashboards also give us an informal measurement of the stability of Zed.\nYou can see what extra data is sent alongside the minidump in the Panic struct in crates/telemetry_events/src/telemetry_events.rs in the Zed repo. You can find additional information in the Debugging Crashes documentation.\nClient-Side Usage Data\nTo improve Zed and understand how it is being used in the wild, Zed optionally collects usage data like the following:\n\n(a) file extensions of opened files;\n(b) features and tools You use within the Editor;\n(c) project statistics (e.g., number of files); and\n(d) frameworks detected in Your projects\n\nUsage Data does not include any of Your software code or sensitive project details. Metric events are reported over HTTPS, and requests are rate-limited to avoid using significant network bandwidth.\nUsage Data is associated with a secure random telemetry ID which may be linked to Your email address. This linkage currently serves two purposes: (1) it allows Zed to analyze usage patterns over time while maintaining Your privacy; and (2) it enables Zed to reach out to specific user groups for feedback and improvement suggestions.\nYou can audit the metrics data that Zed has reported by running the command zed: open telemetry log from the command palette, or clicking Help > View Telemetry Log in the application menu.\nYou can see the full list of the event types and exactly the data sent for each by inspecting the Event enum and the associated structs in crates/telemetry_events/src/telemetry_events.rs in the Zed repository.\nServer-Side Usage Data\nWhen using Zed's hosted services, we may collect, generate, and Process data to allow us to support users and improve our hosted offering. Examples include metadata around rate limiting and billing metrics/token usage. Zed does not persistently store user content or use user content to evaluate and/or improve our AI features, unless it is explicitly shared with Zed, and we have a zero-data retention agreement with Anthropic.\nYou can see more about our stance on data collection (and that any prompt data shared with Zed is explicitly opt-in) at AI Improvement.\nConcerns and Questions\nIf you have concerns about telemetry, please feel free to open an issue.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:05"
+}

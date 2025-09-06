@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/themes.html",
+  "title": "Themes | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"themes\"><a class=\"header\" href=\"#themes\">Themes</a></h1>\n<p>Zed comes with a number of built-in themes, with more themes available as extensions.</p>\n<h2 id=\"selecting-a-theme\"><a class=\"header\" href=\"#selecting-a-theme\">Selecting a Theme</a></h2>\n<p>See what themes are installed and preview them via the Theme Selector, which you can open from the command palette with \"theme selector: Toggle\" (bound to <code>cmd-k cmd-t</code> on macOS and <code>ctrl-k ctrl-t</code> on Linux).</p>\n<p>Navigating through the theme list by moving up and down will change the theme in real time and hitting enter will save it to your settings file.</p>\n<h2 id=\"installing-more-themes\"><a class=\"header\" href=\"#installing-more-themes\">Installing more Themes</a></h2>\n<p>More themes are available from the Extensions page, which you can access via the command palette with \"zed: Extensions\" or the <a href=\"https://zed.dev/extensions\">Zed website</a>.</p>\n<p>Many popular themes have been ported to Zed, and if you're struggling to choose one, visit <a href=\"https://zed-themes.com\">zed-themes.com</a>, a third-party gallery with visible previews for many of them.</p>\n<h2 id=\"configuring-a-theme\"><a class=\"header\" href=\"#configuring-a-theme\">Configuring a Theme</a></h2>\n<p>Your selected theme is stored in your settings file. You can open your settings file from the command palette with \"zed: Open Settings\" (bound to <code>cmd-,</code> on macOS and <code>ctrl-,</code> on Linux).</p>\n<p>By default, Zed maintains two themes: one for light mode and one for dark mode. You can set the mode to <code>\"dark\"</code> or <code>\"light\"</code> to ignore the current system mode.</p>\n<pre><code class=\"language-json\">{\n  \"theme\": {\n    \"mode\": \"system\",\n    \"light\": \"One Light\",\n    \"dark\": \"One Dark\"\n  }\n}\n</code></pre>\n<h2 id=\"theme-overrides\"><a class=\"header\" href=\"#theme-overrides\">Theme Overrides</a></h2>\n<p>To override specific attributes of a theme, use the <code>experimental.theme_overrides</code> setting.</p>\n<p>For example, add the following to your <code>settings.json</code> if you wish to override the background color of the editor and display comments and doc comments as italics:</p>\n<pre><code class=\"language-json\">{\n  \"experimental.theme_overrides\": {\n    \"editor.background\": \"#333\",\n    \"syntax\": {\n      \"comment\": {\n        \"font_style\": \"italic\"\n      },\n      \"comment.doc\": {\n        \"font_style\": \"italic\"\n      }\n    }\n  }\n}\n</code></pre>\n<p>To see a comprehensive list of list of captures (like <code>comment</code> and <code>comment.doc</code>) see: <a href=\"./extensions/languages.html#syntax-highlighting\">Language Extensions: Syntax highlighting</a>.</p>\n<p>To see a list of available theme attributes look at the JSON file for your theme. For example, <a href=\"https://github.com/zed-industries/zed/blob/main/assets/themes/one/one.json\">assets/themes/one/one.json</a> for the default One Dark and One Light themes.</p>\n<h2 id=\"local-themes\"><a class=\"header\" href=\"#local-themes\">Local Themes</a></h2>\n<p>Store new themes locally by placing them in the <code>~/.config/zed/themes</code> directory.</p>\n<p>For example, to create a new theme called <code>my-cool-theme</code>, create a file called <code>my-cool-theme.json</code> in that directory. It will be available in the theme selector the next time Zed loads.</p>\n<p>Find more themes at <a href=\"https://zed-themes.com\">zed-themes.com</a>.</p>\n<h2 id=\"theme-development\"><a class=\"header\" href=\"#theme-development\">Theme Development</a></h2>\n<p>See: <a href=\"./extensions/themes.html\">Developing Zed Themes</a></p>\n\n</main>",
+  "content_text": "Themes\nZed comes with a number of built-in themes, with more themes available as extensions.\nSelecting a Theme\nSee what themes are installed and preview them via the Theme Selector, which you can open from the command palette with \"theme selector: Toggle\" (bound to cmd-k cmd-t on macOS and ctrl-k ctrl-t on Linux).\nNavigating through the theme list by moving up and down will change the theme in real time and hitting enter will save it to your settings file.\nInstalling more Themes\nMore themes are available from the Extensions page, which you can access via the command palette with \"zed: Extensions\" or the Zed website.\nMany popular themes have been ported to Zed, and if you're struggling to choose one, visit zed-themes.com, a third-party gallery with visible previews for many of them.\nConfiguring a Theme\nYour selected theme is stored in your settings file. You can open your settings file from the command palette with \"zed: Open Settings\" (bound to cmd-, on macOS and ctrl-, on Linux).\nBy default, Zed maintains two themes: one for light mode and one for dark mode. You can set the mode to \"dark\" or \"light\" to ignore the current system mode.\n{\n  \"theme\": {\n    \"mode\": \"system\",\n    \"light\": \"One Light\",\n    \"dark\": \"One Dark\"\n  }\n}\n\nTheme Overrides\nTo override specific attributes of a theme, use the experimental.theme_overrides setting.\nFor example, add the following to your settings.json if you wish to override the background color of the editor and display comments and doc comments as italics:\n{\n  \"experimental.theme_overrides\": {\n    \"editor.background\": \"#333\",\n    \"syntax\": {\n      \"comment\": {\n        \"font_style\": \"italic\"\n      },\n      \"comment.doc\": {\n        \"font_style\": \"italic\"\n      }\n    }\n  }\n}\n\nTo see a comprehensive list of list of captures (like comment and comment.doc) see: Language Extensions: Syntax highlighting.\nTo see a list of available theme attributes look at the JSON file for your theme. For example, assets/themes/one/one.json for the default One Dark and One Light themes.\nLocal Themes\nStore new themes locally by placing them in the ~/.config/zed/themes directory.\nFor example, to create a new theme called my-cool-theme, create a file called my-cool-theme.json in that directory. It will be available in the theme selector the next time Zed loads.\nFind more themes at zed-themes.com.\nTheme Development\nSee: Developing Zed Themes",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:22"
+}

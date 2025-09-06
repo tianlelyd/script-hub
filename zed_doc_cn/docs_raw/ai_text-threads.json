@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/text-threads.html",
+  "title": "Text Threads | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"text-threads\"><a class=\"header\" href=\"#text-threads\">Text Threads</a></h1>\n<h2 id=\"overview\"><a class=\"header\" href=\"#overview\">Overview</a></h2>\n<p>Text threads in the <a href=\"./agent-panel.html\">Agent Panel</a> function similarly to any other editor. You can use custom key bindings and work with multiple cursors, allowing for seamless transitions between coding and engaging in discussions with the language models.</p>\n<p>However, the text threads differ with the inclusion of message blocks. These blocks serve as containers for text that correspond to different roles within the context. These roles include:</p>\n<ul>\n<li><code>You</code></li>\n<li><code>Assistant</code></li>\n<li><code>System</code></li>\n</ul>\n<p>To begin, type a message in a <code>You</code> block.</p>\n<p><img alt=\"Asking a question\" src=\"https://zed.dev/img/assistant/ask-a-question.png\"/></p>\n<p>As you type, the remaining tokens count for the selected model is updated.</p>\n<p>Inserting text from an editor is as simple as highlighting the text and running <code>agent: quote selection</code> (<kbd class=\"keybinding\">cmd-&gt;|ctrl-&gt;</kbd>); Zed will wrap it in a fenced code block if it is code.</p>\n<p><img alt=\"Quoting a selection\" src=\"https://zed.dev/img/assistant/quoting-a-selection.png\"/></p>\n<p>To submit a message, use <kbd class=\"keybinding\">cmd-enter|ctrl-enter</kbd>(<code>assistant: assist</code>). Unlike normal threads, where pressing <kbd>enter</kbd> would submit the message, in text threads, our goal is to make it feel as close to a regular editor as possible. So, pressing <kbd class=\"keybinding\">enter|enter</kbd> simply inserts a new line.</p>\n<p>After submitting a message, the response will be streamed below, in an <code>Assistant</code> message block.</p>\n<p><img alt=\"Receiving an answer\" src=\"https://zed.dev/img/assistant/receiving-an-answer.png\"/></p>\n<p>The stream can be canceled at any point with <kbd>escape</kbd>. This is useful if you realize early on that the response is not what you were looking for.</p>\n<p>If you want to start a new conversation at any time, you can hit <kbd>cmd-n|ctrl-n</kbd> or use the <code>New Chat</code> menu option in the hamburger menu at the top left of the panel.</p>\n<p>Simple back-and-forth conversations work well with the text threads. However, there may come a time when you want to modify the previous text in the conversation and steer it in a different direction.</p>\n<h2 id=\"edit-text-thread\"><a class=\"header\" href=\"#edit-text-thread\">Editing a Text Thread</a></h2>\n<p>Text threads give you the flexibility to have control over the context.\nYou can freely edit any previous text, including the responses from the LLM.\nIf you want to remove a message block entirely, simply place your cursor at the beginning of the block and use the <code>delete</code> key.\nA typical workflow might involve making edits and adjustments throughout the context to refine your inquiry or provide additional information. Here's an example:</p>\n<ol>\n<li>Write text in a <code>You</code> block.</li>\n<li>Submit the message with <kbd class=\"keybinding\">cmd-enter|ctrl-enter</kbd>.</li>\n<li>Receive an <code>Assistant</code> response that doesn't meet your expectations.</li>\n<li>Cancel the response with <kbd>escape</kbd>.</li>\n<li>Erase the content of the <code>Assistant</code> message block and remove the block entirely.</li>\n<li>Add additional context to your original message.</li>\n<li>Submit the message with <kbd class=\"keybinding\">cmd-enter|ctrl-enter</kbd>.</li>\n</ol>\n<p>Being able to edit previous messages gives you control over how tokens are used. You don't need to start up a new chat to correct a mistake or to add additional information, and you don't have to waste tokens by submitting follow-up corrections.</p>\n<blockquote>\n<p><strong>Note</strong>: The act of editing past messages is often referred to as \"Rewriting History\" in the context of the language models.</p>\n</blockquote>\n<p>Some additional points to keep in mind:</p>\n<ul>\n<li>You can cycle the role of a message block by clicking on the role, which is useful when you receive a response in an <code>Assistant</code> block that you want to edit and send back up as a <code>You</code> block.</li>\n</ul>\n<h2 id=\"commands\"><a class=\"header\" href=\"#commands\">Commands Overview</a></h2>\n<p>Slash commands enhance the assistant's capabilities. Begin by typing a <code>/</code> at the beginning of the line to see a list of available commands:</p>\n<ul>\n<li><code>/default</code>: Inserts the default rule</li>\n<li><code>/diagnostics</code>: Injects errors reported by the project's language server</li>\n<li><code>/fetch</code>: Fetches the content of a webpage and inserts it</li>\n<li><code>/file</code>: Inserts a single file or a directory of files</li>\n<li><code>/now</code>: Inserts the current date and time</li>\n<li><code>/prompt</code>: Adds a custom-configured prompt to the context (<a href=\"./rules.html#rules-library\">see Rules Library</a>)</li>\n<li><code>/symbols</code>: Inserts the current tab's active symbols</li>\n<li><code>/tab</code>: Inserts the content of the active tab or all open tabs</li>\n<li><code>/terminal</code>: Inserts a select number of lines of output from the terminal</li>\n<li><code>/selection</code>: Inserts the selected text</li>\n</ul>\n<blockquote>\n<p><strong>Note:</strong> Remember, commands are only evaluated when the text thread is created or when the command is inserted, so a command like <code>/now</code> won't continuously update, or <code>/file</code> commands won't keep their contents up to date.</p>\n</blockquote>\n<h3 id=\"default\"><a class=\"header\" href=\"#default\"><code>/default</code></a></h3>\n<p>Read more about <code>/default</code> in the <a href=\"./rules.html#default-rules\">Rules: Editing the Default Rules</a> section.</p>\n<p>Usage: <code>/default</code></p>\n<h3 id=\"diagnostics\"><a class=\"header\" href=\"#diagnostics\"><code>/diagnostics</code></a></h3>\n<p>The <code>/diagnostics</code> command injects errors reported by the project's language server into the context. This is useful for getting an overview of current issues in your project.</p>\n<p>Usage: <code>/diagnostics [--include-warnings] [path]</code></p>\n<ul>\n<li><code>--include-warnings</code>: Optional flag to include warnings in addition to errors.</li>\n<li><code>path</code>: Optional path to limit diagnostics to a specific file or directory.</li>\n</ul>\n<h3 id=\"file\"><a class=\"header\" href=\"#file\"><code>/file</code></a></h3>\n<p>The <code>/file</code> command inserts the content of a single file or a directory of files into the context. This allows you to reference specific parts of your project in your conversation with the assistant.</p>\n<p>Usage: <code>/file &lt;path&gt;</code></p>\n<p>You can use glob patterns to match multiple files or directories.</p>\n<p>Examples:</p>\n<ul>\n<li><code>/file src/index.js</code> - Inserts the content of <code>src/index.js</code> into the context.</li>\n<li><code>/file src/*.js</code> - Inserts the content of all <code>.js</code> files in the <code>src</code> directory.</li>\n<li><code>/file src</code> - Inserts the content of all files in the <code>src</code> directory.</li>\n</ul>\n<h3 id=\"now\"><a class=\"header\" href=\"#now\"><code>/now</code></a></h3>\n<p>The <code>/now</code> command inserts the current date and time into the context. This can be useful letting the language model know the current time (and by extension, how old their current knowledge base is).</p>\n<p>Usage: <code>/now</code></p>\n<h3 id=\"prompt\"><a class=\"header\" href=\"#prompt\"><code>/prompt</code></a></h3>\n<p>The <code>/prompt</code> command inserts a prompt from the prompt library into the context. It can also be used to nest prompts within prompts.</p>\n<p>Usage: <code>/prompt &lt;prompt_name&gt;</code></p>\n<p>Related: <code>/default</code></p>\n<h3 id=\"symbols\"><a class=\"header\" href=\"#symbols\"><code>/symbols</code></a></h3>\n<p>The <code>/symbols</code> command inserts the active symbols (functions, classes, etc.) from the current tab into the context. This is useful for getting an overview of the structure of the current file.</p>\n<p>Usage: <code>/symbols</code></p>\n<h3 id=\"tab\"><a class=\"header\" href=\"#tab\"><code>/tab</code></a></h3>\n<p>The <code>/tab</code> command inserts the content of the active tab or all open tabs into the context. This allows you to reference the content you're currently working on.</p>\n<p>Usage: <code>/tab [tab_name|all]</code></p>\n<ul>\n<li><code>tab_name</code>: Optional name of a specific tab to insert.</li>\n<li><code>all</code>: Insert content from all open tabs.</li>\n</ul>\n<p>Examples:</p>\n<ul>\n<li><code>/tab</code> - Inserts the content of the active tab.</li>\n<li><code>/tab \"index.js\"</code> - Inserts the content of the tab named \"index.js\".</li>\n<li><code>/tab all</code> - Inserts the content of all open tabs.</li>\n</ul>\n<h3 id=\"terminal\"><a class=\"header\" href=\"#terminal\"><code>/terminal</code></a></h3>\n<p>The <code>/terminal</code> command inserts a select number of lines of output from the terminal into the context. This is useful for referencing recent command outputs or logs.</p>\n<p>Usage: <code>/terminal [&lt;number&gt;]</code></p>\n<ul>\n<li><code>&lt;number&gt;</code>: Optional parameter to specify the number of lines to insert (default is a 50).</li>\n</ul>\n<h3 id=\"selection\"><a class=\"header\" href=\"#selection\"><code>/selection</code></a></h3>\n<p>The <code>/selection</code> command inserts the selected text in the editor into the context. This is useful for referencing specific parts of your code.</p>\n<p>This is equivalent to the <code>agent: quote selection</code> command (<kbd class=\"keybinding\">cmd-&gt;|ctrl-&gt;</kbd>).</p>\n<p>Usage: <code>/selection</code></p>\n<h2 id=\"slash-commands-in-rules\"><a class=\"header\" href=\"#slash-commands-in-rules\">Commands in the Rules Library</a></h2>\n<p><a href=\"#commands\">Commands</a> can be used in rules, in the Rules Library (previously known as Prompt Library), to insert dynamic content or perform actions.\nFor example, if you want to create a rule where it is important for the model to know the date, you can use the <code>/now</code> command to insert the current date.</p>\n<blockquote>\n<p><strong>Warn:</strong> Slash commands in rules <strong>only</strong> work when they are used in text threads. Using them in non-text threads is not supported.</p>\n</blockquote>\n<blockquote>\n<p><strong>Note:</strong> Slash commands in rules <strong>must</strong> be on their own line.</p>\n</blockquote>\n<p>See the <a href=\"#commands\">list of commands</a> above for more information on commands, and what slash commands are available.</p>\n<h3 id=\"example\"><a class=\"header\" href=\"#example\">Example</a></h3>\n<pre><code class=\"language-plaintext\">You are an expert Rust engineer. The user has asked you to review their project and answer some questions.\n\nHere is some information about their project:\n\n/file Cargo.toml\n</code></pre>\n<p>In the above example, the <code>@file</code> command is used to insert the contents of the <code>Cargo.toml</code> file (or all <code>Cargo.toml</code> files present in the project) into the rule.</p>\n<h2 id=\"nesting-rules\"><a class=\"header\" href=\"#nesting-rules\">Nesting Rules</a></h2>\n<p>Similar to adding rules to the default rules, you can nest rules within other rules with the <code>/prompt</code> command (only supported in Text Threads currently).</p>\n<p>You might want to nest rules to:</p>\n<ul>\n<li>Create templates on the fly</li>\n<li>Break collections like docs or references into smaller, mix-and-matchable parts</li>\n<li>Create variants of a similar rule (e.g., <code>Async Rust - Tokio</code> vs. <code>Async Rust - Async-std</code>)</li>\n</ul>\n<h3 id=\"example-1\"><a class=\"header\" href=\"#example-1\">Example:</a></h3>\n<pre><code class=\"language-plaintext\">Title: Zed-Flavored Rust\n\n## About Zed\n\n/prompt Zed: Zed (a rule about what Zed is)\n\n## Rust - Zed Style\n\n/prompt Rust: Async - Async-std (zed doesn't use tokio)\n/prompt Rust: Zed-style Crates (we have some unique conventions)\n/prompt Rust - Workspace deps (bias towards reusing deps from the workspace)\n</code></pre>\n<p><em>The text in parentheses above are comments and are not part of the rule.</em></p>\n<blockquote>\n<p><strong>Note:</strong> While you technically <em>can</em> nest a rule within itself, we wouldn't recommend it (in the strongest of terms.) Use at your own risk!</p>\n</blockquote>\n<p>By using nested rules, you can create modular and reusable rule components that can be combined in various ways to suit different scenarios.</p>\n<blockquote>\n<p><strong>Note:</strong> When using slash commands to bring in additional context, the injected content can be edited directly inline in the text thread—edits here will not propagate to the saved rules.</p>\n</blockquote>\n<h2 id=\"extensibility\"><a class=\"header\" href=\"#extensibility\">Extensibility</a></h2>\n<p>Additional slash commands can be provided by extensions.</p>\n<p>See <a href=\"../extensions/slash-commands.html\">Extension: Slash Commands</a> to learn how to create your own.</p>\n<h2 id=\"advanced-concepts\"><a class=\"header\" href=\"#advanced-concepts\">Advanced Concepts</a></h2>\n<h3 id=\"rule-templates\"><a class=\"header\" href=\"#rule-templates\">Rule Templates</a></h3>\n<p>Zed uses rule templates to power internal assistant features, like the terminal assistant, or the content rules used in the inline assistant.</p>\n<p>Zed has the following internal rule templates:</p>\n<ul>\n<li><code>content_prompt.hbs</code>: Used for generating content in the editor.</li>\n<li><code>terminal_assistant_prompt.hbs</code>: Used for the terminal assistant feature.</li>\n</ul>\n<p>At this point it is unknown if we will expand templates further to be user-creatable.</p>\n<h3 id=\"overriding-templates\"><a class=\"header\" href=\"#overriding-templates\">Overriding Templates</a></h3>\n<blockquote>\n<p><strong>Note:</strong> It is not recommended to override templates unless you know what you are doing. Editing templates will break your assistant if done incorrectly.</p>\n</blockquote>\n<p>Zed allows you to override the default rules used for various assistant features by placing custom Handlebars (.hbs) templates in your <code>~/.config/zed/prompt_overrides</code> directory.</p>\n<p>The following templates can be overridden:</p>\n<ol>\n<li>\n<p><a href=\"https://github.com/zed-industries/zed/tree/main/assets/prompts/content_prompt.hbs\"><code>content_prompt.hbs</code></a>: Used for generating content in the editor.</p>\n</li>\n<li>\n<p><a href=\"https://github.com/zed-industries/zed/tree/main/assets/prompts/terminal_assistant_prompt.hbs\"><code>terminal_assistant_prompt.hbs</code></a>: Used for the terminal assistant feature.</p>\n</li>\n</ol>\n<blockquote>\n<p><strong>Note:</strong> Be sure you want to override these, as you'll miss out on iteration on our built-in features. This should be primarily used when developing Zed.</p>\n</blockquote>\n<p>You can customize these templates to better suit your needs while maintaining the core structure and variables used by Zed. Zed will automatically reload your prompt overrides when they change on disk.</p>\n<p>Consult Zed's <a href=\"https://github.com/zed-industries/zed/tree/main/assets/prompts\">assets/prompts</a> directory for current versions you can play with.</p>\n<h3 id=\"history\"><a class=\"header\" href=\"#history\">History</a></h3>\n<p>After you submit your first message in a text thread, a name for your context is generated by the language model, and the context is automatically saved to your file system in</p>\n<ul>\n<li><code>~/.config/zed/conversations</code> (macOS)</li>\n<li><code>~/.local/share/zed/conversations</code> (Linux)</li>\n<li><code>%LocalAppData%\\Zed\\conversations</code> (Windows)</li>\n</ul>\n<p>You can access and load previous contexts by clicking on the history button in the top-left corner of the agent panel.</p>\n<p><img alt=\"Viewing assistant history\" src=\"https://zed.dev/img/assistant/assistant-history.png\"/></p>\n\n</main>",
+  "content_text": "Text Threads\nOverview\nText threads in the Agent Panel function similarly to any other editor. You can use custom key bindings and work with multiple cursors, allowing for seamless transitions between coding and engaging in discussions with the language models.\nHowever, the text threads differ with the inclusion of message blocks. These blocks serve as containers for text that correspond to different roles within the context. These roles include:\n\nYou\nAssistant\nSystem\n\nTo begin, type a message in a You block.\n\nAs you type, the remaining tokens count for the selected model is updated.\nInserting text from an editor is as simple as highlighting the text and running agent: quote selection (cmd->|ctrl->); Zed will wrap it in a fenced code block if it is code.\n\nTo submit a message, use cmd-enter|ctrl-enter(assistant: assist). Unlike normal threads, where pressing enter would submit the message, in text threads, our goal is to make it feel as close to a regular editor as possible. So, pressing enter|enter simply inserts a new line.\nAfter submitting a message, the response will be streamed below, in an Assistant message block.\n\nThe stream can be canceled at any point with escape. This is useful if you realize early on that the response is not what you were looking for.\nIf you want to start a new conversation at any time, you can hit cmd-n|ctrl-n or use the New Chat menu option in the hamburger menu at the top left of the panel.\nSimple back-and-forth conversations work well with the text threads. However, there may come a time when you want to modify the previous text in the conversation and steer it in a different direction.\nEditing a Text Thread\nText threads give you the flexibility to have control over the context.\nYou can freely edit any previous text, including the responses from the LLM.\nIf you want to remove a message block entirely, simply place your cursor at the beginning of the block and use the delete key.\nA typical workflow might involve making edits and adjustments throughout the context to refine your inquiry or provide additional information. Here's an example:\n\nWrite text in a You block.\nSubmit the message with cmd-enter|ctrl-enter.\nReceive an Assistant response that doesn't meet your expectations.\nCancel the response with escape.\nErase the content of the Assistant message block and remove the block entirely.\nAdd additional context to your original message.\nSubmit the message with cmd-enter|ctrl-enter.\n\nBeing able to edit previous messages gives you control over how tokens are used. You don't need to start up a new chat to correct a mistake or to add additional information, and you don't have to waste tokens by submitting follow-up corrections.\n\nNote: The act of editing past messages is often referred to as \"Rewriting History\" in the context of the language models.\n\nSome additional points to keep in mind:\n\nYou can cycle the role of a message block by clicking on the role, which is useful when you receive a response in an Assistant block that you want to edit and send back up as a You block.\n\nCommands Overview\nSlash commands enhance the assistant's capabilities. Begin by typing a / at the beginning of the line to see a list of available commands:\n\n/default: Inserts the default rule\n/diagnostics: Injects errors reported by the project's language server\n/fetch: Fetches the content of a webpage and inserts it\n/file: Inserts a single file or a directory of files\n/now: Inserts the current date and time\n/prompt: Adds a custom-configured prompt to the context (see Rules Library)\n/symbols: Inserts the current tab's active symbols\n/tab: Inserts the content of the active tab or all open tabs\n/terminal: Inserts a select number of lines of output from the terminal\n/selection: Inserts the selected text\n\n\nNote: Remember, commands are only evaluated when the text thread is created or when the command is inserted, so a command like /now won't continuously update, or /file commands won't keep their contents up to date.\n\n/default\nRead more about /default in the Rules: Editing the Default Rules section.\nUsage: /default\n/diagnostics\nThe /diagnostics command injects errors reported by the project's language server into the context. This is useful for getting an overview of current issues in your project.\nUsage: /diagnostics [--include-warnings] [path]\n\n--include-warnings: Optional flag to include warnings in addition to errors.\npath: Optional path to limit diagnostics to a specific file or directory.\n\n/file\nThe /file command inserts the content of a single file or a directory of files into the context. This allows you to reference specific parts of your project in your conversation with the assistant.\nUsage: /file <path>\nYou can use glob patterns to match multiple files or directories.\nExamples:\n\n/file src/index.js - Inserts the content of src/index.js into the context.\n/file src/*.js - Inserts the content of all .js files in the src directory.\n/file src - Inserts the content of all files in the src directory.\n\n/now\nThe /now command inserts the current date and time into the context. This can be useful letting the language model know the current time (and by extension, how old their current knowledge base is).\nUsage: /now\n/prompt\nThe /prompt command inserts a prompt from the prompt library into the context. It can also be used to nest prompts within prompts.\nUsage: /prompt <prompt_name>\nRelated: /default\n/symbols\nThe /symbols command inserts the active symbols (functions, classes, etc.) from the current tab into the context. This is useful for getting an overview of the structure of the current file.\nUsage: /symbols\n/tab\nThe /tab command inserts the content of the active tab or all open tabs into the context. This allows you to reference the content you're currently working on.\nUsage: /tab [tab_name|all]\n\ntab_name: Optional name of a specific tab to insert.\nall: Insert content from all open tabs.\n\nExamples:\n\n/tab - Inserts the content of the active tab.\n/tab \"index.js\" - Inserts the content of the tab named \"index.js\".\n/tab all - Inserts the content of all open tabs.\n\n/terminal\nThe /terminal command inserts a select number of lines of output from the terminal into the context. This is useful for referencing recent command outputs or logs.\nUsage: /terminal [<number>]\n\n<number>: Optional parameter to specify the number of lines to insert (default is a 50).\n\n/selection\nThe /selection command inserts the selected text in the editor into the context. This is useful for referencing specific parts of your code.\nThis is equivalent to the agent: quote selection command (cmd->|ctrl->).\nUsage: /selection\nCommands in the Rules Library\nCommands can be used in rules, in the Rules Library (previously known as Prompt Library), to insert dynamic content or perform actions.\nFor example, if you want to create a rule where it is important for the model to know the date, you can use the /now command to insert the current date.\n\nWarn: Slash commands in rules only work when they are used in text threads. Using them in non-text threads is not supported.\n\n\nNote: Slash commands in rules must be on their own line.\n\nSee the list of commands above for more information on commands, and what slash commands are available.\nExample\nYou are an expert Rust engineer. The user has asked you to review their project and answer some questions.\n\nHere is some information about their project:\n\n/file Cargo.toml\n\nIn the above example, the @file command is used to insert the contents of the Cargo.toml file (or all Cargo.toml files present in the project) into the rule.\nNesting Rules\nSimilar to adding rules to the default rules, you can nest rules within other rules with the /prompt command (only supported in Text Threads currently).\nYou might want to nest rules to:\n\nCreate templates on the fly\nBreak collections like docs or references into smaller, mix-and-matchable parts\nCreate variants of a similar rule (e.g., Async Rust - Tokio vs. Async Rust - Async-std)\n\nExample:\nTitle: Zed-Flavored Rust\n\n## About Zed\n\n/prompt Zed: Zed (a rule about what Zed is)\n\n## Rust - Zed Style\n\n/prompt Rust: Async - Async-std (zed doesn't use tokio)\n/prompt Rust: Zed-style Crates (we have some unique conventions)\n/prompt Rust - Workspace deps (bias towards reusing deps from the workspace)\n\nThe text in parentheses above are comments and are not part of the rule.\n\nNote: While you technically can nest a rule within itself, we wouldn't recommend it (in the strongest of terms.) Use at your own risk!\n\nBy using nested rules, you can create modular and reusable rule components that can be combined in various ways to suit different scenarios.\n\nNote: When using slash commands to bring in additional context, the injected content can be edited directly inline in the text thread—edits here will not propagate to the saved rules.\n\nExtensibility\nAdditional slash commands can be provided by extensions.\nSee Extension: Slash Commands to learn how to create your own.\nAdvanced Concepts\nRule Templates\nZed uses rule templates to power internal assistant features, like the terminal assistant, or the content rules used in the inline assistant.\nZed has the following internal rule templates:\n\ncontent_prompt.hbs: Used for generating content in the editor.\nterminal_assistant_prompt.hbs: Used for the terminal assistant feature.\n\nAt this point it is unknown if we will expand templates further to be user-creatable.\nOverriding Templates\n\nNote: It is not recommended to override templates unless you know what you are doing. Editing templates will break your assistant if done incorrectly.\n\nZed allows you to override the default rules used for various assistant features by placing custom Handlebars (.hbs) templates in your ~/.config/zed/prompt_overrides directory.\nThe following templates can be overridden:\n\n\ncontent_prompt.hbs: Used for generating content in the editor.\n\n\nterminal_assistant_prompt.hbs: Used for the terminal assistant feature.\n\n\n\nNote: Be sure you want to override these, as you'll miss out on iteration on our built-in features. This should be primarily used when developing Zed.\n\nYou can customize these templates to better suit your needs while maintaining the core structure and variables used by Zed. Zed will automatically reload your prompt overrides when they change on disk.\nConsult Zed's assets/prompts directory for current versions you can play with.\nHistory\nAfter you submit your first message in a text thread, a name for your context is generated by the language model, and the context is automatically saved to your file system in\n\n~/.config/zed/conversations (macOS)\n~/.local/share/zed/conversations (Linux)\n%LocalAppData%\\Zed\\conversations (Windows)\n\nYou can access and load previous contexts by clicking on the history button in the top-left corner of the agent panel.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:16"
+}

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Ruby | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#ruby" class="pagetoc-H1">Ruby</a>
+<a href="#language-servers" class="pagetoc-H2">Language Servers</a>
+<a href="#configuring-a-language-server" class="pagetoc-H2">Configuring a language server</a>
+<a href="#language-server-activation" class="pagetoc-H3">Language Server Activation</a>
+<a href="#using-solargraph" class="pagetoc-H3">Using solargraph</a>
+<a href="#using-ruby-lsp" class="pagetoc-H3">Using ruby-lsp</a>
+<a href="#using-rubocop" class="pagetoc-H3">Using rubocop</a>
+<a href="#setting-up-solargraph" class="pagetoc-H2">Setting up solargraph</a>
+<a href="#configuration" class="pagetoc-H3">Configuration</a>
+<a href="#setting-up-ruby-lsp" class="pagetoc-H2">Setting up ruby-lsp</a>
+<a href="#setting-up-rubocop-lsp" class="pagetoc-H2">Setting up rubocop LSP</a>
+<a href="#setting-up-sorbet" class="pagetoc-H2">Setting up Sorbet</a>
+<a href="#setting-up-steep" class="pagetoc-H2">Setting up Steep</a>
+<a href="#using-the-tailwind-css-language-server-with-ruby" class="pagetoc-H2">Using the Tailwind CSS Language Server with Ruby</a>
+<a href="#running-tests" class="pagetoc-H2">Running tests</a>
+<a href="#minitest-with-rails" class="pagetoc-H3">Minitest with Rails</a>
+<a href="#minitest" class="pagetoc-H3">Minitest</a>
+<a href="#rspec" class="pagetoc-H3">RSpec</a>
+<a href="#debugging" class="pagetoc-H2">Debugging</a>
+<a href="#examples" class="pagetoc-H3">Examples</a>
+<a href="#formatters" class="pagetoc-H2">Formatters</a>
+<a href="#erb-formatter" class="pagetoc-H3">erb-formatter</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="ruby"><a class="header" href="#ruby">Ruby</a></h1>
+<p>Ruby support is available through the <a href="https://github.com/zed-extensions/ruby">Ruby extension</a>.</p>
+<ul>
+<li>Tree-sitters:
+<ul>
+<li><a href="https://github.com/tree-sitter/tree-sitter-ruby">tree-sitter-ruby</a></li>
+<li><a href="https://github.com/tree-sitter/tree-sitter-embedded-template">tree-sitter-embedded-template</a></li>
+</ul>
+</li>
+<li>Language Servers:
+<ul>
+<li><a href="https://github.com/Shopify/ruby-lsp">ruby-lsp</a></li>
+<li><a href="https://github.com/castwide/solargraph">solargraph</a></li>
+<li><a href="https://github.com/rubocop/rubocop">rubocop</a></li>
+</ul>
+</li>
+<li>Debug Adapter: <a href="https://github.com/ruby/debug"><code>rdbg</code></a></li>
+</ul>
+<p>The Ruby extension also provides support for ERB files.</p>
+<h2 id="language-servers"><a class="header" href="#language-servers">Language Servers</a></h2>
+<p>There are multiple language servers available for Ruby. Zed supports the two following:</p>
+<ul>
+<li><a href="https://github.com/castwide/solargraph">solargraph</a></li>
+<li><a href="https://github.com/Shopify/ruby-lsp">ruby-lsp</a></li>
+</ul>
+<p>They both have an overlapping feature set of autocomplete, diagnostics, code actions, etc. and it's up to you to decide which one you want to use. Note that you can't use both at the same time.</p>
+<p>In addition to these two language servers, Zed also supports:</p>
+<ul>
+<li><a href="https://github.com/rubocop/rubocop">rubocop</a> which is a static code analyzer and linter for Ruby. Under the hood, it's also used by Zed as a language server, but its functionality is complimentary to that of solargraph and ruby-lsp.</li>
+<li><a href="https://sorbet.org/">sorbet</a> which is a static type checker for Ruby with a custom gradual type system.</li>
+<li><a href="https://github.com/soutaro/steep">steep</a> which is a static type checker for Ruby that leverages Ruby Signature (RBS).</li>
+</ul>
+<p>When configuring a language server, it helps to open the LSP Logs window using the 'dev: Open Language Server Logs' command. You can then choose the corresponding language instance to see any logged information.</p>
+<h2 id="configuring-a-language-server"><a class="header" href="#configuring-a-language-server">Configuring a language server</a></h2>
+<p>The <a href="https://github.com/zed-extensions/ruby">Ruby extension</a> offers both <code>solargraph</code> and <code>ruby-lsp</code> language server support.</p>
+<h3 id="language-server-activation"><a class="header" href="#language-server-activation">Language Server Activation</a></h3>
+<p>For all supported Ruby language servers (<code>solargraph</code>, <code>ruby-lsp</code>, <code>rubocop</code>, <code>sorbet</code>, and <code>steep</code>), the Ruby extension follows this activation sequence:</p>
+<ol>
+<li>If the language server is found in your project's <code>Gemfile</code>, it will be used through <code>bundle exec</code>.</li>
+<li>If not found in the <code>Gemfile</code>, the Ruby extension will look for the executable in your system <code>PATH</code>.</li>
+<li>If the language server is not found in either location, the Ruby extension will automatically install it as a global gem (note: this will not install to your current Ruby gemset).</li>
+</ol>
+<p>You can skip step 1 and force using the system executable by setting <code>use_bundler</code> to <code>false</code> in your settings:</p>
+<pre><code class="language-json">{
+  "lsp": {
+    "&lt;SERVER_NAME&gt;": {
+      "settings": {
+        "use_bundler": false
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="using-solargraph"><a class="header" href="#using-solargraph">Using <code>solargraph</code></a></h3>
+<p><code>solargraph</code> is enabled by default in the Ruby extension.</p>
+<h3 id="using-ruby-lsp"><a class="header" href="#using-ruby-lsp">Using <code>ruby-lsp</code></a></h3>
+<p>To switch to <code>ruby-lsp</code>, add the following to your <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": ["ruby-lsp", "!solargraph", "!rubocop", "..."]
+    }
+  }
+}
+</code></pre>
+<p>That disables <code>solargraph</code> and <code>rubocop</code> and enables <code>ruby-lsp</code>.</p>
+<h3 id="using-rubocop"><a class="header" href="#using-rubocop">Using <code>rubocop</code></a></h3>
+<p>The Ruby extension also provides support for <code>rubocop</code> language server for offense detection and autocorrection.</p>
+<p>To enable it, add the following to your <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": ["ruby-lsp", "rubocop", "!solargraph", "..."]
+    }
+  }
+}
+</code></pre>
+<p>Or, conversely, you can disable <code>ruby-lsp</code> and enable <code>solargraph</code> and <code>rubocop</code> by adding the following to your <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": ["solargraph", "rubocop", "!ruby-lsp", "..."]
+    }
+  }
+}
+</code></pre>
+<h2 id="setting-up-solargraph"><a class="header" href="#setting-up-solargraph">Setting up <code>solargraph</code></a></h2>
+<p>Solargraph has formatting and diagnostics disabled by default. We can tell Zed to enable them by adding the following to your <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "lsp": {
+    "solargraph": {
+      "initialization_options": {
+        "diagnostics": true,
+        "formatting": true
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="configuration"><a class="header" href="#configuration">Configuration</a></h3>
+<p>Solargraph reads its configuration from a file called <code>.solargraph.yml</code> in the root of your project. For more information about this file, see the <a href="https://solargraph.org/guides/configuration">Solargraph configuration documentation</a>.</p>
+<h2 id="setting-up-ruby-lsp"><a class="header" href="#setting-up-ruby-lsp">Setting up <code>ruby-lsp</code></a></h2>
+<p>You can pass Ruby LSP configuration to <code>initialization_options</code>, e.g.</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": ["ruby-lsp", "!solargraph", "..."]
+    }
+  },
+  "lsp": {
+    "ruby-lsp": {
+      "initialization_options": {
+        "enabledFeatures": {
+          // "someFeature": false
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>LSP <code>settings</code> and <code>initialization_options</code> can also be project-specific. For example to use <a href="https://github.com/standardrb/standard">standardrb/standard</a> as a formatter and linter for a particular project, add this to a <code>.zed/settings.json</code> inside your project repo:</p>
+<pre><code class="language-json">{
+  "lsp": {
+    "ruby-lsp": {
+      "initialization_options": {
+        "formatter": "standard",
+        "linters": ["standard"]
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="setting-up-rubocop-lsp"><a class="header" href="#setting-up-rubocop-lsp">Setting up <code>rubocop</code> LSP</a></h2>
+<p>Rubocop has unsafe autocorrection disabled by default. We can tell Zed to enable it by adding the following to your <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      // Use ruby-lsp as the primary language server and rubocop as the secondary.
+      "language_servers": ["ruby-lsp", "rubocop", "!solargraph", "..."]
+    }
+  },
+  "lsp": {
+    "rubocop": {
+      "initialization_options": {
+        "safeAutocorrect": false
+      }
+    },
+    "ruby-lsp": {
+      "initialization_options": {
+        "enabledFeatures": {
+          "diagnostics": false
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="setting-up-sorbet"><a class="header" href="#setting-up-sorbet">Setting up Sorbet</a></h2>
+<p><a href="https://sorbet.org/">Sorbet</a> is a popular static type checker for Ruby that includes a language server.</p>
+<p>To enable Sorbet, add <code>\"sorbet\"</code> to the <code>language_servers</code> list for Ruby in your <code>settings.json</code>. You may want to disable other language servers if Sorbet is intended to be your primary LSP, or if you plan to use it alongside another LSP for specific features like type checking.</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": [
+        "ruby-lsp",
+        "sorbet",
+        "!rubocop",
+        "!solargraph",
+        "..."
+      ]
+    }
+  }
+}
+</code></pre>
+<p>For all aspects of installing Sorbet, setting it up in your project, and configuring its behavior, please refer to the <a href="https://sorbet.org/docs/overview">official Sorbet documentation</a>.</p>
+<h2 id="setting-up-steep"><a class="header" href="#setting-up-steep">Setting up Steep</a></h2>
+<p><a href="https://github.com/soutaro/steep">Steep</a> is a static type checker for Ruby that uses RBS files to define types.</p>
+<p>To enable Steep, add <code>\"steep\"</code> to the <code>language_servers</code> list for Ruby in your <code>settings.json</code>. You may need to adjust the order or disable other LSPs depending on your desired setup.</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": [
+        "ruby-lsp",
+        "steep",
+        "!solargraph",
+        "!rubocop",
+        "..."
+      ]
+    }
+  }
+}
+</code></pre>
+<h2 id="using-the-tailwind-css-language-server-with-ruby"><a class="header" href="#using-the-tailwind-css-language-server-with-ruby">Using the Tailwind CSS Language Server with Ruby</a></h2>
+<p>It's possible to use the <a href="https://github.com/tailwindlabs/tailwindcss-intellisense/tree/HEAD/packages/tailwindcss-language-server#readme">Tailwind CSS Language Server</a> in Ruby and ERB files.</p>
+<p>In order to do that, you need to configure the language server so that it knows about where to look for CSS classes in Ruby/ERB files by adding the following to your <code>settings.json</code>:</p>
+<pre><code class="language-json">{
+  "languages": {
+    "Ruby": {
+      "language_servers": ["tailwindcss-language-server", "..."]
+    }
+  },
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "html/erb": "html",
+          "ruby": "html"
+        },
+        "experimental": {
+          "classRegex": ["\\bclass:\\s*['\"]([^'\"]*)['\"]"]
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<p>With these settings you will get completions for Tailwind CSS classes in HTML attributes inside ERB files and inside Ruby/ERB strings that are coming after a <code>class:</code> key. Examples:</p>
+<pre><code class="language-rb"># Ruby file:
+def method
+  div(class: "pl-2 &lt;completion here&gt;") do
+    p(class: "mt-2 &lt;completion here&gt;") { "Hello World" }
+  end
+end
+
+# ERB file:
+&lt;%= link_to "Hello", "/hello", class: "pl-2 &lt;completion here&gt;" %&gt;
+&lt;a href="/hello" class="pl-2 &lt;completion here&gt;"&gt;Hello&lt;/a&gt;
+</code></pre>
+<h2 id="running-tests"><a class="header" href="#running-tests">Running tests</a></h2>
+<p>To run tests in your Ruby project, you can set up custom tasks in your local <code>.zed/tasks.json</code> configuration file. These tasks can be defined to work with different test frameworks like Minitest, RSpec, quickdraw, and tldr. Below are some examples of how to set up these tasks to run your tests from within your editor.</p>
+<h3 id="minitest-with-rails"><a class="header" href="#minitest-with-rails">Minitest with Rails</a></h3>
+<pre><code class="language-json">[
+  {
+    "label": "test $ZED_RELATIVE_FILE -n /$ZED_CUSTOM_RUBY_TEST_NAME/",
+    "command": "bin/rails",
+    "args": [
+      "test",
+      "$ZED_RELATIVE_FILE",
+      "-n",
+      "\"$ZED_CUSTOM_RUBY_TEST_NAME\""
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": ["ruby-test"]
+  }
+]
+</code></pre>
+<h3 id="minitest"><a class="header" href="#minitest">Minitest</a></h3>
+<p>Plain minitest does not support running tests by line number, only by name, so we need to use <code>$ZED_CUSTOM_RUBY_TEST_NAME</code> instead:</p>
+<pre><code class="language-json">[
+  {
+    "label": "-Itest $ZED_RELATIVE_FILE -n /$ZED_CUSTOM_RUBY_TEST_NAME/",
+    "command": "bundle",
+    "args": [
+      "exec",
+      "ruby",
+      "-Itest",
+      "$ZED_RELATIVE_FILE",
+      "-n",
+      "\"$ZED_CUSTOM_RUBY_TEST_NAME\""
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": ["ruby-test"]
+  }
+]
+</code></pre>
+<h3 id="rspec"><a class="header" href="#rspec">RSpec</a></h3>
+<pre><code class="language-json">[
+  {
+    "label": "test $ZED_RELATIVE_FILE:$ZED_ROW",
+    "command": "bundle",
+    "args": ["exec", "rspec", "\"$ZED_RELATIVE_FILE:$ZED_ROW\""],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": ["ruby-test"]
+  }
+]
+</code></pre>
+<p>Similar task syntax can be used for other test frameworks such as <code>quickdraw</code> or <code>tldr</code>.</p>
+<h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
+<p>The Ruby extension provides a debug adapter for debugging Ruby code. Zed's name for the adapter (in the UI and <code>debug.json</code>) is <code>rdbg</code>, and under the hood, it uses the <a href="https://github.com/ruby/debug"><code>debug</code></a> gem. The extension uses the <a href="#language-server-activation">same activation logic</a> as the language servers.</p>
+<h3 id="examples"><a class="header" href="#examples">Examples</a></h3>
+<h4 id="debug-a-ruby-script"><a class="header" href="#debug-a-ruby-script">Debug a Ruby script</a></h4>
+<pre><code class="language-json">[
+  {
+    "label": "Debug current file",
+    "adapter": "rdbg",
+    "request": "launch",
+    "script": "$ZED_FILE",
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]
+</code></pre>
+<h4 id="debug-rails-server"><a class="header" href="#debug-rails-server">Debug Rails server</a></h4>
+<pre><code class="language-json">[
+  {
+    "label": "Debug Rails server",
+    "adapter": "rdbg",
+    "request": "launch",
+    "command": "./bin/rails",
+    "args": ["server"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "env": {
+      "RUBY_DEBUG_OPEN": "true"
+    }
+  }
+]
+</code></pre>
+<h2 id="formatters"><a class="header" href="#formatters">Formatters</a></h2>
+<h3 id="erb-formatter"><a class="header" href="#erb-formatter"><code>erb-formatter</code></a></h3>
+<p>To format ERB templates, you can use the <code>erb-formatter</code> formatter. This formatter uses the <a href="https://rubygems.org/gems/erb-formatter"><code>erb-formatter</code></a> gem to format ERB templates.</p>
+<pre><code class="language-jsonc">{
+  "HTML/ERB": {
+    "formatter": {
+      "external": {
+        "command": "erb-formatter",
+        "arguments": ["--stdin-filename", "{buffer_path}"],
+      },
+    },
+  },
+}
+</code></pre>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

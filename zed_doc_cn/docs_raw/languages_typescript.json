@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/languages/typescript.html",
+  "title": "TypeScript | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"typescript\"><a class=\"header\" href=\"#typescript\">TypeScript</a></h1>\n<p>TypeScript and TSX support are available natively in Zed.</p>\n<ul>\n<li>Tree-sitter: <a href=\"https://github.com/tree-sitter/tree-sitter-typescript\">tree-sitter/tree-sitter-typescript</a></li>\n<li>Language Server: <a href=\"https://github.com/yioneko/vtsls\">yioneko/vtsls</a></li>\n<li>Alternate Language Server: <a href=\"https://github.com/typescript-language-server/typescript-language-server\">typescript-language-server/typescript-language-server</a></li>\n<li>Debug Adapter: <a href=\"https://github.com/microsoft/vscode-js-debug\">vscode-js-debug</a></li>\n</ul>\n<!--\nTBD: Document the difference between Language servers\n-->\n<h2 id=\"language-servers\"><a class=\"header\" href=\"#language-servers\">Language servers</a></h2>\n<p>By default Zed uses <a href=\"https://github.com/yioneko/vtsls\">vtsls</a> for TypeScript, TSX, and JavaScript files.\nYou can configure the use of <a href=\"https://github.com/typescript-language-server/typescript-language-server\">typescript-language-server</a> per language in your settings file:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"TypeScript\": {\n      \"language_servers\": [\"typescript-language-server\", \"!vtsls\", \"...\"]\n    },\n    \"TSX\": {\n      \"language_servers\": [\"typescript-language-server\", \"!vtsls\", \"...\"]\n    },\n    \"JavaScript\": {\n      \"language_servers\": [\"typescript-language-server\", \"!vtsls\", \"...\"]\n    }\n  }\n}\n</code></pre>\n<p>Prettier will also be used for TypeScript files by default. To disable this:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"TypeScript\": {\n      \"prettier\": { \"allowed\": false }\n    }\n    //...\n  }\n}\n</code></pre>\n<h2 id=\"large-projects\"><a class=\"header\" href=\"#large-projects\">Large projects</a></h2>\n<p><code>vtsls</code> may run out of memory on very large projects. We default the limit to 8092 (8 GiB) vs. the default of 3072 but this may not be sufficient for you:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"vtsls\": {\n      \"settings\": {\n        // For TypeScript:\n        \"typescript\": { \"tsserver\": { \"maxTsServerMemory\": 16184 } },\n        // For JavaScript:\n        \"javascript\": { \"tsserver\": { \"maxTsServerMemory\": 16184 } }\n      }\n    }\n  }\n}\n</code></pre>\n<h2 id=\"inlay-hints\"><a class=\"header\" href=\"#inlay-hints\">Inlay Hints</a></h2>\n<p>Zed sets the following initialization options to make the language server send back inlay hints (that is, when Zed has inlay hints enabled in the settings).</p>\n<p>You can override these settings in your Zed <code>settings.json</code> when using <code>typescript-language-server</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"typescript-language-server\": {\n      \"initialization_options\": {\n        \"preferences\": {\n          \"includeInlayParameterNameHints\": \"all\",\n          \"includeInlayParameterNameHintsWhenArgumentMatchesName\": true,\n          \"includeInlayFunctionParameterTypeHints\": true,\n          \"includeInlayVariableTypeHints\": true,\n          \"includeInlayVariableTypeHintsWhenTypeMatchesName\": true,\n          \"includeInlayPropertyDeclarationTypeHints\": true,\n          \"includeInlayFunctionLikeReturnTypeHints\": true,\n          \"includeInlayEnumMemberValueHints\": true\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>See <a href=\"https://github.com/typescript-language-server/typescript-language-server?tab=readme-ov-file#inlay-hints-textdocumentinlayhint\">typescript-language-server inlayhints documentation</a> for more information.</p>\n<p>When using <code>vtsls</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"vtsls\": {\n      \"settings\": {\n        // For JavaScript:\n        \"javascript\": {\n          \"inlayHints\": {\n            \"parameterNames\": {\n              \"enabled\": \"all\",\n              \"suppressWhenArgumentMatchesName\": false\n            },\n            \"parameterTypes\": {\n              \"enabled\": true\n            },\n            \"variableTypes\": {\n              \"enabled\": true,\n              \"suppressWhenTypeMatchesName\": true\n            },\n            \"propertyDeclarationTypes\": {\n              \"enabled\": true\n            },\n            \"functionLikeReturnTypes\": {\n              \"enabled\": true\n            },\n            \"enumMemberValues\": {\n              \"enabled\": true\n            }\n          }\n        },\n        // For TypeScript:\n        \"typescript\": {\n          \"inlayHints\": {\n            \"parameterNames\": {\n              \"enabled\": \"all\",\n              \"suppressWhenArgumentMatchesName\": false\n            },\n            \"parameterTypes\": {\n              \"enabled\": true\n            },\n            \"variableTypes\": {\n              \"enabled\": true,\n              \"suppressWhenTypeMatchesName\": true\n            },\n            \"propertyDeclarationTypes\": {\n              \"enabled\": true\n            },\n            \"functionLikeReturnTypes\": {\n              \"enabled\": true\n            },\n            \"enumMemberValues\": {\n              \"enabled\": true\n            }\n          }\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<h2 id=\"debugging\"><a class=\"header\" href=\"#debugging\">Debugging</a></h2>\n<p>Zed supports debugging TypeScript code out of the box.\nThe following can be debugged without writing additional configuration:</p>\n<ul>\n<li>Tasks from <code>package.json</code></li>\n<li>Tests written using several popular frameworks (Jest, Mocha, Vitest, Jasmine)</li>\n</ul>\n<p>Run <code class=\"hljs\">debugger: start</code> (<kbd class=\"keybinding\">f4|f4</kbd>) to see a contextual list of these predefined debug tasks.</p>\n<p>As for all languages, configurations from <code>.vscode/launch.json</code> are also available for debugging in Zed.</p>\n<p>If your use-case isn't covered by any of these, you can take full control by adding debug configurations to <code>.zed/debug.json</code>. See below for example configurations.</p>\n<h3 id=\"attach-debugger-to-a-server-running-in-web-browser-npx-serve\"><a class=\"header\" href=\"#attach-debugger-to-a-server-running-in-web-browser-npx-serve\">Attach debugger to a server running in web browser (<code>npx serve</code>)</a></h3>\n<p>Given an externally-ran web server (e.g., with <code>npx serve</code> or <code>npx live-server</code>) one can attach to it and open it with a browser.</p>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Launch Chrome (TypeScript)\",\n    \"adapter\": \"JavaScript\",\n    \"type\": \"chrome\",\n    \"request\": \"launch\",\n    \"url\": \"http://localhost:5500\",\n    \"program\": \"$ZED_FILE\",\n    \"webRoot\": \"${ZED_WORKTREE_ROOT}\",\n    \"build\": {\n      \"command\": \"npx\",\n      \"args\": [\"tsc\"]\n    },\n    \"skipFiles\": [\"&lt;node_internals&gt;/**\"]\n  }\n]\n</code></pre>\n<h2 id=\"see-also\"><a class=\"header\" href=\"#see-also\">See also</a></h2>\n<ul>\n<li><a href=\"./yarn.html\">Zed Yarn documentation</a> for a walkthrough of configuring your project to use Yarn.</li>\n<li><a href=\"./deno.html\">Zed Deno documentation</a></li>\n</ul>\n\n</main>",
+  "content_text": "TypeScript\nTypeScript and TSX support are available natively in Zed.\n\nTree-sitter: tree-sitter/tree-sitter-typescript\nLanguage Server: yioneko/vtsls\nAlternate Language Server: typescript-language-server/typescript-language-server\nDebug Adapter: vscode-js-debug\n\n\nLanguage servers\nBy default Zed uses vtsls for TypeScript, TSX, and JavaScript files.\nYou can configure the use of typescript-language-server per language in your settings file:\n{\n  \"languages\": {\n    \"TypeScript\": {\n      \"language_servers\": [\"typescript-language-server\", \"!vtsls\", \"...\"]\n    },\n    \"TSX\": {\n      \"language_servers\": [\"typescript-language-server\", \"!vtsls\", \"...\"]\n    },\n    \"JavaScript\": {\n      \"language_servers\": [\"typescript-language-server\", \"!vtsls\", \"...\"]\n    }\n  }\n}\n\nPrettier will also be used for TypeScript files by default. To disable this:\n{\n  \"languages\": {\n    \"TypeScript\": {\n      \"prettier\": { \"allowed\": false }\n    }\n    //...\n  }\n}\n\nLarge projects\nvtsls may run out of memory on very large projects. We default the limit to 8092 (8 GiB) vs. the default of 3072 but this may not be sufficient for you:\n{\n  \"lsp\": {\n    \"vtsls\": {\n      \"settings\": {\n        // For TypeScript:\n        \"typescript\": { \"tsserver\": { \"maxTsServerMemory\": 16184 } },\n        // For JavaScript:\n        \"javascript\": { \"tsserver\": { \"maxTsServerMemory\": 16184 } }\n      }\n    }\n  }\n}\n\nInlay Hints\nZed sets the following initialization options to make the language server send back inlay hints (that is, when Zed has inlay hints enabled in the settings).\nYou can override these settings in your Zed settings.json when using typescript-language-server:\n{\n  \"lsp\": {\n    \"typescript-language-server\": {\n      \"initialization_options\": {\n        \"preferences\": {\n          \"includeInlayParameterNameHints\": \"all\",\n          \"includeInlayParameterNameHintsWhenArgumentMatchesName\": true,\n          \"includeInlayFunctionParameterTypeHints\": true,\n          \"includeInlayVariableTypeHints\": true,\n          \"includeInlayVariableTypeHintsWhenTypeMatchesName\": true,\n          \"includeInlayPropertyDeclarationTypeHints\": true,\n          \"includeInlayFunctionLikeReturnTypeHints\": true,\n          \"includeInlayEnumMemberValueHints\": true\n        }\n      }\n    }\n  }\n}\n\nSee typescript-language-server inlayhints documentation for more information.\nWhen using vtsls:\n{\n  \"lsp\": {\n    \"vtsls\": {\n      \"settings\": {\n        // For JavaScript:\n        \"javascript\": {\n          \"inlayHints\": {\n            \"parameterNames\": {\n              \"enabled\": \"all\",\n              \"suppressWhenArgumentMatchesName\": false\n            },\n            \"parameterTypes\": {\n              \"enabled\": true\n            },\n            \"variableTypes\": {\n              \"enabled\": true,\n              \"suppressWhenTypeMatchesName\": true\n            },\n            \"propertyDeclarationTypes\": {\n              \"enabled\": true\n            },\n            \"functionLikeReturnTypes\": {\n              \"enabled\": true\n            },\n            \"enumMemberValues\": {\n              \"enabled\": true\n            }\n          }\n        },\n        // For TypeScript:\n        \"typescript\": {\n          \"inlayHints\": {\n            \"parameterNames\": {\n              \"enabled\": \"all\",\n              \"suppressWhenArgumentMatchesName\": false\n            },\n            \"parameterTypes\": {\n              \"enabled\": true\n            },\n            \"variableTypes\": {\n              \"enabled\": true,\n              \"suppressWhenTypeMatchesName\": true\n            },\n            \"propertyDeclarationTypes\": {\n              \"enabled\": true\n            },\n            \"functionLikeReturnTypes\": {\n              \"enabled\": true\n            },\n            \"enumMemberValues\": {\n              \"enabled\": true\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nDebugging\nZed supports debugging TypeScript code out of the box.\nThe following can be debugged without writing additional configuration:\n\nTasks from package.json\nTests written using several popular frameworks (Jest, Mocha, Vitest, Jasmine)\n\nRun debugger: start (f4|f4) to see a contextual list of these predefined debug tasks.\nAs for all languages, configurations from .vscode/launch.json are also available for debugging in Zed.\nIf your use-case isn't covered by any of these, you can take full control by adding debug configurations to .zed/debug.json. See below for example configurations.\nAttach debugger to a server running in web browser (npx serve)\nGiven an externally-ran web server (e.g., with npx serve or npx live-server) one can attach to it and open it with a browser.\n[\n  {\n    \"label\": \"Launch Chrome (TypeScript)\",\n    \"adapter\": \"JavaScript\",\n    \"type\": \"chrome\",\n    \"request\": \"launch\",\n    \"url\": \"http://localhost:5500\",\n    \"program\": \"$ZED_FILE\",\n    \"webRoot\": \"${ZED_WORKTREE_ROOT}\",\n    \"build\": {\n      \"command\": \"npx\",\n      \"args\": [\"tsc\"]\n    },\n    \"skipFiles\": [\"<node_internals>/**\"]\n  }\n]\n\nSee also\n\nZed Yarn documentation for a walkthrough of configuring your project to use Yarn.\nZed Deno documentation",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:22"
+}

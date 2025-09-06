@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Linux | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="active">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#building-zed-for-linux" class="pagetoc-H1">为 Linux 构建 Zed</a>
+<a href="#repository" class="pagetoc-H2">代码仓库</a>
+<a href="#dependencies" class="pagetoc-H2">依赖项</a>
+<a href="#backend-dependencies" class="pagetoc-H3">后端依赖项（可选）</a>
+<a href="#building-from-source" class="pagetoc-H2">从源码构建</a>
+<a href="#installing-a-development-build" class="pagetoc-H2">安装开发版本</a>
+<a href="#wayland--x11" class="pagetoc-H2">Wayland 和 X11</a>
+<a href="#notes-for-packaging-zed" class="pagetoc-H2">Zed 打包说明</a>
+<a href="#technical-requirements" class="pagetoc-H3">技术要求</a>
+<a href="#other-things-to-note" class="pagetoc-H3">其他注意事项</a>
+<a href="#flatpak" class="pagetoc-H2">Flatpak</a>
+<a href="#memory-profiling" class="pagetoc-H2">内存性能分析</a>
+<a href="#troubleshooting" class="pagetoc-H2">故障排除</a>
+<a href="#cargo-errors-claiming-that-a-dependency-is-using-unstable-features" class="pagetoc-H3">Cargo 报告依赖项使用不稳定功能的错误</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="building-zed-for-linux"><a class="header" href="#building-zed-for-linux">为 Linux 构建 Zed</a></h1>
+<h2 id="repository"><a class="header" href="#repository">代码仓库</a></h2>
+<p>克隆 <a href="https://github.com/zed-industries/zed">Zed 代码仓库</a>。</p>
+<h2 id="dependencies"><a class="header" href="#dependencies">依赖项</a></h2>
+<ul>
+<li>
+<p>安装 <a href="https://www.rust-lang.org/tools/install">rustup</a></p>
+</li>
+<li>
+<p>安装必要的系统库：</p>
+<pre><code class="language-sh">script/linux
+</code></pre>
+<p>如果您更倾向于手动安装系统库，可以在 <code>script/linux</code> 文件中找到所需软件包的列表。</p>
+</li>
+</ul>
+<h3 id="backend-dependencies"><a class="header" href="#backend-dependencies">后端依赖项（可选）</a></h3>
+<p>如果您希望使用本地协作服务器开发 Zed 协作功能，请参阅：<a href="./local-collaboration.html">本地协作</a> 文档。</p>
+<h2 id="building-from-source"><a class="header" href="#building-from-source">从源码构建</a></h2>
+<p>安装依赖项后，您可以使用 <a href="https://doc.rust-lang.org/cargo/">Cargo</a> 构建 Zed。</p>
+<p>构建调试版本的编辑器：</p>
+<pre><code class="language-sh">cargo run
+</code></pre>
+<p>运行测试：</p>
+<pre><code class="language-sh">cargo test --workspace
+</code></pre>
+<p>在发布模式下，主要用户界面是 <code>cli</code> crate。您可以在开发中运行：</p>
+<pre><code class="language-sh">cargo run -p cli
+</code></pre>
+<h2 id="installing-a-development-build"><a class="header" href="#installing-a-development-build">安装开发版本</a></h2>
+<p>您可以使用以下命令在计算机上安装本地构建：</p>
+<pre><code class="language-sh">./script/install-linux
+</code></pre>
+<p>这将以发布模式构建 zed 和 cli，并将它们放置在 <code>~/.local/bin/zed</code>，同时将 .desktop 文件安装到 <code>~/.local/share</code>。</p>
+<blockquote>
+<p><strong><em>注意</em></strong>：如果您遇到类似以下的链接器错误：</p>
+<pre><code class="language-bash">error: linking with `cc` failed: exit status: 1 ...
+= note: /usr/bin/ld: /tmp/rustcISMaod/libaws_lc_sys-79f08eb6d32e546e.rlib(f8e4fd781484bd36-bcm.o): in function `aws_lc_0_25_0_handle_cpu_env':
+          /aws-lc/crypto/fipsmodule/cpucap/cpu_intel.c:(.text.aws_lc_0_25_0_handle_cpu_env+0x63): undefined reference to `__isoc23_sscanf'
+          /usr/bin/ld: /tmp/rustcISMaod/libaws_lc_sys-79f08eb6d32e546e.rlib(f8e4fd781484bd36-bcm.o): in function `pkey_rsa_ctrl_str':
+          /aws-lc/crypto/fipsmodule/evp/p_rsa.c:741:(.text.pkey_rsa_ctrl_str+0x20d): undefined reference to `__isoc23_strtol'
+          /usr/bin/ld: /aws-lc/crypto/fipsmodule/evp/p_rsa.c:752:(.text.pkey_rsa_ctrl_str+0x258): undefined reference to `__isoc23_strtol'
+          collect2: error: ld returned 1 exit status
+  = note: some `extern` functions couldn't be found; some native libraries may need to be installed or have their path specified
+  = note: use the `-l` flag to specify native libraries to link
+  = note: use the `cargo:rustc-link-lib` directive to specify the native libraries to link with Cargo (see https://doc.rust-lang.org/cargo/reference/build-scripts.html#rustc-link-lib)
+error: could not compile `remote_server` (bin "remote_server") due to 1 previous error
+</code></pre>
+<p><strong>原因</strong>：
+这是由 aws-lc-rs 中的已知错误导致的（不支持 GCC >= 14）：<a href="https://github.com/aws/aws-lc-rs/issues/569">FIPS fails to build with GCC >= 14</a>
+以及 <a href="https://github.com/aws/aws-lc/issues/2010">GCC-14 - build failure for FIPS module</a></p>
+<p>您可以参考 <a href="https://github.com/zed-industries/zed/issues/24880">linux: Linker error for remote_server when using script/install-linux</a> 获取更多信息。</p>
+<p><strong>解决方案</strong>：
+将远程服务器目标设置为 <code>x86_64-unknown-linux-gnu</code>，如下所示：<code>export REMOTE_SERVER_TARGET=x86_64-unknown-linux-gnu; script/install-linux</code></p>
+</blockquote>
+<h2 id="wayland--x11"><a class="header" href="#wayland--x11">Wayland 和 X11</a></h2>
+<p>Zed 支持 X11 和 Wayland。默认情况下，我们选择在运行时能找到的任一个。如果您在 Wayland 上运行并希望使用 X11 模式，请使用环境变量 <code>WAYLAND_DISPLAY=''</code>。</p>
+<h2 id="notes-for-packaging-zed"><a class="header" href="#notes-for-packaging-zed">Zed 打包说明</a></h2>
+<p>感谢您承担 Zed 的打包工作！</p>
+<h3 id="technical-requirements"><a class="header" href="#technical-requirements">技术要求</a></h3>
+<p>Zed 有两个主要的二进制文件：</p>
+<ul>
+<li>您需要构建 <code>crates/cli</code> 并使其二进制文件在 <code>$PATH</code> 中以 <code>zed</code> 名称可用。</li>
+<li>您需要构建 <code>crates/zed</code> 并将其放置在 <code>$PATH/to/cli/../../libexec/zed-editor</code>。例如，如果您要将 cli 放在 <code>~/.local/bin/zed</code>，请将 zed 放在 <code>~/.local/libexec/zed-editor</code>。由于一些 Linux 发行版（特别是 Arch）不建议使用 <code>libexec</code>，您也可以将此二进制文件放在 <code>$PATH/to/cli/../../lib/zed/zed-editor</code>（例如 <code>~/.local/lib/zed/zed-editor</code>）。</li>
+<li>如果您要提供 <code>.desktop</code> 文件，可以在 <code>crates/zed/resources/zed.desktop.in</code> 中找到模板，并使用 <code>envsubst</code> 填充所需的值。此文件还应重命名为 <code>$APP_ID.desktop</code>，以便文件<a href="https://github.com/zed-industries/zed/issues/12707#issuecomment-2168742761">遵循 FreeDesktop 标准</a>。您还应该使此桌面文件可执行（<code>chmod 755</code>）。</li>
+<li>您需要确保安装了必要的库。您可以通过在系统上<a href="https://github.com/zed-industries/zed/blob/935cf542aebf55122ce6ed1c91d0fe8711970c82/script/bundle-linux#L65-L67">检查构建的二进制文件</a>来获取当前列表。</li>
+<li>有关完整构建脚本的示例，请参阅 <a href="https://github.com/zed-industries/zed/blob/935cf542aebf55122ce6ed1c91d0fe8711970c82/script/bundle-linux">script/bundle-linux</a>。</li>
+<li>您可以通过使用环境变量 <code>ZED_UPDATE_EXPLANATION</code> 构建（或运行）Zed 来禁用 Zed 的自动更新并为尝试手动更新 Zed 的用户提供说明。例如：<code>ZED_UPDATE_EXPLANATION="请使用 flatpak 更新 zed。"</code>。</li>
+<li>确保将 <code>crates/zed/RELEASE_CHANNEL</code> 文件的内容更新为 'nightly'、'preview' 或 'stable'，不带换行符。这将使 Zed 使用凭据管理器来记住用户的登录信息。</li>
+</ul>
+<h3 id="other-things-to-note"><a class="header" href="#other-things-to-note">其他注意事项</a></h3>
+<p>在 Zed，我们的首要任务是快速发展并为用户带来最新技术。我们长期以来一直对缓慢、过时或难以配置的软件感到沮丧，因此我们根据这些需求构建了我们的编辑器。</p>
+<p>但是，我们意识到许多发行版有其他优先级。我们希望与所有人合作，将 Zed 带到他们喜欢的平台上。但还有很长的路要走：</p>
+<ul>
+<li>Zed 是一个快速发展的早期阶段项目。我们通常每周发布 2-3 个构建版本来修复用户报告的问题并发布主要功能。</li>
+<li>在 Linux 系统上可能存在其他几个 <code>zed</code> 二进制文件（<a href="https://openzfs.github.io/openzfs-docs/man/v2.2/8/zed.8.html">1</a>，<a href="https://zed.brimdata.io/docs/commands/zed">2</a>）。如果您因为这些问题想要重命名我们的 CLI 二进制文件，我们建议使用 <code>zedit</code>、<code>zeditor</code> 或 <code>zed-cli</code>。</li>
+<li>Zed 会像 rustup/rbenv/pyenv 等工具一样自动安装正确版本的常见开发工具。我们理解这是有争议的，<a href="https://github.com/zed-industries/zed/issues/12589">请参阅此处</a>。</li>
+<li>我们允许用户在本地和从 <a href="https://github.com/zed-industries/extensions">zed-industries/extensions</a> 安装扩展。这些扩展可能会根据需要安装进一步的工具，例如语言服务器。从长远来看，我们希望使这更安全，<a href="https://github.com/zed-industries/zed/issues/12358">请参阅此处</a>。</li>
+<li>Zed 默认连接到多个在线服务（AI、遥测、协作）。用户可以通过 zed 设置或修补我们的<a href="https://github.com/zed-industries/zed/blob/main/assets/settings/default.json">默认设置文件</a>来禁用 AI 和我们的遥测。</li>
+<li>由于上述问题，zed 目前与沙箱不兼容，<a href="https://github.com/zed-industries/zed/pull/12006#issuecomment-2130421220">请参阅此处</a></li>
+</ul>
+<h2 id="flatpak"><a class="header" href="#flatpak">Flatpak</a></h2>
+<blockquote>
+<p>Zed 当前的 Flatpak 集成在启动时会退出沙箱。依赖 Flatpak 沙箱功能的工作流可能无法按预期工作。</p>
+</blockquote>
+<p>要在本地构建和安装 Flatpak 包，请按照以下步骤操作：</p>
+<ol>
+<li>按照<a href="https://flathub.org/setup">此处</a>的说明为您的发行版安装 Flatpak。</li>
+<li>运行 <code>script/flatpak/deps</code> 脚本来安装所需的依赖项。</li>
+<li>运行 <code>script/flatpak/bundle-flatpak</code>。</li>
+<li>现在包已安装并在 <code>target/release/{app-id}.flatpak</code> 处有一个可用的包。</li>
+</ol>
+<h2 id="memory-profiling"><a class="header" href="#memory-profiling">内存性能分析</a></h2>
+<p><a href="https://github.com/KDE/heaptrack"><code>heaptrack</code></a> 对于诊断内存泄漏非常有用。安装它：</p>
+<pre><code class="language-sh">$ sudo apt install heaptrack heaptrack-gui
+$ cargo install cargo-heaptrack
+</code></pre>
+<p>然后，要在附加了性能分析器的情况下构建和运行 Zed：</p>
+<pre><code class="language-sh">$ cargo heaptrack -b zed
+</code></pre>
+<p>当退出此 zed 实例时，终端输出将包含一个命令来运行 <code>heaptrack_interpret</code>，将 <code>*.raw.zst</code> 文件转换为 <code>*.zst</code> 文件，然后可以将其传递给 <code>heaptrack_gui</code> 进行查看。</p>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">故障排除</a></h2>
+<h3 id="cargo-errors-claiming-that-a-dependency-is-using-unstable-features"><a class="header" href="#cargo-errors-claiming-that-a-dependency-is-using-unstable-features">Cargo 报告依赖项使用不稳定功能的错误</a></h3>
+<p>尝试运行 <code>cargo clean</code> 和 <code>cargo build</code>。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

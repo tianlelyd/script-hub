@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Windows | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="active">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#building-zed-for-windows" class="pagetoc-H1">在 Windows 上构建 Zed</a>
+<a href="#repository" class="pagetoc-H2">代码仓库</a>
+<a href="#dependencies" class="pagetoc-H2">依赖项</a>
+<a href="#backend-dependencies" class="pagetoc-H3">后端依赖项（可选）</a>
+<a href="#notes" class="pagetoc-H3">注意事项</a>
+<a href="#building-from-source" class="pagetoc-H2">从源码构建</a>
+<a href="#installing-from-msys2" class="pagetoc-H2">从 msys2 安装</a>
+<a href="#troubleshooting" class="pagetoc-H2">故障排除</a>
+<a href="#setting-rustflags-env-var-breaks-builds" class="pagetoc-H3">设置 RUSTFLAGS 环境变量会破坏构建</a>
+<a href="#cargo-errors-claiming-that-a-dependency-is-using-unstable-features" class="pagetoc-H3">Cargo 错误声称依赖项使用了不稳定功能</a>
+<a href="#status_access_violation" class="pagetoc-H3">STATUS_ACCESS_VIOLATION</a>
+<a href="#invalid-rc-path-selected" class="pagetoc-H3">无效的 RC 路径选择</a>
+<a href="#build-fails-path-too-long" class="pagetoc-H3">构建失败：路径过长</a>
+<a href="#graphics-issues" class="pagetoc-H3">图形问题</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="building-zed-for-windows"><a class="header" href="#building-zed-for-windows">在 Windows 上构建 Zed</a></h1>
+<blockquote>
+<p>以下命令可以在任意 shell 中执行。</p>
+</blockquote>
+<h2 id="repository"><a class="header" href="#repository">代码仓库</a></h2>
+<p>克隆 <a href="https://github.com/zed-industries/zed">Zed 代码仓库</a>。</p>
+<h2 id="dependencies"><a class="header" href="#dependencies">依赖项</a></h2>
+<ul>
+<li>
+<p>安装 <a href="https://www.rust-lang.org/tools/install">rustup</a></p>
+</li>
+<li>
+<p>安装 <a href="https://visualstudio.microsoft.com/downloads/">Visual Studio</a>，需要包含可选组件 <code>MSVC v*** - VS YYYY C++ x64/x86 build tools</code> 和 <code>MSVC v*** - VS YYYY C++ x64/x86 Spectre-mitigated libs (latest)</code>（<code>v***</code> 是您的 VS 版本，<code>YYYY</code> 是 VS 发布年份。请注意架构，如需要请更改为您的架构。）</p>
+</li>
+<li>
+<p>或者，如果您希望使用更精简的安装程序来只安装 MSVC 编译器工具，您可以安装 <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">构建工具</a>（加上上述库）和 "使用 C++ 的桌面开发" 工作负载。
+但是请注意，这个安装不会被 rustup 自动检测到。您必须先启动该安装在开始菜单或 Windows Terminal 中放置的 "开发者" shell（cmd/powershell）来初始化您的环境变量，然后再进行编译。</p>
+</li>
+<li>
+<p>根据您的系统安装 Windows 11 或 10 SDK，但请确保您的机器上至少安装了 <code>Windows 10 SDK version 2104 (10.0.20348.0)</code>。您可以从 <a href="https://developer.microsoft.com/windows/downloads/windows-sdk/">Windows SDK 存档</a> 中下载它</p>
+</li>
+<li>
+<p>安装 <a href="https://cmake.org/download">CMake</a>（由 <a href="https://docs.rs/wasmtime-c-api-impl/latest/wasmtime_c_api/">依赖项</a> 所需）。或者您可以通过 Visual Studio Installer 安装它，然后手动将 <code>bin</code> 目录添加到您的 <code>PATH</code> 中，例如：<code>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin</code>。</p>
+</li>
+</ul>
+<p>如果您无法编译 Zed，请确保在 Visual Studio 安装情况下您至少安装了以下组件：</p>
+<pre><code class="language-json">{
+  "version": "1.0",
+  "components": [
+    "Microsoft.VisualStudio.Component.CoreEditor",
+    "Microsoft.VisualStudio.Workload.CoreEditor",
+    "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+    "Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions.CMake",
+    "Microsoft.VisualStudio.Component.VC.CMake.Project",
+    "Microsoft.VisualStudio.Component.Windows11SDK.26100",
+    "Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre"
+  ],
+  "extensions": []
+}
+</code></pre>
+<p>或者如果仅使用构建工具，请安装以下组件：</p>
+<pre><code class="language-json">{
+  "version": "1.0",
+  "components": [
+    "Microsoft.VisualStudio.Component.Roslyn.Compiler",
+    "Microsoft.Component.MSBuild",
+    "Microsoft.VisualStudio.Component.CoreBuildTools",
+    "Microsoft.VisualStudio.Workload.MSBuildTools",
+    "Microsoft.VisualStudio.Component.Windows10SDK",
+    "Microsoft.VisualStudio.Component.VC.CoreBuildTools",
+    "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+    "Microsoft.VisualStudio.Component.VC.Redist.14.Latest",
+    "Microsoft.VisualStudio.Component.Windows11SDK.26100",
+    "Microsoft.VisualStudio.Component.VC.CMake.Project",
+    "Microsoft.VisualStudio.Component.TextTemplating",
+    "Microsoft.VisualStudio.Component.VC.CoreIde",
+    "Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core",
+    "Microsoft.VisualStudio.Workload.VCTools",
+    "Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre"
+  ],
+  "extensions": []
+}
+</code></pre>
+<p>您可以通过以下方式获取列表：</p>
+<ul>
+<li>打开 Visual Studio Installer</li>
+<li>在 <code>已安装</code> 选项卡中点击 <code>更多</code></li>
+<li>点击 <code>导出配置</code></li>
+</ul>
+<h3 id="backend-dependencies"><a class="header" href="#backend-dependencies">后端依赖项（可选）</a></h3>
+<p>如果您希望使用本地协作服务器开发 Zed 协作功能，请参阅：<a href="./local-collaboration.html">本地协作</a> 文档。</p>
+<h3 id="notes"><a class="header" href="#notes">注意事项</a></h3>
+<p>您应该修改 <code>data</code> 目录中的 <code>pg_hba.conf</code> 文件，将 <code>host</code> 方法从 <code>scram-sha-256</code> 改为 <code>trust</code>。否则，连接将失败并显示错误 <code>password authentication failed</code>。<code>pg_hba.conf</code> 文件通常位于 <code>C:\Program Files\PostgreSQL\17\data\pg_hba.conf</code>。修改后，文件应该如下所示：</p>
+<pre><code class="language-conf"># IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+# IPv6 local connections:
+host    all             all             ::1/128                 trust
+</code></pre>
+<p>此外，如果您使用非拉丁字符的 Windows 版本，您必须在 <code>data</code> 目录中的 <code>postgresql.conf</code> 文件中将 <code>lc_messages</code> 参数修改为 <code>English_United States.1252</code>（或您拥有的任何 UTF8 兼容编码）。否则，数据库将会崩溃。<code>postgresql.conf</code> 文件应该如下所示：</p>
+<pre><code class="language-conf"># lc_messages = 'Chinese (Simplified)_China.936' # locale for system error message strings
+lc_messages = 'English_United States.1252'
+</code></pre>
+<p>之后，您应该重启 <code>postgresql</code> 服务。按 <code>win</code> 键 + <code>R</code> 打开 <code>运行</code> 窗口。输入 <code>services.msc</code> 并点击 <code>确定</code> 按钮打开服务管理器。然后，找到 <code>postgresql-x64-XX</code> 服务，右键点击它，并选择 <code>重启</code>。</p>
+<h2 id="building-from-source"><a class="header" href="#building-from-source">从源码构建</a></h2>
+<p>一旦您安装了依赖项，您就可以使用 <a href="https://doc.rust-lang.org/cargo/">Cargo</a> 构建 Zed。</p>
+<p>进行调试构建：</p>
+<pre><code class="language-sh">cargo run
+</code></pre>
+<p>进行发布构建：</p>
+<pre><code class="language-sh">cargo run --release
+</code></pre>
+<p>运行测试：</p>
+<pre><code class="language-sh">cargo test --workspace
+</code></pre>
+<h2 id="installing-from-msys2"><a class="header" href="#installing-from-msys2">从 msys2 安装</a></h2>
+<p>Zed 不支持为 Mingw-w64 构建的非官方 MSYS2 Zed 包。如果您在使用 <a href="https://packages.msys2.org/base/mingw-w64-zed">mingw-w64-zed</a> 时遇到任何问题，请向 <a href="https://github.com/msys2/MINGW-packages/issues?q=is%3Aissue+is%3Aopen+zed">msys2/MINGW-packages/issues</a> 报告。</p>
+<p>请先参阅 <a href="https://www.msys2.org/docs/ides-editors/#zed">MSYS2 文档</a>。</p>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">故障排除</a></h2>
+<h3 id="setting-rustflags-env-var-breaks-builds"><a class="header" href="#setting-rustflags-env-var-breaks-builds">设置 <code>RUSTFLAGS</code> 环境变量会破坏构建</a></h3>
+<p>如果您设置了 <code>RUSTFLAGS</code> 环境变量，它将覆盖 <code>.cargo/config.toml</code> 中的 <code>rustflags</code> 设置，而这些设置是正确构建 Zed 所必需的。</p>
+<p>由于这些设置可能会不时变化，您收到的构建错误可能从链接器错误到其他更奇怪的错误都有。</p>
+<p>如果您希望添加额外的 rust 标志，您可以在 <code>.cargo/config.toml</code> 中执行以下一种操作：</p>
+<p>在 build 部分中添加您的标志</p>
+<pre><code class="language-toml">[build]
+rustflags = ["-C", "symbol-mangling-version=v0", "--cfg", "tokio_unstable"]
+</code></pre>
+<p>在 windows 目标部分中添加您的标志</p>
+<pre><code class="language-toml">[target.'cfg(target_os = "windows")']
+rustflags = [
+    "--cfg",
+    "windows_slim_errors",
+    "-C",
+    "target-feature=+crt-static",
+]
+</code></pre>
+<p>或者，您可以在与 Zed 代码仓库相同的文件夹中创建一个新的 <code>.cargo/config.toml</code>（见下文）。如果您进行 CI 构建，这特别有用，因为您不必编辑原始的 <code>.cargo/config.toml</code>。</p>
+<pre><code>upper_dir
+├── .cargo          // &lt;-- Make this folder
+│   └── config.toml // &lt;-- Make this file
+└── zed
+    ├── .cargo
+    │   └── config.toml
+    └── crates
+        ├── assistant
+        └── ...
+</code></pre>
+<p>在新的（上述）<code>.cargo/config.toml</code> 中，如果我们想在 rustflags 中添加 <code>--cfg gles</code>，它将如下所示</p>
+<pre><code class="language-toml">[target.'cfg(all())']
+rustflags = ["--cfg", "gles"]
+</code></pre>
+<h3 id="cargo-errors-claiming-that-a-dependency-is-using-unstable-features"><a class="header" href="#cargo-errors-claiming-that-a-dependency-is-using-unstable-features">Cargo 错误声称依赖项使用了不稳定功能</a></h3>
+<p>请尝试 <code>cargo clean</code> 和 <code>cargo build</code>。</p>
+<h3 id="status_access_violation"><a class="header" href="#status_access_violation"><code>STATUS_ACCESS_VIOLATION</code></a></h3>
+<p>如果您使用的是 "rust-lld.exe" 链接器，就可能出现此错误。请考虑尝试不同的链接器。</p>
+<p>如果您使用的是全局配置，请考虑将 Zed 代码仓库移动到嵌套目录，并在父目录中添加一个带有自定义链接器配置的 <code>.cargo/config.toml</code>。</p>
+<p>有关更多信息，请参见此问题 <a href="https://github.com/zed-industries/zed/issues/12041">#12041</a></p>
+<h3 id="invalid-rc-path-selected"><a class="header" href="#invalid-rc-path-selected">无效的 RC 路径选择</a></h3>
+<p>有时，根据适用于您笔记本电脑的安全规则，您在编译 Zed 时可能会遇到以下错误：</p>
+<pre><code>error: failed to run custom build command for `zed(C:\Users\USER\src\zed\crates\zed)`
+
+Caused by:
+  process didn't exit successfully: `C:\Users\USER\src\zed\target\debug\build\zed-b24f1e9300107efc\build-script-build` (exit code: 1)
+  --- stdout
+  cargo:rerun-if-changed=../../.git/logs/HEAD
+  cargo:rustc-env=ZED_COMMIT_SHA=25e2e9c6727ba9b77415588cfa11fd969612adb7
+  cargo:rustc-link-arg=/stack:8388608
+  cargo:rerun-if-changed=resources/windows/app-icon.ico
+  package.metadata.winresource does not exist
+  Selected RC path: 'bin\x64\rc.exe'
+
+  --- stderr
+  The system cannot find the path specified. (os error 3)
+warning: build failed, waiting for other jobs to finish...
+</code></pre>
+<p>为了解决此问题，您可以手动将 <code>ZED_RC_TOOLKIT_PATH</code> 环境变量设置为 RC 工具包路径。通常，您可以将其设置为：
+<code>C:\Program Files (x86)\Windows Kits\10\bin\&lt;SDK_version&gt;\x64</code>。</p>
+<p>有关更多信息，请参阅此 <a href="https://github.com/zed-industries/zed/issues/18393">问题</a>。</p>
+<h3 id="build-fails-path-too-long"><a class="header" href="#build-fails-path-too-long">构建失败：路径过长</a></h3>
+<p>构建时您可能会收到类似下面的错误</p>
+<pre><code>error: failed to get `pet` as a dependency of package `languages v0.1.0 (D:\a\zed-windows-builds\zed-windows-builds\crates\languages)`
+
+Caused by:
+  failed to load source for dependency `pet`
+
+Caused by:
+  Unable to update https://github.com/microsoft/python-environment-tools.git?rev=ffcbf3f28c46633abd5448a52b1f396c322e0d6c#ffcbf3f2
+
+Caused by:
+  path too long: 'C:/Users/runneradmin/.cargo/git/checkouts/python-environment-tools-903993894b37a7d2/ffcbf3f/crates/pet-conda/tests/unix/conda_env_without_manager_but_found_in_history/some_other_location/conda_install/conda-meta/python-fastjsonschema-2.16.2-py310hca03da5_0.json'; class=Filesystem (30)
+</code></pre>
+<p>为了解决此问题，您可以为 git 和 Windows 启用长路径支持。</p>
+<p>对于 git：<code>git config --system core.longpaths true</code></p>
+<p>对于 Windows，使用此 PS 命令：</p>
+<pre><code class="language-powershell">New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+</code></pre>
+<p>有关更多信息，请参见 <a href="https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell">win32 文档</a></p>
+<p>（请注意，在启用长路径支持后，您需要重启系统）</p>
+<h3 id="graphics-issues"><a class="header" href="#graphics-issues">图形问题</a></h3>
+<h4 id="zed-fails-to-launch"><a class="header" href="#zed-fails-to-launch">Zed 启动失败</a></h4>
+<p>目前，Zed 在 Windows 上使用 Vulkan 作为其图形 API。然而，Vulkan 在 Windows 上并不总是最可靠的，所以如果 Zed 启动失败，很可能是与 Vulkan 相关的问题。</p>
+<p>您可以在以下位置检查 Zed 日志：
+<code>C:\Users\YOU\AppData\Local\Zed\logs\Zed.log</code></p>
+<p>如果您看到类似下面的消息：</p>
+<ul>
+<li><code>Zed failed to open a window: NoSupportedDeviceFound</code></li>
+<li><code>ERROR_INITIALIZATION_FAILED</code></li>
+<li><code>GPU Crashed</code></li>
+<li><code>ERROR_SURFACE_LOST_KHR</code></li>
+</ul>
+<p>那么 Vulkan 可能在您的系统上无法正常工作。在大多数情况下，更新您的 GPU 驱动程序可能有助于解决此问题。</p>
+<p>如果日志中没有与 Vulkan 相关的内容，而您恰好安装了 Bandicam，请尝试卸载它。Zed 目前与 Bandicam 不兼容。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

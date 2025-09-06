@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/visual-customization.html",
+  "title": "Visual Customization | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"visual-customization\"><a class=\"header\" href=\"#visual-customization\">Visual Customization</a></h1>\n<p>Various aspects of Zed's visual layout can be configured via Zed settings.json which you can access via <code class=\"hljs\">zed: open settings</code> (<kbd class=\"keybinding\">cmd-,|ctrl-,</kbd>).</p>\n<p>See <a href=\"./configuring-zed.html\">Configuring Zed</a> for additional information and other non-visual settings.</p>\n<h2 id=\"themes\"><a class=\"header\" href=\"#themes\">Themes</a></h2>\n<p>Use may install zed extensions providing <a href=\"./themes.html\">Themes</a> and <a href=\"./icon-themes.html\">Icon Themes</a> via <code class=\"hljs\">zed: extensions</code> from the command palette or menu.</p>\n<p>You can preview/choose amongst your installed themes and icon themes with <code class=\"hljs\">theme selector: toggle</code> (<kbd class=\"keybinding\">cmd-k cmd-t|ctrl-k ctrl-t</kbd>) and (<code class=\"hljs\">icon theme selector: toggle</code>) which will modify the following settings:</p>\n<pre><code class=\"language-json\">{\n  \"theme\": \"One Dark\",\n  \"icon_theme\": \"Zed (Default)\"\n}\n</code></pre>\n<p>If you would like to use distinct themes for light mode/dark mode that can be set with:</p>\n<pre><code class=\"language-json\">{\n  \"theme\": {\n    \"dark\": \"One Dark\"\n    \"light\": \"One Light\",\n    // Mode to use (dark, light) or \"system\" to follow the OS's light/dark mode (default)\n    \"mode\": \"system\",\n  },\n  \"icon_theme\": {\n    \"dark\": \"Zed (Default)\"\n    \"light\": \"Zed (Default)\",\n    // Mode to use (dark, light) or \"system\" to follow the OS's light/dark mode (default)\n    \"mode\": \"system\",\n  }\n}\n</code></pre>\n<h2 id=\"fonts\"><a class=\"header\" href=\"#fonts\">Fonts</a></h2>\n<pre><code class=\"language-json\">  // UI Font. Use \".SystemUIFont\" to use the default system font (SF Pro on macOS),\n  // or \".ZedSans\" for the bundled default (currently IBM Plex)\n  \"ui_font_family\": \".SystemUIFont\",\n  \"ui_font_weight\": 400, // Font weight in standard CSS units from 100 to 900.\n  \"ui_font_size\": 16,\n\n  // Buffer Font - Used by editor buffers\n  // use \".ZedMono\" for the bundled default monospace (currently Lilex)\n  \"buffer_font_family\": \"Berkeley Mono\", // Font name for editor buffers\n  \"buffer_font_size\": 15,                 // Font size for editor buffers\n  \"buffer_font_weight\": 400,              // Font weight in CSS units [100-900]\n  // Line height \"comfortable\" (1.618), \"standard\" (1.3) or custom: `{ \"custom\": 2 }`\n  \"buffer_line_height\": \"comfortable\",\n\n  // Terminal Font Settings\n  \"terminal\": {\n    \"font_family\": \"\",\n    \"font_size\": 15,\n    // Terminal line height: comfortable (1.618), standard(1.3) or `{ \"custom\": 2 }`\n    \"line_height\": \"comfortable\",\n  },\n\n  // Agent Panel Font Settings\n  \"agent_font_size\": 15\n</code></pre>\n<h3 id=\"font-ligatures\"><a class=\"header\" href=\"#font-ligatures\">Font ligatures</a></h3>\n<p>By default Zed enable font ligatures which will visually combines certain adjacent characters.</p>\n<p>For example <code>=&gt;</code> will be displayed as <code>→</code> and <code>!=</code> will be <code>≠</code>. This is purely cosmetic and the individual characters remain unchanged.</p>\n<p>To disable this behavior use:</p>\n<pre><code class=\"language-json\">{\n  \"buffer_font_features\": {\n    \"calt\": false // Disable ligatures\n  }\n}\n</code></pre>\n<h3 id=\"status-bar\"><a class=\"header\" href=\"#status-bar\">Status Bar</a></h3>\n<pre><code class=\"language-json\">{\n  // Whether to show full labels in line indicator or short ones\n  //   - `short`: \"2 s, 15 l, 32 c\"\n  //   - `long`: \"2 selections, 15 lines, 32 characters\"\n  \"line_indicator_format\": \"long\"\n\n  // Individual status bar icons can be hidden:\n  // \"project_panel\": {\"button\": false },\n  // \"outline_panel\": {\"button\": false },\n  // \"collaboration_panel\": {\"button\": false },\n  // \"chat_panel\": {\"button\": \"never\" },\n  // \"git_panel\": {\"button\": false },\n  // \"notification_panel\": {\"button\": false },\n  // \"agent\": {\"button\": false },\n  // \"debugger\": {\"button\": false },\n  // \"diagnostics\": {\"button\": false },\n  // \"search\": {\"button\": false },\n}\n</code></pre>\n<h3 id=\"titlebar\"><a class=\"header\" href=\"#titlebar\">Titlebar</a></h3>\n<pre><code class=\"language-json\">  // Control which items are shown/hidden in the title bar\n  \"title_bar\": {\n    \"show_branch_icon\": false,      // Show/hide branch icon beside branch switcher\n    \"show_branch_name\": true,       // Show/hide branch name\n    \"show_project_items\": true,     // Show/hide project host and name\n    \"show_onboarding_banner\": true, // Show/hide onboarding banners\n    \"show_user_picture\": true,      // Show/hide user avatar\n    \"show_sign_in\": true,           // Show/hide sign-in button\n    \"show_menus\": false             // Show/hide menus\n  },\n</code></pre>\n<h2 id=\"workspace\"><a class=\"header\" href=\"#workspace\">Workspace</a></h2>\n<pre><code class=\"language-json\">{\n  // Force usage of Zed build in path prompts (file and directory pickers)\n  // instead of OS native pickers (false).\n  \"use_system_path_prompts\": true,\n  // Force usage of Zed built in confirmation prompts (\"Do you want to save?\")\n  // instead of OS native prompts (false). On linux this is ignored (always false).\n  \"use_system_prompts\": true,\n\n  // Whether to use the system provided dialogs for Open and Save As (true) or\n  // Zed's built-in keyboard-first pickers (false)\n  \"use_system_path_prompts\": true,\n\n  // Active pane styling settings.\n  \"active_pane_modifiers\": {\n    // Inset border size of the active pane, in pixels.\n    \"border_size\": 0.0,\n    // Opacity of the inactive panes. 0 means transparent, 1 means opaque.\n    \"inactive_opacity\": 1.0\n  },\n\n  // Layout mode of the bottom dock: contained, full, left_aligned, right_aligned\n  \"bottom_dock_layout\": \"contained\",\n\n  // Whether to resize all the panels in a dock when resizing the dock.\n  // Can be a combination of \"left\", \"right\" and \"bottom\".\n  \"resize_all_panels_in_dock\": [\"left\"]\n}\n</code></pre>\n<!--\nTBD: Centered layout related settings\n```json\n    \"centered_layout\": {\n    // The relative width of the left padding of the central pane from the\n    // workspace when the centered layout is used.\n    \"left_padding\": 0.2,\n    // The relative width of the right padding of the central pane from the\n    // workspace when the centered layout is used.\n    \"right_padding\": 0.2\n    },\n```\n-->\n<h2 id=\"editor\"><a class=\"header\" href=\"#editor\">Editor</a></h2>\n<pre><code class=\"language-json\">  // Whether the cursor blinks in the editor.\n  \"cursor_blink\": true,\n\n  // Cursor shape for the default editor: bar, block, underline, hollow\n  \"cursor_shape\": null,\n\n  // Highlight the current line in the editor: none, gutter, line, all\n  \"current_line_highlight\": \"all\",\n\n  // When does the mouse cursor hide: never, on_typing, on_typing_and_movement\n  \"hide_mouse\": \"on_typing_and_movement\",\n\n  // Whether to highlight all occurrences of the selected text in an editor.\n  \"selection_highlight\": true,\n\n  // Visually show tabs and spaces  (none, all, selection, boundary, trailing)\n  \"show_whitespaces\": \"selection\",\n\n  \"unnecessary_code_fade\": 0.3, // How much to fade out unused code.\n\n  // Hide the values of in variables from visual display in private files\n  \"redact_private_values\": false,\n\n  // Soft-wrap and rulers\n  \"soft_wrap\": \"none\",          // none, editor_width, preferred_line_length, bounded\n  \"preferred_line_length\": 80,  // Column to soft-wrap\n  \"show_wrap_guides\": true,     // Show/hide wrap guides (vertical rulers)\n  \"wrap_guides\": [],            // Where to position wrap_guides (character counts)\n\n  // Gutter Settings\n  \"gutter\": {\n    \"line_numbers\": true,         // Show/hide line numbers in the gutter.\n    \"runnables\": true,            // Show/hide runnables buttons in the gutter.\n    \"breakpoints\": true,          // Show/hide show breakpoints in the gutter.\n    \"folds\": true,                // Show/hide show fold buttons in the gutter.\n    \"min_line_number_digits\": 4   // Reserve space for N digit line numbers\n  },\n  \"relative_line_numbers\": false, // Show relative line numbers in gutter\n\n  // Indent guides\n  \"indent_guides\": {\n    \"enabled\": true,\n    \"line_width\": 1,                  // Width of guides in pixels [1-10]\n    \"active_line_width\": 1,           // Width of active guide in pixels [1-10]\n    \"coloring\": \"fixed\",              // disabled, fixed, indent_aware\n    \"background_coloring\": \"disabled\" // disabled, indent_aware\n  }\n</code></pre>\n<h3 id=\"editor-blame\"><a class=\"header\" href=\"#editor-blame\">Git Blame</a></h3>\n<pre><code class=\"language-json\">  \"git\": {\n    \"inline_blame\": {\n      \"enabled\": true,             // Show/hide inline blame\n      \"delay\": 0,                  // Show after delay (ms)\n      \"min_column\": 0,             // Minimum column to inline display blame\n      \"padding\": 7,                // Padding between code and inline blame (em)\n      \"show_commit_summary\": false // Show/hide commit summary\n    },\n    \"hunk_style\": \"staged_hollow\"  // staged_hollow, unstaged_hollow\n  }\n</code></pre>\n<h3 id=\"editor-toolbar\"><a class=\"header\" href=\"#editor-toolbar\">Editor Toolbar</a></h3>\n<pre><code class=\"language-json\">  // Editor toolbar related settings\n  \"toolbar\": {\n    \"breadcrumbs\": true, // Whether to show breadcrumbs.\n    \"quick_actions\": true, // Whether to show quick action buttons.\n    \"selections_menu\": true, // Whether to show the Selections menu\n    \"agent_review\": true, // Whether to show agent review buttons\n    \"code_actions\": false // Whether to show code action buttons\n  }\n</code></pre>\n<h3 id=\"editor-scrollbar\"><a class=\"header\" href=\"#editor-scrollbar\">Editor Scrollbar and Minimap</a></h3>\n<pre><code class=\"language-json\">  // Scrollbar related settings\n  \"scrollbar\": {\n    // When to show the scrollbar in the editor (auto, system, always, never)\n    \"show\": \"auto\",\n    \"cursors\": true,          // Show cursor positions in the scrollbar.\n    \"git_diff\": true,         // Show git diff indicators in the scrollbar.\n    \"search_results\": true,   // Show buffer search results in the scrollbar.\n    \"selected_text\": true,    // Show selected text occurrences in the scrollbar.\n    \"selected_symbol\": true,  // Show selected symbol occurrences in the scrollbar.\n    \"diagnostics\": \"all\",     // Show diagnostics (none, error, warning, information, all)\n    \"axes\": {\n      \"horizontal\": true,     // Show/hide the horizontal scrollbar\n      \"vertical\": true        // Show/hide the vertical scrollbar\n    }\n  },\n\n  // Minimap related settings\n  \"minimap\": {\n    \"show\": \"never\",                // When to show (auto, always, never)\n    \"display_in\": \"active_editor\",  // Where to show (active_editor, all_editor)\n    \"thumb\": \"always\",              // When to show thumb (always, hover)\n    \"thumb_border\": \"left_open\",    // Thumb border (left_open, right_open, full, none)\n    \"max_width_columns\": 80,        // Maximum width of minimap\n    \"current_line_highlight\": null  // Highlight current line (null, line, gutter)\n  },\n\n  // Control Editor scroll beyond the last line: off, one_page, vertical_scroll_margin\n  \"scroll_beyond_last_line\": \"one_page\",\n  // Lines to keep above/below the cursor when scrolling with the keyboard\n  \"vertical_scroll_margin\": 3,\n  // The number of characters to keep on either side when scrolling with the mouse\n  \"horizontal_scroll_margin\": 5,\n  // Scroll sensitivity multiplier\n  \"scroll_sensitivity\": 1.0,\n  // Scroll sensitivity multiplier for fast scrolling (hold alt while scrolling)\n  \"fast_scroll_sensitivity\": 4.0,\n</code></pre>\n<h3 id=\"editor-tabs\"><a class=\"header\" href=\"#editor-tabs\">Editor Tabs</a></h3>\n<pre><code class=\"language-json\">  // Maximum number of tabs per pane. Unset for unlimited.\n  \"max_tabs\": null,\n\n  // Customize the tab bar appearance\n  \"tab_bar\": {\n    \"show\": true,                     // Show/hide the tab bar\n    \"show_nav_history_buttons\": true, // Show/hide history buttons on tab bar\n    \"show_tab_bar_buttons\": true      // Show hide buttons (new, split, zoom)\n  },\n  \"tabs\": {\n    \"git_status\": false,              // Color to show git status\n    \"close_position\": \"right\",        // Close button position (left, right, hidden)\n    \"show_close_button\": \"hover\",     // Close button shown (hover, always, hidden)\n    \"file_icons\": false,              // Icon showing file type\n    // Show diagnostics in file icon (off, errors, all). Requires file_icons=true\n    \"show_diagnostics\": \"off\"\n  }\n</code></pre>\n<h3 id=\"status-bar-1\"><a class=\"header\" href=\"#status-bar-1\">Status Bar</a></h3>\n<pre><code class=\"language-json\">  \"status_bar\": {\n    // Show/hide a button that displays the active buffer's language.\n    // Clicking the button brings up the language selector.\n    // Defaults to true.\n    \"active_language_button\": true,\n    // Show/hide a button that displays the cursor's position.\n    // Clicking the button brings up an input for jumping to a line and column.\n    // Defaults to true.\n    \"cursor_position_button\": true,\n  },\n  \"global_lsp_settings\": {\n    // Show/hide the LSP button in the status bar.\n    // Activity from the LSP is still shown.\n    // Button is not shown if \"enable_language_server\" if false.\n    \"button\": true\n  },\n</code></pre>\n<h3 id=\"multibuffer\"><a class=\"header\" href=\"#multibuffer\">Multibuffer</a></h3>\n<pre><code class=\"language-json\">{\n  // The default number of lines to expand excerpts in the multibuffer by.\n  \"expand_excerpt_lines\": 5,\n  // The default number of lines of context provided for excerpts in the multibuffer by.\n  \"excerpt_context_lines\": 2\n}\n</code></pre>\n<h3 id=\"editor-lsp\"><a class=\"header\" href=\"#editor-lsp\">Editor Completions, Snippets, Actions, Diagnostics</a></h3>\n<pre><code class=\"language-json\">  \"snippet_sort_order\": \"inline\",        // Snippets completions: top, inline, bottom, none\n  \"show_completions_on_input\": true,     // Show completions while typing\n  \"show_completion_documentation\": true, // Show documentation in completions\n  \"auto_signature_help\": false,          // Show method signatures inside parentheses\n\n  // Whether to show the signature help after completion or a bracket pair inserted.\n  // If `auto_signature_help` is enabled, this setting will be treated as enabled also.\n  \"show_signature_help_after_edits\": false,\n\n  // Whether to show code action button at start of buffer line.\n  \"inline_code_actions\": true,\n\n  // Which level to use to filter out diagnostics displayed in the editor:\n  \"diagnostics_max_severity\": null,      // off, error, warning, info, hint, null (all)\n\n  // How to render LSP `textDocument/documentColor` colors in the editor.\n  \"lsp_document_colors\": \"inlay\",        // none, inlay, border, background\n</code></pre>\n<h3 id=\"editor-ai\"><a class=\"header\" href=\"#editor-ai\">Edit Predictions</a></h3>\n<pre><code class=\"language-json\">  \"edit_predictions\": {\n    \"mode\": \"eager\",                // Automatically show (eager) or hold-alt (subtle)\n    \"enabled_in_text_threads\": true // Show/hide predictions in agent text threads\n  },\n  \"show_edit_predictions\": true     // Show/hide predictions in editor\n</code></pre>\n<h3 id=\"editor-inlay-hints\"><a class=\"header\" href=\"#editor-inlay-hints\">Editor Inlay Hints</a></h3>\n<pre><code class=\"language-json\">{\n  \"inlay_hints\": {\n    \"enabled\": false,\n    // Toggle certain types of hints on and off, all switched on by default.\n    \"show_type_hints\": true,\n    \"show_parameter_hints\": true,\n    \"show_other_hints\": true,\n\n    // Whether to show a background for inlay hints (theme `hint.background`)\n    \"show_background\": false, //\n\n    // Time to wait after editing before requesting hints (0 to disable debounce)\n    \"edit_debounce_ms\": 700,\n    // Time to wait after scrolling before requesting hints (0 to disable debounce)\n    \"scroll_debounce_ms\": 50,\n\n    // A set of modifiers which, when pressed, will toggle the visibility of inlay hints.\n    \"toggle_on_modifiers_press\": {\n      \"control\": false,\n      \"shift\": false,\n      \"alt\": false,\n      \"platform\": false,\n      \"function\": false\n    }\n  }\n}\n</code></pre>\n<h2 id=\"file-finder\"><a class=\"header\" href=\"#file-finder\">File Finder</a></h2>\n<pre><code class=\"language-json\">  // File Finder Settings\n  \"file_finder\": {\n    \"file_icons\": true,         // Show/hide file icons\n    \"modal_max_width\": \"small\", // Horizontal size: small, medium, large, xlarge, full\n    \"git_status\": true,         // Show the git status for each entry\n    \"include_ignored\": null     // gitignored files in results: true, false, null\n  },\n</code></pre>\n<h2 id=\"project-panel\"><a class=\"header\" href=\"#project-panel\">Project Panel</a></h2>\n<p>Project panel can be shown/hidden with <code class=\"hljs\">project panel: toggle focus</code> (<kbd class=\"keybinding\">cmd-shift-e|ctrl-shift-e</kbd>) or with <code class=\"hljs\">pane: reveal in project panel</code> (<kbd class=\"keybinding\">cmd-shift-e|ctrl-shift-e</kbd>).</p>\n<pre><code class=\"language-json\">  // Project Panel Settings\n  \"project_panel\": {\n    \"button\": true,                 // Show/hide button in the status bar\n    \"default_width\": 240,           // Default panel width\n    \"dock\": \"left\",                 // Position of the dock (left, right)\n    \"entry_spacing\": \"comfortable\", // Vertical spacing (comfortable, standard)\n    \"file_icons\": true,             // Show/hide file icons\n    \"folder_icons\": true,           // Show/hide folder icons\n    \"git_status\": true,             // Indicate new/updated files\n    \"indent_size\": 20,              // Pixels for each successive indent\n    \"auto_reveal_entries\": true,    // Show file in panel when activating its buffer\n    \"auto_fold_dirs\": true,         // Fold dirs with single subdir\n    \"sticky_scroll\": true,          // Stick parent directories at top of the project panel.\n    \"drag_and_drop\": true,          // Whether drag and drop is enabled\n    \"scrollbar\": {                  // Project panel scrollbar settings\n      \"show\": null                  // Show/hide: (auto, system, always, never)\n    },\n    \"show_diagnostics\": \"all\",      //\n    // Settings related to indent guides in the project panel.\n    \"indent_guides\": {\n      // When to show indent guides in the project panel. (always, never)\n      \"show\": \"always\"\n    },\n    // Whether to hide the root entry when only one folder is open in the window.\n    \"hide_root\": false\n  }.\n</code></pre>\n<h2 id=\"agent-panel\"><a class=\"header\" href=\"#agent-panel\">Agent Panel</a></h2>\n<pre><code class=\"language-json\">  \"agent\": {\n    \"version\": \"2\",\n    \"enabled\": true,        // Enable/disable the agent\n    \"button\": true,         // Show/hide the icon in the status bar\n    \"dock\": \"right\",        // Where to dock: left, right, bottom\n    \"default_width\": 640,   // Default width (left/right docked)\n    \"default_height\": 320,  // Default height (bottom dockeed)\n  },\n  \"agent_font_size\": 16\n</code></pre>\n<p>See <a href=\"./ai/overview.html\">Zed AI Documentation</a> for additional non-visual AI settings.</p>\n<h2 id=\"terminal-panel\"><a class=\"header\" href=\"#terminal-panel\">Terminal Panel</a></h2>\n<pre><code class=\"language-json\">  // Terminal Panel Settings\n  \"terminal\": {\n    \"dock\": \"bottom\",                   // Where to dock: left, right, bottom\n    \"button\": true,                     // Show/hide status bar icon\n    \"default_width\": 640,               // Default width (left/right docked)\n    \"default_height\": 320,              // Default height (bottom dockeed)\n\n    // Set the cursor blinking behavior in the terminal (on, off, terminal_controlled)\n    \"blinking\": \"terminal_controlled\",\n    // Default cursor shape for the terminal cursor (block, bar, underline, hollow)\n    \"cursor_shape\": \"block\",\n\n    // Environment variables to add to terminal's process environment\n    \"env\": {\n      // \"KEY\": \"value\"\n    },\n\n    // Terminal scrollbar\n    \"scrollbar\": {\n      \"show\": null                       // Show/hide: (auto, system, always, never)\n    },\n    // Terminal Font Settings\n    \"font_family\": \"Fira Code\",\n    \"font_size\": 15,\n    \"font_weight\": 400,\n    // Terminal line height: comfortable (1.618), standard(1.3) or `{ \"custom\": 2 }`\n    \"line_height\": \"comfortable\",\n\n    \"max_scroll_history_lines\": 10000,   // Scrollback history (0=disable, max=100000)\n  }\n</code></pre>\n<p>See <a href=\"./configuring-zed.html#terminal\">Terminal settings</a> for additional non-visual customization options.</p>\n<h3 id=\"other-panels\"><a class=\"header\" href=\"#other-panels\">Other Panels</a></h3>\n<pre><code class=\"language-json\">  // Git Panel\n  \"git_panel\": {\n    \"button\": true,               // Show/hide status bar icon\n    \"dock\": \"left\",               // Where to dock: left, right\n    \"default_width\": 360,         // Default width of the git panel.\n    \"status_style\": \"icon\",       // label_color, icon\n    \"sort_by_path\": false,        // Sort by path (false) or status (true)\n    \"scrollbar\": {\n      \"show\": null                // Show/hide: (auto, system, always, never)\n    }\n  },\n\n  // Debugger Panel\n  \"debugger\": {\n    \"dock\": \"bottom\",             // Where to dock: left, right, bottom\n    \"button\": true                // Show/hide status bar icon\n  },\n\n  // Outline Panel\n  \"outline_panel\": {\n    \"button\": true,               // Show/hide status bar icon\n    \"default_width\": 300,         // Default width of the git panel\n    \"dock\": \"left\",               // Where to dock: left, right\n    \"file_icons\": true,           // Show/hide file_icons\n    \"folder_icons\": true,         // Show file_icons (true), chevrons (false) for dirs\n    \"git_status\": true,           // Show git status\n    \"indent_size\": 20,            // Indentation for nested items (pixels)\n    \"indent_guides\": {\n      \"show\": \"always\"            // Show indent guides (always, never)\n    },\n    \"auto_reveal_entries\": true,  // Show file in panel when activating its buffer\n    \"auto_fold_dirs\": true,       // Fold dirs with single subdir\n    \"scrollbar\": {                // Project panel scrollbar settings\n      \"show\": null                // Show/hide: (auto, system, always, never)\n    }\n  }\n</code></pre>\n<h2 id=\"collaboration-panels\"><a class=\"header\" href=\"#collaboration-panels\">Collaboration Panels</a></h2>\n<pre><code class=\"language-json\">{\n  // Collaboration Panel\n  \"collaboration_panel\": {\n    \"button\": true,               // Show/hide status bar icon\n    \"dock\": \"left\",               // Where to dock: left, right\n    \"default_width\": 240          // Default width of the collaboration panel.\n  },\n  \"show_call_status_icon\": true,  // Shown call status in the OS status bar.\n\n  // Chat Panel\n  \"chat_panel\": {\n    \"button\": \"when_in_call\",     // status bar icon (true, false, when_in_call)\n    \"dock\": \"right\",              // Where to dock: left, right\n    \"default_width\": 240          // Default width of the chat panel\n  },\n\n  // Notification Panel\n  \"notification_panel\": {\n    // Whether to show the notification panel button in the status bar.\n    \"button\": true,\n    // Where to dock the notification panel. Can be 'left' or 'right'.\n    \"dock\": \"right\",\n    // Default width of the notification panel.\n    \"default_width\": 380\n  }\n</code></pre>\n\n</main>",
+  "content_text": "Visual Customization\nVarious aspects of Zed's visual layout can be configured via Zed settings.json which you can access via zed: open settings (cmd-,|ctrl-,).\nSee Configuring Zed for additional information and other non-visual settings.\nThemes\nUse may install zed extensions providing Themes and Icon Themes via zed: extensions from the command palette or menu.\nYou can preview/choose amongst your installed themes and icon themes with theme selector: toggle (cmd-k cmd-t|ctrl-k ctrl-t) and (icon theme selector: toggle) which will modify the following settings:\n{\n  \"theme\": \"One Dark\",\n  \"icon_theme\": \"Zed (Default)\"\n}\n\nIf you would like to use distinct themes for light mode/dark mode that can be set with:\n{\n  \"theme\": {\n    \"dark\": \"One Dark\"\n    \"light\": \"One Light\",\n    // Mode to use (dark, light) or \"system\" to follow the OS's light/dark mode (default)\n    \"mode\": \"system\",\n  },\n  \"icon_theme\": {\n    \"dark\": \"Zed (Default)\"\n    \"light\": \"Zed (Default)\",\n    // Mode to use (dark, light) or \"system\" to follow the OS's light/dark mode (default)\n    \"mode\": \"system\",\n  }\n}\n\nFonts\n  // UI Font. Use \".SystemUIFont\" to use the default system font (SF Pro on macOS),\n  // or \".ZedSans\" for the bundled default (currently IBM Plex)\n  \"ui_font_family\": \".SystemUIFont\",\n  \"ui_font_weight\": 400, // Font weight in standard CSS units from 100 to 900.\n  \"ui_font_size\": 16,\n\n  // Buffer Font - Used by editor buffers\n  // use \".ZedMono\" for the bundled default monospace (currently Lilex)\n  \"buffer_font_family\": \"Berkeley Mono\", // Font name for editor buffers\n  \"buffer_font_size\": 15,                 // Font size for editor buffers\n  \"buffer_font_weight\": 400,              // Font weight in CSS units [100-900]\n  // Line height \"comfortable\" (1.618), \"standard\" (1.3) or custom: `{ \"custom\": 2 }`\n  \"buffer_line_height\": \"comfortable\",\n\n  // Terminal Font Settings\n  \"terminal\": {\n    \"font_family\": \"\",\n    \"font_size\": 15,\n    // Terminal line height: comfortable (1.618), standard(1.3) or `{ \"custom\": 2 }`\n    \"line_height\": \"comfortable\",\n  },\n\n  // Agent Panel Font Settings\n  \"agent_font_size\": 15\n\nFont ligatures\nBy default Zed enable font ligatures which will visually combines certain adjacent characters.\nFor example => will be displayed as → and != will be ≠. This is purely cosmetic and the individual characters remain unchanged.\nTo disable this behavior use:\n{\n  \"buffer_font_features\": {\n    \"calt\": false // Disable ligatures\n  }\n}\n\nStatus Bar\n{\n  // Whether to show full labels in line indicator or short ones\n  //   - `short`: \"2 s, 15 l, 32 c\"\n  //   - `long`: \"2 selections, 15 lines, 32 characters\"\n  \"line_indicator_format\": \"long\"\n\n  // Individual status bar icons can be hidden:\n  // \"project_panel\": {\"button\": false },\n  // \"outline_panel\": {\"button\": false },\n  // \"collaboration_panel\": {\"button\": false },\n  // \"chat_panel\": {\"button\": \"never\" },\n  // \"git_panel\": {\"button\": false },\n  // \"notification_panel\": {\"button\": false },\n  // \"agent\": {\"button\": false },\n  // \"debugger\": {\"button\": false },\n  // \"diagnostics\": {\"button\": false },\n  // \"search\": {\"button\": false },\n}\n\nTitlebar\n  // Control which items are shown/hidden in the title bar\n  \"title_bar\": {\n    \"show_branch_icon\": false,      // Show/hide branch icon beside branch switcher\n    \"show_branch_name\": true,       // Show/hide branch name\n    \"show_project_items\": true,     // Show/hide project host and name\n    \"show_onboarding_banner\": true, // Show/hide onboarding banners\n    \"show_user_picture\": true,      // Show/hide user avatar\n    \"show_sign_in\": true,           // Show/hide sign-in button\n    \"show_menus\": false             // Show/hide menus\n  },\n\nWorkspace\n{\n  // Force usage of Zed build in path prompts (file and directory pickers)\n  // instead of OS native pickers (false).\n  \"use_system_path_prompts\": true,\n  // Force usage of Zed built in confirmation prompts (\"Do you want to save?\")\n  // instead of OS native prompts (false). On linux this is ignored (always false).\n  \"use_system_prompts\": true,\n\n  // Whether to use the system provided dialogs for Open and Save As (true) or\n  // Zed's built-in keyboard-first pickers (false)\n  \"use_system_path_prompts\": true,\n\n  // Active pane styling settings.\n  \"active_pane_modifiers\": {\n    // Inset border size of the active pane, in pixels.\n    \"border_size\": 0.0,\n    // Opacity of the inactive panes. 0 means transparent, 1 means opaque.\n    \"inactive_opacity\": 1.0\n  },\n\n  // Layout mode of the bottom dock: contained, full, left_aligned, right_aligned\n  \"bottom_dock_layout\": \"contained\",\n\n  // Whether to resize all the panels in a dock when resizing the dock.\n  // Can be a combination of \"left\", \"right\" and \"bottom\".\n  \"resize_all_panels_in_dock\": [\"left\"]\n}\n\n\nEditor\n  // Whether the cursor blinks in the editor.\n  \"cursor_blink\": true,\n\n  // Cursor shape for the default editor: bar, block, underline, hollow\n  \"cursor_shape\": null,\n\n  // Highlight the current line in the editor: none, gutter, line, all\n  \"current_line_highlight\": \"all\",\n\n  // When does the mouse cursor hide: never, on_typing, on_typing_and_movement\n  \"hide_mouse\": \"on_typing_and_movement\",\n\n  // Whether to highlight all occurrences of the selected text in an editor.\n  \"selection_highlight\": true,\n\n  // Visually show tabs and spaces  (none, all, selection, boundary, trailing)\n  \"show_whitespaces\": \"selection\",\n\n  \"unnecessary_code_fade\": 0.3, // How much to fade out unused code.\n\n  // Hide the values of in variables from visual display in private files\n  \"redact_private_values\": false,\n\n  // Soft-wrap and rulers\n  \"soft_wrap\": \"none\",          // none, editor_width, preferred_line_length, bounded\n  \"preferred_line_length\": 80,  // Column to soft-wrap\n  \"show_wrap_guides\": true,     // Show/hide wrap guides (vertical rulers)\n  \"wrap_guides\": [],            // Where to position wrap_guides (character counts)\n\n  // Gutter Settings\n  \"gutter\": {\n    \"line_numbers\": true,         // Show/hide line numbers in the gutter.\n    \"runnables\": true,            // Show/hide runnables buttons in the gutter.\n    \"breakpoints\": true,          // Show/hide show breakpoints in the gutter.\n    \"folds\": true,                // Show/hide show fold buttons in the gutter.\n    \"min_line_number_digits\": 4   // Reserve space for N digit line numbers\n  },\n  \"relative_line_numbers\": false, // Show relative line numbers in gutter\n\n  // Indent guides\n  \"indent_guides\": {\n    \"enabled\": true,\n    \"line_width\": 1,                  // Width of guides in pixels [1-10]\n    \"active_line_width\": 1,           // Width of active guide in pixels [1-10]\n    \"coloring\": \"fixed\",              // disabled, fixed, indent_aware\n    \"background_coloring\": \"disabled\" // disabled, indent_aware\n  }\n\nGit Blame\n  \"git\": {\n    \"inline_blame\": {\n      \"enabled\": true,             // Show/hide inline blame\n      \"delay\": 0,                  // Show after delay (ms)\n      \"min_column\": 0,             // Minimum column to inline display blame\n      \"padding\": 7,                // Padding between code and inline blame (em)\n      \"show_commit_summary\": false // Show/hide commit summary\n    },\n    \"hunk_style\": \"staged_hollow\"  // staged_hollow, unstaged_hollow\n  }\n\nEditor Toolbar\n  // Editor toolbar related settings\n  \"toolbar\": {\n    \"breadcrumbs\": true, // Whether to show breadcrumbs.\n    \"quick_actions\": true, // Whether to show quick action buttons.\n    \"selections_menu\": true, // Whether to show the Selections menu\n    \"agent_review\": true, // Whether to show agent review buttons\n    \"code_actions\": false // Whether to show code action buttons\n  }\n\nEditor Scrollbar and Minimap\n  // Scrollbar related settings\n  \"scrollbar\": {\n    // When to show the scrollbar in the editor (auto, system, always, never)\n    \"show\": \"auto\",\n    \"cursors\": true,          // Show cursor positions in the scrollbar.\n    \"git_diff\": true,         // Show git diff indicators in the scrollbar.\n    \"search_results\": true,   // Show buffer search results in the scrollbar.\n    \"selected_text\": true,    // Show selected text occurrences in the scrollbar.\n    \"selected_symbol\": true,  // Show selected symbol occurrences in the scrollbar.\n    \"diagnostics\": \"all\",     // Show diagnostics (none, error, warning, information, all)\n    \"axes\": {\n      \"horizontal\": true,     // Show/hide the horizontal scrollbar\n      \"vertical\": true        // Show/hide the vertical scrollbar\n    }\n  },\n\n  // Minimap related settings\n  \"minimap\": {\n    \"show\": \"never\",                // When to show (auto, always, never)\n    \"display_in\": \"active_editor\",  // Where to show (active_editor, all_editor)\n    \"thumb\": \"always\",              // When to show thumb (always, hover)\n    \"thumb_border\": \"left_open\",    // Thumb border (left_open, right_open, full, none)\n    \"max_width_columns\": 80,        // Maximum width of minimap\n    \"current_line_highlight\": null  // Highlight current line (null, line, gutter)\n  },\n\n  // Control Editor scroll beyond the last line: off, one_page, vertical_scroll_margin\n  \"scroll_beyond_last_line\": \"one_page\",\n  // Lines to keep above/below the cursor when scrolling with the keyboard\n  \"vertical_scroll_margin\": 3,\n  // The number of characters to keep on either side when scrolling with the mouse\n  \"horizontal_scroll_margin\": 5,\n  // Scroll sensitivity multiplier\n  \"scroll_sensitivity\": 1.0,\n  // Scroll sensitivity multiplier for fast scrolling (hold alt while scrolling)\n  \"fast_scroll_sensitivity\": 4.0,\n\nEditor Tabs\n  // Maximum number of tabs per pane. Unset for unlimited.\n  \"max_tabs\": null,\n\n  // Customize the tab bar appearance\n  \"tab_bar\": {\n    \"show\": true,                     // Show/hide the tab bar\n    \"show_nav_history_buttons\": true, // Show/hide history buttons on tab bar\n    \"show_tab_bar_buttons\": true      // Show hide buttons (new, split, zoom)\n  },\n  \"tabs\": {\n    \"git_status\": false,              // Color to show git status\n    \"close_position\": \"right\",        // Close button position (left, right, hidden)\n    \"show_close_button\": \"hover\",     // Close button shown (hover, always, hidden)\n    \"file_icons\": false,              // Icon showing file type\n    // Show diagnostics in file icon (off, errors, all). Requires file_icons=true\n    \"show_diagnostics\": \"off\"\n  }\n\nStatus Bar\n  \"status_bar\": {\n    // Show/hide a button that displays the active buffer's language.\n    // Clicking the button brings up the language selector.\n    // Defaults to true.\n    \"active_language_button\": true,\n    // Show/hide a button that displays the cursor's position.\n    // Clicking the button brings up an input for jumping to a line and column.\n    // Defaults to true.\n    \"cursor_position_button\": true,\n  },\n  \"global_lsp_settings\": {\n    // Show/hide the LSP button in the status bar.\n    // Activity from the LSP is still shown.\n    // Button is not shown if \"enable_language_server\" if false.\n    \"button\": true\n  },\n\nMultibuffer\n{\n  // The default number of lines to expand excerpts in the multibuffer by.\n  \"expand_excerpt_lines\": 5,\n  // The default number of lines of context provided for excerpts in the multibuffer by.\n  \"excerpt_context_lines\": 2\n}\n\nEditor Completions, Snippets, Actions, Diagnostics\n  \"snippet_sort_order\": \"inline\",        // Snippets completions: top, inline, bottom, none\n  \"show_completions_on_input\": true,     // Show completions while typing\n  \"show_completion_documentation\": true, // Show documentation in completions\n  \"auto_signature_help\": false,          // Show method signatures inside parentheses\n\n  // Whether to show the signature help after completion or a bracket pair inserted.\n  // If `auto_signature_help` is enabled, this setting will be treated as enabled also.\n  \"show_signature_help_after_edits\": false,\n\n  // Whether to show code action button at start of buffer line.\n  \"inline_code_actions\": true,\n\n  // Which level to use to filter out diagnostics displayed in the editor:\n  \"diagnostics_max_severity\": null,      // off, error, warning, info, hint, null (all)\n\n  // How to render LSP `textDocument/documentColor` colors in the editor.\n  \"lsp_document_colors\": \"inlay\",        // none, inlay, border, background\n\nEdit Predictions\n  \"edit_predictions\": {\n    \"mode\": \"eager\",                // Automatically show (eager) or hold-alt (subtle)\n    \"enabled_in_text_threads\": true // Show/hide predictions in agent text threads\n  },\n  \"show_edit_predictions\": true     // Show/hide predictions in editor\n\nEditor Inlay Hints\n{\n  \"inlay_hints\": {\n    \"enabled\": false,\n    // Toggle certain types of hints on and off, all switched on by default.\n    \"show_type_hints\": true,\n    \"show_parameter_hints\": true,\n    \"show_other_hints\": true,\n\n    // Whether to show a background for inlay hints (theme `hint.background`)\n    \"show_background\": false, //\n\n    // Time to wait after editing before requesting hints (0 to disable debounce)\n    \"edit_debounce_ms\": 700,\n    // Time to wait after scrolling before requesting hints (0 to disable debounce)\n    \"scroll_debounce_ms\": 50,\n\n    // A set of modifiers which, when pressed, will toggle the visibility of inlay hints.\n    \"toggle_on_modifiers_press\": {\n      \"control\": false,\n      \"shift\": false,\n      \"alt\": false,\n      \"platform\": false,\n      \"function\": false\n    }\n  }\n}\n\nFile Finder\n  // File Finder Settings\n  \"file_finder\": {\n    \"file_icons\": true,         // Show/hide file icons\n    \"modal_max_width\": \"small\", // Horizontal size: small, medium, large, xlarge, full\n    \"git_status\": true,         // Show the git status for each entry\n    \"include_ignored\": null     // gitignored files in results: true, false, null\n  },\n\nProject Panel\nProject panel can be shown/hidden with project panel: toggle focus (cmd-shift-e|ctrl-shift-e) or with pane: reveal in project panel (cmd-shift-e|ctrl-shift-e).\n  // Project Panel Settings\n  \"project_panel\": {\n    \"button\": true,                 // Show/hide button in the status bar\n    \"default_width\": 240,           // Default panel width\n    \"dock\": \"left\",                 // Position of the dock (left, right)\n    \"entry_spacing\": \"comfortable\", // Vertical spacing (comfortable, standard)\n    \"file_icons\": true,             // Show/hide file icons\n    \"folder_icons\": true,           // Show/hide folder icons\n    \"git_status\": true,             // Indicate new/updated files\n    \"indent_size\": 20,              // Pixels for each successive indent\n    \"auto_reveal_entries\": true,    // Show file in panel when activating its buffer\n    \"auto_fold_dirs\": true,         // Fold dirs with single subdir\n    \"sticky_scroll\": true,          // Stick parent directories at top of the project panel.\n    \"drag_and_drop\": true,          // Whether drag and drop is enabled\n    \"scrollbar\": {                  // Project panel scrollbar settings\n      \"show\": null                  // Show/hide: (auto, system, always, never)\n    },\n    \"show_diagnostics\": \"all\",      //\n    // Settings related to indent guides in the project panel.\n    \"indent_guides\": {\n      // When to show indent guides in the project panel. (always, never)\n      \"show\": \"always\"\n    },\n    // Whether to hide the root entry when only one folder is open in the window.\n    \"hide_root\": false\n  }.\n\nAgent Panel\n  \"agent\": {\n    \"version\": \"2\",\n    \"enabled\": true,        // Enable/disable the agent\n    \"button\": true,         // Show/hide the icon in the status bar\n    \"dock\": \"right\",        // Where to dock: left, right, bottom\n    \"default_width\": 640,   // Default width (left/right docked)\n    \"default_height\": 320,  // Default height (bottom dockeed)\n  },\n  \"agent_font_size\": 16\n\nSee Zed AI Documentation for additional non-visual AI settings.\nTerminal Panel\n  // Terminal Panel Settings\n  \"terminal\": {\n    \"dock\": \"bottom\",                   // Where to dock: left, right, bottom\n    \"button\": true,                     // Show/hide status bar icon\n    \"default_width\": 640,               // Default width (left/right docked)\n    \"default_height\": 320,              // Default height (bottom dockeed)\n\n    // Set the cursor blinking behavior in the terminal (on, off, terminal_controlled)\n    \"blinking\": \"terminal_controlled\",\n    // Default cursor shape for the terminal cursor (block, bar, underline, hollow)\n    \"cursor_shape\": \"block\",\n\n    // Environment variables to add to terminal's process environment\n    \"env\": {\n      // \"KEY\": \"value\"\n    },\n\n    // Terminal scrollbar\n    \"scrollbar\": {\n      \"show\": null                       // Show/hide: (auto, system, always, never)\n    },\n    // Terminal Font Settings\n    \"font_family\": \"Fira Code\",\n    \"font_size\": 15,\n    \"font_weight\": 400,\n    // Terminal line height: comfortable (1.618), standard(1.3) or `{ \"custom\": 2 }`\n    \"line_height\": \"comfortable\",\n\n    \"max_scroll_history_lines\": 10000,   // Scrollback history (0=disable, max=100000)\n  }\n\nSee Terminal settings for additional non-visual customization options.\nOther Panels\n  // Git Panel\n  \"git_panel\": {\n    \"button\": true,               // Show/hide status bar icon\n    \"dock\": \"left\",               // Where to dock: left, right\n    \"default_width\": 360,         // Default width of the git panel.\n    \"status_style\": \"icon\",       // label_color, icon\n    \"sort_by_path\": false,        // Sort by path (false) or status (true)\n    \"scrollbar\": {\n      \"show\": null                // Show/hide: (auto, system, always, never)\n    }\n  },\n\n  // Debugger Panel\n  \"debugger\": {\n    \"dock\": \"bottom\",             // Where to dock: left, right, bottom\n    \"button\": true                // Show/hide status bar icon\n  },\n\n  // Outline Panel\n  \"outline_panel\": {\n    \"button\": true,               // Show/hide status bar icon\n    \"default_width\": 300,         // Default width of the git panel\n    \"dock\": \"left\",               // Where to dock: left, right\n    \"file_icons\": true,           // Show/hide file_icons\n    \"folder_icons\": true,         // Show file_icons (true), chevrons (false) for dirs\n    \"git_status\": true,           // Show git status\n    \"indent_size\": 20,            // Indentation for nested items (pixels)\n    \"indent_guides\": {\n      \"show\": \"always\"            // Show indent guides (always, never)\n    },\n    \"auto_reveal_entries\": true,  // Show file in panel when activating its buffer\n    \"auto_fold_dirs\": true,       // Fold dirs with single subdir\n    \"scrollbar\": {                // Project panel scrollbar settings\n      \"show\": null                // Show/hide: (auto, system, always, never)\n    }\n  }\n\nCollaboration Panels\n{\n  // Collaboration Panel\n  \"collaboration_panel\": {\n    \"button\": true,               // Show/hide status bar icon\n    \"dock\": \"left\",               // Where to dock: left, right\n    \"default_width\": 240          // Default width of the collaboration panel.\n  },\n  \"show_call_status_icon\": true,  // Shown call status in the OS status bar.\n\n  // Chat Panel\n  \"chat_panel\": {\n    \"button\": \"when_in_call\",     // status bar icon (true, false, when_in_call)\n    \"dock\": \"right\",              // Where to dock: left, right\n    \"default_width\": 240          // Default width of the chat panel\n  },\n\n  // Notification Panel\n  \"notification_panel\": {\n    // Whether to show the notification panel button in the status bar.\n    \"button\": true,\n    // Where to dock the notification panel. Can be 'left' or 'right'.\n    \"dock\": \"right\",\n    // Default width of the notification panel.\n    \"default_width\": 380\n  }",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:26"
+}

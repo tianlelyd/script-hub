@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Debugger | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="active">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#debugger" class="pagetoc-H1">调试器</a>
+<a href="#supported-languages" class="pagetoc-H2">支持的语言</a>
+<a href="#getting-started" class="pagetoc-H2">快速开始</a>
+<a href="#launching--attaching" class="pagetoc-H3">启动和附加</a>
+<a href="#configuration" class="pagetoc-H2">配置</a>
+<a href="#build-tasks" class="pagetoc-H3">构建任务</a>
+<a href="#automatic-scenario-creation" class="pagetoc-H3">自动场景创建</a>
+<a href="#breakpoints" class="pagetoc-H2">断点</a>
+<a href="#settings" class="pagetoc-H2">设置</a>
+<a href="#dock" class="pagetoc-H3">停靠</a>
+<a href="#stepping-granularity" class="pagetoc-H3">单步执行粒度</a>
+<a href="#save-breakpoints" class="pagetoc-H3">保存断点</a>
+<a href="#button" class="pagetoc-H3">按钮</a>
+<a href="#timeout" class="pagetoc-H3">超时</a>
+<a href="#inline-values" class="pagetoc-H3">内联值</a>
+<a href="#log-dap-communications" class="pagetoc-H3">记录 DAP 通信</a>
+<a href="#format-dap-log-messages" class="pagetoc-H3">格式化 DAP 日志消息</a>
+<a href="#customizing-debug-adapters" class="pagetoc-H3">自定义调试适配器</a>
+<a href="#theme" class="pagetoc-H2">主题</a>
+<a href="#troubleshooting" class="pagetoc-H2">故障排除</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="debugger"><a class="header" href="#debugger">调试器</a></h1>
+<p>Zed 使用 <a href="https://microsoft.github.io/debug-adapter-protocol/">调试适配器协议 (DAP)</a> 为多种编程语言提供调试功能。
+DAP 是一个标准化协议，定义了调试器、编辑器和 IDE 之间如何进行通信。
+它使 Zed 能够支持各种调试器，而无需实现特定语言的调试逻辑。
+Zed 实现协议的客户端部分，各种<em>调试适配器</em>实现服务端部分。</p>
+<p>这个协议支持诸如设置断点、单步执行代码、检查变量等功能，
+并以一致的方式跨不同编程语言和运行时环境工作。</p>
+<h2 id="supported-languages"><a class="header" href="#supported-languages">支持的语言</a></h2>
+<p>要调试用特定语言编写的代码，Zed 需要找到该语言的调试适配器。一些调试适配器由 Zed 提供，无需额外设置，另一些则由<a href="./extensions/debugger-extensions.html">语言扩展</a>提供。目前以下语言有可用的调试适配器：</p>
+<!-- keep this sorted -->
+<ul>
+<li><a href="./languages/c.html#debugging">C</a> (内置)</li>
+<li><a href="./languages/cpp.html#debugging">C++</a> (内置)</li>
+<li><a href="./languages/go.html#debugging">Go</a> (内置)</li>
+<li><a href="./languages/javascript.html#debugging">JavaScript</a> (内置)</li>
+<li><a href="./languages/php.html#debugging">PHP</a> (内置)</li>
+<li><a href="./languages/python.html#debugging">Python</a> (内置)</li>
+<li><a href="./languages/ruby.html#debugging">Ruby</a> (由扩展提供)</li>
+<li><a href="./languages/rust.html#debugging">Rust</a> (内置)</li>
+<li><a href="./languages/swift.html#debugging">Swift</a> (由扩展提供)</li>
+<li><a href="./languages/typescript.html#debugging">TypeScript</a> (内置)</li>
+</ul>
+<blockquote>
+<p>如果你的语言没有列出，你可以通过为其添加调试适配器来贡献代码。查看我们的<a href="./extensions/debugger-extensions.html">调试器扩展</a>文档了解更多信息。</p>
+</blockquote>
+<p>点击这些链接获取特定语言和适配器的信息和示例，或继续阅读了解更多适用于所有适配器的 Zed 通用调试功能。</p>
+<h2 id="getting-started"><a class="header" href="#getting-started">快速开始</a></h2>
+<p>对于大多数语言，最快的开始方式是运行 <code class="hljs">debugger: start</code> (<kbd class="keybinding">f4|f4</kbd>)。这会打开<em>新进程模态框</em>，显示当前项目的预配置调试任务的上下文列表。调试任务从测试、入口点（如 <code>main</code> 函数）和其他来源创建 —— 请查阅你的语言文档以获取支持内容的完整信息。</p>
+<p>你也可以通过点击调试面板右上角的"加号"按钮来打开同样的模态框。</p>
+<p>对于不提供预配置调试任务的语言（包括 C、C++ 和一些扩展支持的语言），你可以在项目根目录的 <code>.zed/debug.json</code> 文件中定义调试配置。这个文件应该是一个配置对象数组：</p>
+<pre><code class="language-json">[
+  {
+    "adapter": "CodeLLDB",
+    "label": "First configuration"
+    // ...
+  },
+  {
+    "adapter": "Debugpy",
+    "label": "Second configuration"
+    // ...
+  }
+]
+</code></pre>
+<p>查看你的语言文档中涵盖典型用例的示例配置。一旦你向 <code>.zed/debug.json</code> 添加了配置，它们就会出现在新进程模态框的列表中。</p>
+<p>如果在 <code>.zed/debug.json</code> 中没有找到配置，Zed 还会从 <code>.vscode/launch.json</code> 加载调试配置，并在新进程模态框中显示它们。</p>
+<h3 id="launching--attaching"><a class="header" href="#launching--attaching">启动和附加</a></h3>
+<p>Zed 调试器提供两种调试程序的方式；你可以<em>启动</em>程序的新实例或<em>附加</em>到现有进程。
+选择哪种方式取决于你想要实现的目标。</p>
+<p>启动新实例时，Zed（以及底层调试适配器）通常能够比附加到现有进程更好地获取调试信息，因为它控制着整个程序的生命周期。
+运行单元测试或应用程序的调试版本是启动的良好用例。</p>
+<p>与启动相比，附加到现有进程可能看起来较为劣势，但实际情况远非如此；在某些情况下你无法重启程序，例如，错误只能在生产环境中重现，或其他特殊情况。</p>
+<h2 id="configuration"><a class="header" href="#configuration">配置</a></h2>
+<p>虽然配置字段依赖于调试适配器，但大多数适配器支持以下字段：</p>
+<pre><code class="language-json">[
+  {
+    // 调试配置的标签，用于在调试面板和新进程模态框中识别调试会话
+    "label": "Example Start debugger config",
+    // Zed 应该用来调试程序的调试适配器
+    "adapter": "Example adapter name",
+    // 请求类型：
+    //  - launch: 如果指定了程序，Zed 将启动程序，或显示具有正确配置的调试终端
+    //  - attach: Zed 将附加到正在运行的程序进行调试，或当未指定 process_id 时，将显示进程选择器（目前仅支持 node）
+    "request": "launch",
+    // 要调试的程序。此字段支持使用 ~ 或 . 符号的路径解析。
+    "program": "path_to_program",
+    // cwd: 默认为项目的当前工作目录 ($ZED_WORKTREE_ROOT)
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]
+</code></pre>
+<p>所有配置字段都支持<a href="./tasks.html#variables">任务变量</a>。</p>
+<h3 id="build-tasks"><a class="header" href="#build-tasks">构建任务</a></h3>
+<p>Zed 还允许在 <code>build</code> 字段中嵌入一个在调试器启动前运行的 Zed 任务。这对于设置环境或在调试器启动前运行任何必要的设置步骤很有用。</p>
+<pre><code class="language-json">[
+  {
+    "label": "Build Binary",
+    "adapter": "CodeLLDB",
+    "program": "path_to_program",
+    "request": "launch",
+    "build": {
+      "command": "make",
+      "args": ["build", "-j8"]
+    }
+  }
+]
+</code></pre>
+<p>构建任务也可以通过未替换的标签引用现有任务：</p>
+<pre><code class="language-json">[
+  {
+    "label": "Build Binary",
+    "adapter": "CodeLLDB",
+    "program": "path_to_program",
+    "request": "launch",
+    "build": "my build task" // Or "my build task for $ZED_FILE"
+  }
+]
+</code></pre>
+<h3 id="automatic-scenario-creation"><a class="header" href="#automatic-scenario-creation">自动场景创建</a></h3>
+<p>给定一个 Zed 任务，Zed 可以为你自动创建一个场景。自动场景创建也支持我们从装订线创建场景的功能。
+目前 Rust、Go、Python、JavaScript 和 TypeScript 支持自动场景创建。</p>
+<h2 id="breakpoints"><a class="header" href="#breakpoints">断点</a></h2>
+<p>要设置断点，只需在编辑器装订线中的行号旁边点击。
+可以根据需要调整断点；要访问给定断点的其他选项，请右键单击装订线中的断点图标并选择所需的选项。
+目前，你可以：</p>
+<ul>
+<li>向断点添加日志，当断点被命中时将输出日志消息。</li>
+<li>使断点条件化，只有在满足条件时才在断点处停止。条件的语法是特定于适配器的。</li>
+<li>向断点添加命中计数，只有在断点被命中一定次数后才会停止。</li>
+<li>禁用断点，这将防止其被命中，同时保持在装订线中可见。</li>
+</ul>
+<p>一些调试适配器（例如 CodeLLDB 和 JavaScript）还会<em>验证</em>你的断点是否可以被命中；无法被命中的断点在 UI 中会更加显著地显示。</p>
+<p>为给定项目启用的所有断点也在调试会话 UI 中的“断点”项目中列出。从 UI 中的“断点”项目你也可以管理异常断点。
+调试适配器将在特定类型的异常发生时停止。支持哪些异常类型取决于调试适配器。</p>
+<h2 id="settings"><a class="header" href="#settings">设置</a></h2>
+<p>调试器的设置在 <code>settings.json</code> 中在 <code>debugger</code> 键下分组：</p>
+<ul>
+<li><code>dock</code>: 决定调试面板在 UI 中的位置。</li>
+<li><code>stepping_granularity</code>: 决定单步执行的粒度。</li>
+<li><code>save_breakpoints</code>: 断点是否应在 Zed 会话之间重用。</li>
+<li><code>button</code>: 是否在状态栏中显示调试按钮。</li>
+<li><code>timeout</code>: 连接到 TCP 调试适配器时超时错误的时间（毫秒）。</li>
+<li><code>log_dap_communications</code>: 是否记录活动调试适配器和 Zed 之间的消息。</li>
+<li><code>format_dap_log_messages</code>: 将 DAP 消息添加到调试适配器日志记录器时是否格式化。</li>
+</ul>
+<h3 id="dock"><a class="header" href="#dock">停靠</a></h3>
+<ul>
+<li>描述：调试面板在 UI 中的位置。</li>
+<li>默认值： <code>bottom</code></li>
+<li>设置： debugger.dock</li>
+</ul>
+<p><strong>选项</strong></p>
+<ol>
+<li><code>left</code> - 调试面板将停靠在 UI 的左侧。</li>
+<li><code>right</code> - 调试面板将停靠在 UI 的右侧。</li>
+<li><code>bottom</code> - 调试面板将停靠在 UI 的底部。</li>
+</ol>
+<pre><code class="language-json">"debugger": {
+  "dock": "bottom"
+},
+</code></pre>
+<h3 id="stepping-granularity"><a class="header" href="#stepping-granularity">单步执行粒度</a></h3>
+<ul>
+<li>描述：调试器将使用的单步执行粒度</li>
+<li>默认值： <code>line</code></li>
+<li>设置： <code>debugger.stepping_granularity</code></li>
+</ul>
+<p><strong>选项</strong></p>
+<ol>
+<li>Statement - 单步应允许程序运行直到当前语句执行完成。
+语句的含义由适配器决定，它可能被视为等同于一行。
+例如 'for(int i = 0; i &lt; 10; i++)' 可以被认为包含 3 个语句 'int i = 0'、'i &lt; 10' 和 'i++'。</li>
+</ol>
+<pre><code class="language-json">{
+  "debugger": {
+    "stepping_granularity": "statement"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Line - 单步应允许程序运行直到当前源代码行执行完成。</li>
+</ol>
+<pre><code class="language-json">{
+  "debugger": {
+    "stepping_granularity": "line"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Instruction - 单步应允许一条指令执行（例如一条 x86 指令）。</li>
+</ol>
+<pre><code class="language-json">{
+  "debugger": {
+    "stepping_granularity": "instruction"
+  }
+}
+</code></pre>
+<h3 id="save-breakpoints"><a class="header" href="#save-breakpoints">保存断点</a></h3>
+<ul>
+<li>描述：断点是否应在 Zed 会话之间保存。</li>
+<li>默认值： <code>true</code></li>
+<li>设置： <code>debugger.save_breakpoints</code></li>
+</ul>
+<p><strong>选项</strong></p>
+<p><code>boolean</code> values</p>
+<pre><code class="language-json">{
+  "debugger": {
+    "save_breakpoints": true
+  }
+}
+</code></pre>
+<h3 id="button"><a class="header" href="#button">按钮</a></h3>
+<ul>
+<li>描述：是否在调试器工具栏中显示按钮。</li>
+<li>默认值： <code>true</code></li>
+<li>设置： <code>debugger.show_button</code></li>
+</ul>
+<p><strong>选项</strong></p>
+<p><code>boolean</code> values</p>
+<pre><code class="language-json">{
+  "debugger": {
+    "show_button": true
+  }
+}
+</code></pre>
+<h3 id="timeout"><a class="header" href="#timeout">超时</a></h3>
+<ul>
+<li>描述：连接到 TCP 调试适配器时超时错误的时间（毫秒）。</li>
+<li>默认值： <code>2000</code></li>
+<li>设置： <code>debugger.timeout</code></li>
+</ul>
+<p><strong>选项</strong></p>
+<p><code>integer</code> values</p>
+<pre><code class="language-json">{
+  "debugger": {
+    "timeout": 3000
+  }
+}
+</code></pre>
+<h3 id="inline-values"><a class="header" href="#inline-values">内联值</a></h3>
+<ul>
+<li>描述：是否在调试会话期间启用显示代码中变量值的编辑器内联提示。</li>
+<li>默认值： <code>true</code></li>
+<li>设置： <code>inlay_hints.show_value_hints</code></li>
+</ul>
+<p><strong>选项</strong></p>
+<pre><code class="language-json">{
+  "inlay_hints": {
+    "show_value_hints": false
+  }
+}
+</code></pre>
+<p>内联值提示也可以从编辑器工具栏的“编辑器控制”菜单中切换。</p>
+<h3 id="log-dap-communications"><a class="header" href="#log-dap-communications">记录 DAP 通信</a></h3>
+<ul>
+<li>描述：是否记录活动调试适配器和 Zed 之间的消息。（用于 DAP 开发）</li>
+<li>默认值： false</li>
+<li>设置： debugger.log_dap_communications</li>
+</ul>
+<p><strong>选项</strong></p>
+<p><code>boolean</code> values</p>
+<pre><code class="language-json">{
+  "debugger": {
+    "log_dap_communications": true
+  }
+}
+</code></pre>
+<h3 id="format-dap-log-messages"><a class="header" href="#format-dap-log-messages">格式化 DAP 日志消息</a></h3>
+<ul>
+<li>描述：将 DAP 消息添加到调试适配器日志记录器时是否格式化。（用于 DAP 开发）</li>
+<li>默认值： false</li>
+<li>设置： debugger.format_dap_log_messages</li>
+</ul>
+<p><strong>选项</strong></p>
+<p><code>boolean</code> values</p>
+<pre><code class="language-json">{
+  "debugger": {
+    "format_dap_log_messages": true
+  }
+}
+</code></pre>
+<h3 id="customizing-debug-adapters"><a class="header" href="#customizing-debug-adapters">自定义调试适配器</a></h3>
+<ul>
+<li>描述：自定义程序路径和参数，以覆盖 Zed 启动特定调试适配器的方式。</li>
+<li>默认值：适配器特定</li>
+<li>设置： <code>dap.$ADAPTER.binary</code> 和 <code>dap.$ADAPTER.args</code></li>
+</ul>
+<p>你可以传递 <code>binary</code>、<code>args</code> 或两者。<code>binary</code> 应该是指向<em>调试适配器</em>（如 <code>lldb-dap</code>）的路径，而不是<em>调试器</em>（如 <code>lldb</code> 本身）。<code>args</code> 设置会覆盖 Zed 否则传递给适配器的任何参数。</p>
+<pre><code class="language-json">{
+  "dap": {
+    "CodeLLDB": {
+      "binary": "/Users/name/bin/lldb-dap",
+      "args": ["--wait-for-debugger"]
+    }
+  }
+}
+</code></pre>
+<h2 id="theme"><a class="header" href="#theme">主题</a></h2>
+<p>调试器支持以下主题选项：</p>
+<ul>
+<li><code>debugger.accent</code>: 用于突出断点和断点相关符号的颜色</li>
+<li><code>editor.debugger_active_line.background</code>: 活动调试行的背景颜色</li>
+</ul>
+<h2 id="troubleshooting"><a class="header" href="#troubleshooting">故障排除</a></h2>
+<p>如果你在使用调试器时遇到问题，请<a href="https://github.com/zed-industries/zed/issues/new?template=04_bug_debugger.yml">提交 GitHub 问题</a>或与我们<a href="https://cal.com/team/zed-research/debugger">安排上手通话</a>，这样我们可以帮助理解和修复你的问题。</p>
+<p>你还可以使用一些功能来收集更多关于问题的信息：</p>
+<ul>
+<li>当你在调试面板中运行会话时，可以运行 <code class="hljs">dev: copy debug adapter arguments</code> 操作来将描述 Zed 如何初始化会话的 JSON 数据复制到剪贴板。这在会话启动失败时特别有用，并且是在提交 GitHub 问题时添加的很好的上下文。</li>
+<li>你还可以使用 <code class="hljs">dev: open debug adapter logs</code> 操作来查看在最近的调试会话中 Zed 与调试适配器的所有通信跟踪。</li>
+</ul>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

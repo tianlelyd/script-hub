@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/languages.html",
+  "title": "All Languages | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"language-support-in-zed\"><a class=\"header\" href=\"#language-support-in-zed\">Language Support in Zed</a></h1>\n<p>Zed supports hundreds of programming languages and text formats.\nSome work out-of-the box and others rely on 3rd party extensions.</p>\n<blockquote>\n<p>The ones included out-of-the-box, natively built into Zed, are marked with *.</p>\n</blockquote>\n<h2 id=\"languages-with-documentation\"><a class=\"header\" href=\"#languages-with-documentation\">Languages with Documentation</a></h2>\n<ul>\n<li><a href=\"./languages/ansible.html\">Ansible</a></li>\n<li><a href=\"./languages/asciidoc.html\">AsciiDoc</a></li>\n<li><a href=\"./languages/astro.html\">Astro</a></li>\n<li><a href=\"./languages/bash.html\">Bash</a></li>\n<li><a href=\"./languages/biome.html\">Biome</a></li>\n<li><a href=\"./languages/c.html\">C</a> *</li>\n<li><a href=\"./languages/cpp.html\">C++</a> *</li>\n<li><a href=\"./languages/csharp.html\">C#</a></li>\n<li><a href=\"./languages/clojure.html\">Clojure</a></li>\n<li><a href=\"./languages/css.html\">CSS</a> *</li>\n<li><a href=\"./languages/dart.html\">Dart</a></li>\n<li><a href=\"./languages/deno.html\">Deno</a></li>\n<li><a href=\"./languages/diff.html\">Diff</a> *</li>\n<li><a href=\"./languages/docker.html\">Docker</a></li>\n<li><a href=\"./languages/elixir.html\">Elixir</a></li>\n<li><a href=\"./languages/elm.html\">Elm</a></li>\n<li><a href=\"./languages/emmet.html\">Emmet</a></li>\n<li><a href=\"./languages/erlang.html\">Erlang</a></li>\n<li><a href=\"./languages/fish.html\">Fish</a></li>\n<li><a href=\"./languages/gdscript.html\">GDScript</a></li>\n<li><a href=\"./languages/gleam.html\">Gleam</a></li>\n<li><a href=\"./languages/glsl.html\">GLSL</a></li>\n<li><a href=\"./languages/go.html\">Go</a> *</li>\n<li><a href=\"./languages/groovy.html\">Groovy</a></li>\n<li><a href=\"./languages/haskell.html\">Haskell</a></li>\n<li><a href=\"./languages/helm.html\">Helm</a></li>\n<li><a href=\"./languages/html.html\">HTML</a></li>\n<li><a href=\"./languages/java.html\">Java</a></li>\n<li><a href=\"./languages/javascript.html\">JavaScript</a> *</li>\n<li><a href=\"./languages/julia.html\">Julia</a></li>\n<li><a href=\"./languages/json.html\">JSON</a> *</li>\n<li><a href=\"./languages/jsonnet.html\">Jsonnet</a></li>\n<li><a href=\"./languages/kotlin.html\">Kotlin</a></li>\n<li><a href=\"./languages/lua.html\">Lua</a></li>\n<li><a href=\"./languages/luau.html\">Luau</a></li>\n<li><a href=\"./languages/makefile.html\">Makefile</a></li>\n<li><a href=\"./languages/markdown.html\">Markdown</a> *</li>\n<li><a href=\"./languages/nim.html\">Nim</a></li>\n<li><a href=\"./languages/ocaml.html\">OCaml</a></li>\n<li><a href=\"./languages/php.html\">PHP</a></li>\n<li><a href=\"./languages/prisma.html\">Prisma</a></li>\n<li><a href=\"./languages/proto.html\">Proto</a></li>\n<li><a href=\"./languages/purescript.html\">PureScript</a></li>\n<li><a href=\"./languages/python.html\">Python</a> *</li>\n<li><a href=\"./languages/r.html\">R</a></li>\n<li><a href=\"./languages/rego.html\">Rego</a></li>\n<li><a href=\"./languages/rst.html\">ReStructuredText</a></li>\n<li><a href=\"./languages/racket.html\">Racket</a></li>\n<li><a href=\"./languages/roc.html\">Roc</a></li>\n<li><a href=\"./languages/ruby.html\">Ruby</a></li>\n<li><a href=\"./languages/rust.html\">Rust</a> * (Zed's written in Rust)</li>\n<li><a href=\"./languages/scala.html\">Scala</a></li>\n<li><a href=\"./languages/scheme.html\">Scheme</a></li>\n<li><a href=\"./languages/sh.html\">Shell Script</a></li>\n<li><a href=\"./languages/svelte.html\">Svelte</a></li>\n<li><a href=\"./languages/swift.html\">Swift</a></li>\n<li><a href=\"./languages/tailwindcss.html\">Tailwind CSS</a> *</li>\n<li><a href=\"./languages/terraform.html\">Terraform</a></li>\n<li><a href=\"./languages/toml.html\">TOML</a></li>\n<li><a href=\"./languages/typescript.html\">TypeScript</a> *</li>\n<li><a href=\"./languages/uiua.html\">Uiua</a></li>\n<li><a href=\"./languages/vue.html\">Vue</a></li>\n<li><a href=\"./languages/xml.html\">XML</a></li>\n<li><a href=\"./languages/yaml.html\">YAML</a> *</li>\n<li><a href=\"./languages/yarn.html\">Yara</a></li>\n<li><a href=\"./languages/yarn.html\">Yarn</a></li>\n<li><a href=\"./languages/zig.html\">Zig</a></li>\n</ul>\n<h2 id=\"additional-community-language-extensions\"><a class=\"header\" href=\"#additional-community-language-extensions\">Additional Community Language Extensions</a></h2>\n<ul>\n<li><a href=\"https://github.com/wisn/zed-ada-language\">Ada</a></li>\n<li><a href=\"https://github.com/aiken-lang/zed-aiken\">Aiken</a></li>\n<li><a href=\"https://github.com/amber-lang/zed-amber-extension\">Amber</a></li>\n<li><a href=\"https://github.com/DevBlocky/zed-asm\">Assembly</a></li>\n<li><a href=\"https://github.com/dangh/zed-awk\">AWK</a></li>\n<li><a href=\"https://github.com/zed-extensions/beancount\">Beancount</a></li>\n<li><a href=\"https://github.com/mrpedrobraga/zed-bend\">Bend</a></li>\n<li><a href=\"https://github.com/bajrangCoder/zed-laravel-blade\">Blade</a></li>\n<li><a href=\"https://github.com/tfuxu/zed-blueprint\">Blueprint</a></li>\n<li><a href=\"https://github.com/DavidZwitser/zed-bqn\">BQN</a></li>\n<li><a href=\"https://github.com/JosephTLyons/zed-brainfuck\">Brainfuck</a></li>\n<li><a href=\"https://github.com/janezpodhostnik/cadence.zed\">Cadence</a></li>\n<li><a href=\"https://github.com/trbutler4/zed-cairo\">Cairo</a></li>\n<li><a href=\"https://github.com/cmackenzie1/zed-capnp\">Cap'n Proto</a></li>\n<li><a href=\"https://github.com/chrnorm/zed-cedar\">Cedar</a></li>\n<li><a href=\"https://github.com/olehermanse/zed-cfengine\">CFEngine policy language</a></li>\n<li><a href=\"https://github.com/huacnlee/zed-csv\">CSV</a></li>\n<li><a href=\"https://github.com/thlcodes/zed-extension-cucumber\">Cucumber/Gherkin</a></li>\n<li><a href=\"https://github.com/jkasky/zed-cue\">CUE</a></li>\n<li><a href=\"https://github.com/fwcd/zed-curry\">Curry</a></li>\n<li><a href=\"https://github.com/staysail/zed-d\">D</a></li>\n<li><a href=\"https://github.com/shuklaayush/zed-dbml\">Database Markup Language (DBML)</a></li>\n<li><a href=\"https://github.com/glehmann/earthfile.zed\">Earthfile</a></li>\n<li><a href=\"https://github.com/dangh/zed-ejs\">EJS template</a></li>\n<li><a href=\"https://github.com/JosephTLyons/zed-elisp\">Elisp</a></li>\n<li><a href=\"https://github.com/jylamont/zed-ember\">Ember</a></li>\n<li><a href=\"https://github.com/zarifpour/zed-env\">Env</a></li>\n<li><a href=\"https://github.com/exograph/zed-extension\">Exograph</a></li>\n<li><a href=\"https://github.com/Xavier-Maruff/zed-fortran\">Fortran</a></li>\n<li><a href=\"https://github.com/nathanjcollins/zed-fsharp\">F#</a></li>\n<li><a href=\"https://github.com/clseibold/gemini-zed\">Gemini gemtext</a></li>\n<li><a href=\"https://github.com/d1y/git_firefly\">Git Firefly</a></li>\n<li><a href=\"https://github.com/11bit/zed-extension-graphql\">GraphQL</a></li>\n<li><a href=\"https://github.com/juice49/zed-groq\">Groq</a></li>\n<li><a href=\"https://github.com/bajrangCoder/zed-ini\">INI</a></li>\n<li><a href=\"https://github.com/zed-extensions/java\">Java</a></li>\n<li><a href=\"https://github.com/jackTabsCode/zed-just\">Justfiles</a></li>\n<li><a href=\"https://github.com/rzukic/zed-latex\">LaTeX</a></li>\n<li><a href=\"https://github.com/mrkstwrt/zed-ledger\">Ledger</a></li>\n<li><a href=\"https://github.com/jimliang/zed-less\">Less</a></li>\n<li><a href=\"https://github.com/nwhetsell/lilypond-zed-extension\">LilyPond</a></li>\n<li><a href=\"https://github.com/TheBeyondGroup/zed-shopify-liquid\">Liquid</a></li>\n<li><a href=\"https://github.com/evrensen467/zed-log\">Log</a></li>\n<li><a href=\"https://github.com/arian81/zed-lox\">Lox</a></li>\n<li><a href=\"https://github.com/Feel-ix-343/markdown-oxide-zed\">Markdown Oxide</a></li>\n<li><a href=\"https://github.com/vitallium/zed-marksman\">Marksman</a></li>\n<li><a href=\"https://github.com/rzukic/zed-matlab\">Matlab</a></li>\n<li><a href=\"https://github.com/hqnna/zed-meson\">Meson</a></li>\n<li><a href=\"https://github.com/navi-language/zed-navi\">Navi</a></li>\n<li><a href=\"https://github.com/k0tran/zed_neocmake\">NeoCMake</a></li>\n<li><a href=\"https://github.com/d1y/nginx-zed\">Nginx</a></li>\n<li><a href=\"https://github.com/foxoman/zed-nim\">Nim</a></li>\n<li><a href=\"https://github.com/zed-extensions/nix\">Nix</a></li>\n<li><a href=\"https://github.com/shuklaayush/zed-noir\">Noir</a></li>\n<li><a href=\"https://github.com/zed-extensions/nu\">Nu</a></li>\n<li><a href=\"https://github.com/rxptr/zed-odin\">Odin</a></li>\n<li><a href=\"https://github.com/kadena-community/pact-zed\">Pact</a></li>\n<li><a href=\"https://github.com/pest-parser/zed-pest\">Pest</a></li>\n<li><a href=\"https://github.com/Squareheron942/zed-pica200\">PICA200 assembly</a></li>\n<li><a href=\"https://github.com/Moshyfawn/pkl-zed\">Pkl</a></li>\n<li><a href=\"https://github.com/notpeter/playdate-zed-extension\">PlaydateSDK</a></li>\n<li><a href=\"https://github.com/lkroll/zed-qml\">QML</a></li>\n<li><a href=\"https://github.com/weartist/zed-rainbow-csv\">Rainbow CSV</a></li>\n<li><a href=\"https://github.com/StyraInc/zed-rego\">Rego</a></li>\n<li><a href=\"https://github.com/humaans/rescript-zed\">Rescript</a></li>\n<li><a href=\"https://github.com/h2000/zed-roc\">Roclang</a></li>\n<li><a href=\"https://github.com/onbjerg/zed-ron\">Ron</a></li>\n<li><a href=\"https://github.com/scalameta/metals-zed\">Metals</a></li>\n<li><a href=\"https://github.com/bajrangCoder/zed-scss\">SCSS</a></li>\n<li><a href=\"https://github.com/calmyournerves/zed-slim\">Slim</a></li>\n<li><a href=\"https://gitlab.com/flukejones/zed-slint\">Slint</a></li>\n<li><a href=\"https://github.com/joshrutkowski/zed-smithy\">Smithy</a></li>\n<li><a href=\"https://github.com/zarifpour/zed-solidity\">Solidity</a></li>\n<li><a href=\"https://github.com/evrensen467/zed-sql\">SQL</a></li>\n<li><a href=\"https://github.com/sigmaSd/zed-strace\">Strace</a></li>\n<li><a href=\"https://github.com/zed-extensions/swift\">Swift</a></li>\n<li><a href=\"https://github.com/makifdb/zed-templ\">Templ</a></li>\n<li><a href=\"https://github.com/dangh/zed-tmux\">Tmux</a></li>\n<li><a href=\"https://github.com/YussufSassi/zed-twig\">Twig</a></li>\n<li><a href=\"https://github.com/WeetHet/typst.zed\">Typst</a></li>\n<li><a href=\"https://github.com/zetashift/unison-zed\">Unison</a></li>\n<li><a href=\"https://github.com/bajrangCoder/zed-unocss\">UnoCSS</a></li>\n<li><a href=\"https://github.com/lv37/zed-v\">Vlang</a></li>\n<li><a href=\"https://github.com/FyraLabs/zed-vala\">Vala</a></li>\n<li><a href=\"https://github.com/koozz/zed-vale\">Vale</a></li>\n<li><a href=\"https://github.com/someone13574/zed-verilog-extension\">Verilog</a></li>\n<li><a href=\"https://github.com/eth0net/zed-vhs\">VHS</a></li>\n<li><a href=\"https://github.com/luan/zed-wgsl\">Wgsl</a></li>\n<li><a href=\"https://github.com/valentinegb/zed-wit\">WIT</a></li>\n</ul>\n\n</main>",
+  "content_text": "Language Support in Zed\nZed supports hundreds of programming languages and text formats.\nSome work out-of-the box and others rely on 3rd party extensions.\n\nThe ones included out-of-the-box, natively built into Zed, are marked with *.\n\nLanguages with Documentation\n\nAnsible\nAsciiDoc\nAstro\nBash\nBiome\nC *\nC++ *\nC#\nClojure\nCSS *\nDart\nDeno\nDiff *\nDocker\nElixir\nElm\nEmmet\nErlang\nFish\nGDScript\nGleam\nGLSL\nGo *\nGroovy\nHaskell\nHelm\nHTML\nJava\nJavaScript *\nJulia\nJSON *\nJsonnet\nKotlin\nLua\nLuau\nMakefile\nMarkdown *\nNim\nOCaml\nPHP\nPrisma\nProto\nPureScript\nPython *\nR\nRego\nReStructuredText\nRacket\nRoc\nRuby\nRust * (Zed's written in Rust)\nScala\nScheme\nShell Script\nSvelte\nSwift\nTailwind CSS *\nTerraform\nTOML\nTypeScript *\nUiua\nVue\nXML\nYAML *\nYara\nYarn\nZig\n\nAdditional Community Language Extensions\n\nAda\nAiken\nAmber\nAssembly\nAWK\nBeancount\nBend\nBlade\nBlueprint\nBQN\nBrainfuck\nCadence\nCairo\nCap'n Proto\nCedar\nCFEngine policy language\nCSV\nCucumber/Gherkin\nCUE\nCurry\nD\nDatabase Markup Language (DBML)\nEarthfile\nEJS template\nElisp\nEmber\nEnv\nExograph\nFortran\nF#\nGemini gemtext\nGit Firefly\nGraphQL\nGroq\nINI\nJava\nJustfiles\nLaTeX\nLedger\nLess\nLilyPond\nLiquid\nLog\nLox\nMarkdown Oxide\nMarksman\nMatlab\nMeson\nNavi\nNeoCMake\nNginx\nNim\nNix\nNoir\nNu\nOdin\nPact\nPest\nPICA200 assembly\nPkl\nPlaydateSDK\nQML\nRainbow CSV\nRego\nRescript\nRoclang\nRon\nMetals\nSCSS\nSlim\nSlint\nSmithy\nSolidity\nSQL\nStrace\nSwift\nTempl\nTmux\nTwig\nTypst\nUnison\nUnoCSS\nVlang\nVala\nVale\nVerilog\nVHS\nWgsl\nWIT",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:13:02"
+}

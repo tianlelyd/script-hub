@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Glossary | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="active">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#zed-development-glossary" class="pagetoc-H1">Zed Development: Glossary</a>
+<a href="#naming-conventions" class="pagetoc-H2">Naming conventions</a>
+<a href="#gpui" class="pagetoc-H2">GPUI</a>
+<a href="#state-menagement" class="pagetoc-H3">State menagement</a>
+<a href="#ui" class="pagetoc-H3">UI</a>
+<a href="#zed-ui" class="pagetoc-H2">Zed UI</a>
+<a href="#editor" class="pagetoc-H2">Editor</a>
+<a href="#collab" class="pagetoc-H2">Collab</a>
+<a href="#debugger" class="pagetoc-H2">Debugger</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="zed-development-glossary"><a class="header" href="#zed-development-glossary">Zed Development: Glossary</a></h1>
+<p>These are some terms and structures frequently used throughout the zed codebase.</p>
+<p>This is a best effort list and a work in progress.</p>
+<!--
+TBD: Glossary Improvement
+
+Questions:
+
+- Can we generate this list from doc comments throughout zed?
+- We should have a section that shows the various UI parts and their names. (Can't do that in the channel.)
+-->
+<h2 id="naming-conventions"><a class="header" href="#naming-conventions">Naming conventions</a></h2>
+<p>These are generally true for the whole codebase. Note that Name can be anything
+here. An example would be <code>AnyElement</code> and <code>LspStore</code>.</p>
+<ul>
+<li><code>AnyName</code>: A type erased version of <em>name</em>. Think <code>Box&lt;dyn NameTrait&gt;</code>.</li>
+<li><code>NameStore</code>: A wrapper type which abstracts over whether operations are running locally or on a remote.</li>
+</ul>
+<h2 id="gpui"><a class="header" href="#gpui">GPUI</a></h2>
+<h3 id="state-menagement"><a class="header" href="#state-menagement">State menagement</a></h3>
+<ul>
+<li><code>App</code>: A singleton which holds the full application state including all the entities. Crucially: <code>App</code> is not <code>Send</code>, which means that <code>App</code> only exists on the thread that created it (which is the main/UI thread, usually). Thus, if you see a <code>&amp;mut App</code>, know that you're on UI thread.</li>
+<li><code>Context</code>: A wrapper around the <code>App</code> struct with specialized behavior for a specific <code>Entity</code>. Think of it as <code>(&amp;mut App, Entity&lt;V&gt;)</code>. The specialized behavior is surfaced in the API surface of <code>Context</code>. E.g., <code>App::spawn</code> takes an <code>AsyncFnOnce(AsyncApp) -&gt; Ret</code>, whereas <code>Context::spawn</code> takes an <code>AsyncFnOnce(WeakEntity&lt;V&gt;, AsyncApp) -&gt; Ret</code>.</li>
+<li><code>AsyncApp</code>: An owned version of <code>App</code> for use in async contexts. This type is <em>still</em> not <code>Send</code> (so <code>AsyncApp</code> = you're on the main thread) and any use of it may be fallible (to account for the fact that the <code>App</code> might've been terminated by the time this closure runs).
+The convenience of <code>AsyncApp</code> lies in the fact that you usually interface with <code>App</code> via <code>&amp;mut App</code>, which would be inconvenient to use with async closures; <code>AsyncApp</code> is owned, so you can use it in async closures with no sweat.</li>
+<li><code>AppContext</code> A trait which abstracts over <code>App</code>, <code>AsyncApp</code> &amp; <code>Context</code> and their Test versions.</li>
+<li><code>Task</code>: A future running or scheduled to run on the background or foreground
+executor. In contradiction to regular Futures Tasks do not need <code>.await</code> to start running. You do need to await them to get the result of the task.</li>
+<li><code>Executor</code>: Used to spawn tasks that run either on the foreground or background thread. Try to run the tasks on the background thread.
+<ul>
+<li><code>BackgroundExecutor</code>: A threadpool running <code>Task</code>s.</li>
+<li><code>ForegroundExecutor</code>: The main thread running <code>Task</code>s.</li>
+</ul>
+</li>
+<li><code>Entity</code>: A strong, well-typed reference to a struct which is managed by gpui. Effectively a pointer/map key into the <code>App::EntityMap</code>.</li>
+<li><code>WeakEntity</code>: A runtime checked reference to an <code>Entity</code> which may no longer exist. Similar to <a href="https://doc.rust-lang.org/std/rc/struct.Weak.html"><code>std::rc::Weak</code></a>.</li>
+<li><code>Global</code>: A singleton type which has only one value, that is stored in the <code>App</code>.</li>
+<li><code>Event</code>: A datatype which can be send by an <code>Entity</code> to subscribers</li>
+<li><code>Action</code>: An event that represents a user's keyboard input that can be handled by listeners
+Example: <code>file finder: toggle</code></li>
+<li><code>Observing</code>: reacting entities notifying they've changed</li>
+<li><code>Subscription</code>: An event handler that is used to react to the changes of state in the application.
+<ol>
+<li>Emitted event handling</li>
+<li>Observing <code>{new,release,on notify}</code> of an entity</li>
+</ol>
+</li>
+</ul>
+<h3 id="ui"><a class="header" href="#ui">UI</a></h3>
+<ul>
+<li><code>View</code>: An <code>Entity</code> which can produce an <code>Element</code> through its implementation of <code>Render</code>.</li>
+<li><code>Element</code>: A type that can be laid out and painted to the screen.</li>
+<li><code>element expression</code>: An expression that builds an element tree, example:</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>h_flex()
+    .id(text[i])
+    .relative()
+    .when(selected, |this| {
+        this.child(
+            div()
+                .h_4()
+                .absolute()
+                etc etc
+<span class="boring">}</span></code></pre></pre>
+<ul>
+<li><code>Component</code>: A builder which can be rendered turning it into an <code>Element</code>.</li>
+<li><code>Dispatch tree</code>: TODO</li>
+<li><code>Focus</code>: The place where keystrokes are handled first</li>
+<li><code>Focus tree</code>: Path from the place thats the current focus to the UI Root. Example <img/> TODO</li>
+</ul>
+<h2 id="zed-ui"><a class="header" href="#zed-ui">Zed UI</a></h2>
+<ul>
+<li>
+<p><code>Window</code>: A struct in zed representing a zed window in your desktop environment (see image below). There can be multiple if you have multiple zed instances open. Mostly passed around for rendering.</p>
+</li>
+<li>
+<p><code>Modal</code>: A UI element that floats on top of the rest of the UI</p>
+</li>
+<li>
+<p><code>Picker</code>: A struct representing a list of items in floating on top of the UI (Modal). You can select an item and confirm. What happens on select or confirm is determined by the picker's delegate. (The 'Model' in the image below is a picker.)</p>
+</li>
+<li>
+<p><code>PickerDelegate</code>: A trait used to specialize behavior for a <code>Picker</code>. The <code>Picker</code> stores the <code>PickerDelegate</code> in the field delegate.</p>
+</li>
+<li>
+<p><code>Center</code>: The middle of the zed window, the center is split into multiple <code>Pane</code>s. In the codebase this is a field on the <code>Workspace</code> struct. (see image below).</p>
+</li>
+<li>
+<p><code>Pane</code>: An area in the <code>Center</code> where we can place items, such as an editor, multi-buffer or terminal (see image below).</p>
+</li>
+<li>
+<p><code>Panel</code>: An <code>Entity</code> implementing the <code>Panel</code> trait. These can be placed in a <code>Dock</code>. In the image below we see the: <code>ProjectPanel</code> in the left dock, the <code>DebugPanel</code> in the bottom dock, and <code>AgentPanel</code> in the right dock. Note <code>Editor</code> does not implement <code>Panel</code> and hence is not a <code>Panel</code>.</p>
+</li>
+<li>
+<p><code>Dock</code>: A UI element similar to a <code>Pane</code> which can be opened and hidden. There can be up to 3 docks open at a time, left right and below the center. A dock contains one or more <code>Panel</code>s not <code>Pane</code>s. (see image).
+<img alt="image" height="1080" src="https://github.com/user-attachments/assets/2cb1170e-2850-450d-89bb-73622b5d07b2" width="1921"/></p>
+</li>
+<li>
+<p><code>Project</code>: One or more <code>Worktree</code>s</p>
+</li>
+<li>
+<p><code>Worktree</code>: Represents either local or remote files.
+<img alt="image" height="1118" src="https://github.com/user-attachments/assets/da5c58e4-b02e-4038-9736-27e3509fdbfa" width="552"/></p>
+</li>
+<li>
+<p><a href="https://zed.dev/docs/multibuffers">Multibuffer</a>: A list of Editors, a multi-buffer allows editing multiple files simultaneously. A multi-buffer opens when an operation in Zed returns multiple locations, examples: <em>search</em> or <em>go to definition</em>. See project search in the image below.</p>
+</li>
+</ul>
+<img alt="image" height="886" src="https://github.com/user-attachments/assets/d59dcecd-8ab6-4172-8fb6-b1fc3c3eaf9d" width="800"/>
+<h2 id="editor"><a class="header" href="#editor">Editor</a></h2>
+<ul>
+<li><code>Editor</code>: <em>The</em> text editor, nearly everything in zed is an <code>Editor</code>, even single line inputs. Each pane in the image above contains one or more <code>Editor</code> instances.</li>
+<li><code>Workspace</code>: The root of the window</li>
+<li><code>Entry</code>: A file, dir, pending dir or unloaded dir.</li>
+<li><code>Buffer</code>: The in-memory representation of a 'file' together with relevant data such as syntax trees, git status and diagnostics.</li>
+<li><code>pending selection</code>: You have mouse down and you're dragging but you have not yet released.</li>
+</ul>
+<h2 id="collab"><a class="header" href="#collab">Collab</a></h2>
+<ul>
+<li><code>Collab session</code>: Multiple users working in a shared <code>Project</code></li>
+<li><code>Upstream client</code>: The zed client which has shared their workspace</li>
+<li><code>Downstream client</code>: The zed client joining a shared workspace</li>
+</ul>
+<h2 id="debugger"><a class="header" href="#debugger">Debugger</a></h2>
+<ul>
+<li><code>DapStore</code>: Is an entity that manages debugger sessions</li>
+<li><code>debugger::Session</code>: Is an entity that manages the lifecycle of a debug session and communication with DAPS</li>
+<li><code>BreakpointStore</code>: Is an entity that manages breakpoints states in local and remote instances of Zed</li>
+<li><code>DebugSession</code>: Manages a debug session's UI and running state</li>
+<li><code>RunningState</code>: Directily manages all the views of a debug session</li>
+<li><code>VariableList</code>: The variable and watch list view of a debug session</li>
+<li><code>Console</code>: TODO</li>
+<li><code>Terminal</code>: TODO</li>
+<li><code>BreakpointList</code>: TODO</li>
+</ul>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

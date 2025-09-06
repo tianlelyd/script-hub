@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Visual Customization | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="active">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#visual-customization" class="pagetoc-H1">Visual Customization</a>
+<a href="#themes" class="pagetoc-H2">Themes</a>
+<a href="#fonts" class="pagetoc-H2">Fonts</a>
+<a href="#font-ligatures" class="pagetoc-H3">Font ligatures</a>
+<a href="#status-bar" class="pagetoc-H3">Status Bar</a>
+<a href="#titlebar" class="pagetoc-H3">Titlebar</a>
+<a href="#workspace" class="pagetoc-H2">Workspace</a>
+<a href="#editor" class="pagetoc-H2">Editor</a>
+<a href="#editor-blame" class="pagetoc-H3">Git Blame</a>
+<a href="#editor-toolbar" class="pagetoc-H3">Editor Toolbar</a>
+<a href="#editor-scrollbar" class="pagetoc-H3">Editor Scrollbar and Minimap</a>
+<a href="#editor-tabs" class="pagetoc-H3">Editor Tabs</a>
+<a href="#status-bar-1" class="pagetoc-H3">Status Bar</a>
+<a href="#multibuffer" class="pagetoc-H3">Multibuffer</a>
+<a href="#editor-lsp" class="pagetoc-H3">Editor Completions, Snippets, Actions, Diagnostics</a>
+<a href="#editor-ai" class="pagetoc-H3">Edit Predictions</a>
+<a href="#editor-inlay-hints" class="pagetoc-H3">Editor Inlay Hints</a>
+<a href="#file-finder" class="pagetoc-H2">File Finder</a>
+<a href="#project-panel" class="pagetoc-H2">Project Panel</a>
+<a href="#agent-panel" class="pagetoc-H2">Agent Panel</a>
+<a href="#terminal-panel" class="pagetoc-H2">Terminal Panel</a>
+<a href="#other-panels" class="pagetoc-H3">Other Panels</a>
+<a href="#collaboration-panels" class="pagetoc-H2">Collaboration Panels</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="visual-customization"><a class="header" href="#visual-customization">Visual Customization</a></h1>
+<p>Various aspects of Zed's visual layout can be configured via Zed settings.json which you can access via <code class="hljs">zed: open settings</code> (<kbd class="keybinding">cmd-,|ctrl-,</kbd>).</p>
+<p>See <a href="./configuring-zed.html">Configuring Zed</a> for additional information and other non-visual settings.</p>
+<h2 id="themes"><a class="header" href="#themes">Themes</a></h2>
+<p>Use may install zed extensions providing <a href="./themes.html">Themes</a> and <a href="./icon-themes.html">Icon Themes</a> via <code class="hljs">zed: extensions</code> from the command palette or menu.</p>
+<p>You can preview/choose amongst your installed themes and icon themes with <code class="hljs">theme selector: toggle</code> (<kbd class="keybinding">cmd-k cmd-t|ctrl-k ctrl-t</kbd>) and (<code class="hljs">icon theme selector: toggle</code>) which will modify the following settings:</p>
+<pre><code class="language-json">{
+  "theme": "One Dark",
+  "icon_theme": "Zed (Default)"
+}
+</code></pre>
+<p>If you would like to use distinct themes for light mode/dark mode that can be set with:</p>
+<pre><code class="language-json">{
+  "theme": {
+    "dark": "One Dark"
+    "light": "One Light",
+    // Mode to use (dark, light) or "system" to follow the OS's light/dark mode (default)
+    "mode": "system",
+  },
+  "icon_theme": {
+    "dark": "Zed (Default)"
+    "light": "Zed (Default)",
+    // Mode to use (dark, light) or "system" to follow the OS's light/dark mode (default)
+    "mode": "system",
+  }
+}
+</code></pre>
+<h2 id="fonts"><a class="header" href="#fonts">Fonts</a></h2>
+<pre><code class="language-json">  // UI Font. Use ".SystemUIFont" to use the default system font (SF Pro on macOS),
+  // or ".ZedSans" for the bundled default (currently IBM Plex)
+  "ui_font_family": ".SystemUIFont",
+  "ui_font_weight": 400, // Font weight in standard CSS units from 100 to 900.
+  "ui_font_size": 16,
+
+  // Buffer Font - Used by editor buffers
+  // use ".ZedMono" for the bundled default monospace (currently Lilex)
+  "buffer_font_family": "Berkeley Mono", // Font name for editor buffers
+  "buffer_font_size": 15,                 // Font size for editor buffers
+  "buffer_font_weight": 400,              // Font weight in CSS units [100-900]
+  // Line height "comfortable" (1.618), "standard" (1.3) or custom: `{ "custom": 2 }`
+  "buffer_line_height": "comfortable",
+
+  // Terminal Font Settings
+  "terminal": {
+    "font_family": "",
+    "font_size": 15,
+    // Terminal line height: comfortable (1.618), standard(1.3) or `{ "custom": 2 }`
+    "line_height": "comfortable",
+  },
+
+  // Agent Panel Font Settings
+  "agent_font_size": 15
+</code></pre>
+<h3 id="font-ligatures"><a class="header" href="#font-ligatures">Font ligatures</a></h3>
+<p>By default Zed enable font ligatures which will visually combines certain adjacent characters.</p>
+<p>For example <code>=&gt;</code> will be displayed as <code>→</code> and <code>!=</code> will be <code>≠</code>. This is purely cosmetic and the individual characters remain unchanged.</p>
+<p>To disable this behavior use:</p>
+<pre><code class="language-json">{
+  "buffer_font_features": {
+    "calt": false // Disable ligatures
+  }
+}
+</code></pre>
+<h3 id="status-bar"><a class="header" href="#status-bar">Status Bar</a></h3>
+<pre><code class="language-json">{
+  // Whether to show full labels in line indicator or short ones
+  //   - `short`: "2 s, 15 l, 32 c"
+  //   - `long`: "2 selections, 15 lines, 32 characters"
+  "line_indicator_format": "long"
+
+  // Individual status bar icons can be hidden:
+  // "project_panel": {"button": false },
+  // "outline_panel": {"button": false },
+  // "collaboration_panel": {"button": false },
+  // "chat_panel": {"button": "never" },
+  // "git_panel": {"button": false },
+  // "notification_panel": {"button": false },
+  // "agent": {"button": false },
+  // "debugger": {"button": false },
+  // "diagnostics": {"button": false },
+  // "search": {"button": false },
+}
+</code></pre>
+<h3 id="titlebar"><a class="header" href="#titlebar">Titlebar</a></h3>
+<pre><code class="language-json">  // Control which items are shown/hidden in the title bar
+  "title_bar": {
+    "show_branch_icon": false,      // Show/hide branch icon beside branch switcher
+    "show_branch_name": true,       // Show/hide branch name
+    "show_project_items": true,     // Show/hide project host and name
+    "show_onboarding_banner": true, // Show/hide onboarding banners
+    "show_user_picture": true,      // Show/hide user avatar
+    "show_sign_in": true,           // Show/hide sign-in button
+    "show_menus": false             // Show/hide menus
+  },
+</code></pre>
+<h2 id="workspace"><a class="header" href="#workspace">Workspace</a></h2>
+<pre><code class="language-json">{
+  // Force usage of Zed build in path prompts (file and directory pickers)
+  // instead of OS native pickers (false).
+  "use_system_path_prompts": true,
+  // Force usage of Zed built in confirmation prompts ("Do you want to save?")
+  // instead of OS native prompts (false). On linux this is ignored (always false).
+  "use_system_prompts": true,
+
+  // Whether to use the system provided dialogs for Open and Save As (true) or
+  // Zed's built-in keyboard-first pickers (false)
+  "use_system_path_prompts": true,
+
+  // Active pane styling settings.
+  "active_pane_modifiers": {
+    // Inset border size of the active pane, in pixels.
+    "border_size": 0.0,
+    // Opacity of the inactive panes. 0 means transparent, 1 means opaque.
+    "inactive_opacity": 1.0
+  },
+
+  // Layout mode of the bottom dock: contained, full, left_aligned, right_aligned
+  "bottom_dock_layout": "contained",
+
+  // Whether to resize all the panels in a dock when resizing the dock.
+  // Can be a combination of "left", "right" and "bottom".
+  "resize_all_panels_in_dock": ["left"]
+}
+</code></pre>
+<!--
+TBD: Centered layout related settings
+```json
+    "centered_layout": {
+    // The relative width of the left padding of the central pane from the
+    // workspace when the centered layout is used.
+    "left_padding": 0.2,
+    // The relative width of the right padding of the central pane from the
+    // workspace when the centered layout is used.
+    "right_padding": 0.2
+    },
+```
+-->
+<h2 id="editor"><a class="header" href="#editor">Editor</a></h2>
+<pre><code class="language-json">  // Whether the cursor blinks in the editor.
+  "cursor_blink": true,
+
+  // Cursor shape for the default editor: bar, block, underline, hollow
+  "cursor_shape": null,
+
+  // Highlight the current line in the editor: none, gutter, line, all
+  "current_line_highlight": "all",
+
+  // When does the mouse cursor hide: never, on_typing, on_typing_and_movement
+  "hide_mouse": "on_typing_and_movement",
+
+  // Whether to highlight all occurrences of the selected text in an editor.
+  "selection_highlight": true,
+
+  // Visually show tabs and spaces  (none, all, selection, boundary, trailing)
+  "show_whitespaces": "selection",
+
+  "unnecessary_code_fade": 0.3, // How much to fade out unused code.
+
+  // Hide the values of in variables from visual display in private files
+  "redact_private_values": false,
+
+  // Soft-wrap and rulers
+  "soft_wrap": "none",          // none, editor_width, preferred_line_length, bounded
+  "preferred_line_length": 80,  // Column to soft-wrap
+  "show_wrap_guides": true,     // Show/hide wrap guides (vertical rulers)
+  "wrap_guides": [],            // Where to position wrap_guides (character counts)
+
+  // Gutter Settings
+  "gutter": {
+    "line_numbers": true,         // Show/hide line numbers in the gutter.
+    "runnables": true,            // Show/hide runnables buttons in the gutter.
+    "breakpoints": true,          // Show/hide show breakpoints in the gutter.
+    "folds": true,                // Show/hide show fold buttons in the gutter.
+    "min_line_number_digits": 4   // Reserve space for N digit line numbers
+  },
+  "relative_line_numbers": false, // Show relative line numbers in gutter
+
+  // Indent guides
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 1,                  // Width of guides in pixels [1-10]
+    "active_line_width": 1,           // Width of active guide in pixels [1-10]
+    "coloring": "fixed",              // disabled, fixed, indent_aware
+    "background_coloring": "disabled" // disabled, indent_aware
+  }
+</code></pre>
+<h3 id="editor-blame"><a class="header" href="#editor-blame">Git Blame</a></h3>
+<pre><code class="language-json">  "git": {
+    "inline_blame": {
+      "enabled": true,             // Show/hide inline blame
+      "delay": 0,                  // Show after delay (ms)
+      "min_column": 0,             // Minimum column to inline display blame
+      "padding": 7,                // Padding between code and inline blame (em)
+      "show_commit_summary": false // Show/hide commit summary
+    },
+    "hunk_style": "staged_hollow"  // staged_hollow, unstaged_hollow
+  }
+</code></pre>
+<h3 id="editor-toolbar"><a class="header" href="#editor-toolbar">Editor Toolbar</a></h3>
+<pre><code class="language-json">  // Editor toolbar related settings
+  "toolbar": {
+    "breadcrumbs": true, // Whether to show breadcrumbs.
+    "quick_actions": true, // Whether to show quick action buttons.
+    "selections_menu": true, // Whether to show the Selections menu
+    "agent_review": true, // Whether to show agent review buttons
+    "code_actions": false // Whether to show code action buttons
+  }
+</code></pre>
+<h3 id="editor-scrollbar"><a class="header" href="#editor-scrollbar">Editor Scrollbar and Minimap</a></h3>
+<pre><code class="language-json">  // Scrollbar related settings
+  "scrollbar": {
+    // When to show the scrollbar in the editor (auto, system, always, never)
+    "show": "auto",
+    "cursors": true,          // Show cursor positions in the scrollbar.
+    "git_diff": true,         // Show git diff indicators in the scrollbar.
+    "search_results": true,   // Show buffer search results in the scrollbar.
+    "selected_text": true,    // Show selected text occurrences in the scrollbar.
+    "selected_symbol": true,  // Show selected symbol occurrences in the scrollbar.
+    "diagnostics": "all",     // Show diagnostics (none, error, warning, information, all)
+    "axes": {
+      "horizontal": true,     // Show/hide the horizontal scrollbar
+      "vertical": true        // Show/hide the vertical scrollbar
+    }
+  },
+
+  // Minimap related settings
+  "minimap": {
+    "show": "never",                // When to show (auto, always, never)
+    "display_in": "active_editor",  // Where to show (active_editor, all_editor)
+    "thumb": "always",              // When to show thumb (always, hover)
+    "thumb_border": "left_open",    // Thumb border (left_open, right_open, full, none)
+    "max_width_columns": 80,        // Maximum width of minimap
+    "current_line_highlight": null  // Highlight current line (null, line, gutter)
+  },
+
+  // Control Editor scroll beyond the last line: off, one_page, vertical_scroll_margin
+  "scroll_beyond_last_line": "one_page",
+  // Lines to keep above/below the cursor when scrolling with the keyboard
+  "vertical_scroll_margin": 3,
+  // The number of characters to keep on either side when scrolling with the mouse
+  "horizontal_scroll_margin": 5,
+  // Scroll sensitivity multiplier
+  "scroll_sensitivity": 1.0,
+  // Scroll sensitivity multiplier for fast scrolling (hold alt while scrolling)
+  "fast_scroll_sensitivity": 4.0,
+</code></pre>
+<h3 id="editor-tabs"><a class="header" href="#editor-tabs">Editor Tabs</a></h3>
+<pre><code class="language-json">  // Maximum number of tabs per pane. Unset for unlimited.
+  "max_tabs": null,
+
+  // Customize the tab bar appearance
+  "tab_bar": {
+    "show": true,                     // Show/hide the tab bar
+    "show_nav_history_buttons": true, // Show/hide history buttons on tab bar
+    "show_tab_bar_buttons": true      // Show hide buttons (new, split, zoom)
+  },
+  "tabs": {
+    "git_status": false,              // Color to show git status
+    "close_position": "right",        // Close button position (left, right, hidden)
+    "show_close_button": "hover",     // Close button shown (hover, always, hidden)
+    "file_icons": false,              // Icon showing file type
+    // Show diagnostics in file icon (off, errors, all). Requires file_icons=true
+    "show_diagnostics": "off"
+  }
+</code></pre>
+<h3 id="status-bar-1"><a class="header" href="#status-bar-1">Status Bar</a></h3>
+<pre><code class="language-json">  "status_bar": {
+    // Show/hide a button that displays the active buffer's language.
+    // Clicking the button brings up the language selector.
+    // Defaults to true.
+    "active_language_button": true,
+    // Show/hide a button that displays the cursor's position.
+    // Clicking the button brings up an input for jumping to a line and column.
+    // Defaults to true.
+    "cursor_position_button": true,
+  },
+  "global_lsp_settings": {
+    // Show/hide the LSP button in the status bar.
+    // Activity from the LSP is still shown.
+    // Button is not shown if "enable_language_server" if false.
+    "button": true
+  },
+</code></pre>
+<h3 id="multibuffer"><a class="header" href="#multibuffer">Multibuffer</a></h3>
+<pre><code class="language-json">{
+  // The default number of lines to expand excerpts in the multibuffer by.
+  "expand_excerpt_lines": 5,
+  // The default number of lines of context provided for excerpts in the multibuffer by.
+  "excerpt_context_lines": 2
+}
+</code></pre>
+<h3 id="editor-lsp"><a class="header" href="#editor-lsp">Editor Completions, Snippets, Actions, Diagnostics</a></h3>
+<pre><code class="language-json">  "snippet_sort_order": "inline",        // Snippets completions: top, inline, bottom, none
+  "show_completions_on_input": true,     // Show completions while typing
+  "show_completion_documentation": true, // Show documentation in completions
+  "auto_signature_help": false,          // Show method signatures inside parentheses
+
+  // Whether to show the signature help after completion or a bracket pair inserted.
+  // If `auto_signature_help` is enabled, this setting will be treated as enabled also.
+  "show_signature_help_after_edits": false,
+
+  // Whether to show code action button at start of buffer line.
+  "inline_code_actions": true,
+
+  // Which level to use to filter out diagnostics displayed in the editor:
+  "diagnostics_max_severity": null,      // off, error, warning, info, hint, null (all)
+
+  // How to render LSP `textDocument/documentColor` colors in the editor.
+  "lsp_document_colors": "inlay",        // none, inlay, border, background
+</code></pre>
+<h3 id="editor-ai"><a class="header" href="#editor-ai">Edit Predictions</a></h3>
+<pre><code class="language-json">  "edit_predictions": {
+    "mode": "eager",                // Automatically show (eager) or hold-alt (subtle)
+    "enabled_in_text_threads": true // Show/hide predictions in agent text threads
+  },
+  "show_edit_predictions": true     // Show/hide predictions in editor
+</code></pre>
+<h3 id="editor-inlay-hints"><a class="header" href="#editor-inlay-hints">Editor Inlay Hints</a></h3>
+<pre><code class="language-json">{
+  "inlay_hints": {
+    "enabled": false,
+    // Toggle certain types of hints on and off, all switched on by default.
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    "show_other_hints": true,
+
+    // Whether to show a background for inlay hints (theme `hint.background`)
+    "show_background": false, //
+
+    // Time to wait after editing before requesting hints (0 to disable debounce)
+    "edit_debounce_ms": 700,
+    // Time to wait after scrolling before requesting hints (0 to disable debounce)
+    "scroll_debounce_ms": 50,
+
+    // A set of modifiers which, when pressed, will toggle the visibility of inlay hints.
+    "toggle_on_modifiers_press": {
+      "control": false,
+      "shift": false,
+      "alt": false,
+      "platform": false,
+      "function": false
+    }
+  }
+}
+</code></pre>
+<h2 id="file-finder"><a class="header" href="#file-finder">File Finder</a></h2>
+<pre><code class="language-json">  // File Finder Settings
+  "file_finder": {
+    "file_icons": true,         // Show/hide file icons
+    "modal_max_width": "small", // Horizontal size: small, medium, large, xlarge, full
+    "git_status": true,         // Show the git status for each entry
+    "include_ignored": null     // gitignored files in results: true, false, null
+  },
+</code></pre>
+<h2 id="project-panel"><a class="header" href="#project-panel">Project Panel</a></h2>
+<p>Project panel can be shown/hidden with <code class="hljs">project panel: toggle focus</code> (<kbd class="keybinding">cmd-shift-e|ctrl-shift-e</kbd>) or with <code class="hljs">pane: reveal in project panel</code> (<kbd class="keybinding">cmd-shift-e|ctrl-shift-e</kbd>).</p>
+<pre><code class="language-json">  // Project Panel Settings
+  "project_panel": {
+    "button": true,                 // Show/hide button in the status bar
+    "default_width": 240,           // Default panel width
+    "dock": "left",                 // Position of the dock (left, right)
+    "entry_spacing": "comfortable", // Vertical spacing (comfortable, standard)
+    "file_icons": true,             // Show/hide file icons
+    "folder_icons": true,           // Show/hide folder icons
+    "git_status": true,             // Indicate new/updated files
+    "indent_size": 20,              // Pixels for each successive indent
+    "auto_reveal_entries": true,    // Show file in panel when activating its buffer
+    "auto_fold_dirs": true,         // Fold dirs with single subdir
+    "sticky_scroll": true,          // Stick parent directories at top of the project panel.
+    "drag_and_drop": true,          // Whether drag and drop is enabled
+    "scrollbar": {                  // Project panel scrollbar settings
+      "show": null                  // Show/hide: (auto, system, always, never)
+    },
+    "show_diagnostics": "all",      //
+    // Settings related to indent guides in the project panel.
+    "indent_guides": {
+      // When to show indent guides in the project panel. (always, never)
+      "show": "always"
+    },
+    // Whether to hide the root entry when only one folder is open in the window.
+    "hide_root": false
+  }.
+</code></pre>
+<h2 id="agent-panel"><a class="header" href="#agent-panel">Agent Panel</a></h2>
+<pre><code class="language-json">  "agent": {
+    "version": "2",
+    "enabled": true,        // Enable/disable the agent
+    "button": true,         // Show/hide the icon in the status bar
+    "dock": "right",        // Where to dock: left, right, bottom
+    "default_width": 640,   // Default width (left/right docked)
+    "default_height": 320,  // Default height (bottom dockeed)
+  },
+  "agent_font_size": 16
+</code></pre>
+<p>See <a href="./ai/overview.html">Zed AI Documentation</a> for additional non-visual AI settings.</p>
+<h2 id="terminal-panel"><a class="header" href="#terminal-panel">Terminal Panel</a></h2>
+<pre><code class="language-json">  // Terminal Panel Settings
+  "terminal": {
+    "dock": "bottom",                   // Where to dock: left, right, bottom
+    "button": true,                     // Show/hide status bar icon
+    "default_width": 640,               // Default width (left/right docked)
+    "default_height": 320,              // Default height (bottom dockeed)
+
+    // Set the cursor blinking behavior in the terminal (on, off, terminal_controlled)
+    "blinking": "terminal_controlled",
+    // Default cursor shape for the terminal cursor (block, bar, underline, hollow)
+    "cursor_shape": "block",
+
+    // Environment variables to add to terminal's process environment
+    "env": {
+      // "KEY": "value"
+    },
+
+    // Terminal scrollbar
+    "scrollbar": {
+      "show": null                       // Show/hide: (auto, system, always, never)
+    },
+    // Terminal Font Settings
+    "font_family": "Fira Code",
+    "font_size": 15,
+    "font_weight": 400,
+    // Terminal line height: comfortable (1.618), standard(1.3) or `{ "custom": 2 }`
+    "line_height": "comfortable",
+
+    "max_scroll_history_lines": 10000,   // Scrollback history (0=disable, max=100000)
+  }
+</code></pre>
+<p>See <a href="./configuring-zed.html#terminal">Terminal settings</a> for additional non-visual customization options.</p>
+<h3 id="other-panels"><a class="header" href="#other-panels">Other Panels</a></h3>
+<pre><code class="language-json">  // Git Panel
+  "git_panel": {
+    "button": true,               // Show/hide status bar icon
+    "dock": "left",               // Where to dock: left, right
+    "default_width": 360,         // Default width of the git panel.
+    "status_style": "icon",       // label_color, icon
+    "sort_by_path": false,        // Sort by path (false) or status (true)
+    "scrollbar": {
+      "show": null                // Show/hide: (auto, system, always, never)
+    }
+  },
+
+  // Debugger Panel
+  "debugger": {
+    "dock": "bottom",             // Where to dock: left, right, bottom
+    "button": true                // Show/hide status bar icon
+  },
+
+  // Outline Panel
+  "outline_panel": {
+    "button": true,               // Show/hide status bar icon
+    "default_width": 300,         // Default width of the git panel
+    "dock": "left",               // Where to dock: left, right
+    "file_icons": true,           // Show/hide file_icons
+    "folder_icons": true,         // Show file_icons (true), chevrons (false) for dirs
+    "git_status": true,           // Show git status
+    "indent_size": 20,            // Indentation for nested items (pixels)
+    "indent_guides": {
+      "show": "always"            // Show indent guides (always, never)
+    },
+    "auto_reveal_entries": true,  // Show file in panel when activating its buffer
+    "auto_fold_dirs": true,       // Fold dirs with single subdir
+    "scrollbar": {                // Project panel scrollbar settings
+      "show": null                // Show/hide: (auto, system, always, never)
+    }
+  }
+</code></pre>
+<h2 id="collaboration-panels"><a class="header" href="#collaboration-panels">Collaboration Panels</a></h2>
+<pre><code class="language-json">{
+  // Collaboration Panel
+  "collaboration_panel": {
+    "button": true,               // Show/hide status bar icon
+    "dock": "left",               // Where to dock: left, right
+    "default_width": 240          // Default width of the collaboration panel.
+  },
+  "show_call_status_icon": true,  // Shown call status in the OS status bar.
+
+  // Chat Panel
+  "chat_panel": {
+    "button": "when_in_call",     // status bar icon (true, false, when_in_call)
+    "dock": "right",              // Where to dock: left, right
+    "default_width": 240          // Default width of the chat panel
+  },
+
+  // Notification Panel
+  "notification_panel": {
+    // Whether to show the notification panel button in the status bar.
+    "button": true,
+    // Where to dock the notification panel. Can be 'left' or 'right'.
+    "dock": "right",
+    // Default width of the notification panel.
+    "default_width": 380
+  }
+</code></pre>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

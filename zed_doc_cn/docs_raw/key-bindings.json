@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/key-bindings.html",
+  "title": "Key bindings | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"key-bindings\"><a class=\"header\" href=\"#key-bindings\">Key bindings</a></h1>\n<p>Zed has a very customizable key binding system — you can tweak everything to work exactly how your fingers expect!</p>\n<h2 id=\"predefined-keymaps\"><a class=\"header\" href=\"#predefined-keymaps\">Predefined keymaps</a></h2>\n<p>If you're used to a specific editor's defaults you can set a <code>base_keymap</code> in your <a href=\"./configuring-zed.html\">settings file</a>. We currently have:</p>\n<ul>\n<li>VSCode (default)</li>\n<li>Atom</li>\n<li>Emacs (Beta)</li>\n<li>JetBrains</li>\n<li>SublimeText</li>\n<li>TextMate</li>\n<li>None (disables <em>all</em> key bindings)</li>\n</ul>\n<p>You can also enable <code>vim_mode</code> or <code>helix_mode</code>, which add modal bindings. For more information, see the documentation for <a href=\"./vim.html\">Vim mode</a> and <a href=\"./helix.html\">Helix mode</a>.</p>\n<h2 id=\"user-keymaps\"><a class=\"header\" href=\"#user-keymaps\">User keymaps</a></h2>\n<p>Zed reads your keymap from <code>~/.config/zed/keymap.json</code>. You can open the file within Zed with <code class=\"hljs\">zed: open keymap</code> from the command palette or to spawn the Zed Keymap Editor (<code class=\"hljs\">zed: open keymap editor</code>) use <kbd class=\"keybinding\">cmd-k cmd-s|ctrl-k ctrl-s</kbd>.</p>\n<p>The file contains a JSON array of objects with <code>\"bindings\"</code>. If no <code>\"context\"</code> is set the bindings are always active. If it is set the binding is only active when the <a href=\"#contexts\">context matches</a>.</p>\n<p>Within each binding section a <a href=\"#keybinding-syntax\">key sequence</a> is mapped to an <a href=\"#actions\">action</a>. If conflicts are detected they are resolved as <a href=\"#precedence\">described below</a>.</p>\n<p>If you are using a non-QWERTY, Latin-character keyboard, you may want to set <code>use_key_equivalents</code> to <code>true</code>. See <a href=\"#non-qwerty-keyboards\">Non-QWERTY keyboards</a> for more information.</p>\n<p>For example:</p>\n<pre><code class=\"language-json\">[\n  {\n    \"bindings\": {\n      \"ctrl-right\": \"editor::SelectLargerSyntaxNode\",\n      \"ctrl-left\": \"editor::SelectSmallerSyntaxNode\"\n    }\n  },\n  {\n    \"context\": \"ProjectPanel &amp;&amp; not_editing\",\n    \"bindings\": {\n      \"o\": \"project_panel::Open\"\n    }\n  }\n]\n</code></pre>\n<p>You can see all of Zed's default bindings in the default keymaps for <a href=\"https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-macos.json\">MacOS</a> or <a href=\"https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-linux.json\">Linux</a>.</p>\n<p>If you want to debug problems with custom keymaps you can use <code>dev: Open Key Context View</code> from the command palette. Please file <a href=\"https://github.com/zed-industries/zed\">an issue</a> if you run into something you think should work but isn't.</p>\n<h3 id=\"keybinding-syntax\"><a class=\"header\" href=\"#keybinding-syntax\">Keybinding syntax</a></h3>\n<p>Zed has the ability to match against not just a single keypress, but a sequence of keys typed in order. Each key in the <code>\"bindings\"</code> map is a sequence of keypresses separated with a space.</p>\n<p>Each keypress is a sequence of modifiers followed by a key. The modifiers are:</p>\n<ul>\n<li><code>ctrl-</code> The control key</li>\n<li><code>cmd-</code>, <code>win-</code> or <code>super-</code> for the platform modifier (Command on macOS, Windows key on Windows, and the Super key on Linux).</li>\n<li><code>alt-</code> for alt (option on macOS)</li>\n<li><code>shift-</code> The shift key</li>\n<li><code>fn-</code> The function key</li>\n<li><code>secondary-</code> Equivalent to <code>cmd</code> when Zed is running on macOS and <code>ctrl</code> when on Windows and Linux</li>\n</ul>\n<p>The keys can be any single unicode codepoint that your keyboard generates (for example <code>a</code>, <code>0</code>, <code>£</code> or <code>ç</code>), or any named key (<code>tab</code>, <code>f1</code>, <code>shift</code>, or <code>cmd</code>). If you are using a non-Latin layout (e.g. Cyrillic), you can bind either to the cyrillic character, or the latin character that key generates with <code>cmd</code> pressed.</p>\n<p>A few examples:</p>\n<pre><code class=\"language-json\"> \"bindings\": {\n   \"cmd-k cmd-s\": \"zed::OpenKeymap\", // matches ⌘-k then ⌘-s\n   \"space e\": \"editor::Complete\", // type space then e\n   \"ç\": \"editor::Complete\", // matches ⌥-c\n   \"shift shift\": \"file_finder::Toggle\", // matches pressing and releasing shift twice\n }\n</code></pre>\n<p>The <code>shift-</code> modifier can only be used in combination with a letter to indicate the uppercase version. For example <code>shift-g</code> matches typing <code>G</code>. Although on many keyboards shift is used to type punctuation characters like <code>(</code>, the keypress is not considered to be modified and so <code>shift-(</code> does not match.</p>\n<p>The <code>alt-</code> modifier can be used on many layouts to generate a different key. For example on macOS US keyboard the combination <code>alt-c</code> types <code>ç</code>. You can match against either in your keymap file, though by convention Zed spells this combination as <code>alt-c</code>.</p>\n<p>It is possible to match against typing a modifier key on its own. For example <code>shift shift</code> can be used to implement JetBrains search everywhere shortcut. In this case the binding happens on key release instead of keypress.</p>\n<h3 id=\"contexts\"><a class=\"header\" href=\"#contexts\">Contexts</a></h3>\n<p>If a binding group has a <code>\"context\"</code> key it will be matched against the currently active contexts in Zed.</p>\n<p>Zed's contexts make up a tree, with the root being <code>Workspace</code>. Workspaces contain Panes and Panels, and Panes contain Editors, etc. The easiest way to see what contexts are active at a given moment is the key context view, which you can get to with <code>dev: Open Key Context View</code> in the command palette.</p>\n<p>For example:</p>\n<pre><code># in an editor, it might look like this:\nWorkspace os=macos keyboard_layout=com.apple.keylayout.QWERTY\n  Pane\n    Editor mode=full extension=md vim_mode=insert\n\n# in the project panel\nWorkspace os=macos\n  Dock\n    ProjectPanel not_editing\n</code></pre>\n<p>Context expressions can contain the following syntax:</p>\n<ul>\n<li><code>X &amp;&amp; Y</code>, <code>X || Y</code> to and/or two conditions</li>\n<li><code>!X</code> to check that a condition is false</li>\n<li><code>(X)</code> for grouping</li>\n<li><code>X &gt; Y</code> to match if an ancestor in the tree matches X and this layer matches Y.</li>\n</ul>\n<p>For example:</p>\n<ul>\n<li><code>\"context\": \"Editor\"</code> - matches any editor (including inline inputs)</li>\n<li><code>\"context\": \"Editor &amp;&amp; mode=full\"</code> - matches the main editors used for editing code</li>\n<li><code>\"context\": \"!Editor &amp;&amp; !Terminal\"</code> - matches anywhere except where an Editor or Terminal is focused</li>\n<li><code>\"context\": \"os=macos &gt; Editor\"</code> - matches any editor on macOS.</li>\n</ul>\n<p>It's worth noting that attributes are only available on the node they are defined on. This means that if you want to (for example) only enable a keybinding when the debugger is stopped in vim normal mode, you need to do <code>debugger_stopped &gt; vim_mode == normal</code>.</p>\n<p>Note: Before Zed v0.197.x, the ! operator only looked at one node at a time, and <code>&gt;</code> meant \"parent\" not \"ancestor\". This meant that <code>!Editor</code> would match the context <code>Workspace &gt; Pane &gt; Editor</code>, because (confusingly) the Pane matches <code>!Editor</code>, and that <code>os=macos &gt; Editor</code> did not match the context <code>Workspace &gt; Pane &gt; Editor</code> because of the intermediate <code>Pane</code> node.</p>\n<p>If you're using Vim mode, we have information on how <a href=\"./vim.html#contexts\">vim modes influence the context</a>. Helix mode is built on top of Vim mode and uses the same contexts.</p>\n<h3 id=\"actions\"><a class=\"header\" href=\"#actions\">Actions</a></h3>\n<p>Pretty much all of Zed's functionality is exposed as actions. Although there is\nno explicitly documented list, you can find most of them by searching in the\ncommand palette, by looking in the default keymaps for\n<a href=\"https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-macos.json\">MacOS</a>\nor\n<a href=\"https://github.com/zed-industries/zed/blob/main/assets/keymaps/default-linux.json\">Linux</a>, or by using Zed's autocomplete in your keymap file.</p>\n<p>Most actions do not require any arguments, and so you can bind them as strings: <code>\"ctrl-a\": \"language_selector::Toggle\"</code>. Some require a single argument, and must be bound as an array: <code>\"cmd-1\": [\"workspace::ActivatePane\", 0]</code>. Some actions require multiple arguments, and are bound as an array of a string and an object: <code>\"ctrl-a\": [\"pane::DeploySearch\", { \"replace_enabled\": true }]</code>.</p>\n<h3 id=\"precedence\"><a class=\"header\" href=\"#precedence\">Precedence</a></h3>\n<p>When multiple keybindings have the same keystroke and are active at the same time, precedence is resolved in two ways:</p>\n<ul>\n<li>Bindings that match on lower nodes in the context tree win. This means that if you have a binding with a context of <code>Editor</code> it will take precedence over a binding with a context of <code>Workspace</code>. Bindings with no context match at the lowest level in the tree.</li>\n<li>If there are multiple bindings that match at the same level in the tree, then the binding defined later takes precedence. As user keybindings are loaded after system keybindings, this allows user bindings to take precedence over builtin keybindings.</li>\n</ul>\n<p>The other kind of conflict that arises is when you have two bindings, one of which is a prefix of the other. For example if you have <code>\"ctrl-w\":\"editor::DeleteToNextWordEnd\"</code> and <code>\"ctrl-w left\":\"editor::DeleteToEndOfLine\"</code>.</p>\n<p>When this happens, and both bindings are active in the current context, Zed will wait for 1 second after you type <code>ctrl-w</code> to see if you're about to type <code>left</code>. If you don't type anything, or if you type a different key, then <code>DeleteToNextWordEnd</code> will be triggered. If you do, then <code>DeleteToEndOfLine</code> will be triggered.</p>\n<h3 id=\"non-qwerty-keyboards\"><a class=\"header\" href=\"#non-qwerty-keyboards\">Non-QWERTY keyboards</a></h3>\n<p>Zed's support for non-QWERTY keyboards is still a work in progress.</p>\n<p>If your keyboard can type the full ASCII ranges (DVORAK, COLEMAK, etc.) then shortcuts should work as you expect.</p>\n<p>Otherwise, read on...</p>\n<h4 id=\"macos\"><a class=\"header\" href=\"#macos\">macOS</a></h4>\n<p>On Cyrillic, Hebrew, Armenian, and other keyboards that are mostly non-ASCII; macOS automatically maps keys to the ASCII range when <code>cmd</code> is held. Zed takes this a step further and it can always match key-presses against either the ASCII layout, or the real layout regardless of modifiers, and regardless of the <code>use_key_equivalents</code> setting. For example in Thai, pressing <code>ctrl-ๆ</code> will match bindings associated with <code>ctrl-q</code> or <code>ctrl-ๆ</code></p>\n<p>On keyboards that support extended Latin alphabets (French AZERTY, German QWERTZ, etc.) it is often not possible to type the entire ASCII range without <code>option</code>. This introduces an ambiguity, <code>option-2</code> produces <code>@</code>. To ensure that all the builtin keyboard shortcuts can still be typed on these keyboards we move key-bindings around. For example, shortcuts bound to <code>@</code> on QWERTY are moved to <code>\"</code> on a Spanish layout. This mapping is based on the macOS system defaults and can be seen by running <code>dev: Open Key Context View</code> from the command palette.</p>\n<p>If you are defining shortcuts in your personal keymap, you can opt into the key equivalent mapping by setting <code>use_key_equivalents</code> to <code>true</code> in your keymap:</p>\n<pre><code class=\"language-json\">[\n  {\n    \"use_key_equivalents\": true,\n    \"bindings\": {\n      \"ctrl-&gt;\": \"editor::Indent\" // parsed as ctrl-: when a German QWERTZ keyboard is active\n    }\n  }\n]\n</code></pre>\n<h3 id=\"linux\"><a class=\"header\" href=\"#linux\">Linux</a></h3>\n<p>Since v0.196.0 on Linux if the key that you type doesn't produce an ASCII character then we use the QWERTY-layout equivalent key for keyboard shortcuts. This means that many shortcuts can be typed on many layouts.</p>\n<p>We do not yet move shortcuts around to ensure that all the builtin shortcuts can be typed on every layout; so if there are some ASCII characters that cannot be typed, and your keyboard layout has different ASCII characters on the same keys as would be needed to type them, you may need to add custom key bindings to make this work. We do intend to fix this at some point, and help is very much wanted!</p>\n<h2 id=\"tips-and-tricks\"><a class=\"header\" href=\"#tips-and-tricks\">Tips and tricks</a></h2>\n<h3 id=\"disabling-a-binding\"><a class=\"header\" href=\"#disabling-a-binding\">Disabling a binding</a></h3>\n<p>If you'd like a given binding to do nothing in a given context you can use\n<code>null</code> as the action. This is useful if you hit the keybinding by accident and\nwant to disable it, or if you want to type the character that would be typed by\nthe sequence, or if you want to disable multikey bindings starting with that key.</p>\n<pre><code class=\"language-json\">[\n  {\n    \"context\": \"Workspace\",\n    \"bindings\": {\n      \"cmd-r\": null // cmd-r will do nothing when the Workspace context is active\n    }\n  }\n]\n</code></pre>\n<p>A <code>null</code> binding follows the same precedence rules as normal actions. So disables all bindings that would match further up in the tree too. If you'd like a binding that matches further up in the tree to take precedence over a lower binding, you need to rebind it to the action you want in the context you want.</p>\n<p>This is useful for preventing Zed from falling back to a default keybinding when the action you specified is conditional and propagates. For example, <code>buffer_search::DeployReplace</code> only triggers when the search bar is not in view. If the search bar is in view, it would propagate and trigger the default action set for that binding, such as opening the right dock. To prevent this from happening:</p>\n<pre><code class=\"language-json\">[\n  {\n    \"context\": \"Workspace\",\n    \"bindings\": {\n      \"cmd-r\": null // cmd-r will do nothing when the search bar is in view\n    }\n  },\n  {\n    \"context\": \"Workspace\",\n    \"bindings\": {\n      \"cmd-r\": \"buffer_search::DeployReplace\" // cmd-r will deploy replace when the search bar is not in view\n    }\n  }\n]\n</code></pre>\n<h3 id=\"remapping-keys\"><a class=\"header\" href=\"#remapping-keys\">Remapping keys</a></h3>\n<p>A common request is to be able to map from a single keystroke to a sequence. You can do this with the <code>workspace::SendKeystrokes</code> action.</p>\n<pre><code class=\"language-json\">[\n  {\n    \"bindings\": {\n      // Move down four times\n      \"alt-down\": [\"workspace::SendKeystrokes\", \"down down down down\"],\n      // Expand the selection (editor::SelectLargerSyntaxNode);\n      // copy to the clipboard; and then undo the selection expansion.\n      \"cmd-alt-c\": [\n        \"workspace::SendKeystrokes\",\n        \"ctrl-shift-right ctrl-shift-right ctrl-shift-right cmd-c ctrl-shift-left ctrl-shift-left ctrl-shift-left\"\n      ]\n    }\n  },\n  {\n    \"context\": \"Editor &amp;&amp; vim_mode == insert\",\n    \"bindings\": {\n      \"j k\": [\"workspace::SendKeystrokes\", \"escape\"]\n    }\n  }\n]\n</code></pre>\n<p>There are some limitations to this, notably:</p>\n<ul>\n<li>Any asynchronous operation will not happen until after all your key bindings have been dispatched. For example this means that while you can use a binding to open a file (as in the <code>cmd-alt-r</code> example) you cannot send further keystrokes and hope to have them interpreted by the new view.</li>\n<li>Other examples of asynchronous things are: opening the command palette, communicating with a language server, changing the language of a buffer, anything that hits the network.</li>\n<li>There is a limit of 100 simulated keys at a time.</li>\n</ul>\n<p>The argument to <code>SendKeystrokes</code> is a space-separated list of keystrokes (using the same syntax as above). Due to the way that keystrokes are parsed, any segment that is not recognized as a keypress will be sent verbatim to the currently focused input field.</p>\n<p>If the argument to <code>SendKeystrokes</code> contains the binding used to trigger it, it will use the next-highest-precedence definition of that binding. This allows you to extend the default behavior of a key binding.</p>\n<h3 id=\"forward-keys-to-terminal\"><a class=\"header\" href=\"#forward-keys-to-terminal\">Forward keys to terminal</a></h3>\n<p>If you're on Linux or Windows, you might find yourself wanting to forward key combinations to the built-in terminal instead of them being handled by Zed.</p>\n<p>For example, <code>ctrl-n</code> creates a new tab in Zed on Linux. If you want to send <code>ctrl-n</code> to the built-in terminal when it's focused, add the following to your keymap:</p>\n<pre><code class=\"language-json\">{\n  \"context\": \"Terminal\",\n  \"bindings\": {\n    \"ctrl-n\": [\"terminal::SendKeystroke\", \"ctrl-n\"]\n  }\n}\n</code></pre>\n<h3 id=\"task-key-bindings\"><a class=\"header\" href=\"#task-key-bindings\">Task Key bindings</a></h3>\n<p>You can also bind keys to launch Zed Tasks defined in your tasks.json.\nSee the <a href=\"tasks.html#custom-keybindings-for-tasks\">tasks documentation</a> for more.</p>\n\n</main>",
+  "content_text": "Key bindings\nZed has a very customizable key binding system — you can tweak everything to work exactly how your fingers expect!\nPredefined keymaps\nIf you're used to a specific editor's defaults you can set a base_keymap in your settings file. We currently have:\n\nVSCode (default)\nAtom\nEmacs (Beta)\nJetBrains\nSublimeText\nTextMate\nNone (disables all key bindings)\n\nYou can also enable vim_mode or helix_mode, which add modal bindings. For more information, see the documentation for Vim mode and Helix mode.\nUser keymaps\nZed reads your keymap from ~/.config/zed/keymap.json. You can open the file within Zed with zed: open keymap from the command palette or to spawn the Zed Keymap Editor (zed: open keymap editor) use cmd-k cmd-s|ctrl-k ctrl-s.\nThe file contains a JSON array of objects with \"bindings\". If no \"context\" is set the bindings are always active. If it is set the binding is only active when the context matches.\nWithin each binding section a key sequence is mapped to an action. If conflicts are detected they are resolved as described below.\nIf you are using a non-QWERTY, Latin-character keyboard, you may want to set use_key_equivalents to true. See Non-QWERTY keyboards for more information.\nFor example:\n[\n  {\n    \"bindings\": {\n      \"ctrl-right\": \"editor::SelectLargerSyntaxNode\",\n      \"ctrl-left\": \"editor::SelectSmallerSyntaxNode\"\n    }\n  },\n  {\n    \"context\": \"ProjectPanel && not_editing\",\n    \"bindings\": {\n      \"o\": \"project_panel::Open\"\n    }\n  }\n]\n\nYou can see all of Zed's default bindings in the default keymaps for MacOS or Linux.\nIf you want to debug problems with custom keymaps you can use dev: Open Key Context View from the command palette. Please file an issue if you run into something you think should work but isn't.\nKeybinding syntax\nZed has the ability to match against not just a single keypress, but a sequence of keys typed in order. Each key in the \"bindings\" map is a sequence of keypresses separated with a space.\nEach keypress is a sequence of modifiers followed by a key. The modifiers are:\n\nctrl- The control key\ncmd-, win- or super- for the platform modifier (Command on macOS, Windows key on Windows, and the Super key on Linux).\nalt- for alt (option on macOS)\nshift- The shift key\nfn- The function key\nsecondary- Equivalent to cmd when Zed is running on macOS and ctrl when on Windows and Linux\n\nThe keys can be any single unicode codepoint that your keyboard generates (for example a, 0, £ or ç), or any named key (tab, f1, shift, or cmd). If you are using a non-Latin layout (e.g. Cyrillic), you can bind either to the cyrillic character, or the latin character that key generates with cmd pressed.\nA few examples:\n \"bindings\": {\n   \"cmd-k cmd-s\": \"zed::OpenKeymap\", // matches ⌘-k then ⌘-s\n   \"space e\": \"editor::Complete\", // type space then e\n   \"ç\": \"editor::Complete\", // matches ⌥-c\n   \"shift shift\": \"file_finder::Toggle\", // matches pressing and releasing shift twice\n }\n\nThe shift- modifier can only be used in combination with a letter to indicate the uppercase version. For example shift-g matches typing G. Although on many keyboards shift is used to type punctuation characters like (, the keypress is not considered to be modified and so shift-( does not match.\nThe alt- modifier can be used on many layouts to generate a different key. For example on macOS US keyboard the combination alt-c types ç. You can match against either in your keymap file, though by convention Zed spells this combination as alt-c.\nIt is possible to match against typing a modifier key on its own. For example shift shift can be used to implement JetBrains search everywhere shortcut. In this case the binding happens on key release instead of keypress.\nContexts\nIf a binding group has a \"context\" key it will be matched against the currently active contexts in Zed.\nZed's contexts make up a tree, with the root being Workspace. Workspaces contain Panes and Panels, and Panes contain Editors, etc. The easiest way to see what contexts are active at a given moment is the key context view, which you can get to with dev: Open Key Context View in the command palette.\nFor example:\n# in an editor, it might look like this:\nWorkspace os=macos keyboard_layout=com.apple.keylayout.QWERTY\n  Pane\n    Editor mode=full extension=md vim_mode=insert\n\n# in the project panel\nWorkspace os=macos\n  Dock\n    ProjectPanel not_editing\n\nContext expressions can contain the following syntax:\n\nX && Y, X || Y to and/or two conditions\n!X to check that a condition is false\n(X) for grouping\nX > Y to match if an ancestor in the tree matches X and this layer matches Y.\n\nFor example:\n\n\"context\": \"Editor\" - matches any editor (including inline inputs)\n\"context\": \"Editor && mode=full\" - matches the main editors used for editing code\n\"context\": \"!Editor && !Terminal\" - matches anywhere except where an Editor or Terminal is focused\n\"context\": \"os=macos > Editor\" - matches any editor on macOS.\n\nIt's worth noting that attributes are only available on the node they are defined on. This means that if you want to (for example) only enable a keybinding when the debugger is stopped in vim normal mode, you need to do debugger_stopped > vim_mode == normal.\nNote: Before Zed v0.197.x, the ! operator only looked at one node at a time, and > meant \"parent\" not \"ancestor\". This meant that !Editor would match the context Workspace > Pane > Editor, because (confusingly) the Pane matches !Editor, and that os=macos > Editor did not match the context Workspace > Pane > Editor because of the intermediate Pane node.\nIf you're using Vim mode, we have information on how vim modes influence the context. Helix mode is built on top of Vim mode and uses the same contexts.\nActions\nPretty much all of Zed's functionality is exposed as actions. Although there is\nno explicitly documented list, you can find most of them by searching in the\ncommand palette, by looking in the default keymaps for\nMacOS\nor\nLinux, or by using Zed's autocomplete in your keymap file.\nMost actions do not require any arguments, and so you can bind them as strings: \"ctrl-a\": \"language_selector::Toggle\". Some require a single argument, and must be bound as an array: \"cmd-1\": [\"workspace::ActivatePane\", 0]. Some actions require multiple arguments, and are bound as an array of a string and an object: \"ctrl-a\": [\"pane::DeploySearch\", { \"replace_enabled\": true }].\nPrecedence\nWhen multiple keybindings have the same keystroke and are active at the same time, precedence is resolved in two ways:\n\nBindings that match on lower nodes in the context tree win. This means that if you have a binding with a context of Editor it will take precedence over a binding with a context of Workspace. Bindings with no context match at the lowest level in the tree.\nIf there are multiple bindings that match at the same level in the tree, then the binding defined later takes precedence. As user keybindings are loaded after system keybindings, this allows user bindings to take precedence over builtin keybindings.\n\nThe other kind of conflict that arises is when you have two bindings, one of which is a prefix of the other. For example if you have \"ctrl-w\":\"editor::DeleteToNextWordEnd\" and \"ctrl-w left\":\"editor::DeleteToEndOfLine\".\nWhen this happens, and both bindings are active in the current context, Zed will wait for 1 second after you type ctrl-w to see if you're about to type left. If you don't type anything, or if you type a different key, then DeleteToNextWordEnd will be triggered. If you do, then DeleteToEndOfLine will be triggered.\nNon-QWERTY keyboards\nZed's support for non-QWERTY keyboards is still a work in progress.\nIf your keyboard can type the full ASCII ranges (DVORAK, COLEMAK, etc.) then shortcuts should work as you expect.\nOtherwise, read on...\nmacOS\nOn Cyrillic, Hebrew, Armenian, and other keyboards that are mostly non-ASCII; macOS automatically maps keys to the ASCII range when cmd is held. Zed takes this a step further and it can always match key-presses against either the ASCII layout, or the real layout regardless of modifiers, and regardless of the use_key_equivalents setting. For example in Thai, pressing ctrl-ๆ will match bindings associated with ctrl-q or ctrl-ๆ\nOn keyboards that support extended Latin alphabets (French AZERTY, German QWERTZ, etc.) it is often not possible to type the entire ASCII range without option. This introduces an ambiguity, option-2 produces @. To ensure that all the builtin keyboard shortcuts can still be typed on these keyboards we move key-bindings around. For example, shortcuts bound to @ on QWERTY are moved to \" on a Spanish layout. This mapping is based on the macOS system defaults and can be seen by running dev: Open Key Context View from the command palette.\nIf you are defining shortcuts in your personal keymap, you can opt into the key equivalent mapping by setting use_key_equivalents to true in your keymap:\n[\n  {\n    \"use_key_equivalents\": true,\n    \"bindings\": {\n      \"ctrl->\": \"editor::Indent\" // parsed as ctrl-: when a German QWERTZ keyboard is active\n    }\n  }\n]\n\nLinux\nSince v0.196.0 on Linux if the key that you type doesn't produce an ASCII character then we use the QWERTY-layout equivalent key for keyboard shortcuts. This means that many shortcuts can be typed on many layouts.\nWe do not yet move shortcuts around to ensure that all the builtin shortcuts can be typed on every layout; so if there are some ASCII characters that cannot be typed, and your keyboard layout has different ASCII characters on the same keys as would be needed to type them, you may need to add custom key bindings to make this work. We do intend to fix this at some point, and help is very much wanted!\nTips and tricks\nDisabling a binding\nIf you'd like a given binding to do nothing in a given context you can use\nnull as the action. This is useful if you hit the keybinding by accident and\nwant to disable it, or if you want to type the character that would be typed by\nthe sequence, or if you want to disable multikey bindings starting with that key.\n[\n  {\n    \"context\": \"Workspace\",\n    \"bindings\": {\n      \"cmd-r\": null // cmd-r will do nothing when the Workspace context is active\n    }\n  }\n]\n\nA null binding follows the same precedence rules as normal actions. So disables all bindings that would match further up in the tree too. If you'd like a binding that matches further up in the tree to take precedence over a lower binding, you need to rebind it to the action you want in the context you want.\nThis is useful for preventing Zed from falling back to a default keybinding when the action you specified is conditional and propagates. For example, buffer_search::DeployReplace only triggers when the search bar is not in view. If the search bar is in view, it would propagate and trigger the default action set for that binding, such as opening the right dock. To prevent this from happening:\n[\n  {\n    \"context\": \"Workspace\",\n    \"bindings\": {\n      \"cmd-r\": null // cmd-r will do nothing when the search bar is in view\n    }\n  },\n  {\n    \"context\": \"Workspace\",\n    \"bindings\": {\n      \"cmd-r\": \"buffer_search::DeployReplace\" // cmd-r will deploy replace when the search bar is not in view\n    }\n  }\n]\n\nRemapping keys\nA common request is to be able to map from a single keystroke to a sequence. You can do this with the workspace::SendKeystrokes action.\n[\n  {\n    \"bindings\": {\n      // Move down four times\n      \"alt-down\": [\"workspace::SendKeystrokes\", \"down down down down\"],\n      // Expand the selection (editor::SelectLargerSyntaxNode);\n      // copy to the clipboard; and then undo the selection expansion.\n      \"cmd-alt-c\": [\n        \"workspace::SendKeystrokes\",\n        \"ctrl-shift-right ctrl-shift-right ctrl-shift-right cmd-c ctrl-shift-left ctrl-shift-left ctrl-shift-left\"\n      ]\n    }\n  },\n  {\n    \"context\": \"Editor && vim_mode == insert\",\n    \"bindings\": {\n      \"j k\": [\"workspace::SendKeystrokes\", \"escape\"]\n    }\n  }\n]\n\nThere are some limitations to this, notably:\n\nAny asynchronous operation will not happen until after all your key bindings have been dispatched. For example this means that while you can use a binding to open a file (as in the cmd-alt-r example) you cannot send further keystrokes and hope to have them interpreted by the new view.\nOther examples of asynchronous things are: opening the command palette, communicating with a language server, changing the language of a buffer, anything that hits the network.\nThere is a limit of 100 simulated keys at a time.\n\nThe argument to SendKeystrokes is a space-separated list of keystrokes (using the same syntax as above). Due to the way that keystrokes are parsed, any segment that is not recognized as a keypress will be sent verbatim to the currently focused input field.\nIf the argument to SendKeystrokes contains the binding used to trigger it, it will use the next-highest-precedence definition of that binding. This allows you to extend the default behavior of a key binding.\nForward keys to terminal\nIf you're on Linux or Windows, you might find yourself wanting to forward key combinations to the built-in terminal instead of them being handled by Zed.\nFor example, ctrl-n creates a new tab in Zed on Linux. If you want to send ctrl-n to the built-in terminal when it's focused, add the following to your keymap:\n{\n  \"context\": \"Terminal\",\n  \"bindings\": {\n    \"ctrl-n\": [\"terminal::SendKeystroke\", \"ctrl-n\"]\n  }\n}\n\nTask Key bindings\nYou can also bind keys to launch Zed Tasks defined in your tasks.json.\nSee the tasks documentation for more.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:16"
+}

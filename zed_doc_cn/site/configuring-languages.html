@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Configuring Languages | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="active">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-命令s.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#configuring-supported-languages" class="pagetoc-H1">配置支持的语言</a>
+<a href="#language-specific-settings" class="pagetoc-H2">语言特定设置</a>
+<a href="#file-associations" class="pagetoc-H2">文件关联</a>
+<a href="#working-with-language-servers" class="pagetoc-H2">使用语言服务器</a>
+<a href="#what-are-language-servers" class="pagetoc-H3">什么是语言服务器？</a>
+<a href="#managing-language-servers" class="pagetoc-H3">管理语言服务器</a>
+<a href="#choosing-language-servers" class="pagetoc-H3">选择语言服务器</a>
+<a href="#configuring-language-servers" class="pagetoc-H3">配置语言服务器</a>
+<a href="#enabling-or-disabling-language-servers" class="pagetoc-H3">启用或禁用语言服务器</a>
+<a href="#formatting-and-linting" class="pagetoc-H2">格式化和代码检查</a>
+<a href="#configuring-formatters" class="pagetoc-H3">配置格式化工具</a>
+<a href="#setting-up-linters" class="pagetoc-H3">设置代码检查工具</a>
+<a href="#integrating-formatting-and-linting" class="pagetoc-H3">集成格式化和代码检查</a>
+<a href="#troubleshooting" class="pagetoc-H3">问题排查</a>
+<a href="#syntax-highlighting-and-themes" class="pagetoc-H2">语法高亮和主题</a>
+<a href="#customizing-syntax-highlighting" class="pagetoc-H3">自定义语法高亮</a>
+<a href="#selecting-and-customizing-themes" class="pagetoc-H3">选择和自定义主题</a>
+<a href="#using-theme-extensions" class="pagetoc-H3">使用主题扩展</a>
+<a href="#using-language-server-features" class="pagetoc-H2">使用语言服务器功能</a>
+<a href="#inlay-hints" class="pagetoc-H3">内嵌提示</a>
+<a href="#code-actions" class="pagetoc-H3">代码操作</a>
+<a href="#go-to-definition-and-references" class="pagetoc-H3">跳转到定义和引用</a>
+<a href="#rename-symbol" class="pagetoc-H3">重命名符号</a>
+<a href="#hover-information" class="pagetoc-H3">悬停信息</a>
+<a href="#workspace-symbol-search" class="pagetoc-H3">工作区符号搜索</a>
+<a href="#code-completion" class="pagetoc-H3">代码完成</a>
+<a href="#diagnostics" class="pagetoc-H3">诊断</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="configuring-supported-languages"><a class="header" href="#configuring-supported-languages">配置支持的语言</a></h1>
+<p>Zed 为每种支持的编程语言都提供了强大的自定义选项。本指南将为您介绍各种方法，帮助您根据自己的偏好和项目需求定制编程体验。</p>
+<p>Zed 的语言支持基于两项主要技术：</p>
+<ol>
+<li>Tree-sitter：负责语法高亮和基于结构的功能（如大纲面板）。</li>
+<li>语言服务器协议 (LSP)：提供语义功能，如代码完成和诊断。</li>
+</ol>
+<p>这些组件共同协作，为 Zed 提供语言功能。</p>
+<p>本指南将涵盖：</p>
+<ul>
+<li>语言特定设置</li>
+<li>文件关联</li>
+<li>使用语言服务器</li>
+<li>格式化和代码检查配置</li>
+<li>自定义语法高亮和主题</li>
+<li>高级语言功能</li>
+</ul>
+<p>阅读完本指南后，您将掌握如何在 Zed 中配置和自定义支持的语言。</p>
+<p>要查看 Zed 支持的语言及其具体配置的全面列表，请参阅我们的<a href="./languages.html">支持的语言</a>页面。要进一步探索，您可以开发自己的扩展来添加更多语言支持或增强现有功能。有关创建语言扩展的更多信息，请参阅我们的<a href="./extensions/languages.html">语言扩展</a>指南。</p>
+<h2 id="language-specific-settings"><a class="header" href="#language-specific-settings">语言特定设置</a></h2>
+<p>Zed 允许您为各个语言覆盖全局设置。 这些自定义配置在您的 <code>settings.json</code> 文件中的 <code>languages</code> 键下定义。</p>
+<p>以下是语言特定设置的示例：</p>
+<pre><code class="language-json">"languages": {
+  "Python": {
+    "tab_size": 4,
+    "formatter": "language_server",
+    "format_on_save": "on"
+  },
+  "JavaScript": {
+    "tab_size": 2,
+    "formatter": {
+      "external": {
+        "命令": "prettier",
+        "arguments": ["--stdin-filepath", "{buffer_path}"]
+      }
+    }
+  }
+}
+</code></pre>
+<p>您可以为每种语言自定义各种设置，包括：</p>
+<ul>
+<li><a href="./configuring-zed.html#tab-size"><code>tab_size</code></a>: 每个缩进级别的空格数</li>
+<li><a href="./configuring-zed.html#formatter"><code>formatter</code></a>: 用于代码格式化的工具</li>
+<li><a href="./configuring-zed.html#format-on-save"><code>format_on_save</code></a>: 保存时是否自动格式化代码</li>
+<li><a href="./configuring-zed.html#enable-language-server"><code>enable_language_server</code></a>: 切换语言服务器支持</li>
+<li><a href="./configuring-zed.html#hard-tabs"><code>hard_tabs</code></a>: 使用制表符而非空格进行缩进</li>
+<li><a href="./configuring-zed.html#preferred-line-length"><code>preferred_line_length</code></a>: 推荐的最大行长度</li>
+<li><a href="./configuring-zed.html#soft-wrap"><code>soft_wrap</code></a>: 如何换行长代码行</li>
+<li><a href="./configuring-zed.html#show-completions-on-input"><code>show_completions_on_input</code></a>: 是否在输入时显示补全</li>
+<li><a href="./configuring-zed.html#show-completion-documentation"><code>show_completion_documentation</code></a>: 是否在补全菜单项中显示内联和并排文档</li>
+</ul>
+<p>这些设置允许您在不同语言和项目中保持特定的编码风格。</p>
+<h2 id="file-associations"><a class="header" href="#file-associations">文件关联</a></h2>
+<p>Zed 根据文件扩展名自动检测文件类型，但您可以自定义这些关联以适应您的工作流程。</p>
+<p>要设置自定义文件关联，请使用 <a href="./configuring-zed.html#file-types"><code>file_types</code></a> 设置在您的 <code>settings.json</code>:</p>
+<pre><code class="language-json">"file_types": {
+  "C++": ["c"],
+  "TOML": ["MyLockFile"],
+  "Dockerfile": ["Dockerfile*"]
+}
+</code></pre>
+<p>此配置告诉 Zed：</p>
+<ul>
+<li>将 <code>.c</code> 文件视为 C++ 而非 C</li>
+<li>识别名为 "MyLockFile" 的文件为 TOML</li>
+<li>对任何以 "Dockerfile" 开头的文件应用 Dockerfile 语法</li>
+</ul>
+<p>您可以使用 glob 模式进行更灵活的匹配，以处理项目中复杂的命名约定。</p>
+<h2 id="working-with-language-servers"><a class="header" href="#working-with-language-servers">使用语言服务器</a></h2>
+<p>语言服务器是 Zed 智能编码功能的重要组成部分，提供自动完成、跳转定义和实时错误检查等功能。</p>
+<h3 id="what-are-language-servers"><a class="header" href="#what-are-language-servers">什么是语言服务器？</a></h3>
+<p>语言服务器实现语言服务器协议 (LSP)，该协议标准化了编辑器与语言特定工具之间的通信。 这使得 Zed 能够支持多种编程语言的高级功能，而无需单独实现每个功能。</p>
+<p>语言服务器提供的一些关键功能包括：</p>
+<ul>
+<li>代码完成</li>
+<li>错误检查和诊断</li>
+<li>代码导航（跳转定义、查找引用）</li>
+<li>代码操作（重命名、提取方法）</li>
+<li>悬停信息</li>
+<li>工作区符号搜索</li>
+</ul>
+<h3 id="managing-language-servers"><a class="header" href="#managing-language-servers">管理语言服务器</a></h3>
+<p>Zed 为用户简化了语言服务器管理：</p>
+<ol>
+<li>
+<p>自动下载：当您打开匹配文件类型的文件时，Zed 会自动下载相应的语言服务器。 Zed 可能会提示您为已知文件类型安装扩展。</p>
+</li>
+<li>
+<p>存储位置：</p>
+<ul>
+<li>macOS: <code>~/Library/Application Support/Zed/languages</code></li>
+<li>Linux: <code>$XDG_DATA_HOME/languages</code>, <code>$FLATPAK_XDG_DATA_HOME/languages</code>, or <code>$HOME/.local/share</code></li>
+</ul>
+</li>
+<li>
+<p>自动更新：Zed 保持语言服务器的最新状态，确保您始终拥有最新的功能和改进。</p>
+</li>
+</ol>
+<h3 id="choosing-language-servers"><a class="header" href="#choosing-language-servers">选择语言服务器</a></h3>
+<p>Zed 中的某些语言提供多个语言服务器选项。您可能安装了多个扩展，它们都包含针对同一语言的语言服务器，可能导致功能重叠。为了确保获得您偏好的功能，Zed 允许您优先级设置使用哪些语言服务器以及使用顺序。</p>
+<p>您可以使用 <code>language_servers</code> 设置指定您的偏好：</p>
+<pre><code class="language-json">  "languages": {
+    "PHP": {
+      "language_servers": ["intelephense", "!phpactor", "..."]
+    }
+  }
+</code></pre>
+<p>在此示例中：</p>
+<ul>
+<li><code>intelephense</code> 被设置为主要语言服务器</li>
+<li><code>phpactor</code> 被禁用（注意 <code>!</code> 前缀）</li>
+<li><code>...</code> 扩展为为 PHP 注册的其余语言服务器</li>
+</ul>
+<p>此配置允许您根据特定需求定制语言服务器设置，确保为您的开发工作流程获得最合适的功能。</p>
+<h3 id="configuring-language-servers"><a class="header" href="#configuring-language-servers">配置语言服务器</a></h3>
+<p>许多语言服务器接受自定义配置选项。您可以在 <code>settings.json</code> 的 <code>lsp</code> 部分设置这些选项：</p>
+<pre><code class="language-json">  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "check": {
+          "命令": "clippy"
+        }
+      }
+    }
+  }
+</code></pre>
+<p>此示例配置 Rust Analyzer 在保存文件时使用 Clippy 进行附加的代码检查。</p>
+<h4 id="nested-objects"><a class="header" href="#nested-objects">嵌套对象</a></h4>
+<p>在 Zed 中配置语言服务器选项时，重要的是使用嵌套对象而非点分隔的字符串。 这在处理更复杂的配置时尤其相关。 让我们看一个使用 TypeScript 语言服务器的实际示例：</p>
+<p>假设您要为 TypeScript 配置以下设置：</p>
+<ul>
+<li>启用严格的空值检查</li>
+<li>将目标 ECMAScript 版本设置为 ES2020</li>
+</ul>
+<p>以下是在 Zed 的 <code>settings.json</code>:</p>
+<pre><code class="language-json">"lsp": {
+  "typescript-language-server": {
+    "initialization_options": {
+      // 的se are not supported (VSCode dotted style):
+      // "preferences.strictNullChecks": true,
+      // "preferences.target": "ES2020"
+      //
+      // 的se is correct (nested notation):
+      "preferences": {
+        "strictNullChecks": true,
+        "target": "ES2020"
+      },
+    }
+  }
+}
+</code></pre>
+<h4 id="possible-configuration-options"><a class="header" href="#possible-configuration-options">可能的配置选项</a></h4>
+<p>根据特定语言服务器的实现方式，它们可能依赖于 LSP 中指定的不同配置选项。</p>
+<ul>
+<li><a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#version_3_17_0">initializationOptions</a></li>
+</ul>
+<p>在语言服务器启动时发送一次，需要重启服务器以重新应用更改。</p>
+<p>例如，rust-analyzer 和 clangd 仅依赖这种配置方式。</p>
+<pre><code class="language-json">  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "checkOnSave": false
+      }
+    }
+  }
+</code></pre>
+<ul>
+<li><a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#workspace_configuration">Configuration Request</a></li>
+</ul>
+<p>可能会被服务器多次查询。
+大多数服务器仅依赖这种配置方式。</p>
+<pre><code class="language-json">"lsp": {
+  "tailwindcss-language-server": {
+    "settings": {
+      "tailwindCSS": {
+        "emmetCompletions": true,
+      },
+    }
+  }
+}
+</code></pre>
+<p>除了与 LSP 相关的服务器配置选项外，Zed 中的某些服务器允许配置 Zed 启动二进制文件的方式。</p>
+<p>语言服务器会自动下载或在路径中找到时启动，如果您希望指定明确的替代二进制文件，可以在设置中指定：</p>
+<pre><code class="language-json">  "lsp": {
+    "rust-analyzer": {
+      "binary": {
+        // 是否从互联网获取二进制文件，还是尝试在本地查找。
+        "ignore_system_version": false,
+        "path": "/path/to/langserver/bin",
+        "arguments": ["--option", "value"],
+        "env": {
+          "FOO": "BAR"
+        }
+      }
+    }
+  }
+</code></pre>
+<h3 id="enabling-or-disabling-language-servers"><a class="header" href="#enabling-or-disabling-language-servers">启用或禁用语言服务器</a></h3>
+<p>您可以全局或按语言切换语言服务器支持：</p>
+<pre><code class="language-json">  "languages": {
+    "Markdown": {
+      "enable_language_server": false
+    }
+  }
+</code></pre>
+<p>这会禁用 Markdown 文件的语言服务器，这对大型文档项目的性能很有用。 您可以在 <code>~/.config/zed/settings.json</code> 中全局配置，或在项目目录中的 <code>.zed/settings.json</code> 中配置。</p>
+<h2 id="formatting-and-linting"><a class="header" href="#formatting-and-linting">格式化和代码检查</a></h2>
+<p>Zed 支持代码格式化和代码检查，以保持一致的代码风格并及早发现潜在问题。</p>
+<h3 id="configuring-formatters"><a class="header" href="#configuring-formatters">配置格式化工具</a></h3>
+<p>Zed 支持内置和外部格式化工具。 查看 <a href="./configuring-zed.html#formatter"><code>formatter</code></a> 文档了解更多。 您可以在您的设置中全局或按语言配置格式化工具 <code>settings.json</code>:</p>
+<pre><code class="language-json">"languages": {
+  "JavaScript": {
+    "formatter": {
+      "external": {
+        "命令": "prettier",
+        "arguments": ["--stdin-filepath", "{buffer_path}"]
+      }
+    },
+    "format_on_save": "on"
+  },
+  "Rust": {
+    "formatter": "language_server",
+    "format_on_save": "on"
+  }
+}
+</code></pre>
+<p>此示例对 JavaScript 使用 Prettier，对 Rust 使用语言服务器的格式化工具，两者都设置为保存时格式化。</p>
+<p>要禁用特定语言的格式化：</p>
+<pre><code class="language-json">"languages": {
+  "Markdown": {
+    "format_on_save": "off"
+  }
+}
+</code></pre>
+<h3 id="setting-up-linters"><a class="header" href="#setting-up-linters">设置代码检查工具</a></h3>
+<p>Zed 中的代码检查通常由语言服务器处理。 许多语言服务器允许您配置代码检查规则：</p>
+<pre><code class="language-json">"lsp": {
+  "eslint": {
+    "settings": {
+      "codeActionOnSave": {
+        "rules": ["import/order"]
+      }
+    }
+  }
+}
+</code></pre>
+<p>此配置设置 ESLint 在保存 JavaScript 文件时整理导入。</p>
+<p>要在保存时自动运行代码检查修复：</p>
+<pre><code class="language-json">"languages": {
+  "JavaScript": {
+    "code_actions_on_format": {
+      "source.fixAll.eslint": true
+    }
+  }
+}
+</code></pre>
+<h3 id="integrating-formatting-and-linting"><a class="header" href="#integrating-formatting-and-linting">集成格式化和代码检查</a></h3>
+<p>Zed 允许您在保存时同时运行格式化和代码检查。 以下示例使用 Prettier 进行格式化，使用 ESLint 对 JavaScript 文件进行代码检查：</p>
+<pre><code class="language-json">"languages": {
+  "JavaScript": {
+    "formatter": {
+      "external": {
+        "命令": "prettier",
+        "arguments": ["--stdin-filepath", "{buffer_path}"]
+      }
+    },
+    "code_actions_on_format": {
+      "source.fixAll.eslint": true
+    },
+    "format_on_save": "on"
+  }
+}
+</code></pre>
+<h3 id="troubleshooting"><a class="header" href="#troubleshooting">问题排查</a></h3>
+<p>如果您遇到格式化或代码检查问题：</p>
+<ol>
+<li>检查 Zed 的日志文件中的错误消息（使用命令面板： <code>zed: open log</code>)</li>
+<li>确保外部工具（格式化工具、代码检查工具）已正确安装并在您的 PATH 中</li>
+<li>验证 Zed 设置和语言特定配置文件中的配置（例如， <code>.eslintrc</code>, <code>.prettierrc</code>)</li>
+</ol>
+<h2 id="syntax-highlighting-and-themes"><a class="header" href="#syntax-highlighting-and-themes">语法高亮和主题</a></h2>
+<p>Zed 提供语法高亮和主题的自定义选项，允许您定制代码的视觉外观。</p>
+<h3 id="customizing-syntax-highlighting"><a class="header" href="#customizing-syntax-highlighting">自定义语法高亮</a></h3>
+<p>Zed 使用 Tree-sitter 语法进行语法高亮。 使用 <code>experimental.theme_overrides</code> 设置覆盖默认高亮。</p>
+<p>此示例使注释变为斜体并更改字符串的颜色：</p>
+<pre><code class="language-json">"experimental.theme_overrides": {
+  "syntax": {
+    "comment": {
+      "font_style": "italic"
+    },
+    "string": {
+      "color": "#00AA00"
+    }
+  }
+}
+</code></pre>
+<h3 id="selecting-and-customizing-themes"><a class="header" href="#selecting-and-customizing-themes">选择和自定义主题</a></h3>
+<p>更改您的主题：</p>
+<ol>
+<li>使用主题选择器 (<kbd class="keybinding">cmd-k cmd-t|ctrl-k ctrl-t</kbd>)</li>
+<li>或在您的设置中设置 <code>settings.json</code>:</li>
+</ol>
+<pre><code class="language-json">"theme": {
+  "mode": "dark",
+  "dark": "One Dark",
+  "light": "GitHub Light"
+}
+</code></pre>
+<p>通过在指定目录中创建 JSON 文件来创建自定义主题 <code>~/.config/zed/themes/</code>. Zed 将自动检测并提供此目录中的任何主题。</p>
+<h3 id="using-theme-extensions"><a class="header" href="#using-theme-extensions">使用主题扩展</a></h3>
+<p>Zed 支持主题扩展。 从扩展面板浏览和安装主题扩展 (<kbd class="keybinding">cmd-shift-x|ctrl-shift-x</kbd>).</p>
+<p>要创建自己的主题扩展，请参考 <a href="./extensions/themes.html">Developing 的me Extensions</a> 指南。</p>
+<h2 id="using-language-server-features"><a class="header" href="#using-language-server-features">使用语言服务器功能</a></h2>
+<h3 id="inlay-hints"><a class="header" href="#inlay-hints">内嵌提示</a></h3>
+<p>内嵌提示在您的代码中内联提供附加信息，如参数名称或推断类型。 在您的设置中配置内嵌提示 <code>settings.json</code>:</p>
+<pre><code class="language-json">"inlay_hints": {
+  "enabled": true,
+  "show_type_hints": true,
+  "show_parameter_hints": true,
+  "show_other_hints": true
+}
+</code></pre>
+<p>对于语言特定的内嵌提示设置，请参考每种语言的文档。</p>
+<h3 id="code-actions"><a class="header" href="#code-actions">代码操作</a></h3>
+<p>代码操作提供快速修复和重构选项。 使用 <code>editor: Toggle Code Actions</code> 命令访问代码操作，或在有操作可用时单击光标旁边出现的灯泡图标。</p>
+<h3 id="go-to-definition-and-references"><a class="header" href="#go-to-definition-and-references">跳转到定义和引用</a></h3>
+<p>使用这些命令导航您的代码库：</p>
+<ul>
+<li><code>editor: Go to Definition</code> (<kbd>f12|f12</kbd>)</li>
+<li><code>editor: Go to Type Definition</code> (<kbd>cmd-f12|ctrl-f12</kbd>)</li>
+<li><code>editor: Find All References</code> (<kbd>shift-f12|shift-f12</kbd>)</li>
+</ul>
+<h3 id="rename-symbol"><a class="header" href="#rename-symbol">重命名符号</a></h3>
+<p>要在项目中重命名符号：</p>
+<ol>
+<li>将光标放在符号上</li>
+<li>使用 <code>editor: Rename Symbol</code> 命令 (<kbd>f2|f2</kbd>)</li>
+<li>输入新名称并按 Enter</li>
+</ol>
+<p>这些功能取决于每种语言的语言服务器功能。</p>
+<p>重命名跨多个文件的符号时，Zed 将在多缓冲区中打开预览。 这允许您在应用更改之前查看项目中的所有更改。 要确认重命名，只需保存多缓冲区。 如果您决定不继续重命名，可以撤消更改或关闭多缓冲区而不保存。</p>
+<h3 id="hover-information"><a class="header" href="#hover-information">悬停信息</a></h3>
+<p>使用 <code>editor: Show Hover</code> 命令 to display information about the symbol under the cursor. 这通常包括类型信息、文档和相关资源的链接。</p>
+<h3 id="workspace-symbol-search"><a class="header" href="#workspace-symbol-search">工作区符号搜索</a></h3>
+<p>的 <code>workspace: Open Symbol</code> 命令 allows you to search for symbols (functions, classes, variables) across your entire project. 这对于快速导航大型代码库很有用。</p>
+<h3 id="code-completion"><a class="header" href="#code-completion">代码完成</a></h3>
+<p>Zed 在您输入时提供智能代码完成建议。 您可以使用 <code>editor: Show Completions</code> 命令. 使用 <kbd>tab|tab</kbd> 或 <kbd>enter|enter</kbd> 接受建议。</p>
+<h3 id="diagnostics"><a class="header" href="#diagnostics">诊断</a></h3>
+<p>Language servers provide real-time diagnostics (errors, warnings, hints) as you code. View all diagnostics for your project using the <code>diagnostics: Toggle</code> 命令.</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

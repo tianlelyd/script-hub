@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/ai-improvement.html",
+  "title": "AI Improvement | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"zed-ai-improvement\"><a class=\"header\" href=\"#zed-ai-improvement\">Zed AI Improvement</a></h1>\n<h2 id=\"agent-panel\"><a class=\"header\" href=\"#agent-panel\">Agent Panel</a></h2>\n<h3 id=\"opt-in\"><a class=\"header\" href=\"#opt-in\">Opt-In</a></h3>\n<p>When using the Agent Panel, whether through Zed's hosted AI service or via connecting a non-Zed AI service via API key, Zed does not persistently store user content or use user content to evaluate and/or improve our AI features, unless it is explicitly shared with Zed. Each share is opt-in, and sharing once will not cause future content or data to be shared again.</p>\n<blockquote>\n<p>Note that rating responses will send your data related to that response to Zed's servers.\n<strong><em>If you don't want data persisted on Zed's servers, don't rate</em></strong>. We will not collect data for improving our Agentic offering without you explicitly rating responses.</p>\n</blockquote>\n<p>When using upstream services through Zed AI, we require assurances from our service providers that your user content won't be used for training models. For example, usage of Anthropic Claude 3.5 via Zed AI in the Assistant is governed by the <a href=\"https://www.anthropic.com/legal/commercial-terms\">Anthropic Commercial Terms</a> which includes the following:</p>\n<blockquote>\n<p>\"Anthropic may not train models on Customer Content from paid Services.\"</p>\n</blockquote>\n<p>We also have a <a href=\"https://privacy.anthropic.com/en/articles/8956058-i-have-a-zero-data-retention-agreement-with-anthropic-what-products-does-it-apply-to\">zero-data retention agreement</a> with Anthropic.</p>\n<p>When you directly connect Zed with a non Zed AI service (e.g., via API key) Zed does not have control over how your data is used by that service provider.\nYou should reference your agreement with each service provider to understand what terms and conditions apply.</p>\n<h3 id=\"data-we-collect\"><a class=\"header\" href=\"#data-we-collect\">Data we collect</a></h3>\n<p>For prompts you have explicitly shared with us, Zed may store copies of those prompts and other data about the specific use of the Agent Panel.</p>\n<p>This data includes:</p>\n<ul>\n<li>The prompt given to the Agent</li>\n<li>Any commentary you include</li>\n<li>Product telemetry about the agentic thread</li>\n<li>Metadata about your Zed installation</li>\n</ul>\n<h3 id=\"data-handling\"><a class=\"header\" href=\"#data-handling\">Data Handling</a></h3>\n<p>Collected data is stored in Snowflake, a private database where we track other metrics. We periodically review this data to improve our overall agentic approach and refine the product via our system prompt, tool use, etc. We ensure any included data is anonymized and contains no sensitive information (access tokens, user IDs, email addresses, etc).</p>\n<h2 id=\"edit-predictions\"><a class=\"header\" href=\"#edit-predictions\">Edit Predictions</a></h2>\n<p>By default, when using Zed Edit Predictions, Zed does not persistently store user content or use user content for training of its models.</p>\n<h3 id=\"opt-in-1\"><a class=\"header\" href=\"#opt-in-1\">Opt-in</a></h3>\n<p>Users who are working on open source licensed projects may optionally opt-in to providing model improvement feedback. This opt-in occurs on a per-project basis. If you work on multiple open source projects and wish to provide model improvement feedback you will have to opt-in for each individual project.</p>\n<p>When working on other projects where you haven't opted-in, Zed will not persistently store user content or use user content for training of its models.</p>\n<p>You can see exactly how Zed detects open source licenses in: <a href=\"https://github.com/zed-industries/zed/blob/main/crates/zeta/src/license_detection.rs\">license_detection.rs</a>.</p>\n<h3 id=\"exclusions\"><a class=\"header\" href=\"#exclusions\">Exclusions</a></h3>\n<p>Zed will intentionally exclude certain files from Predictive Edits entirely, even when you have opted-in to model improvement feedback.</p>\n<p>You can inspect this exclusion list by opening <code>zed: open default settings</code> from the command palette:</p>\n<pre><code class=\"language-json\">{\n  \"edit_predictions\": {\n    // A list of globs representing files that edit predictions should be disabled for.\n    // There's a sensible default list of globs already included.\n    // Any addition to this list will be merged with the default list.\n    \"disabled_globs\": [\n      \"**/.env*\",\n      \"**/*.pem\",\n      \"**/*.key\",\n      \"**/*.cert\",\n      \"**/*.crt\",\n      \"**/secrets.yml\"\n    ]\n  }\n}\n</code></pre>\n<p>Users may explicitly exclude additional paths and/or file extensions by adding them to <a href=\"https://zed.dev/docs/configuring-zed#edit-predictions\"><code>edit_predictions.disabled_globs</code></a> in their Zed settings.json:</p>\n<pre><code class=\"language-json\">{\n  \"edit_predictions\": {\n    \"disabled_globs\": [\"secret_dir/*\", \"**/*.log\"]\n  }\n}\n</code></pre>\n<h3 id=\"data-we-collect-1\"><a class=\"header\" href=\"#data-we-collect-1\">Data we collect</a></h3>\n<p>For open source projects where you have opted-in, Zed may store copies of requests and responses to the Zed AI Prediction service.</p>\n<p>This data includes:</p>\n<ul>\n<li>the edit prediction</li>\n<li>a portion of the buffer content around the cursor</li>\n<li>a few recent edits</li>\n<li>the current buffer outline</li>\n<li>diagnostics (errors, warnings, etc) from language servers</li>\n</ul>\n<h3 id=\"data-handling-1\"><a class=\"header\" href=\"#data-handling-1\">Data Handling</a></h3>\n<p>Collected data is stored in Snowflake, a private database where we track other metrics. We periodically review this data to select training samples for inclusion in our model training dataset. We ensure any included data is anonymized and contains no sensitive information (access tokens, user IDs, email addresses, etc). This training dataset is publicly available at <a href=\"https://huggingface.co/datasets/zed-industries/zeta\">huggingface.co/datasets/zed-industries/zeta</a>.</p>\n<h3 id=\"model-output\"><a class=\"header\" href=\"#model-output\">Model Output</a></h3>\n<p>We then use this training dataset to fine-tune <a href=\"https://huggingface.co/Qwen/Qwen2.5-Coder-7B\">Qwen2.5-Coder-7B</a> and make the resulting model available at <a href=\"https://huggingface.co/zed-industries/zeta\">huggingface.co/zed-industries/zeta</a>.</p>\n<h2 id=\"applicable-terms\"><a class=\"header\" href=\"#applicable-terms\">Applicable terms</a></h2>\n<p>Please see the <a href=\"https://zed.dev/terms-of-service\">Zed Terms of Service</a> for more.</p>\n\n</main>",
+  "content_text": "Zed AI Improvement\nAgent Panel\nOpt-In\nWhen using the Agent Panel, whether through Zed's hosted AI service or via connecting a non-Zed AI service via API key, Zed does not persistently store user content or use user content to evaluate and/or improve our AI features, unless it is explicitly shared with Zed. Each share is opt-in, and sharing once will not cause future content or data to be shared again.\n\nNote that rating responses will send your data related to that response to Zed's servers.\nIf you don't want data persisted on Zed's servers, don't rate. We will not collect data for improving our Agentic offering without you explicitly rating responses.\n\nWhen using upstream services through Zed AI, we require assurances from our service providers that your user content won't be used for training models. For example, usage of Anthropic Claude 3.5 via Zed AI in the Assistant is governed by the Anthropic Commercial Terms which includes the following:\n\n\"Anthropic may not train models on Customer Content from paid Services.\"\n\nWe also have a zero-data retention agreement with Anthropic.\nWhen you directly connect Zed with a non Zed AI service (e.g., via API key) Zed does not have control over how your data is used by that service provider.\nYou should reference your agreement with each service provider to understand what terms and conditions apply.\nData we collect\nFor prompts you have explicitly shared with us, Zed may store copies of those prompts and other data about the specific use of the Agent Panel.\nThis data includes:\n\nThe prompt given to the Agent\nAny commentary you include\nProduct telemetry about the agentic thread\nMetadata about your Zed installation\n\nData Handling\nCollected data is stored in Snowflake, a private database where we track other metrics. We periodically review this data to improve our overall agentic approach and refine the product via our system prompt, tool use, etc. We ensure any included data is anonymized and contains no sensitive information (access tokens, user IDs, email addresses, etc).\nEdit Predictions\nBy default, when using Zed Edit Predictions, Zed does not persistently store user content or use user content for training of its models.\nOpt-in\nUsers who are working on open source licensed projects may optionally opt-in to providing model improvement feedback. This opt-in occurs on a per-project basis. If you work on multiple open source projects and wish to provide model improvement feedback you will have to opt-in for each individual project.\nWhen working on other projects where you haven't opted-in, Zed will not persistently store user content or use user content for training of its models.\nYou can see exactly how Zed detects open source licenses in: license_detection.rs.\nExclusions\nZed will intentionally exclude certain files from Predictive Edits entirely, even when you have opted-in to model improvement feedback.\nYou can inspect this exclusion list by opening zed: open default settings from the command palette:\n{\n  \"edit_predictions\": {\n    // A list of globs representing files that edit predictions should be disabled for.\n    // There's a sensible default list of globs already included.\n    // Any addition to this list will be merged with the default list.\n    \"disabled_globs\": [\n      \"**/.env*\",\n      \"**/*.pem\",\n      \"**/*.key\",\n      \"**/*.cert\",\n      \"**/*.crt\",\n      \"**/secrets.yml\"\n    ]\n  }\n}\n\nUsers may explicitly exclude additional paths and/or file extensions by adding them to edit_predictions.disabled_globs in their Zed settings.json:\n{\n  \"edit_predictions\": {\n    \"disabled_globs\": [\"secret_dir/*\", \"**/*.log\"]\n  }\n}\n\nData we collect\nFor open source projects where you have opted-in, Zed may store copies of requests and responses to the Zed AI Prediction service.\nThis data includes:\n\nthe edit prediction\na portion of the buffer content around the cursor\na few recent edits\nthe current buffer outline\ndiagnostics (errors, warnings, etc) from language servers\n\nData Handling\nCollected data is stored in Snowflake, a private database where we track other metrics. We periodically review this data to select training samples for inclusion in our model training dataset. We ensure any included data is anonymized and contains no sensitive information (access tokens, user IDs, email addresses, etc). This training dataset is publicly available at huggingface.co/datasets/zed-industries/zeta.\nModel Output\nWe then use this training dataset to fine-tune Qwen2.5-Coder-7B and make the resulting model available at huggingface.co/zed-industries/zeta.\nApplicable terms\nPlease see the Zed Terms of Service for more.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:40"
+}

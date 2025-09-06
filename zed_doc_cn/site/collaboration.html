@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Collaboration | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">键盘快捷键</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">代码补全</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="active">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">环境变量</a></li>
+<li class="chapter-item"><a href="repl.html" class="">交互式解释器</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">语言模型提供商</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">计划与使用量</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">隐私与安全</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">AI 改进</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">语言支持</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">斜线命令</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">MCP 扩展</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">编程语言</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">开发指南</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">macOS</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">FreeBSD</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">调试器开发</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">版本发布</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#collaboration" class="pagetoc-H1">协作</a>
+<a href="#adding-a-collaborator-to-a-call" class="pagetoc-H2">添加协作者到通话</a>
+<a href="#inviting-a-collaborator" class="pagetoc-H3">邀请协作者</a>
+<a href="#inviting-non-zed-users" class="pagetoc-H3">邀请非 Zed 用户</a>
+<a href="#voice-chat" class="pagetoc-H3">语音聊天</a>
+<a href="#collaborating-on-a-project" class="pagetoc-H2">项目协作</a>
+<a href="#share-a-project" class="pagetoc-H3">分享项目</a>
+<a href="#follow-a-collaborator" class="pagetoc-H3">跟随协作者</a>
+<a href="#sharing-your-screen" class="pagetoc-H3">分享你的屏幕</a>
+<a href="#adding-a-project" class="pagetoc-H3">添加项目</a>
+<a href="#removing-a-project" class="pagetoc-H3">移除项目</a>
+<a href="#following-a-collaborators-terminal" class="pagetoc-H3">跟随协作者的终端</a>
+<a href="#leave-call" class="pagetoc-H3">离开通话</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="collaboration"><a class="header" href="#collaboration">协作</a></h1>
+<p>只与你信任的人协作。由于分享项目会给他们访问你本地文件系统的权限，你不应该与不信任的人分享项目；他们可能会做一些恶意的事情。</p>
+<p>未来，我们将采取更多措施来防止这种超出共享项目范围的访问，并增加对协作者权限的控制，但目前，请只与你信任的人协作。</p>
+<h2 id="adding-a-collaborator-to-a-call"><a class="header" href="#adding-a-collaborator-to-a-call">添加协作者到通话</a></h2>
+<p>在开始协作之前，你需要将协作者添加到你的联系人中。操作步骤：</p>
+<ol>
+<li>通过点击窗口右上角的 <code>显示联系人菜单</code> 按钮或运行 <code>collab: toggle contacts menu</code> (<code>cmd-shift-c</code>) 打开联系人菜单。</li>
+<li>点击搜索框右侧的添加按钮。</li>
+<li>使用 GitHub 用户名搜索你想要添加的联系人。注意：你试图添加为联系人的人必须是现有的 Zed 用户。</li>
+</ol>
+<h3 id="inviting-a-collaborator"><a class="header" href="#inviting-a-collaborator">邀请协作者</a></h3>
+<p>你可以从联系人菜单中添加现有的 Zed 用户为联系人，通过点击窗口右上角的 <code>显示联系人菜单</code> 按钮或 <code>collab: toggle contacts menu</code> (<code>cmd-shift-c</code>) 打开菜单，然后点击搜索框右侧的 <code>搜索新联系人</code> 按钮。</p>
+<p><img alt="邀请协作者到当前项目" src="https://zed.dev/img/collaboration/add-a-collaborator.png"/></p>
+<p>当你邀请协作者加入一个不在通话中的项目时，他们将收到加入的通知，并且会创建一个新的通话。</p>
+<p><img alt="收到加入通话的邀请" src="https://zed.dev/img/collaboration/receiving-an-invite.jpg"/></p>
+<h3 id="inviting-non-zed-users"><a class="header" href="#inviting-non-zed-users">邀请非 Zed 用户</a></h3>
+<p>如果你想要协作的人还没有注册 Zed，他们需要先 <a href="https://zed.dev/download">下载应用</a> 并首次登录，然后你才能添加他们。身份验证与 GitHub 账户绑定，所以新用户需要通过 GitHub 认证才能登录 Zed。</p>
+<h3 id="voice-chat"><a class="header" href="#voice-chat">语音聊天</a></h3>
+<p>加入通话时，如果你的操作系统允许，Zed 将自动与通话中的其他用户共享你的麦克风。这与你的项目无关。你可以通过 <a href="./configuring-zed.html#calls"><code>mute_on_join</code></a> 设置在客户端禁用此功能。</p>
+<h2 id="collaborating-on-a-project"><a class="header" href="#collaborating-on-a-project">项目协作</a></h2>
+<h3 id="share-a-project"><a class="header" href="#share-a-project">分享项目</a></h3>
+<p>当你邀请协作者加入你的项目时，一个新的通话开始。你的 Zed 窗口将在窗口的标题栏中显示通话参与者。</p>
+<p><img alt="两个协作者的新 Zed 通话" src="https://zed.dev/img/collaboration/new-call.png"/></p>
+<p>与你在同一项目中的协作者显示为彩色，并具有光标颜色。在其他项目中的协作者显示为灰色。可以访问当前项目的协作者在他们的头像下方会有自己的光标颜色。</p>
+<p>我们旨在尽可能消除本地和远程项目之间的区别。协作者可以打开、编辑和保存文件，执行搜索，与语言服务器交互等。访客具有项目的只读视图，包括访问语言服务器信息。</p>
+<h4 id="unshared-projects"><a class="header" href="#unshared-projects">未共享的项目</a></h4>
+<p>如果协作者当前在一个未共享的项目中，你将无法跳转到他们的项目或跟随他们，直到他们共享项目或返回到一个已共享的项目。</p>
+<p>如果你在一个未共享的项目中，其他人将无法加入或查看其内容。</p>
+<h3 id="follow-a-collaborator"><a class="header" href="#follow-a-collaborator">跟随协作者</a></h3>
+<p>要跟随协作者，请点击窗口右上方的他们的头像。你也可以使用 <code>workspace: follow next collaborator</code> (<code>ctrl-alt-cmd-f</code>) 在协作者之间循环切换。</p>
+<p>当你加入一个项目时，你将立即开始跟随邀请你的协作者。</p>
+<p><img alt="自动跟随邀请我们加入项目的人" src="https://zed.dev/img/collaboration/joining-a-call.png"/></p>
+<p>当你在一个跟随协作者的面板中时，你将：</p>
+<ul>
+<li>跟随他们的光标和滚动位置</li>
+<li>跟随他们在同一项目中的其他文件</li>
+<li>如果他们正在共享屏幕并离开项目，则在该面板中立即切换到查看他们的屏幕</li>
+</ul>
+<p>如果你移动光标或在该面板中进行编辑，你将停止跟随。</p>
+<p>要重新开始跟随，你可以点击协作者的头像，或通过按 <code>workspace: follow next collaborator</code> (<code>ctrl-alt-cmd-f</code>) 在不同参与者之间循环跟随。</p>
+<h4 id="how-following-works"><a class="header" href="#how-following-works">跟随功能的工作原理</a></h4>
+<p>跟随功能仅限于特定的面板。当一个面板正在跟随协作者时，它会用他们的光标颜色进行轮廓显示。</p>
+<p>这种面板特定的行为允许你在一个面板中跟随某人，同时在另一个面板中独立导航，这对于某些协作风格可能是一种有效的布局。</p>
+<h3 id="sharing-your-screen"><a class="header" href="#sharing-your-screen">分享你的屏幕</a></h3>
+<p>通过点击窗口右上方的 <code>共享屏幕</code> 按钮与当前通话中的协作者共享你的屏幕。</p>
+<p>如果协作者正在跟随你，而你开始查看 Zed 之外的窗口或未共享的项目，他们将看到你的屏幕。</p>
+<p>当你进行屏幕共享时，协作者可以看到你的整个屏幕，所以要小心不要分享你不想分享的内容。完成后记得停止屏幕共享。</p>
+<p>如果你正在共享屏幕，通话参与者可以通过打开右上角的联系人菜单并点击 <code>屏幕</code> 项目来为你的屏幕共享打开一个专用选项卡。</p>
+<h3 id="adding-a-project"><a class="header" href="#adding-a-project">添加项目</a></h3>
+<p>你可以通过点击标题栏中项目名称旁边的 <code>共享</code> 按钮来将项目添加到通话中。</p>
+<h3 id="removing-a-project"><a class="header" href="#removing-a-project">移除项目</a></h3>
+<p>你可以通过点击标题栏中项目名称旁边的 <code>取消共享</code> 按钮来从通话中移除项目。</p>
+<p>当前在该项目中的协作者将从项目中断开连接，除非你再次共享它，否则他们将无法重新加入。</p>
+<h3 id="following-a-collaborators-terminal"><a class="header" href="#following-a-collaborators-terminal">跟随协作者的终端</a></h3>
+<p>你可以通过让协作者共享他们的屏幕并跟随它来观看协作者在他们的终端中做什么。</p>
+<p>在未来，我们计划允许你在共享项目中直接在终端中进行协作。</p>
+<h3 id="leave-call"><a class="header" href="#leave-call">离开通话</a></h3>
+<p>你可以通过打开右上角的联系人菜单并点击 <code>离开通话</code> 按钮来离开通话。</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

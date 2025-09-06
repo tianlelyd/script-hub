@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/extensions/slash-commands.html",
+  "title": "Slash Command Extensions | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"slash-commands\"><a class=\"header\" href=\"#slash-commands\">Slash Commands</a></h1>\n<p>Extensions may provide slash commands for use in the Assistant.</p>\n<h2 id=\"example-extension\"><a class=\"header\" href=\"#example-extension\">Example extension</a></h2>\n<p>To see a working example of an extension that provides slash commands, check out the <a href=\"https://github.com/zed-industries/zed/tree/main/extensions/slash-commands-example\"><code>slash-commands-example</code> extension</a>.</p>\n<p>This extension can be <a href=\"./developing-extensions.html#developing-an-extension-locally\">installed as a dev extension</a> if you want to try it out for yourself.</p>\n<h2 id=\"defining-slash-commands\"><a class=\"header\" href=\"#defining-slash-commands\">Defining slash commands</a></h2>\n<p>A given extension may provide one or more slash commands. Each slash command must be registered in the <code>extension.toml</code>.</p>\n<p>For example, here is an extension that provides two slash commands: <code>/echo</code> and <code>/pick-one</code>:</p>\n<pre><code class=\"language-toml\">[slash_commands.echo]\ndescription = \"echoes the provided input\"\nrequires_argument = true\n\n[slash_commands.pick-one]\ndescription = \"pick one of three options\"\nrequires_argument = true\n</code></pre>\n<p>Each slash command may define the following properties:</p>\n<ul>\n<li><code>description</code>: A description of the slash command that will be shown when completing available commands.</li>\n<li><code>requires_argument</code>: Indicates whether a slash command requires at least one argument to run.</li>\n</ul>\n<h2 id=\"implementing-slash-command-behavior\"><a class=\"header\" href=\"#implementing-slash-command-behavior\">Implementing slash command behavior</a></h2>\n<p>To implement behavior for your slash commands, implement <code>run_slash_command</code> for your extension.</p>\n<p>This method accepts the slash command that will be run, the list of arguments passed to it, and an optional <code>Worktree</code>.</p>\n<p>This method returns <code>SlashCommandOutput</code>, which contains the textual output of the command in the <code>text</code> field. The output may also define <code>SlashCommandOutputSection</code>s that contain ranges into the output. These sections are then rendered as creases in the Assistant's context editor.</p>\n<p>Your extension should <code>match</code> on the command name (without the leading <code>/</code>) and then execute behavior accordingly:</p>\n<pre><code class=\"language-rs\">impl zed::Extension for MyExtension {\n    fn run_slash_command(\n        &amp;self,\n        command: SlashCommand,\n        args: Vec&lt;String&gt;,\n        _worktree: Option&lt;&amp;Worktree&gt;,\n    ) -&gt; Result&lt;SlashCommandOutput, String&gt; {\n        match command.name.as_str() {\n            \"echo\" =&gt; {\n                if args.is_empty() {\n                    return Err(\"nothing to echo\".to_string());\n                }\n\n                let text = args.join(\" \");\n\n                Ok(SlashCommandOutput {\n                    sections: vec![SlashCommandOutputSection {\n                        range: (0..text.len()).into(),\n                        label: \"Echo\".to_string(),\n                    }],\n                    text,\n                })\n            }\n            \"pick-one\" =&gt; {\n                let Some(selection) = args.first() else {\n                    return Err(\"no option selected\".to_string());\n                };\n\n                match selection.as_str() {\n                    \"option-1\" | \"option-2\" | \"option-3\" =&gt; {}\n                    invalid_option =&gt; {\n                        return Err(format!(\"{invalid_option} is not a valid option\"));\n                    }\n                }\n\n                let text = format!(\"You chose {selection}.\");\n\n                Ok(SlashCommandOutput {\n                    sections: vec![SlashCommandOutputSection {\n                        range: (0..text.len()).into(),\n                        label: format!(\"Pick One: {selection}\"),\n                    }],\n                    text,\n                })\n            }\n            command =&gt; Err(format!(\"unknown slash command: \\\"{command}\\\"\")),\n        }\n    }\n}\n</code></pre>\n<h2 id=\"auto-completing-slash-command-arguments\"><a class=\"header\" href=\"#auto-completing-slash-command-arguments\">Auto-completing slash command arguments</a></h2>\n<p>For slash commands that have arguments, you may also choose to implement <code>complete_slash_command_argument</code> to provide completions for your slash commands.</p>\n<p>This method accepts the slash command that will be run and the list of arguments passed to it. It returns a list of <code>SlashCommandArgumentCompletion</code>s that will be shown in the completion menu.</p>\n<p>A <code>SlashCommandArgumentCompletion</code> consists of the following properties:</p>\n<ul>\n<li><code>label</code>: The label that will be shown in the completion menu.</li>\n<li><code>new_text</code>: The text that will be inserted when the completion is accepted.</li>\n<li><code>run_command</code>: Whether the slash command will be run when the completion is accepted.</li>\n</ul>\n<p>Once again, your extension should <code>match</code> on the command name (without the leading <code>/</code>) and return the desired argument completions:</p>\n<pre><code class=\"language-rs\">impl zed::Extension for MyExtension {\n    fn complete_slash_command_argument(\n        &amp;self,\n        command: SlashCommand,\n        _args: Vec&lt;String&gt;,\n    ) -&gt; Result&lt;Vec&lt;SlashCommandArgumentCompletion&gt;, String&gt; {\n        match command.name.as_str() {\n            \"echo\" =&gt; Ok(vec![]),\n            \"pick-one\" =&gt; Ok(vec![\n                SlashCommandArgumentCompletion {\n                    label: \"Option One\".to_string(),\n                    new_text: \"option-1\".to_string(),\n                    run_command: true,\n                },\n                SlashCommandArgumentCompletion {\n                    label: \"Option Two\".to_string(),\n                    new_text: \"option-2\".to_string(),\n                    run_command: true,\n                },\n                SlashCommandArgumentCompletion {\n                    label: \"Option Three\".to_string(),\n                    new_text: \"option-3\".to_string(),\n                    run_command: true,\n                },\n            ]),\n            command =&gt; Err(format!(\"unknown slash command: \\\"{command}\\\"\")),\n        }\n    }\n}\n</code></pre>\n\n</main>",
+  "content_text": "Slash Commands\nExtensions may provide slash commands for use in the Assistant.\nExample extension\nTo see a working example of an extension that provides slash commands, check out the slash-commands-example extension.\nThis extension can be installed as a dev extension if you want to try it out for yourself.\nDefining slash commands\nA given extension may provide one or more slash commands. Each slash command must be registered in the extension.toml.\nFor example, here is an extension that provides two slash commands: /echo and /pick-one:\n[slash_commands.echo]\ndescription = \"echoes the provided input\"\nrequires_argument = true\n\n[slash_commands.pick-one]\ndescription = \"pick one of three options\"\nrequires_argument = true\n\nEach slash command may define the following properties:\n\ndescription: A description of the slash command that will be shown when completing available commands.\nrequires_argument: Indicates whether a slash command requires at least one argument to run.\n\nImplementing slash command behavior\nTo implement behavior for your slash commands, implement run_slash_command for your extension.\nThis method accepts the slash command that will be run, the list of arguments passed to it, and an optional Worktree.\nThis method returns SlashCommandOutput, which contains the textual output of the command in the text field. The output may also define SlashCommandOutputSections that contain ranges into the output. These sections are then rendered as creases in the Assistant's context editor.\nYour extension should match on the command name (without the leading /) and then execute behavior accordingly:\nimpl zed::Extension for MyExtension {\n    fn run_slash_command(\n        &self,\n        command: SlashCommand,\n        args: Vec<String>,\n        _worktree: Option<&Worktree>,\n    ) -> Result<SlashCommandOutput, String> {\n        match command.name.as_str() {\n            \"echo\" => {\n                if args.is_empty() {\n                    return Err(\"nothing to echo\".to_string());\n                }\n\n                let text = args.join(\" \");\n\n                Ok(SlashCommandOutput {\n                    sections: vec![SlashCommandOutputSection {\n                        range: (0..text.len()).into(),\n                        label: \"Echo\".to_string(),\n                    }],\n                    text,\n                })\n            }\n            \"pick-one\" => {\n                let Some(selection) = args.first() else {\n                    return Err(\"no option selected\".to_string());\n                };\n\n                match selection.as_str() {\n                    \"option-1\" | \"option-2\" | \"option-3\" => {}\n                    invalid_option => {\n                        return Err(format!(\"{invalid_option} is not a valid option\"));\n                    }\n                }\n\n                let text = format!(\"You chose {selection}.\");\n\n                Ok(SlashCommandOutput {\n                    sections: vec![SlashCommandOutputSection {\n                        range: (0..text.len()).into(),\n                        label: format!(\"Pick One: {selection}\"),\n                    }],\n                    text,\n                })\n            }\n            command => Err(format!(\"unknown slash command: \\\"{command}\\\"\")),\n        }\n    }\n}\n\nAuto-completing slash command arguments\nFor slash commands that have arguments, you may also choose to implement complete_slash_command_argument to provide completions for your slash commands.\nThis method accepts the slash command that will be run and the list of arguments passed to it. It returns a list of SlashCommandArgumentCompletions that will be shown in the completion menu.\nA SlashCommandArgumentCompletion consists of the following properties:\n\nlabel: The label that will be shown in the completion menu.\nnew_text: The text that will be inserted when the completion is accepted.\nrun_command: Whether the slash command will be run when the completion is accepted.\n\nOnce again, your extension should match on the command name (without the leading /) and return the desired argument completions:\nimpl zed::Extension for MyExtension {\n    fn complete_slash_command_argument(\n        &self,\n        command: SlashCommand,\n        _args: Vec<String>,\n    ) -> Result<Vec<SlashCommandArgumentCompletion>, String> {\n        match command.name.as_str() {\n            \"echo\" => Ok(vec![]),\n            \"pick-one\" => Ok(vec![\n                SlashCommandArgumentCompletion {\n                    label: \"Option One\".to_string(),\n                    new_text: \"option-1\".to_string(),\n                    run_command: true,\n                },\n                SlashCommandArgumentCompletion {\n                    label: \"Option Two\".to_string(),\n                    new_text: \"option-2\".to_string(),\n                    run_command: true,\n                },\n                SlashCommandArgumentCompletion {\n                    label: \"Option Three\".to_string(),\n                    new_text: \"option-3\".to_string(),\n                    run_command: true,\n                },\n            ]),\n            command => Err(format!(\"unknown slash command: \\\"{command}\\\"\")),\n        }\n    }\n}",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:57"
+}

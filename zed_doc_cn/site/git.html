@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Git | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="active">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#git" class="pagetoc-H1">Git</a>
+<a href="#git-panel" class="pagetoc-H2">Git Panel</a>
+<a href="#project-diff" class="pagetoc-H2">Project Diff</a>
+<a href="#fetch-push-and-pull" class="pagetoc-H2">Fetch, push, and pull</a>
+<a href="#staging-workflow" class="pagetoc-H2">Staging Workflow</a>
+<a href="#using-the-project-diff" class="pagetoc-H3">Using the Project Diff</a>
+<a href="#using-the-git-panel" class="pagetoc-H3">Using the Git Panel</a>
+<a href="#committing" class="pagetoc-H2">Committing</a>
+<a href="#undoing-a-commit" class="pagetoc-H3">Undoing a Commit</a>
+<a href="#ai-support-in-git" class="pagetoc-H2">AI Support in Git</a>
+<a href="#git-integrations" class="pagetoc-H2">Git Integrations</a>
+<a href="#diff-hunk-keyboard-shortcuts" class="pagetoc-H2">Diff Hunk Keyboard Shortcuts</a>
+<a href="#action-reference" class="pagetoc-H2">Action Reference</a>
+<a href="#git-cli-configuration" class="pagetoc-H2">Git CLI Configuration</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="git"><a class="header" href="#git">Git</a></h1>
+<p>Zed 目前提供了一系列基础的 Git 功能，未来将支持更高级的功能，如冲突解决工具、逐行暂存等。</p>
+<p>以下是当前支持的所有功能概览：</p>
+<ul>
+<li>提交</li>
+<li>暂存、推送、拉取和获取</li>
+<li>项目差异：所有更改的多缓冲区视图</li>
+<li>缓冲区和编辑器滚动条中的差异指示器</li>
+<li>编辑器中未暂存更改的内联差异切换和恢复</li>
+<li>项目面板中的 Git 状态</li>
+<li>分支创建和切换</li>
+<li>Git 责任查看</li>
+</ul>
+<h2 id="git-panel"><a class="header" href="#git-panel">Git 面板</a></h2>
+<p>Git 面板为您提供工作树状态和 Git 暂存区的鸟瞰视图。</p>
+<p>您可以使用 <code class="hljs">git panel: toggle focus</code> 打开 Git 面板，或点击状态栏中的 Git 图标。</p>
+<p>在面板中，您可以一目了然地看到项目的状态——哪个仓库和分支处于活动状态、哪些文件已更改以及每个文件的当前暂存状态。</p>
+<p>Zed 会监控您的仓库，因此您在命令行中所做的更改会立即反映出来。</p>
+<h2 id="project-diff"><a class="header" href="#project-diff">项目差异</a></h2>
+<p>您可以通过打开项目差异（<kbd class="keybinding">ctrl-g d|ctrl-g d</kbd>）来查看 Zed 中 Git 捕获的所有更改，可通过命令面板或 Git 面板中的 <code class="hljs">git: diff</code> 操作访问。</p>
+<p>项目差异中显示的所有更改的行为与任何其他多缓冲区完全相同：它们都是文件的可编辑摘录。</p>
+<p>您可以通过点击选项卡栏上的按钮或其相应的键绑定来暂存或取消暂存每个块以及整个文件。</p>
+<!-- Add media -->
+<h2 id="fetch-push-and-pull"><a class="header" href="#fetch-push-and-pull">获取、推送和拉取</a></h2>
+<p>在 Zed 中，您可以通过 Git 面板上的按钮或通过命令面板查找相应的操作来从 Git 仓库中获取、推送或拉取：<code class="hljs">git: fetch</code>、<code class="hljs">git: push</code> 和 <code class="hljs">git: pull</code>。</p>
+<h2 id="staging-workflow"><a class="header" href="#staging-workflow">暂存工作流程</a></h2>
+<p>Zed 有两种主要的暂存工作流程，使用项目差异或直接使用面板。</p>
+<h3 id="using-the-project-diff"><a class="header" href="#using-the-project-diff">Using the Project Diff</a></h3>
+<p>In the Project Diff view, you can focus on each hunk and stage them individually by clicking on the tab bar buttons or via the keybindings <code class="hljs">git: stage and next</code> (<kbd class="keybinding">cmd-y|alt-y</kbd>).</p>
+<p>Similarly, stage all hunks at the same time with the <code class="hljs">git: stage all</code> (<kbd class="keybinding">cmd-ctrl-y|ctrl-space</kbd>) keybinding and then immediately commit with <code class="hljs">git: commit</code> (<kbd class="keybinding">cmd-enter|ctrl-enter</kbd>).</p>
+<h3 id="using-the-git-panel"><a class="header" href="#using-the-git-panel">使用 Git 面板</a></h3>
+<p>在面板中，您可以简单地输入提交信息并点击提交按钮，或使用 <code class="hljs">git: commit</code>。这将自动暂存所有被跟踪的文件（在条目的复选框中用 <code>[·]</code> 表示）并提交它们。</p>
+<!-- Show a set of changes with default staged -->
+<p>可以使用每个单独条目的复选框来暂存条目。可以使用面板顶部的按钮或 <code class="hljs">git: stage all</code> 暂存所有更改。</p>
+<!-- Add media -->
+<h2 id="committing"><a class="header" href="#committing">提交</a></h2>
+<p>Zed 提供两个提交文本区域：</p>
+<ol>
+<li>第一个位于 Git 面板的底部。按下 <kbd class="keybinding">cmd-enter|ctrl-enter</kbd> 会立即提交所有已暂存的更改。</li>
+<li>第二个可通过 <code class="hljs">git: expand commit editor</code> 操作访问，或在 Git 面板提交文本区域获得焦点时按下 <kbd class="keybinding">shift-escape|</kbd>。</li>
+</ol>
+<h3 id="undoing-a-commit"><a class="header" href="#undoing-a-commit">撤销提交</a></h3>
+<p>在 Zed 中提交后，您会在 Git 面板中看到提交文本区域下方的一个栏，它将显示最近提交的提交。
+在那里，您可以使用“撤销提交”按钮，它执行 <code>git reset HEADˆ--soft</code> 命令。</p>
+<h2 id="ai-support-in-git"><a class="header" href="#ai-support-in-git">Git 中的 AI 支持</a></h2>
+<p>Zed 目前支持由 LLM 驱动的提交信息生成。
+您可以通过在 Git 面板中聚焦在信息编辑器上，然后点击左下角的铅笔图标，或使用 <code class="hljs">git: generate commit message</code>（<kbd class="keybinding">alt-tab|alt-l</kbd>）键绑定来请求 AI 生成提交信息。</p>
+<blockquote>
+<p>请注意，您需要配置 LLM 提供商。访问 <a href="./ai/configuration.html">AI 配置页面</a>以了解如何操作。</p>
+</blockquote>
+<p>您可以通过提供 <code>commit_message_model</code> 代理设置来指定您偶爱的模型。有关更多信息，请参阅<a href="./ai/agent-settings.html#feature-specific-models">特定功能模型</a>。</p>
+<pre><code class="language-json">{
+  "agent": {
+    "version": "2",
+    "commit_message_model": {
+      "provider": "anthropic",
+      "model": "claude-3-5-haiku"
+    }
+  }
+}
+</code></pre>
+<!-- Add media -->
+<p>未来可能会提供更高级的 AI 与 Git 功能的集成。</p>
+<h2 id="git-integrations"><a class="header" href="#git-integrations">Git 集成</a></h2>
+<p>Zed 与流行的 Git 托管服务集成，以确保 Git 提交哈希值和对问题、拉取请求和合并请求的引用成为可点击的链接。</p>
+<p>Zed 目前支持链接到以下托管版本：
+<a href="https://github.com">GitHub</a>、
+<a href="https://gitlab.com">GitLab</a>、
+<a href="https://bitbucket.org">Bitbucket</a>、
+<a href="https://sr.ht">SourceHut</a> 和
+<a href="https://codeberg.org">Codeberg</a>。</p>
+<p>Zed 还具有复制永久链接功能，可以创建指向您的 Git 托管服务上代码片段的永久链接。
+这些链接对于共享特定提交中文件的特定行或行范围很有用。
+可以通过<a href="./getting-started.html#command-palette">命令面板</a>（搜索 <code>permalink</code>）、
+通过为 <code>editor::CopyPermalinkToLine</code> 或 <code>editor::OpenPermalinkToLine</code> 操作创建<a href="key-bindings.html#custom-key-bindings">自定义键绑定</a>，
+或简单地在编辑器中选择行后右键点击并选择 <code>Copy Permalink</code> 来触发此操作。</p>
+<h2 id="diff-hunk-keyboard-shortcuts"><a class="header" href="#diff-hunk-keyboard-shortcuts">差异块键盘快捷键</a></h2>
+<p>在查看有更改的文件时，Zed 显示可以展开或折叠以进行详细审查的差异块：</p>
+<ul>
+<li><strong>展开所有差异块</strong>：<code class="hljs">editor: expand all diff hunks</code>（<kbd class="keybinding">cmd-"|ctrl-"</kbd>）</li>
+<li><strong>折叠所有差异块</strong>：按 <code>Escape</code> 键（绑定到 <code class="hljs">editor: cancel</code>）</li>
+<li><strong>切换选中的差异块</strong>：<code class="hljs">editor: toggle selected diff hunks</code>（<kbd class="keybinding">cmd-'|ctrl-'</kbd>）</li>
+<li><strong>在块之间导航</strong>：<code class="hljs">editor: go to hunk</code> 和 <code class="hljs">editor: go to previous hunk</code></li>
+</ul>
+<blockquote>
+<p><strong>提示：</strong><code>Escape</code> 键是折叠所有展开的差异块并返回更改概览的最快方式。</p>
+</blockquote>
+<h2 id="action-reference"><a class="header" href="#action-reference">操作参考</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>操作</th><th>键绑定</th></tr></thead><tbody>
+<tr><td><code class="hljs">git: add</code></td><td><div>无默认绑定</div></td></tr>
+<tr><td><code class="hljs">git: stage all</code></td><td><kbd class="keybinding">cmd-ctrl-y</kbd></td></tr>
+<tr><td><code class="hljs">git: unstage all</code></td><td><kbd class="keybinding">cmd-ctrl-shift-y</kbd></td></tr>
+<tr><td><code class="hljs">git: toggle staged</code></td><td><kbd class="keybinding">space</kbd></td></tr>
+<tr><td><code class="hljs">git: stage and next</code></td><td><kbd class="keybinding">cmd-y</kbd></td></tr>
+<tr><td><code class="hljs">git: unstage and next</code></td><td><kbd class="keybinding">cmd-shift-y</kbd></td></tr>
+<tr><td><code class="hljs">git: commit</code></td><td><kbd class="keybinding">cmd-enter</kbd></td></tr>
+<tr><td><code class="hljs">git: expand commit editor</code></td><td><kbd class="keybinding">shift-escape</kbd></td></tr>
+<tr><td><code class="hljs">git: push</code></td><td><kbd class="keybinding">ctrl-g up</kbd></td></tr>
+<tr><td><code class="hljs">git: force push</code></td><td><kbd class="keybinding">ctrl-g shift-up</kbd></td></tr>
+<tr><td><code class="hljs">git: pull</code></td><td><kbd class="keybinding">ctrl-g down</kbd></td></tr>
+<tr><td><code class="hljs">git: fetch</code></td><td><kbd class="keybinding">ctrl-g ctrl-g</kbd></td></tr>
+<tr><td><code class="hljs">git: diff</code></td><td><kbd class="keybinding">ctrl-g d</kbd></td></tr>
+<tr><td><code class="hljs">git: restore</code></td><td><kbd class="keybinding">cmd-alt-z</kbd></td></tr>
+<tr><td><code class="hljs">git: restore file</code></td><td><kbd class="keybinding">cmd-delete</kbd></td></tr>
+<tr><td><code class="hljs">git: branch</code></td><td><div>无默认绑定</div></td></tr>
+<tr><td><code class="hljs">git: switch</code></td><td><div>无默认绑定</div></td></tr>
+<tr><td><code class="hljs">git: checkout branch</code></td><td><div>无默认绑定</div></td></tr>
+<tr><td><code class="hljs">git: blame</code></td><td><kbd class="keybinding">cmd-alt-g b</kbd></td></tr>
+<tr><td><code class="hljs">editor: toggle git blame inline</code></td><td><div>无默认绑定</div></td></tr>
+<tr><td><code class="hljs">editor: expand all diff hunks</code></td><td><kbd class="keybinding">cmd-"</kbd></td></tr>
+<tr><td><code class="hljs">editor: toggle selected diff hunks</code></td><td><kbd class="keybinding">cmd-'</kbd></td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p>并非所有操作都有默认的键绑定，但可以通过<a href="./key-bindings.html#user-keymaps">自定义键盘映射</a>进行绑定。</p>
+</blockquote>
+<h2 id="git-cli-configuration"><a class="header" href="#git-cli-configuration">Git CLI 配置</a></h2>
+<p>如果您希望在从命令行提交时也使用 Zed 作为 <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_core_editor">git 提交信息编辑器</a>，您可以使用 <code>zed --wait</code>：</p>
+<pre><code class="language-sh">git config --global core.editor "zed --wait"
+</code></pre>
+<p>或者将以下内容添加到您的 shell 环境中（在 <code>~/.zshrc</code>、<code>~/.bashrc</code> 等）：</p>
+<pre><code class="language-sh">export GIT_EDITOR="zed --wait"
+</code></pre>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

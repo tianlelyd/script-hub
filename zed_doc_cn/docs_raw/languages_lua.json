@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/languages/lua.html",
+  "title": "Lua | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"lua\"><a class=\"header\" href=\"#lua\">Lua</a></h1>\n<p>Lua support is available through the <a href=\"https://github.com/zed-extensions/lua\">Lua extension</a>.</p>\n<ul>\n<li>Tree-sitter: <a href=\"https://github.com/tree-sitter-grammars/tree-sitter-lua\">tree-sitter-grammars/tree-sitter-lua</a></li>\n<li>Language server: <a href=\"https://github.com/LuaLS/lua-language-server\">LuaLS/lua-language-server</a></li>\n</ul>\n<h2 id=\"luarcjson\"><a class=\"header\" href=\"#luarcjson\">luarc.json</a></h2>\n<p>To configure LuaLS you can create a <code>.luarc.json</code> file in the root of your workspace.</p>\n<pre><code class=\"language-json\">{\n  \"$schema\": \"https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json\",\n  \"runtime.version\": \"Lua 5.4\",\n  \"format.enable\": true,\n  \"workspace.library\": [\"../somedir/library\"]\n}\n</code></pre>\n<p>See <a href=\"https://luals.github.io/wiki/settings/\">LuaLS Settings Documentation</a> for all available configuration options, or when editing this file in Zed available settings options will autocomplete, (e.g <code>runtime.version</code> will show <code>\"Lua 5.1\"</code>, <code>\"Lua 5.2\"</code>, <code>\"Lua 5.3\"</code>, <code>\"Lua 5.4\"</code> and <code>\"LuaJIT\"</code> as allowed values). Note when importing settings options from VSCode, remove the <code>Lua.</code> prefix. (e.g. <code>runtime.version</code> instead of <code>Lua.runtime.version</code>).</p>\n<h3 id=\"luacats-definitions\"><a class=\"header\" href=\"#luacats-definitions\">LuaCATS Definitions</a></h3>\n<p>LuaLS can provide enhanced LSP autocompletion suggestions and type validation with the help of LuaCATS (Lua Comment and Type System) definitions. These definitions are available for many common Lua libraries, and local paths containing them can be specified via <code>workspace.library</code> in <code>luarc.json</code>. You can do this via relative paths if you checkout your definitions into the same partent directory of your project (<code>../playdate-luacats</code>, <code>../love2d</code>, etc). Alternatively you can create submodule(s) inside your project for each LuaCATS definition repo.</p>\n<h3 id=\"love2d\"><a class=\"header\" href=\"#love2d\">LÖVE (Love2D)</a></h3>\n<p>To use <a href=\"https://love2d.org/\">LÖVE (Love2D)</a> in Zed, checkout <a href=\"https://github.com/LuaCATS/love2d\">LuaCATS/love2d</a> into a folder called <code>love2d-luacats</code> into the parent folder of your project:</p>\n<pre><code class=\"language-sh\">cd .. &amp;&amp; git clone https://github.com/LuaCATS/love2d love2d-luacats\n</code></pre>\n<p>Then in your <code>.luarc.json</code>:</p>\n<pre><code>{\n  \"$schema\": \"https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json\",\n  \"runtime.version\": \"Lua 5.4\",\n  \"workspace.library\": [\"../love2d-luacats\"],\n  \"runtime.special\": {\n    \"love.filesystem.load\": \"loadfile\"\n  }\n}\n</code></pre>\n<h3 id=\"playdatesdk\"><a class=\"header\" href=\"#playdatesdk\">PlaydateSDK</a></h3>\n<p>To use <a href=\"https://play.date/dev/\">Playdate Lua SDK</a> in Zed, checkout <a href=\"https://github.com/notpeter/playdate-luacats\">playdate-luacats</a> into the parent folder of your project:</p>\n<pre><code class=\"language-sh\">cd .. &amp;&amp; git clone https://github.com/notpeter/playdate-luacats\n</code></pre>\n<p>Then in your <code>.luarc.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"$schema\": \"https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json\",\n  \"runtime.version\": \"Lua 5.4\",\n  \"runtime.nonstandardSymbol\": [\n    \"+=\",\n    \"-=\",\n    \"*=\",\n    \"/=\",\n    \"//=\",\n    \"%=\",\n    \"&lt;&lt;=\",\n    \"&gt;&gt;=\",\n    \"&amp;=\",\n    \"|=\",\n    \"^=\"\n  ],\n  \"diagnostics.severity\": { \"duplicate-set-field\": \"Hint\" },\n  \"diagnostics.globals\": [\"import\"],\n  \"workspace.library\": [\"../playdate-luacats\"],\n  \"format.defaultConfig\": {\n    \"indent_style\": \"space\",\n    \"indent_size\": \"4\"\n  },\n  \"format.enable\": true,\n  \"runtime.builtin\": { \"io\": \"disable\", \"os\": \"disable\", \"package\": \"disable\" }\n}\n</code></pre>\n<h3 id=\"inlay-hints\"><a class=\"header\" href=\"#inlay-hints\">Inlay Hints</a></h3>\n<p>To enable <a href=\"../configuring-languages.html#inlay-hints\">Inlay Hints</a> for LuaLS in Zed</p>\n<ol>\n<li>Add the following to your Zed settings.json:</li>\n</ol>\n<pre><code class=\"language-json\">  \"languages\": {\n    \"Lua\": {\n      \"inlay_hints\": {\n        \"enabled\": true,\n        \"show_type_hints\": true,\n        \"show_parameter_hints\": true,\n        \"show_other_hints\": true\n      }\n    }\n  }\n</code></pre>\n<ol start=\"2\">\n<li>Add <code>\"hint.enable\": true</code> to your <code>.luarc.json</code>.</li>\n</ol>\n<h2 id=\"formatting\"><a class=\"header\" href=\"#formatting\">Formatting</a></h2>\n<h3 id=\"luals-formatting\"><a class=\"header\" href=\"#luals-formatting\">LuaLS Formatting</a></h3>\n<p>To enable auto-formatting with your LuaLS (provided by <a href=\"https://github.com/CppCXY/EmmyLuaCodeStyle\">CppCXY/EmmyLuaCodeStyle</a>) make sure you have <code>\"format.enable\": true,</code> in your .luarc.json:</p>\n<pre><code class=\"language-json\">{\n  \"$schema\": \"https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json\",\n  \"format.enable\": true\n}\n</code></pre>\n<p>Then add the following to your Zed <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Lua\": {\n      \"format_on_save\": \"on\",\n      \"formatter\": \"language_server\"\n    }\n  }\n}\n</code></pre>\n<p>You can customize various EmmyLuaCodeStyle style options via <code>.editorconfig</code>, see <a href=\"https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/lua.template.editorconfig\">lua.template.editorconfig</a> for all available options.</p>\n<h3 id=\"stylua-formatting\"><a class=\"header\" href=\"#stylua-formatting\">StyLua Formatting</a></h3>\n<p>Alternatively to use <a href=\"https://github.com/JohnnyMorganz/StyLua\">StyLua</a> for auto-formatting:</p>\n<ol>\n<li>Install <a href=\"https://github.com/JohnnyMorganz/StyLua\">StyLua</a>: <code>brew install stylua</code> or <code>cargo install stylua --features lua52,lua53,lua54,luau,luajit</code> (feel free to remove any Lua versions you don't need).</li>\n<li>Add the following to your <code>settings.json</code>:</li>\n</ol>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Lua\": {\n      \"format_on_save\": \"on\",\n      \"formatter\": {\n        \"external\": {\n          \"command\": \"stylua\",\n          \"arguments\": [\n            \"--syntax=Lua54\",\n            \"--respect-ignores\",\n            \"--stdin-filepath\",\n            \"{buffer_path}\",\n            \"-\"\n          ]\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>You can specify various options to StyLua either on the command line above (like <code>--syntax=Lua54</code>) or in a <code>stylua.toml</code> in your workspace:</p>\n<pre><code class=\"language-toml\">syntax = \"Lua54\"\ncolumn_width = 100\nline_endings = \"Unix\"\nindent_type = \"Spaces\"\nindent_width = 4\nquote_style = \"AutoPreferDouble\"\ncall_parentheses = \"Always\"\ncollapse_simple_statement = \"All\"\n\n[sort_requires]\nenabled = true\n</code></pre>\n<p>For a complete list of available options, see: <a href=\"https://github.com/JohnnyMorganz/StyLua?tab=readme-ov-file#options\">StyLua Options</a>.</p>\n\n</main>",
+  "content_text": "Lua\nLua support is available through the Lua extension.\n\nTree-sitter: tree-sitter-grammars/tree-sitter-lua\nLanguage server: LuaLS/lua-language-server\n\nluarc.json\nTo configure LuaLS you can create a .luarc.json file in the root of your workspace.\n{\n  \"$schema\": \"https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json\",\n  \"runtime.version\": \"Lua 5.4\",\n  \"format.enable\": true,\n  \"workspace.library\": [\"../somedir/library\"]\n}\n\nSee LuaLS Settings Documentation for all available configuration options, or when editing this file in Zed available settings options will autocomplete, (e.g runtime.version will show \"Lua 5.1\", \"Lua 5.2\", \"Lua 5.3\", \"Lua 5.4\" and \"LuaJIT\" as allowed values). Note when importing settings options from VSCode, remove the Lua. prefix. (e.g. runtime.version instead of Lua.runtime.version).\nLuaCATS Definitions\nLuaLS can provide enhanced LSP autocompletion suggestions and type validation with the help of LuaCATS (Lua Comment and Type System) definitions. These definitions are available for many common Lua libraries, and local paths containing them can be specified via workspace.library in luarc.json. You can do this via relative paths if you checkout your definitions into the same partent directory of your project (../playdate-luacats, ../love2d, etc). Alternatively you can create submodule(s) inside your project for each LuaCATS definition repo.\nLÖVE (Love2D)\nTo use LÖVE (Love2D) in Zed, checkout LuaCATS/love2d into a folder called love2d-luacats into the parent folder of your project:\ncd .. && git clone https://github.com/LuaCATS/love2d love2d-luacats\n\nThen in your .luarc.json:\n{\n  \"$schema\": \"https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json\",\n  \"runtime.version\": \"Lua 5.4\",\n  \"workspace.library\": [\"../love2d-luacats\"],\n  \"runtime.special\": {\n    \"love.filesystem.load\": \"loadfile\"\n  }\n}\n\nPlaydateSDK\nTo use Playdate Lua SDK in Zed, checkout playdate-luacats into the parent folder of your project:\ncd .. && git clone https://github.com/notpeter/playdate-luacats\n\nThen in your .luarc.json:\n{\n  \"$schema\": \"https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json\",\n  \"runtime.version\": \"Lua 5.4\",\n  \"runtime.nonstandardSymbol\": [\n    \"+=\",\n    \"-=\",\n    \"*=\",\n    \"/=\",\n    \"//=\",\n    \"%=\",\n    \"<<=\",\n    \">>=\",\n    \"&=\",\n    \"|=\",\n    \"^=\"\n  ],\n  \"diagnostics.severity\": { \"duplicate-set-field\": \"Hint\" },\n  \"diagnostics.globals\": [\"import\"],\n  \"workspace.library\": [\"../playdate-luacats\"],\n  \"format.defaultConfig\": {\n    \"indent_style\": \"space\",\n    \"indent_size\": \"4\"\n  },\n  \"format.enable\": true,\n  \"runtime.builtin\": { \"io\": \"disable\", \"os\": \"disable\", \"package\": \"disable\" }\n}\n\nInlay Hints\nTo enable Inlay Hints for LuaLS in Zed\n\nAdd the following to your Zed settings.json:\n\n  \"languages\": {\n    \"Lua\": {\n      \"inlay_hints\": {\n        \"enabled\": true,\n        \"show_type_hints\": true,\n        \"show_parameter_hints\": true,\n        \"show_other_hints\": true\n      }\n    }\n  }\n\n\nAdd \"hint.enable\": true to your .luarc.json.\n\nFormatting\nLuaLS Formatting\nTo enable auto-formatting with your LuaLS (provided by CppCXY/EmmyLuaCodeStyle) make sure you have \"format.enable\": true, in your .luarc.json:\n{\n  \"$schema\": \"https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json\",\n  \"format.enable\": true\n}\n\nThen add the following to your Zed settings.json:\n{\n  \"languages\": {\n    \"Lua\": {\n      \"format_on_save\": \"on\",\n      \"formatter\": \"language_server\"\n    }\n  }\n}\n\nYou can customize various EmmyLuaCodeStyle style options via .editorconfig, see lua.template.editorconfig for all available options.\nStyLua Formatting\nAlternatively to use StyLua for auto-formatting:\n\nInstall StyLua: brew install stylua or cargo install stylua --features lua52,lua53,lua54,luau,luajit (feel free to remove any Lua versions you don't need).\nAdd the following to your settings.json:\n\n{\n  \"languages\": {\n    \"Lua\": {\n      \"format_on_save\": \"on\",\n      \"formatter\": {\n        \"external\": {\n          \"command\": \"stylua\",\n          \"arguments\": [\n            \"--syntax=Lua54\",\n            \"--respect-ignores\",\n            \"--stdin-filepath\",\n            \"{buffer_path}\",\n            \"-\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nYou can specify various options to StyLua either on the command line above (like --syntax=Lua54) or in a stylua.toml in your workspace:\nsyntax = \"Lua54\"\ncolumn_width = 100\nline_endings = \"Unix\"\nindent_type = \"Spaces\"\nindent_width = 4\nquote_style = \"AutoPreferDouble\"\ncall_parentheses = \"Always\"\ncollapse_simple_statement = \"All\"\n\n[sort_requires]\nenabled = true\n\nFor a complete list of available options, see: StyLua Options.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:14:22"
+}

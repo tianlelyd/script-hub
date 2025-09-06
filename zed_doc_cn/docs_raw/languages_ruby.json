@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/languages/ruby.html",
+  "title": "Ruby | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"ruby\"><a class=\"header\" href=\"#ruby\">Ruby</a></h1>\n<p>Ruby support is available through the <a href=\"https://github.com/zed-extensions/ruby\">Ruby extension</a>.</p>\n<ul>\n<li>Tree-sitters:\n<ul>\n<li><a href=\"https://github.com/tree-sitter/tree-sitter-ruby\">tree-sitter-ruby</a></li>\n<li><a href=\"https://github.com/tree-sitter/tree-sitter-embedded-template\">tree-sitter-embedded-template</a></li>\n</ul>\n</li>\n<li>Language Servers:\n<ul>\n<li><a href=\"https://github.com/Shopify/ruby-lsp\">ruby-lsp</a></li>\n<li><a href=\"https://github.com/castwide/solargraph\">solargraph</a></li>\n<li><a href=\"https://github.com/rubocop/rubocop\">rubocop</a></li>\n</ul>\n</li>\n<li>Debug Adapter: <a href=\"https://github.com/ruby/debug\"><code>rdbg</code></a></li>\n</ul>\n<p>The Ruby extension also provides support for ERB files.</p>\n<h2 id=\"language-servers\"><a class=\"header\" href=\"#language-servers\">Language Servers</a></h2>\n<p>There are multiple language servers available for Ruby. Zed supports the two following:</p>\n<ul>\n<li><a href=\"https://github.com/castwide/solargraph\">solargraph</a></li>\n<li><a href=\"https://github.com/Shopify/ruby-lsp\">ruby-lsp</a></li>\n</ul>\n<p>They both have an overlapping feature set of autocomplete, diagnostics, code actions, etc. and it's up to you to decide which one you want to use. Note that you can't use both at the same time.</p>\n<p>In addition to these two language servers, Zed also supports:</p>\n<ul>\n<li><a href=\"https://github.com/rubocop/rubocop\">rubocop</a> which is a static code analyzer and linter for Ruby. Under the hood, it's also used by Zed as a language server, but its functionality is complimentary to that of solargraph and ruby-lsp.</li>\n<li><a href=\"https://sorbet.org/\">sorbet</a> which is a static type checker for Ruby with a custom gradual type system.</li>\n<li><a href=\"https://github.com/soutaro/steep\">steep</a> which is a static type checker for Ruby that leverages Ruby Signature (RBS).</li>\n</ul>\n<p>When configuring a language server, it helps to open the LSP Logs window using the 'dev: Open Language Server Logs' command. You can then choose the corresponding language instance to see any logged information.</p>\n<h2 id=\"configuring-a-language-server\"><a class=\"header\" href=\"#configuring-a-language-server\">Configuring a language server</a></h2>\n<p>The <a href=\"https://github.com/zed-extensions/ruby\">Ruby extension</a> offers both <code>solargraph</code> and <code>ruby-lsp</code> language server support.</p>\n<h3 id=\"language-server-activation\"><a class=\"header\" href=\"#language-server-activation\">Language Server Activation</a></h3>\n<p>For all supported Ruby language servers (<code>solargraph</code>, <code>ruby-lsp</code>, <code>rubocop</code>, <code>sorbet</code>, and <code>steep</code>), the Ruby extension follows this activation sequence:</p>\n<ol>\n<li>If the language server is found in your project's <code>Gemfile</code>, it will be used through <code>bundle exec</code>.</li>\n<li>If not found in the <code>Gemfile</code>, the Ruby extension will look for the executable in your system <code>PATH</code>.</li>\n<li>If the language server is not found in either location, the Ruby extension will automatically install it as a global gem (note: this will not install to your current Ruby gemset).</li>\n</ol>\n<p>You can skip step 1 and force using the system executable by setting <code>use_bundler</code> to <code>false</code> in your settings:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"&lt;SERVER_NAME&gt;\": {\n      \"settings\": {\n        \"use_bundler\": false\n      }\n    }\n  }\n}\n</code></pre>\n<h3 id=\"using-solargraph\"><a class=\"header\" href=\"#using-solargraph\">Using <code>solargraph</code></a></h3>\n<p><code>solargraph</code> is enabled by default in the Ruby extension.</p>\n<h3 id=\"using-ruby-lsp\"><a class=\"header\" href=\"#using-ruby-lsp\">Using <code>ruby-lsp</code></a></h3>\n<p>To switch to <code>ruby-lsp</code>, add the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"ruby-lsp\", \"!solargraph\", \"!rubocop\", \"...\"]\n    }\n  }\n}\n</code></pre>\n<p>That disables <code>solargraph</code> and <code>rubocop</code> and enables <code>ruby-lsp</code>.</p>\n<h3 id=\"using-rubocop\"><a class=\"header\" href=\"#using-rubocop\">Using <code>rubocop</code></a></h3>\n<p>The Ruby extension also provides support for <code>rubocop</code> language server for offense detection and autocorrection.</p>\n<p>To enable it, add the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"ruby-lsp\", \"rubocop\", \"!solargraph\", \"...\"]\n    }\n  }\n}\n</code></pre>\n<p>Or, conversely, you can disable <code>ruby-lsp</code> and enable <code>solargraph</code> and <code>rubocop</code> by adding the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"solargraph\", \"rubocop\", \"!ruby-lsp\", \"...\"]\n    }\n  }\n}\n</code></pre>\n<h2 id=\"setting-up-solargraph\"><a class=\"header\" href=\"#setting-up-solargraph\">Setting up <code>solargraph</code></a></h2>\n<p>Solargraph has formatting and diagnostics disabled by default. We can tell Zed to enable them by adding the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"solargraph\": {\n      \"initialization_options\": {\n        \"diagnostics\": true,\n        \"formatting\": true\n      }\n    }\n  }\n}\n</code></pre>\n<h3 id=\"configuration\"><a class=\"header\" href=\"#configuration\">Configuration</a></h3>\n<p>Solargraph reads its configuration from a file called <code>.solargraph.yml</code> in the root of your project. For more information about this file, see the <a href=\"https://solargraph.org/guides/configuration\">Solargraph configuration documentation</a>.</p>\n<h2 id=\"setting-up-ruby-lsp\"><a class=\"header\" href=\"#setting-up-ruby-lsp\">Setting up <code>ruby-lsp</code></a></h2>\n<p>You can pass Ruby LSP configuration to <code>initialization_options</code>, e.g.</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"ruby-lsp\", \"!solargraph\", \"...\"]\n    }\n  },\n  \"lsp\": {\n    \"ruby-lsp\": {\n      \"initialization_options\": {\n        \"enabledFeatures\": {\n          // \"someFeature\": false\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>LSP <code>settings</code> and <code>initialization_options</code> can also be project-specific. For example to use <a href=\"https://github.com/standardrb/standard\">standardrb/standard</a> as a formatter and linter for a particular project, add this to a <code>.zed/settings.json</code> inside your project repo:</p>\n<pre><code class=\"language-json\">{\n  \"lsp\": {\n    \"ruby-lsp\": {\n      \"initialization_options\": {\n        \"formatter\": \"standard\",\n        \"linters\": [\"standard\"]\n      }\n    }\n  }\n}\n</code></pre>\n<h2 id=\"setting-up-rubocop-lsp\"><a class=\"header\" href=\"#setting-up-rubocop-lsp\">Setting up <code>rubocop</code> LSP</a></h2>\n<p>Rubocop has unsafe autocorrection disabled by default. We can tell Zed to enable it by adding the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      // Use ruby-lsp as the primary language server and rubocop as the secondary.\n      \"language_servers\": [\"ruby-lsp\", \"rubocop\", \"!solargraph\", \"...\"]\n    }\n  },\n  \"lsp\": {\n    \"rubocop\": {\n      \"initialization_options\": {\n        \"safeAutocorrect\": false\n      }\n    },\n    \"ruby-lsp\": {\n      \"initialization_options\": {\n        \"enabledFeatures\": {\n          \"diagnostics\": false\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<h2 id=\"setting-up-sorbet\"><a class=\"header\" href=\"#setting-up-sorbet\">Setting up Sorbet</a></h2>\n<p><a href=\"https://sorbet.org/\">Sorbet</a> is a popular static type checker for Ruby that includes a language server.</p>\n<p>To enable Sorbet, add <code>\\\"sorbet\\\"</code> to the <code>language_servers</code> list for Ruby in your <code>settings.json</code>. You may want to disable other language servers if Sorbet is intended to be your primary LSP, or if you plan to use it alongside another LSP for specific features like type checking.</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\n        \"ruby-lsp\",\n        \"sorbet\",\n        \"!rubocop\",\n        \"!solargraph\",\n        \"...\"\n      ]\n    }\n  }\n}\n</code></pre>\n<p>For all aspects of installing Sorbet, setting it up in your project, and configuring its behavior, please refer to the <a href=\"https://sorbet.org/docs/overview\">official Sorbet documentation</a>.</p>\n<h2 id=\"setting-up-steep\"><a class=\"header\" href=\"#setting-up-steep\">Setting up Steep</a></h2>\n<p><a href=\"https://github.com/soutaro/steep\">Steep</a> is a static type checker for Ruby that uses RBS files to define types.</p>\n<p>To enable Steep, add <code>\\\"steep\\\"</code> to the <code>language_servers</code> list for Ruby in your <code>settings.json</code>. You may need to adjust the order or disable other LSPs depending on your desired setup.</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\n        \"ruby-lsp\",\n        \"steep\",\n        \"!solargraph\",\n        \"!rubocop\",\n        \"...\"\n      ]\n    }\n  }\n}\n</code></pre>\n<h2 id=\"using-the-tailwind-css-language-server-with-ruby\"><a class=\"header\" href=\"#using-the-tailwind-css-language-server-with-ruby\">Using the Tailwind CSS Language Server with Ruby</a></h2>\n<p>It's possible to use the <a href=\"https://github.com/tailwindlabs/tailwindcss-intellisense/tree/HEAD/packages/tailwindcss-language-server#readme\">Tailwind CSS Language Server</a> in Ruby and ERB files.</p>\n<p>In order to do that, you need to configure the language server so that it knows about where to look for CSS classes in Ruby/ERB files by adding the following to your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"tailwindcss-language-server\", \"...\"]\n    }\n  },\n  \"lsp\": {\n    \"tailwindcss-language-server\": {\n      \"settings\": {\n        \"includeLanguages\": {\n          \"html/erb\": \"html\",\n          \"ruby\": \"html\"\n        },\n        \"experimental\": {\n          \"classRegex\": [\"\\\\bclass:\\\\s*['\\\"]([^'\\\"]*)['\\\"]\"]\n        }\n      }\n    }\n  }\n}\n</code></pre>\n<p>With these settings you will get completions for Tailwind CSS classes in HTML attributes inside ERB files and inside Ruby/ERB strings that are coming after a <code>class:</code> key. Examples:</p>\n<pre><code class=\"language-rb\"># Ruby file:\ndef method\n  div(class: \"pl-2 &lt;completion here&gt;\") do\n    p(class: \"mt-2 &lt;completion here&gt;\") { \"Hello World\" }\n  end\nend\n\n# ERB file:\n&lt;%= link_to \"Hello\", \"/hello\", class: \"pl-2 &lt;completion here&gt;\" %&gt;\n&lt;a href=\"/hello\" class=\"pl-2 &lt;completion here&gt;\"&gt;Hello&lt;/a&gt;\n</code></pre>\n<h2 id=\"running-tests\"><a class=\"header\" href=\"#running-tests\">Running tests</a></h2>\n<p>To run tests in your Ruby project, you can set up custom tasks in your local <code>.zed/tasks.json</code> configuration file. These tasks can be defined to work with different test frameworks like Minitest, RSpec, quickdraw, and tldr. Below are some examples of how to set up these tasks to run your tests from within your editor.</p>\n<h3 id=\"minitest-with-rails\"><a class=\"header\" href=\"#minitest-with-rails\">Minitest with Rails</a></h3>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"test $ZED_RELATIVE_FILE -n /$ZED_CUSTOM_RUBY_TEST_NAME/\",\n    \"command\": \"bin/rails\",\n    \"args\": [\n      \"test\",\n      \"$ZED_RELATIVE_FILE\",\n      \"-n\",\n      \"\\\"$ZED_CUSTOM_RUBY_TEST_NAME\\\"\"\n    ],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"tags\": [\"ruby-test\"]\n  }\n]\n</code></pre>\n<h3 id=\"minitest\"><a class=\"header\" href=\"#minitest\">Minitest</a></h3>\n<p>Plain minitest does not support running tests by line number, only by name, so we need to use <code>$ZED_CUSTOM_RUBY_TEST_NAME</code> instead:</p>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"-Itest $ZED_RELATIVE_FILE -n /$ZED_CUSTOM_RUBY_TEST_NAME/\",\n    \"command\": \"bundle\",\n    \"args\": [\n      \"exec\",\n      \"ruby\",\n      \"-Itest\",\n      \"$ZED_RELATIVE_FILE\",\n      \"-n\",\n      \"\\\"$ZED_CUSTOM_RUBY_TEST_NAME\\\"\"\n    ],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"tags\": [\"ruby-test\"]\n  }\n]\n</code></pre>\n<h3 id=\"rspec\"><a class=\"header\" href=\"#rspec\">RSpec</a></h3>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"test $ZED_RELATIVE_FILE:$ZED_ROW\",\n    \"command\": \"bundle\",\n    \"args\": [\"exec\", \"rspec\", \"\\\"$ZED_RELATIVE_FILE:$ZED_ROW\\\"\"],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"tags\": [\"ruby-test\"]\n  }\n]\n</code></pre>\n<p>Similar task syntax can be used for other test frameworks such as <code>quickdraw</code> or <code>tldr</code>.</p>\n<h2 id=\"debugging\"><a class=\"header\" href=\"#debugging\">Debugging</a></h2>\n<p>The Ruby extension provides a debug adapter for debugging Ruby code. Zed's name for the adapter (in the UI and <code>debug.json</code>) is <code>rdbg</code>, and under the hood, it uses the <a href=\"https://github.com/ruby/debug\"><code>debug</code></a> gem. The extension uses the <a href=\"#language-server-activation\">same activation logic</a> as the language servers.</p>\n<h3 id=\"examples\"><a class=\"header\" href=\"#examples\">Examples</a></h3>\n<h4 id=\"debug-a-ruby-script\"><a class=\"header\" href=\"#debug-a-ruby-script\">Debug a Ruby script</a></h4>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Debug current file\",\n    \"adapter\": \"rdbg\",\n    \"request\": \"launch\",\n    \"script\": \"$ZED_FILE\",\n    \"cwd\": \"$ZED_WORKTREE_ROOT\"\n  }\n]\n</code></pre>\n<h4 id=\"debug-rails-server\"><a class=\"header\" href=\"#debug-rails-server\">Debug Rails server</a></h4>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Debug Rails server\",\n    \"adapter\": \"rdbg\",\n    \"request\": \"launch\",\n    \"command\": \"./bin/rails\",\n    \"args\": [\"server\"],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"env\": {\n      \"RUBY_DEBUG_OPEN\": \"true\"\n    }\n  }\n]\n</code></pre>\n<h2 id=\"formatters\"><a class=\"header\" href=\"#formatters\">Formatters</a></h2>\n<h3 id=\"erb-formatter\"><a class=\"header\" href=\"#erb-formatter\"><code>erb-formatter</code></a></h3>\n<p>To format ERB templates, you can use the <code>erb-formatter</code> formatter. This formatter uses the <a href=\"https://rubygems.org/gems/erb-formatter\"><code>erb-formatter</code></a> gem to format ERB templates.</p>\n<pre><code class=\"language-jsonc\">{\n  \"HTML/ERB\": {\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"erb-formatter\",\n        \"arguments\": [\"--stdin-filename\", \"{buffer_path}\"],\n      },\n    },\n  },\n}\n</code></pre>\n\n</main>",
+  "content_text": "Ruby\nRuby support is available through the Ruby extension.\n\nTree-sitters:\n\ntree-sitter-ruby\ntree-sitter-embedded-template\n\n\nLanguage Servers:\n\nruby-lsp\nsolargraph\nrubocop\n\n\nDebug Adapter: rdbg\n\nThe Ruby extension also provides support for ERB files.\nLanguage Servers\nThere are multiple language servers available for Ruby. Zed supports the two following:\n\nsolargraph\nruby-lsp\n\nThey both have an overlapping feature set of autocomplete, diagnostics, code actions, etc. and it's up to you to decide which one you want to use. Note that you can't use both at the same time.\nIn addition to these two language servers, Zed also supports:\n\nrubocop which is a static code analyzer and linter for Ruby. Under the hood, it's also used by Zed as a language server, but its functionality is complimentary to that of solargraph and ruby-lsp.\nsorbet which is a static type checker for Ruby with a custom gradual type system.\nsteep which is a static type checker for Ruby that leverages Ruby Signature (RBS).\n\nWhen configuring a language server, it helps to open the LSP Logs window using the 'dev: Open Language Server Logs' command. You can then choose the corresponding language instance to see any logged information.\nConfiguring a language server\nThe Ruby extension offers both solargraph and ruby-lsp language server support.\nLanguage Server Activation\nFor all supported Ruby language servers (solargraph, ruby-lsp, rubocop, sorbet, and steep), the Ruby extension follows this activation sequence:\n\nIf the language server is found in your project's Gemfile, it will be used through bundle exec.\nIf not found in the Gemfile, the Ruby extension will look for the executable in your system PATH.\nIf the language server is not found in either location, the Ruby extension will automatically install it as a global gem (note: this will not install to your current Ruby gemset).\n\nYou can skip step 1 and force using the system executable by setting use_bundler to false in your settings:\n{\n  \"lsp\": {\n    \"<SERVER_NAME>\": {\n      \"settings\": {\n        \"use_bundler\": false\n      }\n    }\n  }\n}\n\nUsing solargraph\nsolargraph is enabled by default in the Ruby extension.\nUsing ruby-lsp\nTo switch to ruby-lsp, add the following to your settings.json:\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"ruby-lsp\", \"!solargraph\", \"!rubocop\", \"...\"]\n    }\n  }\n}\n\nThat disables solargraph and rubocop and enables ruby-lsp.\nUsing rubocop\nThe Ruby extension also provides support for rubocop language server for offense detection and autocorrection.\nTo enable it, add the following to your settings.json:\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"ruby-lsp\", \"rubocop\", \"!solargraph\", \"...\"]\n    }\n  }\n}\n\nOr, conversely, you can disable ruby-lsp and enable solargraph and rubocop by adding the following to your settings.json:\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"solargraph\", \"rubocop\", \"!ruby-lsp\", \"...\"]\n    }\n  }\n}\n\nSetting up solargraph\nSolargraph has formatting and diagnostics disabled by default. We can tell Zed to enable them by adding the following to your settings.json:\n{\n  \"lsp\": {\n    \"solargraph\": {\n      \"initialization_options\": {\n        \"diagnostics\": true,\n        \"formatting\": true\n      }\n    }\n  }\n}\n\nConfiguration\nSolargraph reads its configuration from a file called .solargraph.yml in the root of your project. For more information about this file, see the Solargraph configuration documentation.\nSetting up ruby-lsp\nYou can pass Ruby LSP configuration to initialization_options, e.g.\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"ruby-lsp\", \"!solargraph\", \"...\"]\n    }\n  },\n  \"lsp\": {\n    \"ruby-lsp\": {\n      \"initialization_options\": {\n        \"enabledFeatures\": {\n          // \"someFeature\": false\n        }\n      }\n    }\n  }\n}\n\nLSP settings and initialization_options can also be project-specific. For example to use standardrb/standard as a formatter and linter for a particular project, add this to a .zed/settings.json inside your project repo:\n{\n  \"lsp\": {\n    \"ruby-lsp\": {\n      \"initialization_options\": {\n        \"formatter\": \"standard\",\n        \"linters\": [\"standard\"]\n      }\n    }\n  }\n}\n\nSetting up rubocop LSP\nRubocop has unsafe autocorrection disabled by default. We can tell Zed to enable it by adding the following to your settings.json:\n{\n  \"languages\": {\n    \"Ruby\": {\n      // Use ruby-lsp as the primary language server and rubocop as the secondary.\n      \"language_servers\": [\"ruby-lsp\", \"rubocop\", \"!solargraph\", \"...\"]\n    }\n  },\n  \"lsp\": {\n    \"rubocop\": {\n      \"initialization_options\": {\n        \"safeAutocorrect\": false\n      }\n    },\n    \"ruby-lsp\": {\n      \"initialization_options\": {\n        \"enabledFeatures\": {\n          \"diagnostics\": false\n        }\n      }\n    }\n  }\n}\n\nSetting up Sorbet\nSorbet is a popular static type checker for Ruby that includes a language server.\nTo enable Sorbet, add \\\"sorbet\\\" to the language_servers list for Ruby in your settings.json. You may want to disable other language servers if Sorbet is intended to be your primary LSP, or if you plan to use it alongside another LSP for specific features like type checking.\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\n        \"ruby-lsp\",\n        \"sorbet\",\n        \"!rubocop\",\n        \"!solargraph\",\n        \"...\"\n      ]\n    }\n  }\n}\n\nFor all aspects of installing Sorbet, setting it up in your project, and configuring its behavior, please refer to the official Sorbet documentation.\nSetting up Steep\nSteep is a static type checker for Ruby that uses RBS files to define types.\nTo enable Steep, add \\\"steep\\\" to the language_servers list for Ruby in your settings.json. You may need to adjust the order or disable other LSPs depending on your desired setup.\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\n        \"ruby-lsp\",\n        \"steep\",\n        \"!solargraph\",\n        \"!rubocop\",\n        \"...\"\n      ]\n    }\n  }\n}\n\nUsing the Tailwind CSS Language Server with Ruby\nIt's possible to use the Tailwind CSS Language Server in Ruby and ERB files.\nIn order to do that, you need to configure the language server so that it knows about where to look for CSS classes in Ruby/ERB files by adding the following to your settings.json:\n{\n  \"languages\": {\n    \"Ruby\": {\n      \"language_servers\": [\"tailwindcss-language-server\", \"...\"]\n    }\n  },\n  \"lsp\": {\n    \"tailwindcss-language-server\": {\n      \"settings\": {\n        \"includeLanguages\": {\n          \"html/erb\": \"html\",\n          \"ruby\": \"html\"\n        },\n        \"experimental\": {\n          \"classRegex\": [\"\\\\bclass:\\\\s*['\\\"]([^'\\\"]*)['\\\"]\"]\n        }\n      }\n    }\n  }\n}\n\nWith these settings you will get completions for Tailwind CSS classes in HTML attributes inside ERB files and inside Ruby/ERB strings that are coming after a class: key. Examples:\n# Ruby file:\ndef method\n  div(class: \"pl-2 <completion here>\") do\n    p(class: \"mt-2 <completion here>\") { \"Hello World\" }\n  end\nend\n\n# ERB file:\n<%= link_to \"Hello\", \"/hello\", class: \"pl-2 <completion here>\" %>\n<a href=\"/hello\" class=\"pl-2 <completion here>\">Hello</a>\n\nRunning tests\nTo run tests in your Ruby project, you can set up custom tasks in your local .zed/tasks.json configuration file. These tasks can be defined to work with different test frameworks like Minitest, RSpec, quickdraw, and tldr. Below are some examples of how to set up these tasks to run your tests from within your editor.\nMinitest with Rails\n[\n  {\n    \"label\": \"test $ZED_RELATIVE_FILE -n /$ZED_CUSTOM_RUBY_TEST_NAME/\",\n    \"command\": \"bin/rails\",\n    \"args\": [\n      \"test\",\n      \"$ZED_RELATIVE_FILE\",\n      \"-n\",\n      \"\\\"$ZED_CUSTOM_RUBY_TEST_NAME\\\"\"\n    ],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"tags\": [\"ruby-test\"]\n  }\n]\n\nMinitest\nPlain minitest does not support running tests by line number, only by name, so we need to use $ZED_CUSTOM_RUBY_TEST_NAME instead:\n[\n  {\n    \"label\": \"-Itest $ZED_RELATIVE_FILE -n /$ZED_CUSTOM_RUBY_TEST_NAME/\",\n    \"command\": \"bundle\",\n    \"args\": [\n      \"exec\",\n      \"ruby\",\n      \"-Itest\",\n      \"$ZED_RELATIVE_FILE\",\n      \"-n\",\n      \"\\\"$ZED_CUSTOM_RUBY_TEST_NAME\\\"\"\n    ],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"tags\": [\"ruby-test\"]\n  }\n]\n\nRSpec\n[\n  {\n    \"label\": \"test $ZED_RELATIVE_FILE:$ZED_ROW\",\n    \"command\": \"bundle\",\n    \"args\": [\"exec\", \"rspec\", \"\\\"$ZED_RELATIVE_FILE:$ZED_ROW\\\"\"],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"tags\": [\"ruby-test\"]\n  }\n]\n\nSimilar task syntax can be used for other test frameworks such as quickdraw or tldr.\nDebugging\nThe Ruby extension provides a debug adapter for debugging Ruby code. Zed's name for the adapter (in the UI and debug.json) is rdbg, and under the hood, it uses the debug gem. The extension uses the same activation logic as the language servers.\nExamples\nDebug a Ruby script\n[\n  {\n    \"label\": \"Debug current file\",\n    \"adapter\": \"rdbg\",\n    \"request\": \"launch\",\n    \"script\": \"$ZED_FILE\",\n    \"cwd\": \"$ZED_WORKTREE_ROOT\"\n  }\n]\n\nDebug Rails server\n[\n  {\n    \"label\": \"Debug Rails server\",\n    \"adapter\": \"rdbg\",\n    \"request\": \"launch\",\n    \"command\": \"./bin/rails\",\n    \"args\": [\"server\"],\n    \"cwd\": \"$ZED_WORKTREE_ROOT\",\n    \"env\": {\n      \"RUBY_DEBUG_OPEN\": \"true\"\n    }\n  }\n]\n\nFormatters\nerb-formatter\nTo format ERB templates, you can use the erb-formatter formatter. This formatter uses the erb-formatter gem to format ERB templates.\n{\n  \"HTML/ERB\": {\n    \"formatter\": {\n      \"external\": {\n        \"command\": \"erb-formatter\",\n        \"arguments\": [\"--stdin-filename\", \"{buffer_path}\"],\n      },\n    },\n  },\n}",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:14:59"
+}

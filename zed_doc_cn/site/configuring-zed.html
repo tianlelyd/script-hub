@@ -1,0 +1,4724 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>配置 Zed | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="active">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#configuring-zed" class="pagetoc-H1">配置 Zed</a>
+<a href="#settings-files" class="pagetoc-H2">设置文件</a>
+<a href="#default-settings" class="pagetoc-H2">默认设置</a>
+<a href="#settings" class="pagetoc-H1">设置</a>
+<a href="#active-pane-modifiers" class="pagetoc-H2">Active Pane Modifiers</a>
+<a href="#border-size" class="pagetoc-H3">边框大小</a>
+<a href="#inactive-opacity" class="pagetoc-H3">非活动透明度</a>
+<a href="#bottom-dock-layout" class="pagetoc-H2">底部停靠布局</a>
+<a href="#agent-font-size" class="pagetoc-H2">Agent 字体大小</a>
+<a href="#allow-rewrap" class="pagetoc-H2">允许重新换行</a>
+<a href="#auto-indent" class="pagetoc-H2">自动缩进</a>
+<a href="#auto-indent-on-paste" class="pagetoc-H2">粘贴时自动缩进</a>
+<a href="#auto-install-extensions" class="pagetoc-H2">自动安装扩展</a>
+<a href="#autosave" class="pagetoc-H2">自动保存</a>
+<a href="#autoscroll-on-clicks" class="pagetoc-H2">点击时自动滚动</a>
+<a href="#auto-signature-help" class="pagetoc-H2">自动签名帮助</a>
+<a href="#show-signature-help-after-edits" class="pagetoc-H3">Show Signature Help After Edits</a>
+<a href="#auto-update" class="pagetoc-H2">自动更新</a>
+<a href="#base-keymap" class="pagetoc-H2">基础键盘映射</a>
+<a href="#buffer-font-family" class="pagetoc-H2">缓冲区字体族</a>
+<a href="#buffer-font-features" class="pagetoc-H2">缓冲区字体特性</a>
+<a href="#buffer-font-fallbacks" class="pagetoc-H2">缓冲区字体回退</a>
+<a href="#buffer-font-size" class="pagetoc-H2">缓冲区字体大小</a>
+<a href="#buffer-font-weight" class="pagetoc-H2">缓冲区字体粗细</a>
+<a href="#buffer-line-height" class="pagetoc-H2">缓冲区行高</a>
+<a href="#centered-layout" class="pagetoc-H2">Centered Layout</a>
+<a href="#close-on-file-delete" class="pagetoc-H2">Close on File Delete</a>
+<a href="#confirm-quit" class="pagetoc-H2">确认退出</a>
+<a href="#diagnostics-max-severity" class="pagetoc-H2">Diagnostics Max Severity</a>
+<a href="#disable-ai" class="pagetoc-H2">Disable AI</a>
+<a href="#direnv-integration" class="pagetoc-H2">Direnv Integration</a>
+<a href="#double-click-in-multibuffer" class="pagetoc-H2">Double Click In Multibuffer</a>
+<a href="#drop-target-size" class="pagetoc-H2">Drop Target Size</a>
+<a href="#edit-predictions" class="pagetoc-H2">Edit Predictions</a>
+<a href="#disabled-globs" class="pagetoc-H3">Disabled Globs</a>
+<a href="#edit-predictions-disabled-in" class="pagetoc-H2">Edit Predictions Disabled in</a>
+<a href="#current-line-highlight" class="pagetoc-H2">当前行高亮</a>
+<a href="#selection-highlight" class="pagetoc-H2">Selection Highlight</a>
+<a href="#rounded-selection" class="pagetoc-H2">Rounded Selection</a>
+<a href="#cursor-blink" class="pagetoc-H2">光标闪烁</a>
+<a href="#cursor-shape" class="pagetoc-H2">光标形状</a>
+<a href="#gutter" class="pagetoc-H2">边栏</a>
+<a href="#hide-mouse" class="pagetoc-H2">Hide Mouse</a>
+<a href="#snippet-sort-order" class="pagetoc-H2">Snippet Sort Order</a>
+<a href="#editor-scrollbar" class="pagetoc-H2">Editor Scrollbar</a>
+<a href="#show-mode" class="pagetoc-H3">Show Mode</a>
+<a href="#cursor-indicators" class="pagetoc-H3">Cursor Indicators</a>
+<a href="#git-diff-indicators" class="pagetoc-H3">Git Diff Indicators</a>
+<a href="#search-results-indicators" class="pagetoc-H3">Search Results Indicators</a>
+<a href="#selected-text-indicators" class="pagetoc-H3">Selected Text Indicators</a>
+<a href="#selected-symbols-indicators" class="pagetoc-H3">Selected Symbols Indicators</a>
+<a href="#diagnostics" class="pagetoc-H3">Diagnostics</a>
+<a href="#axes" class="pagetoc-H3">Axes</a>
+<a href="#minimap" class="pagetoc-H2">Minimap</a>
+<a href="#show-mode-1" class="pagetoc-H3">Show Mode</a>
+<a href="#thumb-display" class="pagetoc-H3">Thumb Display</a>
+<a href="#thumb-border" class="pagetoc-H3">Thumb Border</a>
+<a href="#current-line-highlight-1" class="pagetoc-H3">当前行高亮</a>
+<a href="#editor-tab-bar" class="pagetoc-H2">Editor Tab Bar</a>
+<a href="#show" class="pagetoc-H3">Show</a>
+<a href="#navigation-history-buttons" class="pagetoc-H3">Navigation History Buttons</a>
+<a href="#tab-bar-buttons" class="pagetoc-H3">Tab Bar Buttons</a>
+<a href="#editor-tabs" class="pagetoc-H2">Editor Tabs</a>
+<a href="#close-position" class="pagetoc-H3">Close Position</a>
+<a href="#file-icons" class="pagetoc-H3">File Icons</a>
+<a href="#git-status" class="pagetoc-H3">Git Status</a>
+<a href="#activate-on-close" class="pagetoc-H3">Activate on close</a>
+<a href="#show-close-button" class="pagetoc-H3">Show close button</a>
+<a href="#show-diagnostics" class="pagetoc-H3">Show Diagnostics</a>
+<a href="#show-inline-code-actions" class="pagetoc-H3">Show Inline Code Actions</a>
+<a href="#drag-and-drop-selection" class="pagetoc-H3">Drag And Drop Selection</a>
+<a href="#editor-toolbar" class="pagetoc-H2">Editor Toolbar</a>
+<a href="#use-system-tabs" class="pagetoc-H2">Use System Tabs</a>
+<a href="#enable-language-server" class="pagetoc-H2">启用语言服务器</a>
+<a href="#ensure-final-newline-on-save" class="pagetoc-H2">Ensure Final Newline On Save</a>
+<a href="#expand-excerpt-lines" class="pagetoc-H2">Expand Excerpt Lines</a>
+<a href="#excerpt-context-lines" class="pagetoc-H2">Excerpt Context Lines</a>
+<a href="#extend-comment-on-newline" class="pagetoc-H2">新行时扩展注释</a>
+<a href="#status-bar" class="pagetoc-H2">Status Bar</a>
+<a href="#lsp" class="pagetoc-H2">LSP</a>
+<a href="#global-lsp-settings" class="pagetoc-H2">Global LSP Settings</a>
+<a href="#lsp-highlight-debounce" class="pagetoc-H2">LSP Highlight Debounce</a>
+<a href="#global-lsp-settings-1" class="pagetoc-H2">Global LSP Settings</a>
+<a href="#features" class="pagetoc-H2">Features</a>
+<a href="#edit-prediction-provider" class="pagetoc-H3">Edit Prediction Provider</a>
+<a href="#format-on-save" class="pagetoc-H2">保存时格式化</a>
+<a href="#formatter" class="pagetoc-H2">格式化器</a>
+<a href="#code-actions-on-format" class="pagetoc-H2">格式化时的代码操作</a>
+<a href="#auto-close" class="pagetoc-H2">Auto close</a>
+<a href="#always-treat-brackets-as-autoclosed" class="pagetoc-H2">Always Treat Brackets As Autoclosed</a>
+<a href="#file-scan-exclusions" class="pagetoc-H2">文件扫描排除项</a>
+<a href="#file-scan-inclusions" class="pagetoc-H2">File Scan Inclusions</a>
+<a href="#file-types" class="pagetoc-H2">文件类型</a>
+<a href="#diagnostics-1" class="pagetoc-H2">Diagnostics</a>
+<a href="#inline-diagnostics" class="pagetoc-H3">Inline Diagnostics</a>
+<a href="#git" class="pagetoc-H2">Git</a>
+<a href="#git-gutter" class="pagetoc-H3">Git Gutter</a>
+<a href="#gutter-debounce" class="pagetoc-H3">Gutter Debounce</a>
+<a href="#inline-git-blame" class="pagetoc-H3">Inline Git Blame</a>
+<a href="#hunk-style" class="pagetoc-H3">Hunk Style</a>
+<a href="#go-to-definition-fallback" class="pagetoc-H2">Go to Definition Fallback</a>
+<a href="#hard-tabs" class="pagetoc-H2">硬制表符</a>
+<a href="#helix-mode" class="pagetoc-H2">Helix Mode</a>
+<a href="#indent-guides" class="pagetoc-H2">缩进参考线</a>
+<a href="#hover-popover-enabled" class="pagetoc-H2">悬停弹出框启用</a>
+<a href="#hover-popover-delay" class="pagetoc-H2">Hover Popover Delay</a>
+<a href="#icon-theme" class="pagetoc-H2">Icon Theme</a>
+<a href="#icon-theme-object" class="pagetoc-H3">Icon Theme Object</a>
+<a href="#mode" class="pagetoc-H3">Mode</a>
+<a href="#dark" class="pagetoc-H3">Dark</a>
+<a href="#light" class="pagetoc-H3">Light</a>
+<a href="#image-viewer" class="pagetoc-H2">Image Viewer</a>
+<a href="#unit" class="pagetoc-H3">Unit</a>
+<a href="#inlay-hints" class="pagetoc-H2">Inlay hints</a>
+<a href="#journal" class="pagetoc-H2">日志</a>
+<a href="#path" class="pagetoc-H3">Path</a>
+<a href="#hour-format" class="pagetoc-H3">Hour Format</a>
+<a href="#jsx-tag-auto-close" class="pagetoc-H2">JSX Tag Auto Close</a>
+<a href="#languages" class="pagetoc-H2">语言</a>
+<a href="#language-models" class="pagetoc-H2">Language Models</a>
+<a href="#line-indicator-format" class="pagetoc-H2">Line Indicator Format</a>
+<a href="#linked-edits" class="pagetoc-H2">Linked Edits</a>
+<a href="#lsp-document-colors" class="pagetoc-H2">LSP Document Colors</a>
+<a href="#max-tabs" class="pagetoc-H2">Max Tabs</a>
+<a href="#middle-click-paste-linux-only" class="pagetoc-H2">Middle Click Paste (Linux only)</a>
+<a href="#multi-cursor-modifier" class="pagetoc-H2">Multi Cursor Modifier</a>
+<a href="#node" class="pagetoc-H2">Node</a>
+<a href="#network-proxy" class="pagetoc-H2">Network Proxy</a>
+<a href="#on-last-window-closed" class="pagetoc-H2">On Last Window Closed</a>
+<a href="#profiles" class="pagetoc-H2">Profiles</a>
+<a href="#preview-tabs" class="pagetoc-H2">Preview tabs</a>
+<a href="#enable-preview-from-file-finder" class="pagetoc-H3">Enable preview from file finder</a>
+<a href="#enable-preview-from-code-navigation" class="pagetoc-H3">Enable preview from code navigation</a>
+<a href="#file-finder" class="pagetoc-H2">File Finder</a>
+<a href="#file-icons-1" class="pagetoc-H3">File Icons</a>
+<a href="#modal-max-width" class="pagetoc-H3">Modal Max Width</a>
+<a href="#skip-focus-for-active-in-search" class="pagetoc-H3">Skip Focus For Active In Search</a>
+<a href="#pane-split-direction-horizontal" class="pagetoc-H2">Pane Split Direction Horizontal</a>
+<a href="#pane-split-direction-vertical" class="pagetoc-H2">Pane Split Direction Vertical</a>
+<a href="#preferred-line-length" class="pagetoc-H2">首选行长度</a>
+<a href="#private-files" class="pagetoc-H2">Private Files</a>
+<a href="#projects-online-by-default" class="pagetoc-H2">Projects Online By Default</a>
+<a href="#read-ssh-config" class="pagetoc-H2">Read SSH Config</a>
+<a href="#redact-private-values" class="pagetoc-H2">Redact Private Values</a>
+<a href="#relative-line-numbers" class="pagetoc-H2">Relative Line Numbers</a>
+<a href="#remove-trailing-whitespace-on-save" class="pagetoc-H2">Remove Trailing Whitespace On Save</a>
+<a href="#resize-all-panels-in-dock" class="pagetoc-H2">Resize All Panels In Dock</a>
+<a href="#restore-on-file-reopen" class="pagetoc-H2">Restore on File Reopen</a>
+<a href="#restore-on-startup" class="pagetoc-H2">Restore on Startup</a>
+<a href="#scroll-beyond-last-line" class="pagetoc-H2">Scroll Beyond Last Line</a>
+<a href="#scroll-sensitivity" class="pagetoc-H2">Scroll Sensitivity</a>
+<a href="#fast-scroll-sensitivity" class="pagetoc-H3">Fast Scroll Sensitivity</a>
+<a href="#horizontal-scroll-margin" class="pagetoc-H3">Horizontal Scroll Margin</a>
+<a href="#vertical-scroll-margin" class="pagetoc-H3">垂直滚动边距</a>
+<a href="#search" class="pagetoc-H2">搜索</a>
+<a href="#search-wrap" class="pagetoc-H2">Search Wrap</a>
+<a href="#seed-search-query-from-cursor" class="pagetoc-H2">Seed Search Query From Cursor</a>
+<a href="#use-smartcase-search" class="pagetoc-H2">Use Smartcase Search</a>
+<a href="#show-call-status-icon" class="pagetoc-H2">显示通话状态图标</a>
+<a href="#completions" class="pagetoc-H2">Completions</a>
+<a href="#words" class="pagetoc-H3">Words</a>
+<a href="#min-words-query-length" class="pagetoc-H3">Min Words Query Length</a>
+<a href="#lsp-1" class="pagetoc-H3">LSP</a>
+<a href="#lsp-fetch-timeout-ms" class="pagetoc-H3">LSP Fetch Timeout (ms)</a>
+<a href="#lsp-insert-mode" class="pagetoc-H3">LSP Insert Mode</a>
+<a href="#show-completions-on-input" class="pagetoc-H2">输入时显示补全</a>
+<a href="#show-completion-documentation" class="pagetoc-H2">显示补全文档</a>
+<a href="#show-edit-predictions" class="pagetoc-H2">Show Edit Predictions</a>
+<a href="#show-whitespaces" class="pagetoc-H2">Show Whitespaces</a>
+<a href="#soft-wrap" class="pagetoc-H2">软换行</a>
+<a href="#show-wrap-guides" class="pagetoc-H2">显示换行参考线</a>
+<a href="#use-on-type-format" class="pagetoc-H2">Use On Type Format</a>
+<a href="#use-auto-surround" class="pagetoc-H2">Use Auto Surround</a>
+<a href="#use-system-path-prompts" class="pagetoc-H2">Use System Path Prompts</a>
+<a href="#use-system-prompts" class="pagetoc-H2">Use System Prompts</a>
+<a href="#wrap-guides-vertical-rulers" class="pagetoc-H2">Wrap Guides (Vertical Rulers)</a>
+<a href="#tab-size" class="pagetoc-H2">制表符大小</a>
+<a href="#tasks" class="pagetoc-H2">Tasks</a>
+<a href="#telemetry" class="pagetoc-H2">Telemetry</a>
+<a href="#diagnostics-2" class="pagetoc-H3">Diagnostics</a>
+<a href="#metrics" class="pagetoc-H3">Metrics</a>
+<a href="#terminal" class="pagetoc-H2">终端</a>
+<a href="#terminal-dock" class="pagetoc-H3">Terminal: Dock</a>
+<a href="#terminal-alternate-scroll" class="pagetoc-H3">Terminal: Alternate Scroll</a>
+<a href="#terminal-blinking" class="pagetoc-H3">Terminal: Blinking</a>
+<a href="#terminal-copy-on-select" class="pagetoc-H3">Terminal: Copy On Select</a>
+<a href="#terminal-cursor-shape" class="pagetoc-H3">Terminal: Cursor Shape</a>
+<a href="#terminal-keep-selection-on-copy" class="pagetoc-H3">Terminal: Keep Selection On Copy</a>
+<a href="#terminal-env" class="pagetoc-H3">Terminal: Env</a>
+<a href="#terminal-font-size" class="pagetoc-H3">Terminal: Font Size</a>
+<a href="#terminal-font-family" class="pagetoc-H3">Terminal: Font Family</a>
+<a href="#terminal-font-features" class="pagetoc-H3">Terminal: Font Features</a>
+<a href="#terminal-line-height" class="pagetoc-H3">Terminal: Line Height</a>
+<a href="#terminal-minimum-contrast" class="pagetoc-H3">Terminal: Minimum Contrast</a>
+<a href="#terminal-option-as-meta" class="pagetoc-H3">Terminal: Option As Meta</a>
+<a href="#terminal-shell" class="pagetoc-H3">Terminal: Shell</a>
+<a href="#terminal-detect_venv" class="pagetoc-H2">Terminal: Detect Virtual Environments</a>
+<a href="#terminal-toolbar" class="pagetoc-H2">Terminal: Toolbar</a>
+<a href="#terminal-button" class="pagetoc-H3">Terminal: Button</a>
+<a href="#terminal-working-directory" class="pagetoc-H3">Terminal: Working Directory</a>
+<a href="#theme" class="pagetoc-H2">Theme</a>
+<a href="#theme-object" class="pagetoc-H3">Theme Object</a>
+<a href="#mode-1" class="pagetoc-H3">Mode</a>
+<a href="#dark-1" class="pagetoc-H3">Dark</a>
+<a href="#light-1" class="pagetoc-H3">Light</a>
+<a href="#title-bar" class="pagetoc-H2">Title Bar</a>
+<a href="#vim" class="pagetoc-H2">Vim</a>
+<a href="#when-closing-with-no-tabs" class="pagetoc-H2">When Closing With No Tabs</a>
+<a href="#project-panel" class="pagetoc-H2">项目面板</a>
+<a href="#dock" class="pagetoc-H3">停靠栏</a>
+<a href="#entry-spacing" class="pagetoc-H3">Entry Spacing</a>
+<a href="#git-status-1" class="pagetoc-H3">Git Status</a>
+<a href="#default-width" class="pagetoc-H3">Default Width</a>
+<a href="#auto-reveal-entries" class="pagetoc-H3">Auto Reveal Entries</a>
+<a href="#auto-fold-dirs" class="pagetoc-H3">Auto Fold Dirs</a>
+<a href="#indent-size" class="pagetoc-H3">Indent Size</a>
+<a href="#indent-guides-show" class="pagetoc-H3">Indent Guides: Show</a>
+<a href="#scrollbar-show" class="pagetoc-H3">Scrollbar: Show</a>
+<a href="#agent" class="pagetoc-H2">Agent</a>
+<a href="#collaboration-panel" class="pagetoc-H2">协作面板</a>
+<a href="#chat-panel" class="pagetoc-H2">Chat Panel</a>
+<a href="#debugger" class="pagetoc-H2">Debugger</a>
+<a href="#git-panel" class="pagetoc-H2">Git Panel</a>
+<a href="#outline-panel" class="pagetoc-H2">大纲面板</a>
+<a href="#calls" class="pagetoc-H2">Calls</a>
+<a href="#unnecessary-code-fade" class="pagetoc-H2">Unnecessary Code Fade</a>
+<a href="#ui-font-family" class="pagetoc-H2">UI Font Family</a>
+<a href="#ui-font-features" class="pagetoc-H2">UI Font Features</a>
+<a href="#ui-font-fallbacks" class="pagetoc-H2">UI Font Fallbacks</a>
+<a href="#ui-font-size" class="pagetoc-H2">UI Font Size</a>
+<a href="#ui-font-weight" class="pagetoc-H2">UI Font Weight</a>
+<a href="#an-example-configuration" class="pagetoc-H2">An example configuration:</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="configuring-zed"><a class="header" href="#configuring-zed">配置 Zed</a></h1>
+<p>Zed 旨在让您自由配置：我们希望完全符合您的工作流程和偏好。我们提供的默认设置旨在为尽可能多的用户提供舒适的起点，但我们希望您能享受调整它的过程，让它变得令人惊叹。</p>
+<p>除了这里描述的设置外，您可能还想更改您的<a href="./themes.html">主题</a>，配置您的<a href="./key-bindings.html">键位绑定</a>，设置<a href="./tasks.html">任务</a>或安装<a href="https://github.com/zed-industries/extensions">扩展</a>。</p>
+<h2 id="settings-files"><a class="header" href="#settings-files">设置文件</a></h2>
+<!--
+TBD: Settings files. Rewrite with "remote settings" in mind (e.g. `local settings` on the remote host).
+Consider renaming `zed: Open Local Settings` to `zed: Open Project Settings`.
+
+TBD: Add settings documentation about how settings are merged as overlays. E.g. project>local>default. Note how settings that are maps are merged, but settings that are arrays are replaced and must include the defaults.
+-->
+<p>您的设置文件可以通过 <kbd class="keybinding">cmd-,|ctrl-,</kbd> 打开。默认情况下，它位于 <code>~/.config/zed/settings.json</code>，但如果您在 Linux 环境中设置了 XDG_CONFIG_HOME，则会位于 <code>$XDG_CONFIG_HOME/zed/settings.json</code>。</p>
+<p>此配置将与项目内的任何本地配置合并。您可以通过在命令面板中运行 <code class="hljs">zed: open project settings</code> 来打开项目设置。这将创建一个包含 <code>.zed/settings.json</code> 的 <code>.zed</code> 目录。</p>
+<p>虽然大多数项目只需要在根目录下有一个设置文件，但您可以根据需要为子目录添加更多本地设置文件。并非所有设置都可以在本地文件中设置，只有那些影响编辑器和语言工具行为的设置才可以。例如，您可以设置 <code>tab_size</code>、<code>formatter</code> 等，但不能设置 <code>theme</code>、<code>vim_mode</code> 等类似设置。</p>
+<p>配置文件的语法是 JSON 的超集，允许使用 <code>//</code> 注释。</p>
+<h2 id="default-settings"><a class="header" href="#default-settings">默认设置</a></h2>
+<p>您可以通过在命令面板中运行 <code class="hljs">zed: open default settings</code> 来查找当前 Zed 的默认设置。</p>
+<p>提供语言服务器的扩展也可能为这些语言服务器提供默认设置。</p>
+<h1 id="settings"><a class="header" href="#settings">设置</a></h1>
+<h2 id="active-pane-modifiers"><a class="header" href="#active-pane-modifiers">活动面板修饰符</a></h2>
+<ul>
+<li>描述: 应用于活动面板的样式设置。</li>
+<li>设置: <code>active_pane_modifiers</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "active_pane_modifiers": {
+    "border_size": 0.0,
+    "inactive_opacity": 1.0
+  }
+}
+</code></pre>
+<h3 id="border-size"><a class="header" href="#border-size">边框大小</a></h3>
+<ul>
+<li>Description: Size of the border surrounding the active pane. When set to 0, the active pane doesn't have any border. The border is drawn inset.</li>
+<li>Setting: <code>border_size</code></li>
+<li>Default: <code>0.0</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Non-negative <code>float</code> values</p>
+<h3 id="inactive-opacity"><a class="header" href="#inactive-opacity">非活动透明度</a></h3>
+<ul>
+<li>Description: Opacity of inactive panels. When set to 1.0, the inactive panes have the same opacity as the active one. If set to 0, the inactive panes content will not be visible at all. Values are clamped to the [0.0, 1.0] range.</li>
+<li>Setting: <code>inactive_opacity</code></li>
+<li>Default: <code>1.0</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>float</code> values</p>
+<h2 id="bottom-dock-layout"><a class="header" href="#bottom-dock-layout">底部停靠布局</a></h2>
+<ul>
+<li>Description: Control the layout of the bottom dock, relative to the left and right docks</li>
+<li>Setting: <code>bottom_dock_layout</code></li>
+<li>Default: <code>"contained"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Contain the bottom dock, giving the full height of the window to the left and right docks</li>
+</ol>
+<pre><code class="language-json">{
+  "bottom_dock_layout": "contained"
+}
+</code></pre>
+<ol start="2">
+<li>Give the bottom dock the full width of the window, truncating the left and right docks</li>
+</ol>
+<pre><code class="language-json">{
+  "bottom_dock_layout": "full"
+}
+</code></pre>
+<ol start="3">
+<li>Left align the bottom dock, truncating the left dock and giving the right dock the full height of the window</li>
+</ol>
+<pre><code class="language-json">{
+  "bottom_dock_layout": "left_aligned"
+}
+</code></pre>
+<ol start="3">
+<li>Right align the bottom dock, giving the left dock the full height of the window and truncating the right dock.</li>
+</ol>
+<pre><code class="language-json">{
+  "bottom_dock_layout": "right_aligned"
+}
+</code></pre>
+<h2 id="agent-font-size"><a class="header" href="#agent-font-size">Agent 字体大小</a></h2>
+<ul>
+<li>Description: The font size for text in the agent panel. Inherits the UI font size if unset.</li>
+<li>Setting: <code>agent_font_size</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values from <code>6</code> to <code>100</code> pixels (inclusive)</p>
+<h2 id="allow-rewrap"><a class="header" href="#allow-rewrap">允许重新换行</a></h2>
+<ul>
+<li>Description: Controls where the <code>editor::Rewrap</code> action is allowed in the current language scope</li>
+<li>Setting: <code>allow_rewrap</code></li>
+<li>Default: <code>"in_comments"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Allow rewrap in comments only:</li>
+</ol>
+<pre><code class="language-json">{
+  "allow_rewrap": "in_comments"
+}
+</code></pre>
+<ol start="2">
+<li>Allow rewrap everywhere:</li>
+</ol>
+<pre><code class="language-json">{
+  "allow_rewrap": "everywhere"
+}
+</code></pre>
+<ol start="3">
+<li>Never allow rewrap:</li>
+</ol>
+<pre><code class="language-json">{
+  "allow_rewrap": "never"
+}
+</code></pre>
+<p>Note: This setting has no effect in Vim mode, as rewrap is already allowed everywhere.</p>
+<h2 id="auto-indent"><a class="header" href="#auto-indent">自动缩进</a></h2>
+<ul>
+<li>Description: Whether indentation should be adjusted based on the context whilst typing. This can be specified on a per-language basis.</li>
+<li>Setting: <code>auto_indent</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="auto-indent-on-paste"><a class="header" href="#auto-indent-on-paste">粘贴时自动缩进</a></h2>
+<ul>
+<li>Description: Whether indentation of pasted content should be adjusted based on the context</li>
+<li>Setting: <code>auto_indent_on_paste</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="auto-install-extensions"><a class="header" href="#auto-install-extensions">自动安装扩展</a></h2>
+<ul>
+<li>Description: Define extensions to be autoinstalled or never be installed.</li>
+<li>Setting: <code>auto_install_extension</code></li>
+<li>Default: <code>{ "html": true }</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>You can find the names of your currently installed extensions by listing the subfolders under the <a href="./extensions/installing-extensions.html#installation-location">extension installation location</a>:</p>
+<p>On MacOS:</p>
+<pre><code class="language-sh">ls ~/Library/Application\ Support/Zed/extensions/installed/
+</code></pre>
+<p>On Linux:</p>
+<pre><code class="language-sh">ls ~/.local/share/zed/extensions/installed
+</code></pre>
+<p>Define extensions which should be installed (<code>true</code>) or never installed (<code>false</code>).</p>
+<pre><code class="language-json">{
+  "auto_install_extensions": {
+    "html": true,
+    "dockerfile": true,
+    "docker-compose": false
+  }
+}
+</code></pre>
+<h2 id="autosave"><a class="header" href="#autosave">自动保存</a></h2>
+<ul>
+<li>Description: When to automatically save edited buffers.</li>
+<li>Setting: <code>autosave</code></li>
+<li>Default: <code>off</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>To disable autosave, set it to <code>off</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "autosave": "off"
+}
+</code></pre>
+<ol start="2">
+<li>To autosave when focus changes, use <code>on_focus_change</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "autosave": "on_focus_change"
+}
+</code></pre>
+<ol start="3">
+<li>To autosave when the active window changes, use <code>on_window_change</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "autosave": "on_window_change"
+}
+</code></pre>
+<ol start="4">
+<li>To autosave after an inactivity period, use <code>after_delay</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000
+    }
+  }
+}
+</code></pre>
+<h2 id="autoscroll-on-clicks"><a class="header" href="#autoscroll-on-clicks">点击时自动滚动</a></h2>
+<ul>
+<li>Description: Whether to scroll when clicking near the edge of the visible text area.</li>
+<li>Setting: <code>autoscroll_on_clicks</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="auto-signature-help"><a class="header" href="#auto-signature-help">自动签名帮助</a></h2>
+<ul>
+<li>Description: Show method signatures in the editor, when inside parentheses</li>
+<li>Setting: <code>auto_signature_help</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="show-signature-help-after-edits"><a class="header" href="#show-signature-help-after-edits">Show Signature Help After Edits</a></h3>
+<ul>
+<li>Description: Whether to show the signature help after completion or a bracket pair inserted. If <code>auto_signature_help</code> is enabled, this setting will be treated as enabled also.</li>
+<li>Setting: <code>show_signature_help_after_edits</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="auto-update"><a class="header" href="#auto-update">自动更新</a></h2>
+<ul>
+<li>Description: Whether or not to automatically check for updates.</li>
+<li>Setting: <code>auto_update</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="base-keymap"><a class="header" href="#base-keymap">基础键盘映射</a></h2>
+<ul>
+<li>Description: Base key bindings scheme. Base keymaps can be overridden with user keymaps.</li>
+<li>Setting: <code>base_keymap</code></li>
+<li>Default: <code>VSCode</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>VSCode</li>
+</ol>
+<pre><code class="language-json">{
+  "base_keymap": "VSCode"
+}
+</code></pre>
+<ol start="2">
+<li>Atom</li>
+</ol>
+<pre><code class="language-json">{
+  "base_keymap": "Atom"
+}
+</code></pre>
+<ol start="3">
+<li>JetBrains</li>
+</ol>
+<pre><code class="language-json">{
+  "base_keymap": "JetBrains"
+}
+</code></pre>
+<ol start="4">
+<li>None</li>
+</ol>
+<pre><code class="language-json">{
+  "base_keymap": "None"
+}
+</code></pre>
+<ol start="5">
+<li>SublimeText</li>
+</ol>
+<pre><code class="language-json">{
+  "base_keymap": "SublimeText"
+}
+</code></pre>
+<ol start="6">
+<li>TextMate</li>
+</ol>
+<pre><code class="language-json">{
+  "base_keymap": "TextMate"
+}
+</code></pre>
+<h2 id="buffer-font-family"><a class="header" href="#buffer-font-family">缓冲区字体族</a></h2>
+<ul>
+<li>Description: The name of a font to use for rendering text in the editor.</li>
+<li>Setting: <code>buffer_font_family</code></li>
+<li>Default: <code>.ZedMono</code>. This currently aliases to <a href="https://lilex.myrt.co">Lilex</a>.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>The name of any font family installed on the user's system, or <code>".ZedMono"</code>.</p>
+<h2 id="buffer-font-features"><a class="header" href="#buffer-font-features">缓冲区字体特性</a></h2>
+<ul>
+<li>Description: The OpenType features to enable for text in the editor.</li>
+<li>Setting: <code>buffer_font_features</code></li>
+<li>Default: <code>null</code></li>
+<li>Platform: macOS and Windows.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Zed supports all OpenType features that can be enabled or disabled for a given buffer or terminal font, as well as setting values for font features.</p>
+<p>For example, to disable font ligatures, add the following to your settings:</p>
+<pre><code class="language-json">{
+  "buffer_font_features": {
+    "calt": false
+  }
+}
+</code></pre>
+<p>You can also set other OpenType features, like setting <code>cv01</code> to <code>7</code>:</p>
+<pre><code class="language-json">{
+  "buffer_font_features": {
+    "cv01": 7
+  }
+}
+</code></pre>
+<h2 id="buffer-font-fallbacks"><a class="header" href="#buffer-font-fallbacks">缓冲区字体回退</a></h2>
+<ul>
+<li>Description: Set the buffer text's font fallbacks, this will be merged with the platform's default fallbacks.</li>
+<li>Setting: <code>buffer_font_fallbacks</code></li>
+<li>Default: <code>null</code></li>
+<li>Platform: macOS and Windows.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>For example, to use <code>Nerd Font</code> as a fallback, add the following to your settings:</p>
+<pre><code class="language-json">{
+  "buffer_font_fallbacks": ["Nerd Font"]
+}
+</code></pre>
+<h2 id="buffer-font-size"><a class="header" href="#buffer-font-size">缓冲区字体大小</a></h2>
+<ul>
+<li>Description: The default font size for text in the editor.</li>
+<li>Setting: <code>buffer_font_size</code></li>
+<li>Default: <code>15</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values from <code>6</code> to <code>100</code> pixels (inclusive)</p>
+<h2 id="buffer-font-weight"><a class="header" href="#buffer-font-weight">缓冲区字体粗细</a></h2>
+<ul>
+<li>Description: The default font weight for text in the editor.</li>
+<li>Setting: <code>buffer_font_weight</code></li>
+<li>Default: <code>400</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values between <code>100</code> and <code>900</code></p>
+<h2 id="buffer-line-height"><a class="header" href="#buffer-line-height">缓冲区行高</a></h2>
+<ul>
+<li>Description: The default line height for text in the editor.</li>
+<li>Setting: <code>buffer_line_height</code></li>
+<li>Default: <code>"comfortable"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>"standard"</code>, <code>"comfortable"</code> or <code>{ "custom": float }</code> (<code>1</code> is compact, <code>2</code> is loose)</p>
+<h2 id="centered-layout"><a class="header" href="#centered-layout">Centered Layout</a></h2>
+<ul>
+<li>Description: Configuration for the centered layout mode.</li>
+<li>Setting: <code>centered_layout</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"centered_layout": {
+  "left_padding": 0.2,
+  "right_padding": 0.2,
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<p>The <code>left_padding</code> and <code>right_padding</code> options define the relative width of the
+left and right padding of the central pane from the workspace when the centered layout mode is activated. Valid values range is from <code>0</code> to <code>0.4</code>.</p>
+<h2 id="close-on-file-delete"><a class="header" href="#close-on-file-delete">Close on File Delete</a></h2>
+<ul>
+<li>Description: Whether to automatically close editor tabs when their corresponding files are deleted from disk.</li>
+<li>Setting: <code>close_on_file_delete</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<p>When enabled, this setting will automatically close tabs for files that have been deleted from the file system. This is particularly useful for workflows involving temporary or scratch files that are frequently created and deleted. When disabled (default), deleted files remain open with a strikethrough through their tab title.</p>
+<p>Note: Dirty files (files with unsaved changes) will not be automatically closed even when this setting is enabled, ensuring you don't lose unsaved work.</p>
+<h2 id="confirm-quit"><a class="header" href="#confirm-quit">确认退出</a></h2>
+<ul>
+<li>Description: Whether or not to prompt the user to confirm before closing the application.</li>
+<li>Setting: <code>confirm_quit</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="diagnostics-max-severity"><a class="header" href="#diagnostics-max-severity">Diagnostics Max Severity</a></h2>
+<ul>
+<li>Description: Which level to use to filter out diagnostics displayed in the editor</li>
+<li>Setting: <code>diagnostics_max_severity</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Allow all diagnostics (default):</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics_max_severity": null
+}
+</code></pre>
+<ol start="2">
+<li>Show only errors:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics_max_severity": "error"
+}
+</code></pre>
+<ol start="3">
+<li>Show errors and warnings:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics_max_severity": "warning"
+}
+</code></pre>
+<ol start="4">
+<li>Show errors, warnings, and information:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics_max_severity": "information"
+}
+</code></pre>
+<ol start="5">
+<li>Show all including hints:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics_max_severity": "hint"
+}
+</code></pre>
+<h2 id="disable-ai"><a class="header" href="#disable-ai">Disable AI</a></h2>
+<ul>
+<li>Description: Whether to disable all AI features in Zed</li>
+<li>Setting: <code>disable_ai</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="direnv-integration"><a class="header" href="#direnv-integration">Direnv Integration</a></h2>
+<ul>
+<li>Description: Settings for <a href="https://direnv.net/">direnv</a> integration. Requires <code>direnv</code> to be installed.
+<code>direnv</code> integration make it possible to use the environment variables set by a <code>direnv</code> configuration to detect some language servers in <code>$PATH</code> instead of installing them.
+It also allows for those environment variables to be used in tasks.</li>
+<li>Setting: <code>load_direnv</code></li>
+<li>Default: <code>"direct"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>There are two options to choose from:</p>
+<ol>
+<li><code>shell_hook</code>: Use the shell hook to load direnv. This relies on direnv to activate upon entering the directory. Supports POSIX shells and fish.</li>
+<li><code>direct</code>: Use <code>direnv export json</code> to load direnv. This will load direnv directly without relying on the shell hook and might cause some inconsistencies. This allows direnv to work with any shell.</li>
+</ol>
+<h2 id="double-click-in-multibuffer"><a class="header" href="#double-click-in-multibuffer">Double Click In Multibuffer</a></h2>
+<ul>
+<li>Description: What to do when multibuffer is double clicked in some of its excerpts (parts of singleton buffers)</li>
+<li>Setting: <code>double_click_in_multibuffer</code></li>
+<li>Default: <code>"select"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Behave as a regular buffer and select the whole word (default):</li>
+</ol>
+<pre><code class="language-json">{
+  "double_click_in_multibuffer": "select"
+}
+</code></pre>
+<ol start="2">
+<li>Open the excerpt clicked as a new buffer in the new tab:</li>
+</ol>
+<pre><code class="language-json">{
+  "double_click_in_multibuffer": "open"
+}
+</code></pre>
+<p>For the case of "open", regular selection behavior can be achieved by holding <code>alt</code> when double clicking.</p>
+<h2 id="drop-target-size"><a class="header" href="#drop-target-size">Drop Target Size</a></h2>
+<ul>
+<li>Description: Relative size of the drop target in the editor that will open dropped file as a split pane (0-0.5). For example, 0.25 means if you drop onto the top/bottom quarter of the pane a new vertical split will be used, if you drop onto the left/right quarter of the pane a new horizontal split will be used.</li>
+<li>Setting: <code>drop_target_size</code></li>
+<li>Default: <code>0.2</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>float</code> values between <code>0</code> and <code>0.5</code></p>
+<h2 id="edit-predictions"><a class="header" href="#edit-predictions">Edit Predictions</a></h2>
+<ul>
+<li>Description: Settings for edit predictions.</li>
+<li>Setting: <code>edit_predictions</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">  "edit_predictions": {
+    "disabled_globs": [
+      "**/.env*",
+      "**/*.pem",
+      "**/*.key",
+      "**/*.cert",
+      "**/*.crt",
+      "**/.dev.vars",
+      "**/secrets.yml"
+    ]
+  }
+</code></pre>
+<p><strong>Options</strong></p>
+<h3 id="disabled-globs"><a class="header" href="#disabled-globs">Disabled Globs</a></h3>
+<ul>
+<li>Description: A list of globs for which edit predictions should be disabled for. This list adds to a pre-existing, sensible default set of globs. Any additional ones you add are combined with them.</li>
+<li>Setting: <code>disabled_globs</code></li>
+<li>Default: <code>["**/.env*", "**/*.pem", "**/*.key", "**/*.cert", "**/*.crt", "**/.dev.vars", "**/secrets.yml"]</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>List of <code>string</code> values.</p>
+<h2 id="edit-predictions-disabled-in"><a class="header" href="#edit-predictions-disabled-in">Edit Predictions Disabled in</a></h2>
+<ul>
+<li>Description: A list of language scopes in which edit predictions should be disabled.</li>
+<li>Setting: <code>edit_predictions_disabled_in</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>List of <code>string</code> values</p>
+<ol>
+<li>Don't show edit predictions in comments:</li>
+</ol>
+<pre><code class="language-json">"disabled_in": ["comment"]
+</code></pre>
+<ol start="2">
+<li>Don't show edit predictions in strings and comments:</li>
+</ol>
+<pre><code class="language-json">"disabled_in": ["comment", "string"]
+</code></pre>
+<ol start="3">
+<li>Only in Go, don't show edit predictions in strings and comments:</li>
+</ol>
+<pre><code class="language-json">{
+  "languages": {
+    "Go": {
+      "edit_predictions_disabled_in": ["comment", "string"]
+    }
+  }
+}
+</code></pre>
+<h2 id="current-line-highlight"><a class="header" href="#current-line-highlight">当前行高亮</a></h2>
+<ul>
+<li>Description: How to highlight the current line in the editor.</li>
+<li>Setting: <code>current_line_highlight</code></li>
+<li>Default: <code>all</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Don't highlight the current line:</li>
+</ol>
+<pre><code class="language-json">"current_line_highlight": "none"
+</code></pre>
+<ol start="2">
+<li>Highlight the gutter area:</li>
+</ol>
+<pre><code class="language-json">"current_line_highlight": "gutter"
+</code></pre>
+<ol start="3">
+<li>Highlight the editor area:</li>
+</ol>
+<pre><code class="language-json">"current_line_highlight": "line"
+</code></pre>
+<ol start="4">
+<li>Highlight the full line:</li>
+</ol>
+<pre><code class="language-json">"current_line_highlight": "all"
+</code></pre>
+<h2 id="selection-highlight"><a class="header" href="#selection-highlight">Selection Highlight</a></h2>
+<ul>
+<li>Description: Whether to highlight all occurrences of the selected text in an editor.</li>
+<li>Setting: <code>selection_highlight</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<h2 id="rounded-selection"><a class="header" href="#rounded-selection">Rounded Selection</a></h2>
+<ul>
+<li>Description: Whether the text selection should have rounded corners.</li>
+<li>Setting: <code>rounded_selection</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<h2 id="cursor-blink"><a class="header" href="#cursor-blink">光标闪烁</a></h2>
+<ul>
+<li>Description: Whether or not the cursor blinks.</li>
+<li>Setting: <code>cursor_blink</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="cursor-shape"><a class="header" href="#cursor-shape">光标形状</a></h2>
+<ul>
+<li>Description: Cursor shape for the default editor.</li>
+<li>Setting: <code>cursor_shape</code></li>
+<li>Default: <code>bar</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>A vertical bar:</li>
+</ol>
+<pre><code class="language-json">"cursor_shape": "bar"
+</code></pre>
+<ol start="2">
+<li>A block that surrounds the following character:</li>
+</ol>
+<pre><code class="language-json">"cursor_shape": "block"
+</code></pre>
+<ol start="3">
+<li>An underline / underscore that runs along the following character:</li>
+</ol>
+<pre><code class="language-json">"cursor_shape": "underline"
+</code></pre>
+<ol start="4">
+<li>An box drawn around the following character:</li>
+</ol>
+<pre><code class="language-json">"cursor_shape": "hollow"
+</code></pre>
+<h2 id="gutter"><a class="header" href="#gutter">边栏</a></h2>
+<ul>
+<li>Description: Settings for the editor gutter</li>
+<li>Setting: <code>gutter</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "gutter": {
+    "line_numbers": true,
+    "runnables": true,
+    "breakpoints": true,
+    "folds": true,
+    "min_line_number_digits": 4
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>line_numbers</code>: Whether to show line numbers in the gutter</li>
+<li><code>runnables</code>: Whether to show runnable buttons in the gutter</li>
+<li><code>breakpoints</code>: Whether to show breakpoints in the gutter</li>
+<li><code>folds</code>: Whether to show fold buttons in the gutter</li>
+<li><code>min_line_number_digits</code>: Minimum number of characters to reserve space for in the gutter</li>
+</ul>
+<h2 id="hide-mouse"><a class="header" href="#hide-mouse">Hide Mouse</a></h2>
+<ul>
+<li>Description: Determines when the mouse cursor should be hidden in an editor or input box.</li>
+<li>Setting: <code>hide_mouse</code></li>
+<li>Default: <code>on_typing_and_movement</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Never hide the mouse cursor:</li>
+</ol>
+<pre><code class="language-json">"hide_mouse": "never"
+</code></pre>
+<ol start="2">
+<li>Hide only when typing:</li>
+</ol>
+<pre><code class="language-json">"hide_mouse": "on_typing"
+</code></pre>
+<ol start="3">
+<li>Hide on both typing and cursor movement:</li>
+</ol>
+<pre><code class="language-json">"hide_mouse": "on_typing_and_movement"
+</code></pre>
+<h2 id="snippet-sort-order"><a class="header" href="#snippet-sort-order">Snippet Sort Order</a></h2>
+<ul>
+<li>Description: Determines how snippets are sorted relative to other completion items.</li>
+<li>Setting: <code>snippet_sort_order</code></li>
+<li>Default: <code>inline</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Place snippets at the top of the completion list:</li>
+</ol>
+<pre><code class="language-json">"snippet_sort_order": "top"
+</code></pre>
+<ol start="2">
+<li>Place snippets normally without any preference:</li>
+</ol>
+<pre><code class="language-json">"snippet_sort_order": "inline"
+</code></pre>
+<ol start="3">
+<li>Place snippets at the bottom of the completion list:</li>
+</ol>
+<pre><code class="language-json">"snippet_sort_order": "bottom"
+</code></pre>
+<ol start="4">
+<li>Do not show snippets in the completion list at all:</li>
+</ol>
+<pre><code class="language-json">"snippet_sort_order": "none"
+</code></pre>
+<h2 id="editor-scrollbar"><a class="header" href="#editor-scrollbar">Editor Scrollbar</a></h2>
+<ul>
+<li>Description: Whether or not to show the editor scrollbar and various elements in it.</li>
+<li>Setting: <code>scrollbar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"scrollbar": {
+  "show": "auto",
+  "cursors": true,
+  "git_diff": true,
+  "search_results": true,
+  "selected_text": true,
+  "selected_symbol": true,
+  "diagnostics": "all",
+  "axes": {
+    "horizontal": true,
+    "vertical": true,
+  },
+},
+</code></pre>
+<h3 id="show-mode"><a class="header" href="#show-mode">Show Mode</a></h3>
+<ul>
+<li>Description: When to show the editor scrollbar.</li>
+<li>Setting: <code>show</code></li>
+<li>Default: <code>auto</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show the scrollbar if there's important information or follow the system's configured behavior:</li>
+</ol>
+<pre><code class="language-json">"scrollbar": {
+  "show": "auto"
+}
+</code></pre>
+<ol start="2">
+<li>Match the system's configured behavior:</li>
+</ol>
+<pre><code class="language-json">"scrollbar": {
+  "show": "system"
+}
+</code></pre>
+<ol start="3">
+<li>Always show the scrollbar:</li>
+</ol>
+<pre><code class="language-json">"scrollbar": {
+  "show": "always"
+}
+</code></pre>
+<ol start="4">
+<li>Never show the scrollbar:</li>
+</ol>
+<pre><code class="language-json">"scrollbar": {
+  "show": "never"
+}
+</code></pre>
+<h3 id="cursor-indicators"><a class="header" href="#cursor-indicators">Cursor Indicators</a></h3>
+<ul>
+<li>Description: Whether to show cursor positions in the scrollbar.</li>
+<li>Setting: <code>cursors</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="git-diff-indicators"><a class="header" href="#git-diff-indicators">Git Diff Indicators</a></h3>
+<ul>
+<li>Description: Whether to show git diff indicators in the scrollbar.</li>
+<li>Setting: <code>git_diff</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="search-results-indicators"><a class="header" href="#search-results-indicators">Search Results Indicators</a></h3>
+<ul>
+<li>Description: Whether to show buffer search results in the scrollbar.</li>
+<li>Setting: <code>search_results</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="selected-text-indicators"><a class="header" href="#selected-text-indicators">Selected Text Indicators</a></h3>
+<ul>
+<li>Description: Whether to show selected text occurrences in the scrollbar.</li>
+<li>Setting: <code>selected_text</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="selected-symbols-indicators"><a class="header" href="#selected-symbols-indicators">Selected Symbols Indicators</a></h3>
+<ul>
+<li>Description: Whether to show selected symbol occurrences in the scrollbar.</li>
+<li>Setting: <code>selected_symbol</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="diagnostics"><a class="header" href="#diagnostics">Diagnostics</a></h3>
+<ul>
+<li>Description: Which diagnostic indicators to show in the scrollbar.</li>
+<li>Setting: <code>diagnostics</code></li>
+<li>Default: <code>all</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show all diagnostics:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": "all"
+}
+</code></pre>
+<ol start="2">
+<li>Do not show any diagnostics:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": "none"
+}
+</code></pre>
+<ol start="3">
+<li>Show only errors:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": "error"
+}
+</code></pre>
+<ol start="4">
+<li>Show only errors and warnings:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": "warning"
+}
+</code></pre>
+<ol start="5">
+<li>Show only errors, warnings, and information:</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": "information"
+}
+</code></pre>
+<h3 id="axes"><a class="header" href="#axes">Axes</a></h3>
+<ul>
+<li>Description: Forcefully enable or disable the scrollbar for each axis</li>
+<li>Setting: <code>axes</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"scrollbar": {
+  "axes": {
+    "horizontal": true,
+    "vertical": true,
+  },
+}
+</code></pre>
+<h4 id="horizontal"><a class="header" href="#horizontal">Horizontal</a></h4>
+<ul>
+<li>Description: When false, forcefully disables the horizontal scrollbar. Otherwise, obey other settings.</li>
+<li>Setting: <code>horizontal</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h4 id="vertical"><a class="header" href="#vertical">Vertical</a></h4>
+<ul>
+<li>Description: When false, forcefully disables the vertical scrollbar. Otherwise, obey other settings.</li>
+<li>Setting: <code>vertical</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="minimap"><a class="header" href="#minimap">Minimap</a></h2>
+<ul>
+<li>Description: Settings related to the editor's minimap, which provides an overview of your document.</li>
+<li>Setting: <code>minimap</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "minimap": {
+    "show": "never",
+    "thumb": "always",
+    "thumb_border": "left_open",
+    "current_line_highlight": null
+  }
+}
+</code></pre>
+<h3 id="show-mode-1"><a class="header" href="#show-mode-1">Show Mode</a></h3>
+<ul>
+<li>Description: When to show the minimap in the editor.</li>
+<li>Setting: <code>show</code></li>
+<li>Default: <code>never</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Always show the minimap:</li>
+</ol>
+<pre><code class="language-json">{
+  "show": "always"
+}
+</code></pre>
+<ol start="2">
+<li>Show the minimap if the editor's scrollbars are visible:</li>
+</ol>
+<pre><code class="language-json">{
+  "show": "auto"
+}
+</code></pre>
+<ol start="3">
+<li>Never show the minimap:</li>
+</ol>
+<pre><code class="language-json">{
+  "show": "never"
+}
+</code></pre>
+<h3 id="thumb-display"><a class="header" href="#thumb-display">Thumb Display</a></h3>
+<ul>
+<li>Description: When to show the minimap thumb (the visible editor area) in the minimap.</li>
+<li>Setting: <code>thumb</code></li>
+<li>Default: <code>always</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show the minimap thumb when hovering over the minimap:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb": "hover"
+}
+</code></pre>
+<ol start="2">
+<li>Always show the minimap thumb:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb": "always"
+}
+</code></pre>
+<h3 id="thumb-border"><a class="header" href="#thumb-border">Thumb Border</a></h3>
+<ul>
+<li>Description: How the minimap thumb border should look.</li>
+<li>Setting: <code>thumb_border</code></li>
+<li>Default: <code>left_open</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Display a border on all sides of the thumb:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb_border": "full"
+}
+</code></pre>
+<ol start="2">
+<li>Display a border on all sides except the left side:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb_border": "left_open"
+}
+</code></pre>
+<ol start="3">
+<li>Display a border on all sides except the right side:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb_border": "right_open"
+}
+</code></pre>
+<ol start="4">
+<li>Display a border only on the left side:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb_border": "left_only"
+}
+</code></pre>
+<ol start="5">
+<li>Display the thumb without any border:</li>
+</ol>
+<pre><code class="language-json">{
+  "thumb_border": "none"
+}
+</code></pre>
+<h3 id="current-line-highlight-1"><a class="header" href="#current-line-highlight-1">当前行高亮</a></h3>
+<ul>
+<li>Description: How to highlight the current line in the minimap.</li>
+<li>Setting: <code>current_line_highlight</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Inherit the editor's current line highlight setting:</li>
+</ol>
+<pre><code class="language-json">{
+  "minimap": {
+    "current_line_highlight": null
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Highlight the current line in the minimap:</li>
+</ol>
+<pre><code class="language-json">{
+  "minimap": {
+    "current_line_highlight": "line"
+  }
+}
+</code></pre>
+<p>or</p>
+<pre><code class="language-json">{
+  "minimap": {
+    "current_line_highlight": "all"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Do not highlight the current line in the minimap:</li>
+</ol>
+<pre><code class="language-json">{
+  "minimap": {
+    "current_line_highlight": "gutter"
+  }
+}
+</code></pre>
+<p>or</p>
+<pre><code class="language-json">{
+  "minimap": {
+    "current_line_highlight": "none"
+  }
+}
+</code></pre>
+<h2 id="editor-tab-bar"><a class="header" href="#editor-tab-bar">Editor Tab Bar</a></h2>
+<ul>
+<li>Description: Settings related to the editor's tab bar.</li>
+<li>Settings: <code>tab_bar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"tab_bar": {
+  "show": true,
+  "show_nav_history_buttons": true,
+  "show_tab_bar_buttons": true
+}
+</code></pre>
+<h3 id="show"><a class="header" href="#show">Show</a></h3>
+<ul>
+<li>Description: Whether or not to show the tab bar in the editor.</li>
+<li>Setting: <code>show</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="navigation-history-buttons"><a class="header" href="#navigation-history-buttons">Navigation History Buttons</a></h3>
+<ul>
+<li>Description: Whether or not to show the navigation history buttons.</li>
+<li>Setting: <code>show_nav_history_buttons</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="tab-bar-buttons"><a class="header" href="#tab-bar-buttons">Tab Bar Buttons</a></h3>
+<ul>
+<li>Description: Whether or not to show the tab bar buttons.</li>
+<li>Setting: <code>show_tab_bar_buttons</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="editor-tabs"><a class="header" href="#editor-tabs">Editor Tabs</a></h2>
+<ul>
+<li>Description: Configuration for the editor tabs.</li>
+<li>Setting: <code>tabs</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"tabs": {
+  "close_position": "right",
+  "file_icons": false,
+  "git_status": false,
+  "activate_on_close": "history",
+  "show_close_button": "hover",
+  "show_diagnostics": "off"
+},
+</code></pre>
+<h3 id="close-position"><a class="header" href="#close-position">Close Position</a></h3>
+<ul>
+<li>Description: Where to display close button within a tab.</li>
+<li>Setting: <code>close_position</code></li>
+<li>Default: <code>right</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Display the close button on the right:</li>
+</ol>
+<pre><code class="language-json">{
+  "close_position": "right"
+}
+</code></pre>
+<ol start="2">
+<li>Display the close button on the left:</li>
+</ol>
+<pre><code class="language-json">{
+  "close_position": "left"
+}
+</code></pre>
+<h3 id="file-icons"><a class="header" href="#file-icons">File Icons</a></h3>
+<ul>
+<li>Description: Whether to show the file icon for a tab.</li>
+<li>Setting: <code>file_icons</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<h3 id="git-status"><a class="header" href="#git-status">Git Status</a></h3>
+<ul>
+<li>Description: Whether or not to show Git file status in tab.</li>
+<li>Setting: <code>git_status</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<h3 id="activate-on-close"><a class="header" href="#activate-on-close">Activate on close</a></h3>
+<ul>
+<li>Description: What to do after closing the current tab.</li>
+<li>Setting: <code>activate_on_close</code></li>
+<li>Default: <code>history</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Activate the tab that was open previously:</li>
+</ol>
+<pre><code class="language-json">{
+  "activate_on_close": "history"
+}
+</code></pre>
+<ol start="2">
+<li>Activate the right neighbour tab if present:</li>
+</ol>
+<pre><code class="language-json">{
+  "activate_on_close": "neighbour"
+}
+</code></pre>
+<ol start="3">
+<li>Activate the left neighbour tab if present:</li>
+</ol>
+<pre><code class="language-json">{
+  "activate_on_close": "left_neighbour"
+}
+</code></pre>
+<h3 id="show-close-button"><a class="header" href="#show-close-button">Show close button</a></h3>
+<ul>
+<li>Description: Controls the appearance behavior of the tab's close button.</li>
+<li>Setting: <code>show_close_button</code></li>
+<li>Default: <code>hover</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show it just upon hovering the tab:</li>
+</ol>
+<pre><code class="language-json">{
+  "show_close_button": "hover"
+}
+</code></pre>
+<ol start="2">
+<li>Show it persistently:</li>
+</ol>
+<pre><code class="language-json">{
+  "show_close_button": "always"
+}
+</code></pre>
+<ol start="3">
+<li>Never show it, even if hovering it:</li>
+</ol>
+<pre><code class="language-json">{
+  "show_close_button": "hidden"
+}
+</code></pre>
+<h3 id="show-diagnostics"><a class="header" href="#show-diagnostics">Show Diagnostics</a></h3>
+<ul>
+<li>Description: Whether to show diagnostics indicators in tabs. This setting only works when file icons are active and controls which files with diagnostic issues to mark.</li>
+<li>Setting: <code>show_diagnostics</code></li>
+<li>Default: <code>off</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Do not mark any files:</li>
+</ol>
+<pre><code class="language-json">{
+  "show_diagnostics": "off"
+}
+</code></pre>
+<ol start="2">
+<li>Only mark files with errors:</li>
+</ol>
+<pre><code class="language-json">{
+  "show_diagnostics": "errors"
+}
+</code></pre>
+<ol start="3">
+<li>Mark files with errors and warnings:</li>
+</ol>
+<pre><code class="language-json">{
+  "show_diagnostics": "all"
+}
+</code></pre>
+<h3 id="show-inline-code-actions"><a class="header" href="#show-inline-code-actions">Show Inline Code Actions</a></h3>
+<ul>
+<li>Description: Whether to show code action button at start of buffer line.</li>
+<li>Setting: <code>inline_code_actions</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="drag-and-drop-selection"><a class="header" href="#drag-and-drop-selection">Drag And Drop Selection</a></h3>
+<ul>
+<li>Description: Whether to allow drag and drop text selection in buffer. <code>delay</code> is the milliseconds that must elapse before drag and drop is allowed. Otherwise, a new text selection is created.</li>
+<li>Setting: <code>drag_and_drop_selection</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"drag_and_drop_selection": {
+  "enabled": true,
+  "delay": 300
+}
+</code></pre>
+<h2 id="editor-toolbar"><a class="header" href="#editor-toolbar">Editor Toolbar</a></h2>
+<ul>
+<li>Description: Whether or not to show various elements in the editor toolbar.</li>
+<li>Setting: <code>toolbar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"toolbar": {
+  "breadcrumbs": true,
+  "quick_actions": true,
+  "selections_menu": true,
+  "agent_review": true,
+  "code_actions": false
+},
+</code></pre>
+<p><strong>Options</strong></p>
+<p>Each option controls displaying of a particular toolbar element. If all elements are hidden, the editor toolbar is not displayed.</p>
+<h2 id="use-system-tabs"><a class="header" href="#use-system-tabs">Use System Tabs</a></h2>
+<ul>
+<li>Description: Whether to allow windows to tab together based on the user’s tabbing preference (macOS only).</li>
+<li>Setting: <code>use_system_window_tabs</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>This setting enables integration with macOS’s native window tabbing feature. When set to <code>true</code>, Zed windows can be grouped together as tabs in a single macOS window, following the system-wide tabbing preferences set by the user (such as "Always", "In Full Screen", or "Never"). This setting is only available on macOS.</p>
+<h2 id="enable-language-server"><a class="header" href="#enable-language-server">启用语言服务器</a></h2>
+<ul>
+<li>Description: Whether or not to use language servers to provide code intelligence.</li>
+<li>Setting: <code>enable_language_server</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="ensure-final-newline-on-save"><a class="header" href="#ensure-final-newline-on-save">Ensure Final Newline On Save</a></h2>
+<ul>
+<li>Description: Removes any lines containing only whitespace at the end of the file and ensures just one newline at the end.</li>
+<li>Setting: <code>ensure_final_newline_on_save</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="expand-excerpt-lines"><a class="header" href="#expand-excerpt-lines">Expand Excerpt Lines</a></h2>
+<ul>
+<li>Description: The default number of lines to expand excerpts in the multibuffer by</li>
+<li>Setting: <code>expand_excerpt_lines</code></li>
+<li>Default: <code>5</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Positive <code>integer</code> values</p>
+<h2 id="excerpt-context-lines"><a class="header" href="#excerpt-context-lines">Excerpt Context Lines</a></h2>
+<ul>
+<li>Description: The number of lines of context to provide when showing excerpts in the multibuffer.</li>
+<li>Setting: <code>excerpt_context_lines</code></li>
+<li>Default: <code>2</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Positive <code>integer</code> value between 1 and 32. Values outside of this range will be clamped to this range.</p>
+<h2 id="extend-comment-on-newline"><a class="header" href="#extend-comment-on-newline">新行时扩展注释</a></h2>
+<ul>
+<li>Description: Whether to start a new line with a comment when a previous line is a comment as well.</li>
+<li>Setting: <code>extend_comment_on_newline</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="status-bar"><a class="header" href="#status-bar">Status Bar</a></h2>
+<ul>
+<li>Description: Control various elements in the status bar. Note that some items in the status bar have their own settings set elsewhere.</li>
+<li>Setting: <code>status_bar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"status_bar": {
+  "active_language_button": true,
+  "cursor_position_button": true
+},
+</code></pre>
+<h2 id="lsp"><a class="header" href="#lsp">LSP</a></h2>
+<ul>
+<li>Description: Configuration for language servers.</li>
+<li>Setting: <code>lsp</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>The following settings can be overridden for specific language servers:</p>
+<ul>
+<li><code>initialization_options</code></li>
+<li><code>settings</code></li>
+</ul>
+<p>To override configuration for a language server, add an entry for that language server's name to the <code>lsp</code> value.</p>
+<p>Some options are passed via <code>initialization_options</code> to the language server. These are for options which must be specified at language server startup and when changed will require restarting the language server.</p>
+<p>For example to pass the <code>check</code> option to <code>rust-analyzer</code>, use the following configuration:</p>
+<pre><code class="language-json">"lsp": {
+  "rust-analyzer": {
+    "initialization_options": {
+      "check": {
+        "command": "clippy" // rust-analyzer.check.command (default: "check")
+      }
+    }
+  }
+}
+</code></pre>
+<p>While other options may be changed at a runtime and should be placed under <code>settings</code>:</p>
+<pre><code class="language-json">"lsp": {
+  "yaml-language-server": {
+    "settings": {
+      "yaml": {
+        "keyOrdering": true // Enforces alphabetical ordering of keys in maps
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="global-lsp-settings"><a class="header" href="#global-lsp-settings">Global LSP Settings</a></h2>
+<ul>
+<li>Description: Configuration for global LSP settings that apply to all language servers</li>
+<li>Setting: <code>global_lsp_settings</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "global_lsp_settings": {
+    "button": true
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>button</code>: Whether to show the LSP status button in the status bar</li>
+</ul>
+<h2 id="lsp-highlight-debounce"><a class="header" href="#lsp-highlight-debounce">LSP Highlight Debounce</a></h2>
+<ul>
+<li>Description: The debounce delay in milliseconds before querying highlights from the language server based on the current cursor location.</li>
+<li>Setting: <code>lsp_highlight_debounce</code></li>
+<li>Default: <code>75</code></li>
+</ul>
+<h2 id="global-lsp-settings-1"><a class="header" href="#global-lsp-settings-1">Global LSP Settings</a></h2>
+<ul>
+<li>Description: Common language server settings.</li>
+<li>Setting: <code>global_lsp_settings</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"global_lsp_settings": {
+  "button": true
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values representing milliseconds</p>
+<h2 id="features"><a class="header" href="#features">Features</a></h2>
+<ul>
+<li>Description: Features that can be globally enabled or disabled</li>
+<li>Setting: <code>features</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "zed"
+  }
+}
+</code></pre>
+<h3 id="edit-prediction-provider"><a class="header" href="#edit-prediction-provider">Edit Prediction Provider</a></h3>
+<ul>
+<li>Description: Which edit prediction provider to use</li>
+<li>Setting: <code>edit_prediction_provider</code></li>
+<li>Default: <code>"zed"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use Zeta as the edit prediction provider:</li>
+</ol>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "zed"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Use Copilot as the edit prediction provider:</li>
+</ol>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "copilot"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Use Supermaven as the edit prediction provider:</li>
+</ol>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "supermaven"
+  }
+}
+</code></pre>
+<ol start="4">
+<li>Turn off edit predictions across all providers</li>
+</ol>
+<pre><code class="language-json">{
+  "features": {
+    "edit_prediction_provider": "none"
+  }
+}
+</code></pre>
+<h2 id="format-on-save"><a class="header" href="#format-on-save">保存时格式化</a></h2>
+<ul>
+<li>Description: Whether or not to perform a buffer format before saving.</li>
+<li>Setting: <code>format_on_save</code></li>
+<li>Default: <code>on</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li><code>on</code>, enables format on save obeying <code>formatter</code> setting:</li>
+</ol>
+<pre><code class="language-json">{
+  "format_on_save": "on"
+}
+</code></pre>
+<ol start="2">
+<li><code>off</code>, disables format on save:</li>
+</ol>
+<pre><code class="language-json">{
+  "format_on_save": "off"
+}
+</code></pre>
+<h2 id="formatter"><a class="header" href="#formatter">格式化器</a></h2>
+<ul>
+<li>Description: How to perform a buffer format.</li>
+<li>Setting: <code>formatter</code></li>
+<li>Default: <code>auto</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>To use the current language server, use <code>"language_server"</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "formatter": "language_server"
+}
+</code></pre>
+<ol start="2">
+<li>Or to use an external command, use <code>"external"</code>. Specify the name of the formatting program to run, and an array of arguments to pass to the program. The buffer's text will be passed to the program on stdin, and the formatted output should be written to stdout. For example, the following command would strip trailing spaces using <a href="https://linux.die.net/man/1/sed"><code>sed(1)</code></a>:</li>
+</ol>
+<pre><code class="language-json">{
+  "formatter": {
+    "external": {
+      "command": "sed",
+      "arguments": ["-e", "s/ *$//"]
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li>External formatters may optionally include a <code>{buffer_path}</code> placeholder which at runtime will include the path of the buffer being formatted. Formatters operate by receiving file content via standard input, reformatting it and then outputting it to standard output and so normally don't know the filename of what they are formatting. Tools like Prettier support receiving the file path via a command line argument which can then used to impact formatting decisions.</li>
+</ol>
+<p>WARNING: <code>{buffer_path}</code> should not be used to direct your formatter to read from a filename. Your formatter should only read from standard input and should not read or write files directly.</p>
+<pre><code class="language-json">  "formatter": {
+    "external": {
+      "command": "prettier",
+      "arguments": ["--stdin-filepath", "{buffer_path}"]
+    }
+  }
+</code></pre>
+<ol start="4">
+<li>Or to use code actions provided by the connected language servers, use <code>"code_actions"</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "formatter": {
+    "code_actions": {
+      // Use ESLint's --fix:
+      "source.fixAll.eslint": true,
+      // Organize imports on save:
+      "source.organizeImports": true
+    }
+  }
+}
+</code></pre>
+<ol start="5">
+<li>Or to use multiple formatters consecutively, use an array of formatters:</li>
+</ol>
+<pre><code class="language-json">{
+  "formatter": [
+    { "language_server": { "name": "rust-analyzer" } },
+    {
+      "external": {
+        "command": "sed",
+        "arguments": ["-e", "s/ *$//"]
+      }
+    }
+  ]
+}
+</code></pre>
+<p>Here <code>rust-analyzer</code> will be used first to format the code, followed by a call of sed.
+If any of the formatters fails, the subsequent ones will still be executed.</p>
+<h2 id="code-actions-on-format"><a class="header" href="#code-actions-on-format">格式化时的代码操作</a></h2>
+<ul>
+<li>Description: The code actions to perform with the primary language server when formatting the buffer.</li>
+<li>Setting: <code>code_actions_on_format</code></li>
+<li>Default: <code>{}</code>, except for Go it's <code>{ "source.organizeImports": true }</code></li>
+</ul>
+<p><strong>Examples</strong></p>
+<!--
+TBD: Add Python Ruff source.organizeImports example
+-->
+<ol>
+<li>Organize imports on format in TypeScript and TSX buffers:</li>
+</ol>
+<pre><code class="language-json">{
+  "languages": {
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.organizeImports": true
+      }
+    },
+    "TSX": {
+      "code_actions_on_format": {
+        "source.organizeImports": true
+      }
+    }
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Run ESLint <code>fixAll</code> code action when formatting:</li>
+</ol>
+<pre><code class="language-json">{
+  "languages": {
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Run only a single ESLint rule when using <code>fixAll</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "languages": {
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    }
+  },
+  "lsp": {
+    "eslint": {
+      "settings": {
+        "codeActionOnSave": {
+          "rules": ["import/order"]
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="auto-close"><a class="header" href="#auto-close">Auto close</a></h2>
+<ul>
+<li>Description: Whether to automatically add matching closing characters when typing opening parenthesis, bracket, brace, single or double quote characters.</li>
+<li>Setting: <code>use_autoclose</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="always-treat-brackets-as-autoclosed"><a class="header" href="#always-treat-brackets-as-autoclosed">Always Treat Brackets As Autoclosed</a></h2>
+<ul>
+<li>Description: Controls how the editor handles the autoclosed characters.</li>
+<li>Setting: <code>always_treat_brackets_as_autoclosed</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<p><strong>Example</strong></p>
+<p>If the setting is set to <code>true</code>:</p>
+<ol>
+<li>Enter in the editor: <code>)))</code></li>
+<li>Move the cursor to the start: <code>^)))</code></li>
+<li>Enter again: <code>)))</code></li>
+</ol>
+<p>The result is still <code>)))</code> and not <code>))))))</code>, which is what it would be by default.</p>
+<h2 id="file-scan-exclusions"><a class="header" href="#file-scan-exclusions">文件扫描排除项</a></h2>
+<ul>
+<li>Setting: <code>file_scan_exclusions</code></li>
+<li>Description: Files or globs of files that will be excluded by Zed entirely. They will be skipped during file scans, file searches, and not be displayed in the project file tree. Overrides <code>file_scan_inclusions</code>.</li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"file_scan_exclusions": [
+  "**/.git",
+  "**/.svn",
+  "**/.hg",
+  "**/.jj",
+  "**/CVS",
+  "**/.DS_Store",
+  "**/Thumbs.db",
+  "**/.classpath",
+  "**/.settings"
+],
+</code></pre>
+<p>Note, specifying <code>file_scan_exclusions</code> in settings.json will override the defaults (shown above). If you are looking to exclude additional items you will need to include all the default values in your settings.</p>
+<h2 id="file-scan-inclusions"><a class="header" href="#file-scan-inclusions">File Scan Inclusions</a></h2>
+<ul>
+<li>Setting: <code>file_scan_inclusions</code></li>
+<li>Description: Files or globs of files that will be included by Zed, even when ignored by git. This is useful for files that are not tracked by git, but are still important to your project. Note that globs that are overly broad can slow down Zed's file scanning. <code>file_scan_exclusions</code> takes precedence over these inclusions.</li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"file_scan_inclusions": [".env*"],
+</code></pre>
+<h2 id="file-types"><a class="header" href="#file-types">文件类型</a></h2>
+<ul>
+<li>Setting: <code>file_types</code></li>
+<li>Description: Configure how Zed selects a language for a file based on its filename or extension. Supports glob entries.</li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"file_types": {
+  "JSONC": ["**/.zed/**/*.json", "**/zed/**/*.json", "**/Zed/**/*.json", "**/.vscode/**/*.json"],
+  "Shell Script": [".env.*"]
+}
+</code></pre>
+<p><strong>Examples</strong></p>
+<p>To interpret all <code>.c</code> files as C++, files called <code>MyLockFile</code> as TOML and files starting with <code>Dockerfile</code> as Dockerfile:</p>
+<pre><code class="language-json">{
+  "file_types": {
+    "C++": ["c"],
+    "TOML": ["MyLockFile"],
+    "Dockerfile": ["Dockerfile*"]
+  }
+}
+</code></pre>
+<h2 id="diagnostics-1"><a class="header" href="#diagnostics-1">Diagnostics</a></h2>
+<ul>
+<li>Description: Configuration for diagnostics-related features.</li>
+<li>Setting: <code>diagnostics</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "include_warnings": true,
+    "inline": {
+      "enabled": false
+    },
+    "update_with_cursor": false,
+    "primary_only": false,
+    "use_rendered": false
+  }
+}
+</code></pre>
+<h3 id="inline-diagnostics"><a class="header" href="#inline-diagnostics">Inline Diagnostics</a></h3>
+<ul>
+<li>Description: Whether or not to show diagnostics information inline.</li>
+<li>Setting: <code>inline</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "inline": {
+      "enabled": false,
+      "update_debounce_ms": 150,
+      "padding": 4,
+      "min_column": 0,
+      "max_severity": null
+    }
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ol>
+<li>Enable inline diagnostics.</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Delay diagnostic updates until some time after the last diagnostic update.</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+      "update_debounce_ms": 150
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Set padding between the end of the source line and the start of the diagnostic.</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+      "padding": 4
+    }
+  }
+}
+</code></pre>
+<ol start="4">
+<li>Horizontally align inline diagnostics at the given column.</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+      "min_column": 80
+    }
+  }
+}
+</code></pre>
+<ol start="5">
+<li>Show only warning and error diagnostics.</li>
+</ol>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+      "max_severity": "warning"
+    }
+  }
+}
+</code></pre>
+<h2 id="git"><a class="header" href="#git">Git</a></h2>
+<ul>
+<li>Description: Configuration for git-related features.</li>
+<li>Setting: <code>git</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true
+    },
+    "hunk_style": "staged_hollow"
+  }
+}
+</code></pre>
+<h3 id="git-gutter"><a class="header" href="#git-gutter">Git Gutter</a></h3>
+<ul>
+<li>Description: Whether or not to show the git gutter.</li>
+<li>Setting: <code>git_gutter</code></li>
+<li>Default: <code>tracked_files</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show git gutter in tracked files</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "git_gutter": "tracked_files"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Hide git gutter</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "git_gutter": "hide"
+  }
+}
+</code></pre>
+<h3 id="gutter-debounce"><a class="header" href="#gutter-debounce">Gutter Debounce</a></h3>
+<ul>
+<li>Description: Sets the debounce threshold (in milliseconds) after which changes are reflected in the git gutter.</li>
+<li>Setting: <code>gutter_debounce</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values representing milliseconds</p>
+<p>Example:</p>
+<pre><code class="language-json">{
+  "git": {
+    "gutter_debounce": 100
+  }
+}
+</code></pre>
+<h3 id="inline-git-blame"><a class="header" href="#inline-git-blame">Inline Git Blame</a></h3>
+<ul>
+<li>Description: Whether or not to show git blame information inline, on the currently focused line.</li>
+<li>Setting: <code>inline_blame</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "git": {
+    "inline_blame": {
+      "enabled": true
+    }
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ol>
+<li>Disable inline git blame:</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "inline_blame": {
+      "enabled": false
+    }
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Only show inline git blame after a delay (that starts after cursor stops moving):</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "inline_blame": {
+      "delay_ms": 500
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Show a commit summary next to the commit date and author:</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": true
+    }
+  }
+}
+</code></pre>
+<ol start="4">
+<li>Use this as the minimum column at which to display inline blame information:</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "inline_blame": {
+      "min_column": 80
+    }
+  }
+}
+</code></pre>
+<ol start="5">
+<li>Set the padding between the end of the line and the inline blame hint, in ems:</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "inline_blame": {
+      "padding": 10
+    }
+  }
+}
+</code></pre>
+<h3 id="hunk-style"><a class="header" href="#hunk-style">Hunk Style</a></h3>
+<ul>
+<li>Description: What styling we should use for the diff hunks.</li>
+<li>Setting: <code>hunk_style</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "git": {
+    "hunk_style": "staged_hollow"
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show the staged hunks faded out and with a border:</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "hunk_style": "staged_hollow"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Show unstaged hunks faded out and with a border:</li>
+</ol>
+<pre><code class="language-json">{
+  "git": {
+    "hunk_style": "unstaged_hollow"
+  }
+}
+</code></pre>
+<h2 id="go-to-definition-fallback"><a class="header" href="#go-to-definition-fallback">Go to Definition Fallback</a></h2>
+<ul>
+<li>Description: What to do when the "go to definition" action fails to find a definition</li>
+<li>Setting: <code>go_to_definition_fallback</code></li>
+<li>Default: <code>"find_all_references"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Do nothing:</li>
+</ol>
+<pre><code class="language-json">{
+  "go_to_definition_fallback": "none"
+}
+</code></pre>
+<ol start="2">
+<li>Find references for the same symbol (default):</li>
+</ol>
+<pre><code class="language-json">{
+  "go_to_definition_fallback": "find_all_references"
+}
+</code></pre>
+<h2 id="hard-tabs"><a class="header" href="#hard-tabs">硬制表符</a></h2>
+<ul>
+<li>Description: Whether to indent lines using tab characters or multiple spaces.</li>
+<li>Setting: <code>hard_tabs</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="helix-mode"><a class="header" href="#helix-mode">Helix Mode</a></h2>
+<ul>
+<li>Description: Whether or not to enable Helix mode. Enabling <code>helix_mode</code> also enables <code>vim_mode</code>. See the <a href="./helix.html">Helix documentation</a> for more details.</li>
+<li>Setting: <code>helix_mode</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="indent-guides"><a class="header" href="#indent-guides">缩进参考线</a></h2>
+<ul>
+<li>Description: Configuration related to indent guides. Indent guides can be configured separately for each language.</li>
+<li>Setting: <code>indent_guides</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "indent_guides": {
+    "enabled": true,
+    "line_width": 1,
+    "active_line_width": 1,
+    "coloring": "fixed",
+    "background_coloring": "disabled"
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ol>
+<li>Disable indent guides</li>
+</ol>
+<pre><code class="language-json">{
+  "indent_guides": {
+    "enabled": false
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Enable indent guides for a specific language.</li>
+</ol>
+<pre><code class="language-json">{
+  "languages": {
+    "Python": {
+      "indent_guides": {
+        "enabled": true
+      }
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Enable indent aware coloring ("rainbow indentation").
+The colors that are used for different indentation levels are defined in the theme (theme key: <code>accents</code>). They can be customized by using theme overrides.</li>
+</ol>
+<pre><code class="language-json">{
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware"
+  }
+}
+</code></pre>
+<ol start="4">
+<li>Enable indent aware background coloring ("rainbow indentation").
+The colors that are used for different indentation levels are defined in the theme (theme key: <code>accents</code>). They can be customized by using theme overrides.</li>
+</ol>
+<pre><code class="language-json">{
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware",
+    "background_coloring": "indent_aware"
+  }
+}
+</code></pre>
+<h2 id="hover-popover-enabled"><a class="header" href="#hover-popover-enabled">悬停弹出框启用</a></h2>
+<ul>
+<li>Description: Whether or not to show the informational hover box when moving the mouse over symbols in the editor.</li>
+<li>Setting: <code>hover_popover_enabled</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="hover-popover-delay"><a class="header" href="#hover-popover-delay">Hover Popover Delay</a></h2>
+<ul>
+<li>Description: Time to wait in milliseconds before showing the informational hover box.</li>
+<li>Setting: <code>hover_popover_delay</code></li>
+<li>Default: <code>300</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values representing milliseconds</p>
+<h2 id="icon-theme"><a class="header" href="#icon-theme">Icon Theme</a></h2>
+<ul>
+<li>Description: The icon theme setting can be specified in two forms - either as the name of an icon theme or as an object containing the <code>mode</code>, <code>dark</code>, and <code>light</code> icon themes for files/folders inside Zed.</li>
+<li>Setting: <code>icon_theme</code></li>
+<li>Default: <code>Zed (Default)</code></li>
+</ul>
+<h3 id="icon-theme-object"><a class="header" href="#icon-theme-object">Icon Theme Object</a></h3>
+<ul>
+<li>Description: Specify the icon theme using an object that includes the <code>mode</code>, <code>dark</code>, and <code>light</code>.</li>
+<li>Setting: <code>icon_theme</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"icon_theme": {
+  "mode": "system",
+  "dark": "Zed (Default)",
+  "light": "Zed (Default)"
+},
+</code></pre>
+<h3 id="mode"><a class="header" href="#mode">Mode</a></h3>
+<ul>
+<li>Description: Specify the icon theme mode.</li>
+<li>Setting: <code>mode</code></li>
+<li>Default: <code>system</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Set the icon theme to dark mode</li>
+</ol>
+<pre><code class="language-json">{
+  "mode": "dark"
+}
+</code></pre>
+<ol start="2">
+<li>Set the icon theme to light mode</li>
+</ol>
+<pre><code class="language-json">{
+  "mode": "light"
+}
+</code></pre>
+<ol start="3">
+<li>Set the icon theme to system mode</li>
+</ol>
+<pre><code class="language-json">{
+  "mode": "system"
+}
+</code></pre>
+<h3 id="dark"><a class="header" href="#dark">Dark</a></h3>
+<ul>
+<li>Description: The name of the dark icon theme.</li>
+<li>Setting: <code>dark</code></li>
+<li>Default: <code>Zed (Default)</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Run the <code>icon theme selector: toggle</code> action in the command palette to see a current list of valid icon themes names.</p>
+<h3 id="light"><a class="header" href="#light">Light</a></h3>
+<ul>
+<li>Description: The name of the light icon theme.</li>
+<li>Setting: <code>light</code></li>
+<li>Default: <code>Zed (Default)</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Run the <code>icon theme selector: toggle</code> action in the command palette to see a current list of valid icon themes names.</p>
+<h2 id="image-viewer"><a class="header" href="#image-viewer">Image Viewer</a></h2>
+<ul>
+<li>Description: Settings for image viewer functionality</li>
+<li>Setting: <code>image_viewer</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "image_viewer": {
+    "unit": "binary"
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<h3 id="unit"><a class="header" href="#unit">Unit</a></h3>
+<ul>
+<li>Description: The unit for image file sizes</li>
+<li>Setting: <code>unit</code></li>
+<li>Default: <code>"binary"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use binary units (KiB, MiB):</li>
+</ol>
+<pre><code class="language-json">{
+  "image_viewer": {
+    "unit": "binary"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Use decimal units (KB, MB):</li>
+</ol>
+<pre><code class="language-json">{
+  "image_viewer": {
+    "unit": "decimal"
+  }
+}
+</code></pre>
+<h2 id="inlay-hints"><a class="header" href="#inlay-hints">Inlay hints</a></h2>
+<ul>
+<li>Description: Configuration for displaying extra text with hints in the editor.</li>
+<li>Setting: <code>inlay_hints</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"inlay_hints": {
+  "enabled": false,
+  "show_type_hints": true,
+  "show_parameter_hints": true,
+  "show_other_hints": true,
+  "show_background": false,
+  "edit_debounce_ms": 700,
+  "scroll_debounce_ms": 50,
+  "toggle_on_modifiers_press": null
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<p>Inlay hints querying consists of two parts: editor (client) and LSP server.
+With the inlay settings above are changed to enable the hints, editor will start to query certain types of hints and react on LSP hint refresh request from the server.
+At this point, the server may or may not return hints depending on its implementation, further configuration might be needed, refer to the corresponding LSP server documentation.</p>
+<p>The following languages have inlay hints preconfigured by Zed:</p>
+<ul>
+<li><a href="https://docs.zed.dev/languages/go">Go</a></li>
+<li><a href="https://docs.zed.dev/languages/rust">Rust</a></li>
+<li><a href="https://docs.zed.dev/languages/svelte">Svelte</a></li>
+<li><a href="https://docs.zed.dev/languages/typescript">Typescript</a></li>
+</ul>
+<p>Use the <code>lsp</code> section for the server configuration. Examples are provided in the corresponding language documentation.</p>
+<p>Hints are not instantly queried in Zed, two kinds of debounces are used, either may be set to 0 to be disabled.
+Settings-related hint updates are not debounced.</p>
+<p>All possible config values for <code>toggle_on_modifiers_press</code> are:</p>
+<pre><code class="language-json">"inlay_hints": {
+  "toggle_on_modifiers_press": {
+    "control": true,
+    "shift": true,
+    "alt": true,
+    "platform": true,
+    "function": true
+  }
+}
+</code></pre>
+<p>Unspecified values have a <code>false</code> value, hints won't be toggled if all the modifiers are <code>false</code> or not all the modifiers are pressed.</p>
+<h2 id="journal"><a class="header" href="#journal">日志</a></h2>
+<ul>
+<li>Description: Configuration for the journal.</li>
+<li>Setting: <code>journal</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"journal": {
+  "path": "~",
+  "hour_format": "hour12"
+}
+</code></pre>
+<h3 id="path"><a class="header" href="#path">Path</a></h3>
+<ul>
+<li>Description: The path of the directory where journal entries are stored.</li>
+<li>Setting: <code>path</code></li>
+<li>Default: <code>~</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>string</code> values</p>
+<h3 id="hour-format"><a class="header" href="#hour-format">Hour Format</a></h3>
+<ul>
+<li>Description: The format to use for displaying hours in the journal.</li>
+<li>Setting: <code>hour_format</code></li>
+<li>Default: <code>hour12</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>12-hour format:</li>
+</ol>
+<pre><code class="language-json">{
+  "hour_format": "hour12"
+}
+</code></pre>
+<ol start="2">
+<li>24-hour format:</li>
+</ol>
+<pre><code class="language-json">{
+  "hour_format": "hour24"
+}
+</code></pre>
+<h2 id="jsx-tag-auto-close"><a class="header" href="#jsx-tag-auto-close">JSX Tag Auto Close</a></h2>
+<ul>
+<li>Description: Whether to automatically close JSX tags</li>
+<li>Setting: <code>jsx_tag_auto_close</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "jsx_tag_auto_close": {
+    "enabled": true
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>enabled</code>: Whether to enable automatic JSX tag closing</li>
+</ul>
+<h2 id="languages"><a class="header" href="#languages">语言</a></h2>
+<ul>
+<li>Description: Configuration for specific languages.</li>
+<li>Setting: <code>languages</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>To override settings for a language, add an entry for that languages name to the <code>languages</code> value. Example:</p>
+<pre><code class="language-json">"languages": {
+  "C": {
+    "format_on_save": "off",
+    "preferred_line_length": 64,
+    "soft_wrap": "preferred_line_length"
+  },
+  "JSON": {
+    "tab_size": 4
+  }
+}
+</code></pre>
+<p>The following settings can be overridden for each specific language:</p>
+<ul>
+<li><a href="#enable-language-server"><code>enable_language_server</code></a></li>
+<li><a href="#ensure-final-newline-on-save"><code>ensure_final_newline_on_save</code></a></li>
+<li><a href="#format-on-save"><code>format_on_save</code></a></li>
+<li><a href="#formatter"><code>formatter</code></a></li>
+<li><a href="#hard-tabs"><code>hard_tabs</code></a></li>
+<li><a href="#preferred-line-length"><code>preferred_line_length</code></a></li>
+<li><a href="#remove-trailing-whitespace-on-save"><code>remove_trailing_whitespace_on_save</code></a></li>
+<li><a href="#show-edit-predictions"><code>show_edit_predictions</code></a></li>
+<li><a href="#show-whitespaces"><code>show_whitespaces</code></a></li>
+<li><a href="#soft-wrap"><code>soft_wrap</code></a></li>
+<li><a href="#tab-size"><code>tab_size</code></a></li>
+<li><a href="#use-autoclose"><code>use_autoclose</code></a></li>
+<li><a href="#always-treat-brackets-as-autoclosed"><code>always_treat_brackets_as_autoclosed</code></a></li>
+</ul>
+<p>These values take in the same options as the root-level settings with the same name.</p>
+<h2 id="language-models"><a class="header" href="#language-models">Language Models</a></h2>
+<ul>
+<li>Description: Configuration for language model providers</li>
+<li>Setting: <code>language_models</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "language_models": {
+    "anthropic": {
+      "api_url": "https://api.anthropic.com"
+    },
+    "google": {
+      "api_url": "https://generativelanguage.googleapis.com"
+    },
+    "ollama": {
+      "api_url": "http://localhost:11434"
+    },
+    "openai": {
+      "api_url": "https://api.openai.com/v1"
+    }
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<p>Configuration for various AI model providers including API URLs and authentication settings.</p>
+<h2 id="line-indicator-format"><a class="header" href="#line-indicator-format">Line Indicator Format</a></h2>
+<ul>
+<li>Description: Format for line indicator in the status bar</li>
+<li>Setting: <code>line_indicator_format</code></li>
+<li>Default: <code>"short"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Short format:</li>
+</ol>
+<pre><code class="language-json">{
+  "line_indicator_format": "short"
+}
+</code></pre>
+<ol start="2">
+<li>Long format:</li>
+</ol>
+<pre><code class="language-json">{
+  "line_indicator_format": "long"
+}
+</code></pre>
+<h2 id="linked-edits"><a class="header" href="#linked-edits">Linked Edits</a></h2>
+<ul>
+<li>Description: Whether to perform linked edits of associated ranges, if the language server supports it. For example, when editing opening <code>&lt;html&gt;</code> tag, the contents of the closing <code>&lt;/html&gt;</code> tag will be edited as well.</li>
+<li>Setting: <code>linked_edits</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="lsp-document-colors"><a class="header" href="#lsp-document-colors">LSP Document Colors</a></h2>
+<ul>
+<li>Description: Whether to show document color information from the language server</li>
+<li>Setting: <code>lsp_document_colors</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="max-tabs"><a class="header" href="#max-tabs">Max Tabs</a></h2>
+<ul>
+<li>Description: Maximum number of tabs to show in the tab bar</li>
+<li>Setting: <code>max_tabs</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Positive <code>integer</code> values or <code>null</code> for unlimited tabs</p>
+<h2 id="middle-click-paste-linux-only"><a class="header" href="#middle-click-paste-linux-only">Middle Click Paste (Linux only)</a></h2>
+<ul>
+<li>Description: Enable middle-click paste on Linux</li>
+<li>Setting: <code>middle_click_paste</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="multi-cursor-modifier"><a class="header" href="#multi-cursor-modifier">Multi Cursor Modifier</a></h2>
+<ul>
+<li>Description: Determines the modifier to be used to add multiple cursors with the mouse. The open hover link mouse gestures will adapt such that it do not conflict with the multicursor modifier.</li>
+<li>Setting: <code>multi_cursor_modifier</code></li>
+<li>Default: <code>alt</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Maps to <code>Alt</code> on Linux and Windows and to <code>Option</code> on MacOS:</li>
+</ol>
+<pre><code class="language-json">{
+  "multi_cursor_modifier": "alt"
+}
+</code></pre>
+<ol start="2">
+<li>Maps <code>Control</code> on Linux and Windows and to <code>Command</code> on MacOS:</li>
+</ol>
+<pre><code class="language-json">{
+  "multi_cursor_modifier": "cmd_or_ctrl" // alias: "cmd", "ctrl"
+}
+</code></pre>
+<h2 id="node"><a class="header" href="#node">Node</a></h2>
+<ul>
+<li>Description: Configuration for Node.js integration</li>
+<li>Setting: <code>node</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "node": {
+    "ignore_system_version": false,
+    "path": null,
+    "npm_path": null
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>ignore_system_version</code>: Whether to ignore the system Node.js version</li>
+<li><code>path</code>: Custom path to Node.js binary</li>
+<li><code>npm_path</code>: Custom path to npm binary</li>
+</ul>
+<h2 id="network-proxy"><a class="header" href="#network-proxy">Network Proxy</a></h2>
+<ul>
+<li>Description: Configure a network proxy for Zed.</li>
+<li>Setting: <code>proxy</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>The proxy setting must contain a URL to the proxy.</p>
+<p>The following URI schemes are supported:</p>
+<ul>
+<li><code>http</code></li>
+<li><code>https</code></li>
+<li><code>socks4</code> - SOCKS4 proxy with local DNS</li>
+<li><code>socks4a</code> - SOCKS4 proxy with remote DNS</li>
+<li><code>socks5</code> - SOCKS5 proxy with local DNS</li>
+<li><code>socks5h</code> - SOCKS5 proxy with remote DNS</li>
+</ul>
+<p><code>http</code> will be used when no scheme is specified.</p>
+<p>By default no proxy will be used, or Zed will attempt to retrieve proxy settings from environment variables, such as <code>http_proxy</code>, <code>HTTP_PROXY</code>, <code>https_proxy</code>, <code>HTTPS_PROXY</code>, <code>all_proxy</code>, <code>ALL_PROXY</code>, <code>no_proxy</code> and <code>NO_PROXY</code>.</p>
+<p>For example, to set an <code>http</code> proxy, add the following to your settings:</p>
+<pre><code class="language-json">{
+  "proxy": "http://127.0.0.1:10809"
+}
+</code></pre>
+<p>Or to set a <code>socks5</code> proxy:</p>
+<pre><code class="language-json">{
+  "proxy": "socks5h://localhost:10808"
+}
+</code></pre>
+<p>If you wish to exclude certain hosts from using the proxy, set the <code>NO_PROXY</code> environment variable. This accepts a comma-separated list of hostnames, host suffixes, IPv4/IPv6 addresses or blocks that should not use the proxy. For example if your environment included <code>NO_PROXY="google.com, 192.168.1.0/24"</code> all hosts in <code>192.168.1.*</code>, <code>google.com</code> and <code>*.google.com</code> would bypass the proxy. See <a href="https://docs.rs/reqwest/latest/reqwest/struct.NoProxy.html#method.from_string">reqwest NoProxy docs</a> for more.</p>
+<h2 id="on-last-window-closed"><a class="header" href="#on-last-window-closed">On Last Window Closed</a></h2>
+<ul>
+<li>Description: What to do when the last window is closed</li>
+<li>Setting: <code>on_last_window_closed</code></li>
+<li>Default: <code>"platform_default"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use platform default behavior:</li>
+</ol>
+<pre><code class="language-json">{
+  "on_last_window_closed": "platform_default"
+}
+</code></pre>
+<ol start="2">
+<li>Always quit the application:</li>
+</ol>
+<pre><code class="language-json">{
+  "on_last_window_closed": "quit_app"
+}
+</code></pre>
+<h2 id="profiles"><a class="header" href="#profiles">Profiles</a></h2>
+<ul>
+<li>Description: Configuration profiles that can be applied on top of existing settings</li>
+<li>Setting: <code>profiles</code></li>
+<li>Default: <code>{}</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Configuration object for defining settings profiles. Example:</p>
+<pre><code class="language-json">{
+  "profiles": {
+    "presentation": {
+      "buffer_font_size": 20,
+      "ui_font_size": 18,
+      "theme": "One Light"
+    }
+  }
+}
+</code></pre>
+<h2 id="preview-tabs"><a class="header" href="#preview-tabs">Preview tabs</a></h2>
+<ul>
+<li>
+<p>Description:
+Preview tabs allow you to open files in preview mode, where they close automatically when you switch to another file unless you explicitly pin them. This is useful for quickly viewing files without cluttering your workspace. Preview tabs display their file names in italics. <br/>
+There are several ways to convert a preview tab into a regular tab:</p>
+<ul>
+<li>Double-clicking on the file</li>
+<li>Double-clicking on the tab header</li>
+<li>Using the <code>project_panel::OpenPermanent</code> action</li>
+<li>Editing the file</li>
+<li>Dragging the file to a different pane</li>
+</ul>
+</li>
+<li>
+<p>Setting: <code>preview_tabs</code></p>
+</li>
+<li>
+<p>Default:</p>
+</li>
+</ul>
+<pre><code class="language-json">"preview_tabs": {
+  "enabled": true,
+  "enable_preview_from_file_finder": false,
+  "enable_preview_from_code_navigation": false,
+}
+</code></pre>
+<h3 id="enable-preview-from-file-finder"><a class="header" href="#enable-preview-from-file-finder">Enable preview from file finder</a></h3>
+<ul>
+<li>Description: Determines whether to open files in preview mode when selected from the file finder.</li>
+<li>Setting: <code>enable_preview_from_file_finder</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="enable-preview-from-code-navigation"><a class="header" href="#enable-preview-from-code-navigation">Enable preview from code navigation</a></h3>
+<ul>
+<li>Description: Determines whether a preview tab gets replaced when code navigation is used to navigate away from the tab.</li>
+<li>Setting: <code>enable_preview_from_code_navigation</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="file-finder"><a class="header" href="#file-finder">File Finder</a></h2>
+<h3 id="file-icons-1"><a class="header" href="#file-icons-1">File Icons</a></h3>
+<ul>
+<li>Description: Whether to show file icons in the file finder.</li>
+<li>Setting: <code>file_icons</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<h3 id="modal-max-width"><a class="header" href="#modal-max-width">Modal Max Width</a></h3>
+<ul>
+<li>Description: Max-width of the file finder modal. It can take one of these values: <code>small</code>, <code>medium</code>, <code>large</code>, <code>xlarge</code>, and <code>full</code>.</li>
+<li>Setting: <code>modal_max_width</code></li>
+<li>Default: <code>small</code></li>
+</ul>
+<h3 id="skip-focus-for-active-in-search"><a class="header" href="#skip-focus-for-active-in-search">Skip Focus For Active In Search</a></h3>
+<ul>
+<li>Description: Determines whether the file finder should skip focus for the active file in search results.</li>
+<li>Setting: <code>skip_focus_for_active_in_search</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<h2 id="pane-split-direction-horizontal"><a class="header" href="#pane-split-direction-horizontal">Pane Split Direction Horizontal</a></h2>
+<ul>
+<li>Description: The direction that you want to split panes horizontally</li>
+<li>Setting: <code>pane_split_direction_horizontal</code></li>
+<li>Default: <code>"up"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Split upward:</li>
+</ol>
+<pre><code class="language-json">{
+  "pane_split_direction_horizontal": "up"
+}
+</code></pre>
+<ol start="2">
+<li>Split downward:</li>
+</ol>
+<pre><code class="language-json">{
+  "pane_split_direction_horizontal": "down"
+}
+</code></pre>
+<h2 id="pane-split-direction-vertical"><a class="header" href="#pane-split-direction-vertical">Pane Split Direction Vertical</a></h2>
+<ul>
+<li>Description: The direction that you want to split panes vertically</li>
+<li>Setting: <code>pane_split_direction_vertical</code></li>
+<li>Default: <code>"left"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Split to the left:</li>
+</ol>
+<pre><code class="language-json">{
+  "pane_split_direction_vertical": "left"
+}
+</code></pre>
+<ol start="2">
+<li>Split to the right:</li>
+</ol>
+<pre><code class="language-json">{
+  "pane_split_direction_vertical": "right"
+}
+</code></pre>
+<h2 id="preferred-line-length"><a class="header" href="#preferred-line-length">首选行长度</a></h2>
+<ul>
+<li>Description: The column at which to soft-wrap lines, for buffers where soft-wrap is enabled.</li>
+<li>Setting: <code>preferred_line_length</code></li>
+<li>Default: <code>80</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values</p>
+<h2 id="private-files"><a class="header" href="#private-files">Private Files</a></h2>
+<ul>
+<li>Description: Globs to match against file paths to determine if a file is private</li>
+<li>Setting: <code>private_files</code></li>
+<li>Default: <code>["**/.env*", "**/*.pem", "**/*.key", "**/*.cert", "**/*.crt", "**/secrets.yml"]</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>List of <code>string</code> glob patterns</p>
+<h2 id="projects-online-by-default"><a class="header" href="#projects-online-by-default">Projects Online By Default</a></h2>
+<ul>
+<li>Description: Whether or not to show the online projects view by default.</li>
+<li>Setting: <code>projects_online_by_default</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="read-ssh-config"><a class="header" href="#read-ssh-config">Read SSH Config</a></h2>
+<ul>
+<li>Description: Whether to read SSH configuration files</li>
+<li>Setting: <code>read_ssh_config</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="redact-private-values"><a class="header" href="#redact-private-values">Redact Private Values</a></h2>
+<ul>
+<li>Description: Hide the values of variables from visual display in private files</li>
+<li>Setting: <code>redact_private_values</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="relative-line-numbers"><a class="header" href="#relative-line-numbers">Relative Line Numbers</a></h2>
+<ul>
+<li>Description: Whether to show relative line numbers in the gutter</li>
+<li>Setting: <code>relative_line_numbers</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="remove-trailing-whitespace-on-save"><a class="header" href="#remove-trailing-whitespace-on-save">Remove Trailing Whitespace On Save</a></h2>
+<ul>
+<li>Description: Whether or not to remove any trailing whitespace from lines of a buffer before saving it.</li>
+<li>Setting: <code>remove_trailing_whitespace_on_save</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="resize-all-panels-in-dock"><a class="header" href="#resize-all-panels-in-dock">Resize All Panels In Dock</a></h2>
+<ul>
+<li>Description: Whether to resize all the panels in a dock when resizing the dock. Can be a combination of "left", "right" and "bottom".</li>
+<li>Setting: <code>resize_all_panels_in_dock</code></li>
+<li>Default: <code>["left"]</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>List of strings containing any combination of:</p>
+<ul>
+<li><code>"left"</code>: Resize left dock panels together</li>
+<li><code>"right"</code>: Resize right dock panels together</li>
+<li><code>"bottom"</code>: Resize bottom dock panels together</li>
+</ul>
+<h2 id="restore-on-file-reopen"><a class="header" href="#restore-on-file-reopen">Restore on File Reopen</a></h2>
+<ul>
+<li>Description: Whether to attempt to restore previous file's state when opening it again. The state is stored per pane.</li>
+<li>Setting: <code>restore_on_file_reopen</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="restore-on-startup"><a class="header" href="#restore-on-startup">Restore on Startup</a></h2>
+<ul>
+<li>Description: Controls session restoration on startup.</li>
+<li>Setting: <code>restore_on_startup</code></li>
+<li>Default: <code>last_session</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Restore all workspaces that were open when quitting Zed:</li>
+</ol>
+<pre><code class="language-json">{
+  "restore_on_startup": "last_session"
+}
+</code></pre>
+<ol start="2">
+<li>Restore the workspace that was closed last:</li>
+</ol>
+<pre><code class="language-json">{
+  "restore_on_startup": "last_workspace"
+}
+</code></pre>
+<ol start="3">
+<li>Always start with an empty editor:</li>
+</ol>
+<pre><code class="language-json">{
+  "restore_on_startup": "none"
+}
+</code></pre>
+<h2 id="scroll-beyond-last-line"><a class="header" href="#scroll-beyond-last-line">Scroll Beyond Last Line</a></h2>
+<ul>
+<li>Description: Whether the editor will scroll beyond the last line</li>
+<li>Setting: <code>scroll_beyond_last_line</code></li>
+<li>Default: <code>"one_page"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Scroll one page beyond the last line by one page:</li>
+</ol>
+<pre><code class="language-json">{
+  "scroll_beyond_last_line": "one_page"
+}
+</code></pre>
+<ol start="2">
+<li>The editor will scroll beyond the last line by the same amount of lines as <code>vertical_scroll_margin</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  "scroll_beyond_last_line": "vertical_scroll_margin"
+}
+</code></pre>
+<ol start="3">
+<li>The editor will not scroll beyond the last line:</li>
+</ol>
+<pre><code class="language-json">{
+  "scroll_beyond_last_line": "off"
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="scroll-sensitivity"><a class="header" href="#scroll-sensitivity">Scroll Sensitivity</a></h2>
+<ul>
+<li>Description: Scroll sensitivity multiplier. This multiplier is applied to both the horizontal and vertical delta values while scrolling.</li>
+<li>Setting: <code>scroll_sensitivity</code></li>
+<li>Default: <code>1.0</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Positive <code>float</code> values</p>
+<h3 id="fast-scroll-sensitivity"><a class="header" href="#fast-scroll-sensitivity">Fast Scroll Sensitivity</a></h3>
+<ul>
+<li>Description: Scroll sensitivity multiplier for fast scrolling. This multiplier is applied to both the horizontal and vertical delta values while scrolling. Fast scrolling happens when a user holds the alt or option key while scrolling.</li>
+<li>Setting: <code>fast_scroll_sensitivity</code></li>
+<li>Default: <code>4.0</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Positive <code>float</code> values</p>
+<h3 id="horizontal-scroll-margin"><a class="header" href="#horizontal-scroll-margin">Horizontal Scroll Margin</a></h3>
+<ul>
+<li>Description: The number of characters to keep on either side when scrolling with the mouse</li>
+<li>Setting: <code>horizontal_scroll_margin</code></li>
+<li>Default: <code>5</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Non-negative <code>integer</code> values</p>
+<h3 id="vertical-scroll-margin"><a class="header" href="#vertical-scroll-margin">垂直滚动边距</a></h3>
+<ul>
+<li>Description: The number of lines to keep above/below the cursor when scrolling with the keyboard</li>
+<li>Setting: <code>vertical_scroll_margin</code></li>
+<li>Default: <code>3</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Non-negative <code>integer</code> values</p>
+<h2 id="search"><a class="header" href="#search">搜索</a></h2>
+<ul>
+<li>Description: Search options to enable by default when opening new project and buffer searches.</li>
+<li>Setting: <code>search</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"search": {
+  "whole_word": false,
+  "case_sensitive": false,
+  "include_ignored": false,
+  "regex": false
+},
+</code></pre>
+<h2 id="search-wrap"><a class="header" href="#search-wrap">Search Wrap</a></h2>
+<ul>
+<li>Description: If <code>search_wrap</code> is disabled, search result do not wrap around the end of the file</li>
+<li>Setting: <code>search_wrap</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<h2 id="seed-search-query-from-cursor"><a class="header" href="#seed-search-query-from-cursor">Seed Search Query From Cursor</a></h2>
+<ul>
+<li>Description: When to populate a new search's query based on the text under the cursor.</li>
+<li>Setting: <code>seed_search_query_from_cursor</code></li>
+<li>Default: <code>always</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li><code>always</code> always populate the search query with the word under the cursor</li>
+<li><code>selection</code> only populate the search query when there is text selected</li>
+<li><code>never</code> never populate the search query</li>
+</ol>
+<h2 id="use-smartcase-search"><a class="header" href="#use-smartcase-search">Use Smartcase Search</a></h2>
+<ul>
+<li>Description: When enabled, automatically adjusts search case sensitivity based on your query. If your search query contains any uppercase letters, the search becomes case-sensitive; if it contains only lowercase letters, the search becomes case-insensitive. <br/>
+This applies to both in-file searches and project-wide searches.</li>
+<li>Setting: <code>use_smartcase_search</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<p>Examples:</p>
+<ul>
+<li>Searching for "function" would match "function", "Function", "FUNCTION", etc.</li>
+<li>Searching for "Function" would only match "Function", not "function" or "FUNCTION"</li>
+</ul>
+<h2 id="show-call-status-icon"><a class="header" href="#show-call-status-icon">显示通话状态图标</a></h2>
+<ul>
+<li>Description: Whether or not to show the call status icon in the status bar.</li>
+<li>Setting: <code>show_call_status_icon</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="completions"><a class="header" href="#completions">Completions</a></h2>
+<ul>
+<li>Description: Controls how completions are processed for this language.</li>
+<li>Setting: <code>completions</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "completions": {
+    "words": "fallback",
+    "words_min_length": 3,
+    "lsp": true,
+    "lsp_fetch_timeout_ms": 0,
+    "lsp_insert_mode": "replace_suffix"
+  }
+}
+</code></pre>
+<h3 id="words"><a class="header" href="#words">Words</a></h3>
+<ul>
+<li>Description: Controls how words are completed. For large documents, not all words may be fetched for completion.</li>
+<li>Setting: <code>words</code></li>
+<li>Default: <code>fallback</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li><code>enabled</code> - Always fetch document's words for completions along with LSP completions</li>
+<li><code>fallback</code> - Only if LSP response errors or times out, use document's words to show completions</li>
+<li><code>disabled</code> - Never fetch or complete document's words for completions (word-based completions can still be queried via a separate action)</li>
+</ol>
+<h3 id="min-words-query-length"><a class="header" href="#min-words-query-length">Min Words Query Length</a></h3>
+<ul>
+<li>Description: Minimum number of characters required to automatically trigger word-based completions.
+Before that value, it's still possible to trigger the words-based completion manually with the corresponding editor command.</li>
+<li>Setting: <code>words_min_length</code></li>
+<li>Default: <code>3</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Positive integer values</p>
+<h3 id="lsp-1"><a class="header" href="#lsp-1">LSP</a></h3>
+<ul>
+<li>Description: Whether to fetch LSP completions or not.</li>
+<li>Setting: <code>lsp</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="lsp-fetch-timeout-ms"><a class="header" href="#lsp-fetch-timeout-ms">LSP Fetch Timeout (ms)</a></h3>
+<ul>
+<li>Description: When fetching LSP completions, determines how long to wait for a response of a particular server. When set to 0, waits indefinitely.</li>
+<li>Setting: <code>lsp_fetch_timeout_ms</code></li>
+<li>Default: <code>0</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values representing milliseconds</p>
+<h3 id="lsp-insert-mode"><a class="header" href="#lsp-insert-mode">LSP Insert Mode</a></h3>
+<ul>
+<li>Description: Controls what range to replace when accepting LSP completions.</li>
+<li>Setting: <code>lsp_insert_mode</code></li>
+<li>Default: <code>replace_suffix</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li><code>insert</code> - Replaces text before the cursor, using the <code>insert</code> range described in the LSP specification</li>
+<li><code>replace</code> - Replaces text before and after the cursor, using the <code>replace</code> range described in the LSP specification</li>
+<li><code>replace_subsequence</code> - Behaves like <code>"replace"</code> if the text that would be replaced is a subsequence of the completion text, and like <code>"insert"</code> otherwise</li>
+<li><code>replace_suffix</code> - Behaves like <code>"replace"</code> if the text after the cursor is a suffix of the completion, and like <code>"insert"</code> otherwise</li>
+</ol>
+<h2 id="show-completions-on-input"><a class="header" href="#show-completions-on-input">输入时显示补全</a></h2>
+<ul>
+<li>Description: Whether or not to show completions as you type.</li>
+<li>Setting: <code>show_completions_on_input</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="show-completion-documentation"><a class="header" href="#show-completion-documentation">显示补全文档</a></h2>
+<ul>
+<li>Description: Whether to display inline and alongside documentation for items in the completions menu.</li>
+<li>Setting: <code>show_completion_documentation</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="show-edit-predictions"><a class="header" href="#show-edit-predictions">Show Edit Predictions</a></h2>
+<ul>
+<li>Description: Whether to show edit predictions as you type or manually by triggering <code>editor::ShowEditPrediction</code>.</li>
+<li>Setting: <code>show_edit_predictions</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="show-whitespaces"><a class="header" href="#show-whitespaces">Show Whitespaces</a></h2>
+<ul>
+<li>Description: Whether or not to render whitespace characters in the editor.</li>
+<li>Setting: <code>show_whitespaces</code></li>
+<li>Default: <code>selection</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li><code>all</code></li>
+<li><code>selection</code></li>
+<li><code>none</code></li>
+<li><code>boundary</code></li>
+</ol>
+<h2 id="soft-wrap"><a class="header" href="#soft-wrap">软换行</a></h2>
+<ul>
+<li>Description: Whether or not to automatically wrap lines of text to fit editor / preferred width.</li>
+<li>Setting: <code>soft_wrap</code></li>
+<li>Default: <code>none</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li><code>none</code> to avoid wrapping generally, unless the line is too long</li>
+<li><code>prefer_line</code> (deprecated, same as <code>none</code>)</li>
+<li><code>editor_width</code> to wrap lines that overflow the editor width</li>
+<li><code>preferred_line_length</code> to wrap lines that overflow <code>preferred_line_length</code> config value</li>
+<li><code>bounded</code> to wrap lines at the minimum of <code>editor_width</code> and <code>preferred_line_length</code></li>
+</ol>
+<h2 id="show-wrap-guides"><a class="header" href="#show-wrap-guides">显示换行参考线</a></h2>
+<ul>
+<li>Description: Whether to show wrap guides (vertical rulers) in the editor. Setting this to true will show a guide at the 'preferred_line_length' value if 'soft_wrap' is set to 'preferred_line_length', and will show any additional guides as specified by the 'wrap_guides' setting.</li>
+<li>Setting: <code>show_wrap_guides</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="use-on-type-format"><a class="header" href="#use-on-type-format">Use On Type Format</a></h2>
+<ul>
+<li>Description: Whether to use additional LSP queries to format (and amend) the code after every "trigger" symbol input, defined by LSP server capabilities</li>
+<li>Setting: <code>use_on_type_format</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="use-auto-surround"><a class="header" href="#use-auto-surround">Use Auto Surround</a></h2>
+<ul>
+<li>Description: Whether to automatically surround selected text when typing opening parenthesis, bracket, brace, single or double quote characters. For example, when you select text and type (, Zed will surround the text with ().</li>
+<li>Setting: <code>use_auto_surround</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="use-system-path-prompts"><a class="header" href="#use-system-path-prompts">Use System Path Prompts</a></h2>
+<ul>
+<li>Description: Whether to use the system provided dialogs for Open and Save As. When set to false, Zed will use the built-in keyboard-first pickers.</li>
+<li>Setting: <code>use_system_path_prompts</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="use-system-prompts"><a class="header" href="#use-system-prompts">Use System Prompts</a></h2>
+<ul>
+<li>Description: Whether to use the system provided dialogs for prompts, such as confirmation prompts. When set to false, Zed will use its built-in prompts. Note that on Linux, this option is ignored and Zed will always use the built-in prompts.</li>
+<li>Setting: <code>use_system_prompts</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="wrap-guides-vertical-rulers"><a class="header" href="#wrap-guides-vertical-rulers">Wrap Guides (Vertical Rulers)</a></h2>
+<ul>
+<li>Description: Where to display vertical rulers as wrap-guides. Disable by setting <code>show_wrap_guides</code> to <code>false</code>.</li>
+<li>Setting: <code>wrap_guides</code></li>
+<li>Default: []</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>List of <code>integer</code> column numbers</p>
+<h2 id="tab-size"><a class="header" href="#tab-size">制表符大小</a></h2>
+<ul>
+<li>Description: The number of spaces to use for each tab character.</li>
+<li>Setting: <code>tab_size</code></li>
+<li>Default: <code>4</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values</p>
+<h2 id="tasks"><a class="header" href="#tasks">Tasks</a></h2>
+<ul>
+<li>Description: Configuration for tasks that can be run within Zed</li>
+<li>Setting: <code>tasks</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "tasks": {
+    "variables": {},
+    "enabled": true,
+    "prefer_lsp": false
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>variables</code>: Custom variables for task configuration</li>
+<li><code>enabled</code>: Whether tasks are enabled</li>
+<li><code>prefer_lsp</code>: Whether to prefer LSP-provided tasks over Zed language extension ones</li>
+</ul>
+<h2 id="telemetry"><a class="header" href="#telemetry">Telemetry</a></h2>
+<ul>
+<li>Description: Control what info is collected by Zed.</li>
+<li>Setting: <code>telemetry</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"telemetry": {
+  "diagnostics": true,
+  "metrics": true
+},
+</code></pre>
+<p><strong>Options</strong></p>
+<h3 id="diagnostics-2"><a class="header" href="#diagnostics-2">Diagnostics</a></h3>
+<ul>
+<li>Description: Setting for sending debug-related data, such as crash reports.</li>
+<li>Setting: <code>diagnostics</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h3 id="metrics"><a class="header" href="#metrics">Metrics</a></h3>
+<ul>
+<li>Description: Setting for sending anonymized usage data, such what languages you're using Zed with.</li>
+<li>Setting: <code>metrics</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<h2 id="terminal"><a class="header" href="#terminal">终端</a></h2>
+<ul>
+<li>Description: Configuration for the terminal.</li>
+<li>Setting: <code>terminal</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "terminal": {
+    "alternate_scroll": "off",
+    "blinking": "terminal_controlled",
+    "copy_on_select": false,
+    "keep_selection_on_copy": false,
+    "dock": "bottom",
+    "default_width": 640,
+    "default_height": 320,
+    "detect_venv": {
+      "on": {
+        "directories": [".env", "env", ".venv", "venv"],
+        "activate_script": "default"
+      }
+    },
+    "env": {},
+    "font_family": null,
+    "font_features": null,
+    "font_size": null,
+    "line_height": "comfortable",
+    "minimum_contrast": 45,
+    "option_as_meta": false,
+    "button": true,
+    "shell": "system",
+    "toolbar": {
+      "breadcrumbs": true
+    },
+    "working_directory": "current_project_directory",
+    "scrollbar": {
+      "show": null
+    }
+  }
+}
+</code></pre>
+<h3 id="terminal-dock"><a class="header" href="#terminal-dock">Terminal: Dock</a></h3>
+<ul>
+<li>Description: Control the position of the dock</li>
+<li>Setting: <code>dock</code></li>
+<li>Default: <code>bottom</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>"bottom"</code>, <code>"left"</code> or <code>"right"</code></p>
+<h3 id="terminal-alternate-scroll"><a class="header" href="#terminal-alternate-scroll">Terminal: Alternate Scroll</a></h3>
+<ul>
+<li>Description: Set whether Alternate Scroll mode (DECSET code: <code>?1007</code>) is active by default. Alternate Scroll mode converts mouse scroll events into up / down key presses when in the alternate screen (e.g. when running applications like vim or less). The terminal can still set and unset this mode with ANSI escape codes.</li>
+<li>Setting: <code>alternate_scroll</code></li>
+<li>Default: <code>off</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Default alternate scroll mode to off</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "alternate_scroll": "off"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Default alternate scroll mode to on</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "alternate_scroll": "on"
+  }
+}
+</code></pre>
+<h3 id="terminal-blinking"><a class="header" href="#terminal-blinking">Terminal: Blinking</a></h3>
+<ul>
+<li>Description: Set the cursor blinking behavior in the terminal</li>
+<li>Setting: <code>blinking</code></li>
+<li>Default: <code>terminal_controlled</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Never blink the cursor, ignore the terminal mode</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "blinking": "off"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Default the cursor blink to off, but allow the terminal to turn blinking on</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "blinking": "terminal_controlled"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Always blink the cursor, ignore the terminal mode</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "blinking": "on"
+  }
+}
+</code></pre>
+<h3 id="terminal-copy-on-select"><a class="header" href="#terminal-copy-on-select">Terminal: Copy On Select</a></h3>
+<ul>
+<li>Description: Whether or not selecting text in the terminal will automatically copy to the system clipboard.</li>
+<li>Setting: <code>copy_on_select</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<p><strong>Example</strong></p>
+<pre><code class="language-json">{
+  "terminal": {
+    "copy_on_select": true
+  }
+}
+</code></pre>
+<h3 id="terminal-cursor-shape"><a class="header" href="#terminal-cursor-shape">Terminal: Cursor Shape</a></h3>
+<ul>
+<li>Description: Whether or not selecting text in the terminal will automatically copy to the system clipboard.</li>
+<li>Setting: <code>cursor_shape</code></li>
+<li>Default: <code>null</code> (defaults to block)</li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>A block that surrounds the following character</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "cursor_shape": "block"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>A vertical bar</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "cursor_shape": "bar"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>An underline / underscore that runs along the following character</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "cursor_shape": "underline"
+  }
+}
+</code></pre>
+<ol start="4">
+<li>A box drawn around the following character</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "cursor_shape": "hollow"
+  }
+}
+</code></pre>
+<h3 id="terminal-keep-selection-on-copy"><a class="header" href="#terminal-keep-selection-on-copy">Terminal: Keep Selection On Copy</a></h3>
+<ul>
+<li>Description: Whether or not to keep the selection in the terminal after copying text.</li>
+<li>Setting: <code>keep_selection_on_copy</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<p><strong>Example</strong></p>
+<pre><code class="language-json">{
+  "terminal": {
+    "keep_selection_on_copy": true
+  }
+}
+</code></pre>
+<h3 id="terminal-env"><a class="header" href="#terminal-env">Terminal: Env</a></h3>
+<ul>
+<li>Description: Any key-value pairs added to this object will be added to the terminal's environment. Keys must be unique, use <code>:</code> to separate multiple values in a single variable</li>
+<li>Setting: <code>env</code></li>
+<li>Default: <code>{}</code></li>
+</ul>
+<p><strong>Example</strong></p>
+<pre><code class="language-json">{
+  "terminal": {
+    "env": {
+      "ZED": "1",
+      "KEY": "value1:value2"
+    }
+  }
+}
+</code></pre>
+<h3 id="terminal-font-size"><a class="header" href="#terminal-font-size">Terminal: Font Size</a></h3>
+<ul>
+<li>Description: What font size to use for the terminal. When not set defaults to matching the editor's font size</li>
+<li>Setting: <code>font_size</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values</p>
+<pre><code class="language-json">{
+  "terminal": {
+    "font_size": 15
+  }
+}
+</code></pre>
+<h3 id="terminal-font-family"><a class="header" href="#terminal-font-family">Terminal: Font Family</a></h3>
+<ul>
+<li>Description: What font to use for the terminal. When not set, defaults to matching the editor's font.</li>
+<li>Setting: <code>font_family</code></li>
+<li>Default: <code>null</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>The name of any font family installed on the user's system</p>
+<pre><code class="language-json">{
+  "terminal": {
+    "font_family": "Berkeley Mono"
+  }
+}
+</code></pre>
+<h3 id="terminal-font-features"><a class="header" href="#terminal-font-features">Terminal: Font Features</a></h3>
+<ul>
+<li>Description: What font features to use for the terminal. When not set, defaults to matching the editor's font features.</li>
+<li>Setting: <code>font_features</code></li>
+<li>Default: <code>null</code></li>
+<li>Platform: macOS and Windows.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>See Buffer Font Features</p>
+<pre><code class="language-json">{
+  "terminal": {
+    "font_features": {
+      "calt": false
+      // See Buffer Font Features for more features
+    }
+  }
+}
+</code></pre>
+<h3 id="terminal-line-height"><a class="header" href="#terminal-line-height">Terminal: Line Height</a></h3>
+<ul>
+<li>Description: Set the terminal's line height.</li>
+<li>Setting: <code>line_height</code></li>
+<li>Default: <code>comfortable</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use a line height that's <code>comfortable</code> for reading, 1.618. (default)</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "line_height": "comfortable"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Use a <code>standard</code> line height, 1.3. This option is useful for TUIs, particularly if they use box characters</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "line_height": "standard"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Use a custom line height.</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "line_height": {
+      "custom": 2
+    }
+  }
+}
+</code></pre>
+<h3 id="terminal-minimum-contrast"><a class="header" href="#terminal-minimum-contrast">Terminal: Minimum Contrast</a></h3>
+<ul>
+<li>Description: Controls the minimum contrast between foreground and background colors in the terminal. Uses the APCA (Accessible Perceptual Contrast Algorithm) for color adjustments. Set this to 0 to disable this feature.</li>
+<li>Setting: <code>minimum_contrast</code></li>
+<li>Default: <code>45</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values from 0 to 106. Common recommended values:</p>
+<ul>
+<li><code>0</code>: No contrast adjustment</li>
+<li><code>45</code>: Minimum for large fluent text (default)</li>
+<li><code>60</code>: Minimum for other content text</li>
+<li><code>75</code>: Minimum for body text</li>
+<li><code>90</code>: Preferred for body text</li>
+</ul>
+<pre><code class="language-json">{
+  "terminal": {
+    "minimum_contrast": 45
+  }
+}
+</code></pre>
+<h3 id="terminal-option-as-meta"><a class="header" href="#terminal-option-as-meta">Terminal: Option As Meta</a></h3>
+<ul>
+<li>Description: Re-interprets the option keys to act like a 'meta' key, like in Emacs.</li>
+<li>Setting: <code>option_as_meta</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<pre><code class="language-json">{
+  "terminal": {
+    "option_as_meta": true
+  }
+}
+</code></pre>
+<h3 id="terminal-shell"><a class="header" href="#terminal-shell">Terminal: Shell</a></h3>
+<ul>
+<li>Description: What shell to use when launching the terminal.</li>
+<li>Setting: <code>shell</code></li>
+<li>Default: <code>system</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use the system's default terminal configuration (usually the <code>/etc/passwd</code> file).</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "shell": "system"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>A program to launch:</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "shell": {
+      "program": "sh"
+    }
+  }
+}
+</code></pre>
+<ol start="3">
+<li>A program with arguments:</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "shell": {
+      "with_arguments": {
+        "program": "/bin/bash",
+        "args": ["--login"]
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="terminal-detect_venv"><a class="header" href="#terminal-detect_venv">Terminal: Detect Virtual Environments</a></h2>
+<ul>
+<li>Description: Activate the <a href="https://docs.python.org/3/library/venv.html">Python Virtual Environment</a>, if one is found, in the terminal's working directory (as resolved by the working_directory and automatically activating the virtual environment.</li>
+<li>Setting: <code>detect_venv</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "terminal": {
+    "detect_venv": {
+      "on": {
+        // Default directories to search for virtual environments, relative
+        // to the current working directory. We recommend overriding this
+        // in your project's settings, rather than globally.
+        "directories": [".env", "env", ".venv", "venv"],
+        // Can also be `csh`, `fish`, and `nushell`
+        "activate_script": "default"
+      }
+    }
+  }
+}
+</code></pre>
+<p>Disable with:</p>
+<pre><code class="language-json">{
+  "terminal": {
+    "detect_venv": "off"
+  }
+}
+</code></pre>
+<h2 id="terminal-toolbar"><a class="header" href="#terminal-toolbar">Terminal: Toolbar</a></h2>
+<ul>
+<li>Description: Whether or not to show various elements in the terminal toolbar.</li>
+<li>Setting: <code>toolbar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "terminal": {
+    "toolbar": {
+      "breadcrumbs": true
+    }
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<p>At the moment, only the <code>breadcrumbs</code> option is available, it controls displaying of the terminal title that can be changed via <code>PROMPT_COMMAND</code>.</p>
+<p>If the terminal title is empty, the breadcrumbs won't be shown.</p>
+<p>The shell running in the terminal needs to be configured to emit the title.</p>
+<p>Example command to set the title: <code>echo -e "\e]2;New Title\007";</code></p>
+<h3 id="terminal-button"><a class="header" href="#terminal-button">Terminal: Button</a></h3>
+<ul>
+<li>Description: Control to show or hide the terminal button in the status bar</li>
+<li>Setting: <code>button</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>boolean</code> values</p>
+<pre><code class="language-json">{
+  "terminal": {
+    "button": false
+  }
+}
+</code></pre>
+<h3 id="terminal-working-directory"><a class="header" href="#terminal-working-directory">Terminal: Working Directory</a></h3>
+<ul>
+<li>Description: What working directory to use when launching the terminal.</li>
+<li>Setting: <code>working_directory</code></li>
+<li>Default: <code>"current_project_directory"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use the current file's project directory. Will Fallback to the first project directory strategy if unsuccessful</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "working_directory": "current_project_directory"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Use the first project in this workspace's directory. Will fallback to using this platform's home directory.</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "working_directory": "first_project_directory"
+  }
+}
+</code></pre>
+<ol start="3">
+<li>Always use this platform's home directory (if we can find it)</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "working_directory": "always_home"
+  }
+}
+</code></pre>
+<ol start="4">
+<li>Always use a specific directory. This value will be shell expanded. If this path is not a valid directory the terminal will default to this platform's home directory.</li>
+</ol>
+<pre><code class="language-json">{
+  "terminal": {
+    "working_directory": {
+      "always": {
+        "directory": "~/zed/projects/"
+      }
+    }
+  }
+}
+</code></pre>
+<h2 id="theme"><a class="header" href="#theme">Theme</a></h2>
+<ul>
+<li>Description: The theme setting can be specified in two forms - either as the name of a theme or as an object containing the <code>mode</code>, <code>dark</code>, and <code>light</code> themes for the Zed UI.</li>
+<li>Setting: <code>theme</code></li>
+<li>Default: <code>One Dark</code></li>
+</ul>
+<h3 id="theme-object"><a class="header" href="#theme-object">Theme Object</a></h3>
+<ul>
+<li>Description: Specify the theme using an object that includes the <code>mode</code>, <code>dark</code>, and <code>light</code> themes.</li>
+<li>Setting: <code>theme</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"theme": {
+  "mode": "system",
+  "dark": "One Dark",
+  "light": "One Light"
+},
+</code></pre>
+<h3 id="mode-1"><a class="header" href="#mode-1">Mode</a></h3>
+<ul>
+<li>Description: Specify theme mode.</li>
+<li>Setting: <code>mode</code></li>
+<li>Default: <code>system</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Set the theme to dark mode</li>
+</ol>
+<pre><code class="language-json">{
+  "mode": "dark"
+}
+</code></pre>
+<ol start="2">
+<li>Set the theme to light mode</li>
+</ol>
+<pre><code class="language-json">{
+  "mode": "light"
+}
+</code></pre>
+<ol start="3">
+<li>Set the theme to system mode</li>
+</ol>
+<pre><code class="language-json">{
+  "mode": "system"
+}
+</code></pre>
+<h3 id="dark-1"><a class="header" href="#dark-1">Dark</a></h3>
+<ul>
+<li>Description: The name of the dark Zed theme to use for the UI.</li>
+<li>Setting: <code>dark</code></li>
+<li>Default: <code>One Dark</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Run the <code>theme selector: toggle</code> action in the command palette to see a current list of valid themes names.</p>
+<h3 id="light-1"><a class="header" href="#light-1">Light</a></h3>
+<ul>
+<li>Description: The name of the light Zed theme to use for the UI.</li>
+<li>Setting: <code>light</code></li>
+<li>Default: <code>One Light</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Run the <code>theme selector: toggle</code> action in the command palette to see a current list of valid themes names.</p>
+<h2 id="title-bar"><a class="header" href="#title-bar">Title Bar</a></h2>
+<ul>
+<li>Description: Whether or not to show various elements in the title bar</li>
+<li>Setting: <code>title_bar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"title_bar": {
+  "show_branch_icon": false,
+  "show_branch_name": true,
+  "show_project_items": true,
+  "show_onboarding_banner": true,
+  "show_user_picture": true,
+  "show_sign_in": true,
+  "show_menus": false
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>show_branch_icon</code>: Whether to show the branch icon beside branch switcher in the titlebar</li>
+<li><code>show_branch_name</code>: Whether to show the branch name button in the titlebar</li>
+<li><code>show_project_items</code>: Whether to show the project host and name in the titlebar</li>
+<li><code>show_onboarding_banner</code>: Whether to show onboarding banners in the titlebar</li>
+<li><code>show_user_picture</code>: Whether to show user picture in the titlebar</li>
+<li><code>show_sign_in</code>: Whether to show the sign in button in the titlebar</li>
+<li><code>show_menus</code>: Whether to show the menus in the titlebar</li>
+</ul>
+<h2 id="vim"><a class="header" href="#vim">Vim</a></h2>
+<ul>
+<li>Description: Whether or not to enable vim mode.</li>
+<li>Setting: <code>vim_mode</code></li>
+<li>Default: <code>false</code></li>
+</ul>
+<h2 id="when-closing-with-no-tabs"><a class="header" href="#when-closing-with-no-tabs">When Closing With No Tabs</a></h2>
+<ul>
+<li>Description: Whether the window should be closed when using 'close active item' on a window with no tabs</li>
+<li>Setting: <code>when_closing_with_no_tabs</code></li>
+<li>Default: <code>"platform_default"</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Use platform default behavior:</li>
+</ol>
+<pre><code class="language-json">{
+  "when_closing_with_no_tabs": "platform_default"
+}
+</code></pre>
+<ol start="2">
+<li>Always close the window:</li>
+</ol>
+<pre><code class="language-json">{
+  "when_closing_with_no_tabs": "close_window"
+}
+</code></pre>
+<ol start="3">
+<li>Never close the window:</li>
+</ol>
+<pre><code class="language-json">{
+  "when_closing_with_no_tabs": "keep_window_open"
+}
+</code></pre>
+<h2 id="project-panel"><a class="header" href="#project-panel">项目面板</a></h2>
+<ul>
+<li>Description: Customize project panel</li>
+<li>Setting: <code>project_panel</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "project_panel": {
+    "button": true,
+    "default_width": 240,
+    "dock": "left",
+    "entry_spacing": "comfortable",
+    "file_icons": true,
+    "folder_icons": true,
+    "git_status": true,
+    "indent_size": 20,
+    "auto_reveal_entries": true,
+    "auto_fold_dirs": true,
+    "drag_and_drop": true,
+    "scrollbar": {
+      "show": null
+    },
+    "sticky_scroll": true,
+    "show_diagnostics": "all",
+    "indent_guides": {
+      "show": "always"
+    },
+    "hide_root": false,
+    "starts_open": true
+  }
+}
+</code></pre>
+<h3 id="dock"><a class="header" href="#dock">停靠栏</a></h3>
+<ul>
+<li>Description: Control the position of the dock</li>
+<li>Setting: <code>dock</code></li>
+<li>Default: <code>left</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Default dock position to left</li>
+</ol>
+<pre><code class="language-json">{
+  "dock": "left"
+}
+</code></pre>
+<ol start="2">
+<li>Default dock position to right</li>
+</ol>
+<pre><code class="language-json">{
+  "dock": "right"
+}
+</code></pre>
+<h3 id="entry-spacing"><a class="header" href="#entry-spacing">Entry Spacing</a></h3>
+<ul>
+<li>Description: Spacing between worktree entries</li>
+<li>Setting: <code>entry_spacing</code></li>
+<li>Default: <code>comfortable</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Comfortable entry spacing</li>
+</ol>
+<pre><code class="language-json">{
+  "entry_spacing": "comfortable"
+}
+</code></pre>
+<ol start="2">
+<li>Standard entry spacing</li>
+</ol>
+<pre><code class="language-json">{
+  "entry_spacing": "standard"
+}
+</code></pre>
+<h3 id="git-status-1"><a class="header" href="#git-status-1">Git Status</a></h3>
+<ul>
+<li>Description: Indicates newly created and updated files</li>
+<li>Setting: <code>git_status</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Default enable git status</li>
+</ol>
+<pre><code class="language-json">{
+  "git_status": true
+}
+</code></pre>
+<ol start="2">
+<li>Default disable git status</li>
+</ol>
+<pre><code class="language-json">{
+  "git_status": false
+}
+</code></pre>
+<h3 id="default-width"><a class="header" href="#default-width">Default Width</a></h3>
+<ul>
+<li>Description: Customize default width taken by project panel</li>
+<li>Setting: <code>default_width</code></li>
+<li>Default: <code>240</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>float</code> values</p>
+<h3 id="auto-reveal-entries"><a class="header" href="#auto-reveal-entries">Auto Reveal Entries</a></h3>
+<ul>
+<li>Description: Whether to reveal it in the project panel automatically, when a corresponding project entry becomes active. Gitignored entries are never auto revealed.</li>
+<li>Setting: <code>auto_reveal_entries</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Enable auto reveal entries</li>
+</ol>
+<pre><code class="language-json">{
+  "auto_reveal_entries": true
+}
+</code></pre>
+<ol start="2">
+<li>Disable auto reveal entries</li>
+</ol>
+<pre><code class="language-json">{
+  "auto_reveal_entries": false
+}
+</code></pre>
+<h3 id="auto-fold-dirs"><a class="header" href="#auto-fold-dirs">Auto Fold Dirs</a></h3>
+<ul>
+<li>Description: Whether to fold directories automatically when directory has only one directory inside.</li>
+<li>Setting: <code>auto_fold_dirs</code></li>
+<li>Default: <code>true</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<ol>
+<li>Enable auto fold dirs</li>
+</ol>
+<pre><code class="language-json">{
+  "auto_fold_dirs": true
+}
+</code></pre>
+<ol start="2">
+<li>Disable auto fold dirs</li>
+</ol>
+<pre><code class="language-json">{
+  "auto_fold_dirs": false
+}
+</code></pre>
+<h3 id="indent-size"><a class="header" href="#indent-size">Indent Size</a></h3>
+<ul>
+<li>Description: Amount of indentation (in pixels) for nested items.</li>
+<li>Setting: <code>indent_size</code></li>
+<li>Default: <code>20</code></li>
+</ul>
+<h3 id="indent-guides-show"><a class="header" href="#indent-guides-show">Indent Guides: Show</a></h3>
+<ul>
+<li>Description: Whether to show indent guides in the project panel.</li>
+<li>Setting: <code>indent_guides</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"indent_guides": {
+  "show": "always"
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show indent guides in the project panel</li>
+</ol>
+<pre><code class="language-json">{
+  "indent_guides": {
+    "show": "always"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Hide indent guides in the project panel</li>
+</ol>
+<pre><code class="language-json">{
+  "indent_guides": {
+    "show": "never"
+  }
+}
+</code></pre>
+<h3 id="scrollbar-show"><a class="header" href="#scrollbar-show">Scrollbar: Show</a></h3>
+<ul>
+<li>Description: Whether to show a scrollbar in the project panel. Possible values: null, "auto", "system", "always", "never". Inherits editor settings when absent, see its description for more details.</li>
+<li>Setting: <code>scrollbar</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"scrollbar": {
+  "show": null
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ol>
+<li>Show scrollbar in the project panel</li>
+</ol>
+<pre><code class="language-json">{
+  "scrollbar": {
+    "show": "always"
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Hide scrollbar in the project panel</li>
+</ol>
+<pre><code class="language-json">{
+  "scrollbar": {
+    "show": "never"
+  }
+}
+</code></pre>
+<h2 id="agent"><a class="header" href="#agent">Agent</a></h2>
+<p>Visit <a href="./ai/configuration.html">the Configuration page</a> under the AI section to learn more about all the agent-related settings.</p>
+<h2 id="collaboration-panel"><a class="header" href="#collaboration-panel">协作面板</a></h2>
+<ul>
+<li>Description: Customizations for the collaboration panel.</li>
+<li>Setting: <code>collaboration_panel</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "collaboration_panel": {
+    "button": true,
+    "dock": "left",
+    "default_width": 240
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>button</code>: Whether to show the collaboration panel button in the status bar</li>
+<li><code>dock</code>: Where to dock the collaboration panel. Can be <code>left</code> or <code>right</code></li>
+<li><code>default_width</code>: Default width of the collaboration panel</li>
+</ul>
+<h2 id="chat-panel"><a class="header" href="#chat-panel">Chat Panel</a></h2>
+<ul>
+<li>Description: Customizations for the chat panel.</li>
+<li>Setting: <code>chat_panel</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "chat_panel": {
+    "button": "when_in_call",
+    "dock": "right",
+    "default_width": 240
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>button</code>: When to show the chat panel button in the status bar. Can be <code>never</code>, <code>always</code>, or <code>when_in_call</code>.</li>
+<li><code>dock</code>: Where to dock the chat panel. Can be 'left' or 'right'</li>
+<li><code>default_width</code>: Default width of the chat panel</li>
+</ul>
+<h2 id="debugger"><a class="header" href="#debugger">Debugger</a></h2>
+<ul>
+<li>Description: Configuration for debugger panel and settings</li>
+<li>Setting: <code>debugger</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "debugger": {
+    "stepping_granularity": "line",
+    "save_breakpoints": true,
+    "dock": "bottom",
+    "button": true
+  }
+}
+</code></pre>
+<p>See the <a href="./debugger.html">debugger page</a> for more information about debugging support within Zed.</p>
+<h2 id="git-panel"><a class="header" href="#git-panel">Git Panel</a></h2>
+<ul>
+<li>Description: Setting to customize the behavior of the git panel.</li>
+<li>Setting: <code>git_panel</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">{
+  "git_panel": {
+    "button": true,
+    "dock": "left",
+    "default_width": 360,
+    "status_style": "icon",
+    "fallback_branch_name": "main",
+    "sort_by_path": false,
+    "collapse_untracked_diff": false,
+    "scrollbar": {
+      "show": null
+    }
+  }
+}
+</code></pre>
+<p><strong>Options</strong></p>
+<ul>
+<li><code>button</code>: Whether to show the git panel button in the status bar</li>
+<li><code>dock</code>: Where to dock the git panel. Can be <code>left</code> or <code>right</code></li>
+<li><code>default_width</code>: Default width of the git panel</li>
+<li><code>status_style</code>: How to display git status. Can be <code>label_color</code> or <code>icon</code></li>
+<li><code>fallback_branch_name</code>: What branch name to use if <code>init.defaultBranch</code> is not set</li>
+<li><code>sort_by_path</code>: Whether to sort entries in the panel by path or by status (the default)</li>
+<li><code>collapse_untracked_diff</code>: Whether to collapse untracked files in the diff panel</li>
+<li><code>scrollbar</code>: When to show the scrollbar in the git panel</li>
+</ul>
+<h2 id="outline-panel"><a class="header" href="#outline-panel">大纲面板</a></h2>
+<ul>
+<li>Description: Customize outline Panel</li>
+<li>Setting: <code>outline_panel</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"outline_panel": {
+  "button": true,
+  "default_width": 300,
+  "dock": "left",
+  "file_icons": true,
+  "folder_icons": true,
+  "git_status": true,
+  "indent_size": 20,
+  "auto_reveal_entries": true,
+  "auto_fold_dirs": true,
+  "indent_guides": {
+    "show": "always"
+  },
+  "scrollbar": {
+    "show": null
+  }
+}
+</code></pre>
+<h2 id="calls"><a class="header" href="#calls">Calls</a></h2>
+<ul>
+<li>Description: Customize behavior when participating in a call</li>
+<li>Setting: <code>calls</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"calls": {
+  // Join calls with the microphone live by default
+  "mute_on_join": false,
+  // Share your project when you are the first to join a channel
+  "share_on_join": false
+},
+</code></pre>
+<h2 id="unnecessary-code-fade"><a class="header" href="#unnecessary-code-fade">Unnecessary Code Fade</a></h2>
+<ul>
+<li>Description: How much to fade out unused code.</li>
+<li>Setting: <code>unnecessary_code_fade</code></li>
+<li>Default: <code>0.3</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Float values between <code>0.0</code> and <code>0.9</code>, where:</p>
+<ul>
+<li><code>0.0</code> means no fading (unused code looks the same as used code)</li>
+<li><code>0.9</code> means maximum fading (unused code is very faint but still visible)</li>
+</ul>
+<p><strong>Example</strong></p>
+<pre><code class="language-json">{
+  "unnecessary_code_fade": 0.5
+}
+</code></pre>
+<h2 id="ui-font-family"><a class="header" href="#ui-font-family">UI Font Family</a></h2>
+<ul>
+<li>Description: The name of the font to use for text in the UI.</li>
+<li>Setting: <code>ui_font_family</code></li>
+<li>Default: <code>.ZedSans</code>. This currently aliases to <a href="https://www.ibm.com/plex/">IBM Plex</a>.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>The name of any font family installed on the system, <code>".ZedSans"</code> to use the Zed-provided default, or <code>".SystemUIFont"</code> to use the system's default UI font (on macOS and Windows).</p>
+<h2 id="ui-font-features"><a class="header" href="#ui-font-features">UI Font Features</a></h2>
+<ul>
+<li>Description: The OpenType features to enable for text in the UI.</li>
+<li>Setting: <code>ui_font_features</code></li>
+<li>默认值:</li>
+</ul>
+<pre><code class="language-json">"ui_font_features": {
+  "calt": false
+}
+</code></pre>
+<ul>
+<li>Platform: macOS and Windows.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>Zed supports all OpenType features that can be enabled or disabled for a given UI font, as well as setting values for font features.</p>
+<p>For example, to disable font ligatures, add the following to your settings:</p>
+<pre><code class="language-json">{
+  "ui_font_features": {
+    "calt": false
+  }
+}
+</code></pre>
+<p>You can also set other OpenType features, like setting <code>cv01</code> to <code>7</code>:</p>
+<pre><code class="language-json">{
+  "ui_font_features": {
+    "cv01": 7
+  }
+}
+</code></pre>
+<h2 id="ui-font-fallbacks"><a class="header" href="#ui-font-fallbacks">UI Font Fallbacks</a></h2>
+<ul>
+<li>Description: The font fallbacks to use for text in the UI.</li>
+<li>Setting: <code>ui_font_fallbacks</code></li>
+<li>Default: <code>null</code></li>
+<li>Platform: macOS and Windows.</li>
+</ul>
+<p><strong>Options</strong></p>
+<p>For example, to use <code>Nerd Font</code> as a fallback, add the following to your settings:</p>
+<pre><code class="language-json">{
+  "ui_font_fallbacks": ["Nerd Font"]
+}
+</code></pre>
+<h2 id="ui-font-size"><a class="header" href="#ui-font-size">UI Font Size</a></h2>
+<ul>
+<li>Description: The default font size for text in the UI.</li>
+<li>Setting: <code>ui_font_size</code></li>
+<li>Default: <code>16</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values from <code>6</code> to <code>100</code> pixels (inclusive)</p>
+<h2 id="ui-font-weight"><a class="header" href="#ui-font-weight">UI Font Weight</a></h2>
+<ul>
+<li>Description: The default font weight for text in the UI.</li>
+<li>Setting: <code>ui_font_weight</code></li>
+<li>Default: <code>400</code></li>
+</ul>
+<p><strong>Options</strong></p>
+<p><code>integer</code> values between <code>100</code> and <code>900</code></p>
+<h2 id="an-example-configuration"><a class="header" href="#an-example-configuration">An example configuration:</a></h2>
+<pre><code class="language-json">// ~/.config/zed/settings.json
+{
+  "theme": "cave-light",
+  "tab_size": 2,
+  "preferred_line_length": 80,
+  "soft_wrap": "none",
+
+  "buffer_font_size": 18,
+  "buffer_font_family": ".ZedMono",
+
+  "autosave": "on_focus_change",
+  "format_on_save": "off",
+  "vim_mode": false,
+  "projects_online_by_default": true,
+  "terminal": {
+    "font_family": "FiraCode Nerd Font Mono",
+    "blinking": "off"
+  },
+  "languages": {
+    "C": {
+      "format_on_save": "language_server",
+      "preferred_line_length": 64,
+      "soft_wrap": "preferred_line_length"
+    }
+  }
+}
+</code></pre>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

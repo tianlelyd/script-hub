@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/extensions/debugger-extensions.html",
+  "title": "Debugger Extensions | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"debugger-extensions\"><a class=\"header\" href=\"#debugger-extensions\">Debugger Extensions</a></h1>\n<p><a href=\"https://microsoft.github.io/debug-adapter-protocol\">Debug Adapter Protocol</a> Servers can be exposed as extensions for use in the <a href=\"../debugger.html\">debugger</a>.</p>\n<h2 id=\"defining-debugger-extensions\"><a class=\"header\" href=\"#defining-debugger-extensions\">Defining Debugger Extensions</a></h2>\n<p>A given extension may provide one or more DAP servers.\nEach DAP server must be registered in the <code>extension.toml</code>:</p>\n<pre><code class=\"language-toml\">[debug_adapters.my-debug-adapter]\n# Optional relative path to the JSON schema for the debug adapter configuration schema. Defaults to `debug_adapter_schemas/$DEBUG_ADAPTER_NAME_ID.json`.\n# Note that while this field is optional, a schema is mandatory.\nschema_path = \"relative/path/to/schema.json\"\n</code></pre>\n<p>Then, in the Rust code for your extension, implement the <code>get_dap_binary</code> method on your extension:</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn get_dap_binary(\n        &amp;mut self,\n        adapter_name: String,\n        config: DebugTaskDefinition,\n        user_provided_debug_adapter_path: Option&lt;String&gt;,\n        worktree: &amp;Worktree,\n    ) -&gt; Result&lt;DebugAdapterBinary, String&gt;;\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p>This method should return the command to start up a debug adapter protocol server, along with any arguments or environment variables necessary for it to function.</p>\n<p>If you need to download the DAP server from an external source—like GitHub Releases or npm—you can also do that in this function. Make sure to check for updates only periodically, as this function is called whenever a user spawns a new debug session with your debug adapter.</p>\n<p>You must also implement <code>dap_request_kind</code>. This function is used to determine whether a given debug scenario will <em>launch</em> a new debuggee or <em>attach</em> to an existing one.\nWe also use it to determine that a given debug scenario requires running a <em>locator</em>.</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn dap_request_kind(\n        &amp;mut self,\n        _adapter_name: String,\n        _config: Value,\n    ) -&gt; Result&lt;StartDebuggingRequestArgumentsRequest, String&gt;;\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p>These two functions are sufficient to expose your debug adapter in <code>debug.json</code>-based user workflows, but you should strongly consider implementing <code>dap_config_to_scenario</code> as well.</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn dap_config_to_scenario(\n        &amp;mut self,\n        _adapter_name: DebugConfig,\n    ) -&gt; Result&lt;DebugScenario, String&gt;;\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p><code>dap_config_to_scenario</code> is used when the user spawns a session via new process modal UI. At a high level, it takes a generic debug configuration (that isn't specific to any\ndebug adapter) and tries to turn it into a concrete debug scenario for your adapter.\nPut another way, it is supposed to answer the question: \"Given a program, a list of arguments, current working directory and environment variables, what would the configuration for spawning this debug adapter look like?\".</p>\n<h2 id=\"defining-debug-locators\"><a class=\"header\" href=\"#defining-debug-locators\">Defining Debug Locators</a></h2>\n<p>Zed offers an automatic way to create debug scenarios with <em>debug locators</em>.\nA locator locates the debug target and figures out how to spawn a debug session for it. Thanks to locators, we can automatically convert existing user tasks (e.g. <code>cargo run</code>) and convert them into debug scenarios (e.g. <code>cargo build</code> followed by spawning a debugger with <code>target/debug/my_program</code> as the program to debug).</p>\n<blockquote>\n<p>Your extension can define it's own debug locators even if it does not expose a debug adapter. We strongly recommend doing so when your extension already exposes language tasks, as it allows users to spawn a debug session without having to manually configure the debug adapter.</p>\n</blockquote>\n<p>Locators can (but don't have to) be agnostic to the debug adapter they are used with. They are simply responsible for locating the debug target and figuring out how to spawn a debug session for it. This allows for a more flexible and extensible debugging experience.</p>\n<p>Your extension can define one or more debug locators. Each debug locator must be registered in the <code>extension.toml</code>:</p>\n<pre><code class=\"language-toml\">[debug_locators.my-debug-locator]\n</code></pre>\n<p>Locators have two components.\nFirst, each locator is ran on each available task to figure out if any of the available locators can provide a debug scenario for a given task. This is done by calling <code>dap_locator_create_scenario</code>.</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn dap_locator_create_scenario(\n        &amp;mut self,\n        _locator_name: String,\n        _build_task: TaskTemplate,\n        _resolved_label: String,\n        _debug_adapter_name: String,\n    ) -&gt; Option&lt;DebugScenario&gt;;\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p>This function should return <code>Some</code> debug scenario when that scenario defines a debugging counterpart to a given user task.\nNote that a <code>DebugScenario</code> can include a <a href=\"../debugger.html#build-tasks\">build task</a>. If there is one, we will execute <code>run_dap_locator</code> after a build task is finished successfully.</p>\n<pre><pre class=\"playground\"><code class=\"language-rust\"><span class=\"boring\">#![allow(unused)]\n</span><span class=\"boring\">fn main() {\n</span>impl zed::Extension for MyExtension {\n    fn run_dap_locator(\n        &amp;mut self,\n        _locator_name: String,\n        _build_task: TaskTemplate,\n    ) -&gt; Result&lt;DebugRequest, String&gt;;\n}\n<span class=\"boring\">}</span></code></pre></pre>\n<p><code>run_dap_locator</code> is useful in case you cannot determine a build target deterministically. Some build systems may produce artifacts whose names are not known up-front.\nNote however that you do <em>not</em> need to go through a 2-phase resolution; if you can determine the full debug configuration with just <code>dap_locator_create_scenario</code>, you can omit <code>build</code> property on a returned <code>DebugScenario</code>. Please also note that your locator <strong>will be</strong> called with tasks it's unlikely to accept; thus you should take some effort to return <code>None</code> early before performing any expensive operations.</p>\n<h2 id=\"available-extensions\"><a class=\"header\" href=\"#available-extensions\">Available Extensions</a></h2>\n<p>Check out all the DAP servers that have already been exposed as extensions <a href=\"https://zed.dev/extensions?filter=debug-adapters\">on Zed's site</a>.</p>\n<p>We recommend taking a look at their repositories as a way to understand how they are generally created and structured.</p>\n<h2 id=\"testing\"><a class=\"header\" href=\"#testing\">Testing</a></h2>\n<p>To test your new Debug Adapter Protocol server extension, you can <a href=\"./developing-extensions.html#developing-an-extension-locally\">install it as a dev extension</a>.</p>\n\n</main>",
+  "content_text": "Debugger Extensions\nDebug Adapter Protocol Servers can be exposed as extensions for use in the debugger.\nDefining Debugger Extensions\nA given extension may provide one or more DAP servers.\nEach DAP server must be registered in the extension.toml:\n[debug_adapters.my-debug-adapter]\n# Optional relative path to the JSON schema for the debug adapter configuration schema. Defaults to `debug_adapter_schemas/$DEBUG_ADAPTER_NAME_ID.json`.\n# Note that while this field is optional, a schema is mandatory.\nschema_path = \"relative/path/to/schema.json\"\n\nThen, in the Rust code for your extension, implement the get_dap_binary method on your extension:\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn get_dap_binary(\n        &mut self,\n        adapter_name: String,\n        config: DebugTaskDefinition,\n        user_provided_debug_adapter_path: Option<String>,\n        worktree: &Worktree,\n    ) -> Result<DebugAdapterBinary, String>;\n}\n}\nThis method should return the command to start up a debug adapter protocol server, along with any arguments or environment variables necessary for it to function.\nIf you need to download the DAP server from an external source—like GitHub Releases or npm—you can also do that in this function. Make sure to check for updates only periodically, as this function is called whenever a user spawns a new debug session with your debug adapter.\nYou must also implement dap_request_kind. This function is used to determine whether a given debug scenario will launch a new debuggee or attach to an existing one.\nWe also use it to determine that a given debug scenario requires running a locator.\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn dap_request_kind(\n        &mut self,\n        _adapter_name: String,\n        _config: Value,\n    ) -> Result<StartDebuggingRequestArgumentsRequest, String>;\n}\n}\nThese two functions are sufficient to expose your debug adapter in debug.json-based user workflows, but you should strongly consider implementing dap_config_to_scenario as well.\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn dap_config_to_scenario(\n        &mut self,\n        _adapter_name: DebugConfig,\n    ) -> Result<DebugScenario, String>;\n}\n}\ndap_config_to_scenario is used when the user spawns a session via new process modal UI. At a high level, it takes a generic debug configuration (that isn't specific to any\ndebug adapter) and tries to turn it into a concrete debug scenario for your adapter.\nPut another way, it is supposed to answer the question: \"Given a program, a list of arguments, current working directory and environment variables, what would the configuration for spawning this debug adapter look like?\".\nDefining Debug Locators\nZed offers an automatic way to create debug scenarios with debug locators.\nA locator locates the debug target and figures out how to spawn a debug session for it. Thanks to locators, we can automatically convert existing user tasks (e.g. cargo run) and convert them into debug scenarios (e.g. cargo build followed by spawning a debugger with target/debug/my_program as the program to debug).\n\nYour extension can define it's own debug locators even if it does not expose a debug adapter. We strongly recommend doing so when your extension already exposes language tasks, as it allows users to spawn a debug session without having to manually configure the debug adapter.\n\nLocators can (but don't have to) be agnostic to the debug adapter they are used with. They are simply responsible for locating the debug target and figuring out how to spawn a debug session for it. This allows for a more flexible and extensible debugging experience.\nYour extension can define one or more debug locators. Each debug locator must be registered in the extension.toml:\n[debug_locators.my-debug-locator]\n\nLocators have two components.\nFirst, each locator is ran on each available task to figure out if any of the available locators can provide a debug scenario for a given task. This is done by calling dap_locator_create_scenario.\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn dap_locator_create_scenario(\n        &mut self,\n        _locator_name: String,\n        _build_task: TaskTemplate,\n        _resolved_label: String,\n        _debug_adapter_name: String,\n    ) -> Option<DebugScenario>;\n}\n}\nThis function should return Some debug scenario when that scenario defines a debugging counterpart to a given user task.\nNote that a DebugScenario can include a build task. If there is one, we will execute run_dap_locator after a build task is finished successfully.\n#![allow(unused)]\nfn main() {\nimpl zed::Extension for MyExtension {\n    fn run_dap_locator(\n        &mut self,\n        _locator_name: String,\n        _build_task: TaskTemplate,\n    ) -> Result<DebugRequest, String>;\n}\n}\nrun_dap_locator is useful in case you cannot determine a build target deterministically. Some build systems may produce artifacts whose names are not known up-front.\nNote however that you do not need to go through a 2-phase resolution; if you can determine the full debug configuration with just dap_locator_create_scenario, you can omit build property on a returned DebugScenario. Please also note that your locator will be called with tasks it's unlikely to accept; thus you should take some effort to return None early before performing any expensive operations.\nAvailable Extensions\nCheck out all the DAP servers that have already been exposed as extensions on Zed's site.\nWe recommend taking a look at their repositories as a way to understand how they are generally created and structured.\nTesting\nTo test your new Debug Adapter Protocol server extension, you can install it as a dev extension.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:51"
+}

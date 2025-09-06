@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/development/windows.html",
+  "title": "Windows | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"building-zed-for-windows\"><a class=\"header\" href=\"#building-zed-for-windows\">Building Zed for Windows</a></h1>\n<blockquote>\n<p>The following commands may be executed in any shell.</p>\n</blockquote>\n<h2 id=\"repository\"><a class=\"header\" href=\"#repository\">Repository</a></h2>\n<p>Clone down the <a href=\"https://github.com/zed-industries/zed\">Zed repository</a>.</p>\n<h2 id=\"dependencies\"><a class=\"header\" href=\"#dependencies\">Dependencies</a></h2>\n<ul>\n<li>\n<p>Install <a href=\"https://www.rust-lang.org/tools/install\">rustup</a></p>\n</li>\n<li>\n<p>Install either <a href=\"https://visualstudio.microsoft.com/downloads/\">Visual Studio</a> with the optional components <code>MSVC v*** - VS YYYY C++ x64/x86 build tools</code> and <code>MSVC v*** - VS YYYY C++ x64/x86 Spectre-mitigated libs (latest)</code> (<code>v***</code> is your VS version and <code>YYYY</code> is year when your VS was released. Pay attention to the architecture and change it to yours if needed.)</p>\n</li>\n<li>\n<p>Or, if you prefer to have a slimmer installer of only the MSVC compiler tools, you can install the <a href=\"https://visualstudio.microsoft.com/visual-cpp-build-tools/\">build tools</a> (+libs as above) and the \"Desktop development with C++\" workload.\nBut beware this installation is not automatically picked up by rustup. You must initialize your environment variables by first launching the \"developer\" shell (cmd/powershell) this installation places in the start menu or in Windows Terminal and then compile.</p>\n</li>\n<li>\n<p>Install Windows 11 or 10 SDK depending on your system, but ensure that at least <code>Windows 10 SDK version 2104 (10.0.20348.0)</code> is installed on your machine. You can download it from the <a href=\"https://developer.microsoft.com/windows/downloads/windows-sdk/\">Windows SDK Archive</a></p>\n</li>\n<li>\n<p>Install <a href=\"https://cmake.org/download\">CMake</a> (required by <a href=\"https://docs.rs/wasmtime-c-api-impl/latest/wasmtime_c_api/\">a dependency</a>). Or you can install it through Visual Studio Installer, then manually add the <code>bin</code> directory to your <code>PATH</code>, for example: <code>C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin</code>.</p>\n</li>\n</ul>\n<p>If you can't compile Zed, make sure that you have at least the following components installed in case of a Visual Studio installation:</p>\n<pre><code class=\"language-json\">{\n  \"version\": \"1.0\",\n  \"components\": [\n    \"Microsoft.VisualStudio.Component.CoreEditor\",\n    \"Microsoft.VisualStudio.Workload.CoreEditor\",\n    \"Microsoft.VisualStudio.Component.VC.Tools.x86.x64\",\n    \"Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions.CMake\",\n    \"Microsoft.VisualStudio.Component.VC.CMake.Project\",\n    \"Microsoft.VisualStudio.Component.Windows11SDK.26100\",\n    \"Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre\"\n  ],\n  \"extensions\": []\n}\n</code></pre>\n<p>Or if in case of just Build Tools, the following components:</p>\n<pre><code class=\"language-json\">{\n  \"version\": \"1.0\",\n  \"components\": [\n    \"Microsoft.VisualStudio.Component.Roslyn.Compiler\",\n    \"Microsoft.Component.MSBuild\",\n    \"Microsoft.VisualStudio.Component.CoreBuildTools\",\n    \"Microsoft.VisualStudio.Workload.MSBuildTools\",\n    \"Microsoft.VisualStudio.Component.Windows10SDK\",\n    \"Microsoft.VisualStudio.Component.VC.CoreBuildTools\",\n    \"Microsoft.VisualStudio.Component.VC.Tools.x86.x64\",\n    \"Microsoft.VisualStudio.Component.VC.Redist.14.Latest\",\n    \"Microsoft.VisualStudio.Component.Windows11SDK.26100\",\n    \"Microsoft.VisualStudio.Component.VC.CMake.Project\",\n    \"Microsoft.VisualStudio.Component.TextTemplating\",\n    \"Microsoft.VisualStudio.Component.VC.CoreIde\",\n    \"Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core\",\n    \"Microsoft.VisualStudio.Workload.VCTools\",\n    \"Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre\"\n  ],\n  \"extensions\": []\n}\n</code></pre>\n<p>The list can be obtained as follows:</p>\n<ul>\n<li>Open the Visual Studio Installer</li>\n<li>Click on <code>More</code> in the <code>Installed</code> tab</li>\n<li>Click on <code>Export configuration</code></li>\n</ul>\n<h3 id=\"backend-dependencies\"><a class=\"header\" href=\"#backend-dependencies\">Backend Dependencies (optional)</a></h3>\n<p>If you are looking to develop Zed collaboration features using a local collabortation server, please see: <a href=\"./local-collaboration.html\">Local Collaboration</a> docs.</p>\n<h3 id=\"notes\"><a class=\"header\" href=\"#notes\">Notes</a></h3>\n<p>You should modify the <code>pg_hba.conf</code> file in the <code>data</code> directory to use <code>trust</code> instead of <code>scram-sha-256</code> for the <code>host</code> method. Otherwise, the connection will fail with the error <code>password authentication failed</code>. The <code>pg_hba.conf</code> file typically locates at <code>C:\\Program Files\\PostgreSQL\\17\\data\\pg_hba.conf</code>. After the modification, the file should look like this:</p>\n<pre><code class=\"language-conf\"># IPv4 local connections:\nhost    all             all             127.0.0.1/32            trust\n# IPv6 local connections:\nhost    all             all             ::1/128                 trust\n</code></pre>\n<p>Also, if you are using a non-latin Windows version, you must modify the<code>lc_messages</code> parameter in the <code>postgresql.conf</code> file in the <code>data</code> directory to <code>English_United States.1252</code> (or whatever UTF8-compatible encoding you have). Otherwise, the database will panic. The <code>postgresql.conf</code> file should look like this:</p>\n<pre><code class=\"language-conf\"># lc_messages = 'Chinese (Simplified)_China.936' # locale for system error message strings\nlc_messages = 'English_United States.1252'\n</code></pre>\n<p>After this, you should restart the <code>postgresql</code> service. Press the <code>win</code> key + <code>R</code> to launch the <code>Run</code> window. Type the <code>services.msc</code> and hit the <code>OK</code> button to open the Services Manager. Then, find the <code>postgresql-x64-XX</code> service, right-click on it, and select <code>Restart</code>.</p>\n<h2 id=\"building-from-source\"><a class=\"header\" href=\"#building-from-source\">Building from source</a></h2>\n<p>Once you have the dependencies installed, you can build Zed using <a href=\"https://doc.rust-lang.org/cargo/\">Cargo</a>.</p>\n<p>For a debug build:</p>\n<pre><code class=\"language-sh\">cargo run\n</code></pre>\n<p>For a release build:</p>\n<pre><code class=\"language-sh\">cargo run --release\n</code></pre>\n<p>And to run the tests:</p>\n<pre><code class=\"language-sh\">cargo test --workspace\n</code></pre>\n<h2 id=\"installing-from-msys2\"><a class=\"header\" href=\"#installing-from-msys2\">Installing from msys2</a></h2>\n<p>Zed does not support unofficial MSYS2 Zed packages built for Mingw-w64. Please report any issues you may have with <a href=\"https://packages.msys2.org/base/mingw-w64-zed\">mingw-w64-zed</a> to <a href=\"https://github.com/msys2/MINGW-packages/issues?q=is%3Aissue+is%3Aopen+zed\">msys2/MINGW-packages/issues</a>.</p>\n<p>Please refer to <a href=\"https://www.msys2.org/docs/ides-editors/#zed\">MSYS2 documentation</a> first.</p>\n<h2 id=\"troubleshooting\"><a class=\"header\" href=\"#troubleshooting\">Troubleshooting</a></h2>\n<h3 id=\"setting-rustflags-env-var-breaks-builds\"><a class=\"header\" href=\"#setting-rustflags-env-var-breaks-builds\">Setting <code>RUSTFLAGS</code> env var breaks builds</a></h3>\n<p>If you set the <code>RUSTFLAGS</code> env var, it will override the <code>rustflags</code> settings in <code>.cargo/config.toml</code> which is required to properly build Zed.</p>\n<p>Since these settings can vary from time to time, the build errors you receive may vary from linker errors, to other stranger errors.</p>\n<p>If you'd like to add extra rust flags, you may do 1 of the following in <code>.cargo/config.toml</code>:</p>\n<p>Add your flags in the build section</p>\n<pre><code class=\"language-toml\">[build]\nrustflags = [\"-C\", \"symbol-mangling-version=v0\", \"--cfg\", \"tokio_unstable\"]\n</code></pre>\n<p>Add your flags in the windows target section</p>\n<pre><code class=\"language-toml\">[target.'cfg(target_os = \"windows\")']\nrustflags = [\n    \"--cfg\",\n    \"windows_slim_errors\",\n    \"-C\",\n    \"target-feature=+crt-static\",\n]\n</code></pre>\n<p>Or, you can create a new <code>.cargo/config.toml</code> in the same folder as the Zed repo (see below). This is particularly useful if you are doing CI builds since you don't have to edit the original <code>.cargo/config.toml</code>.</p>\n<pre><code>upper_dir\n├── .cargo          // &lt;-- Make this folder\n│   └── config.toml // &lt;-- Make this file\n└── zed\n    ├── .cargo\n    │   └── config.toml\n    └── crates\n        ├── assistant\n        └── ...\n</code></pre>\n<p>In the new (above) <code>.cargo/config.toml</code>, if we wanted to add <code>--cfg gles</code> to our rustflags, it would look like this</p>\n<pre><code class=\"language-toml\">[target.'cfg(all())']\nrustflags = [\"--cfg\", \"gles\"]\n</code></pre>\n<h3 id=\"cargo-errors-claiming-that-a-dependency-is-using-unstable-features\"><a class=\"header\" href=\"#cargo-errors-claiming-that-a-dependency-is-using-unstable-features\">Cargo errors claiming that a dependency is using unstable features</a></h3>\n<p>Try <code>cargo clean</code> and <code>cargo build</code>.</p>\n<h3 id=\"status_access_violation\"><a class=\"header\" href=\"#status_access_violation\"><code>STATUS_ACCESS_VIOLATION</code></a></h3>\n<p>This error can happen if you are using the \"rust-lld.exe\" linker. Consider trying a different linker.</p>\n<p>If you are using a global config, consider moving the Zed repository to a nested directory and add a <code>.cargo/config.toml</code> with a custom linker config in the parent directory.</p>\n<p>See this issue for more information <a href=\"https://github.com/zed-industries/zed/issues/12041\">#12041</a></p>\n<h3 id=\"invalid-rc-path-selected\"><a class=\"header\" href=\"#invalid-rc-path-selected\">Invalid RC path selected</a></h3>\n<p>Sometimes, depending on the security rules applied to your laptop, you may get the following error while compiling Zed:</p>\n<pre><code>error: failed to run custom build command for `zed(C:\\Users\\USER\\src\\zed\\crates\\zed)`\n\nCaused by:\n  process didn't exit successfully: `C:\\Users\\USER\\src\\zed\\target\\debug\\build\\zed-b24f1e9300107efc\\build-script-build` (exit code: 1)\n  --- stdout\n  cargo:rerun-if-changed=../../.git/logs/HEAD\n  cargo:rustc-env=ZED_COMMIT_SHA=25e2e9c6727ba9b77415588cfa11fd969612adb7\n  cargo:rustc-link-arg=/stack:8388608\n  cargo:rerun-if-changed=resources/windows/app-icon.ico\n  package.metadata.winresource does not exist\n  Selected RC path: 'bin\\x64\\rc.exe'\n\n  --- stderr\n  The system cannot find the path specified. (os error 3)\nwarning: build failed, waiting for other jobs to finish...\n</code></pre>\n<p>In order to fix this issue, you can manually set the <code>ZED_RC_TOOLKIT_PATH</code> environment variable to the RC toolkit path. Usually, you can set it to:\n<code>C:\\Program Files (x86)\\Windows Kits\\10\\bin\\&lt;SDK_version&gt;\\x64</code>.</p>\n<p>See this <a href=\"https://github.com/zed-industries/zed/issues/18393\">issue</a> for more information.</p>\n<h3 id=\"build-fails-path-too-long\"><a class=\"header\" href=\"#build-fails-path-too-long\">Build fails: Path too long</a></h3>\n<p>You may receive an error like the following when building</p>\n<pre><code>error: failed to get `pet` as a dependency of package `languages v0.1.0 (D:\\a\\zed-windows-builds\\zed-windows-builds\\crates\\languages)`\n\nCaused by:\n  failed to load source for dependency `pet`\n\nCaused by:\n  Unable to update https://github.com/microsoft/python-environment-tools.git?rev=ffcbf3f28c46633abd5448a52b1f396c322e0d6c#ffcbf3f2\n\nCaused by:\n  path too long: 'C:/Users/runneradmin/.cargo/git/checkouts/python-environment-tools-903993894b37a7d2/ffcbf3f/crates/pet-conda/tests/unix/conda_env_without_manager_but_found_in_history/some_other_location/conda_install/conda-meta/python-fastjsonschema-2.16.2-py310hca03da5_0.json'; class=Filesystem (30)\n</code></pre>\n<p>In order to solve this, you can enable longpath support for git and Windows.</p>\n<p>For git: <code>git config --system core.longpaths true</code></p>\n<p>And for Windows with this PS command:</p>\n<pre><code class=\"language-powershell\">New-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem\" -Name \"LongPathsEnabled\" -Value 1 -PropertyType DWORD -Force\n</code></pre>\n<p>For more information on this, please see <a href=\"https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell\">win32 docs</a></p>\n<p>(note that you will need to restart your system after enabling longpath support)</p>\n<h3 id=\"graphics-issues\"><a class=\"header\" href=\"#graphics-issues\">Graphics issues</a></h3>\n<h4 id=\"zed-fails-to-launch\"><a class=\"header\" href=\"#zed-fails-to-launch\">Zed fails to launch</a></h4>\n<p>Currently, Zed uses Vulkan as its graphics API on Windows. However, Vulkan isn't always the most reliable on Windows, so if Zed fails to launch, it's likely a Vulkan-related issue.</p>\n<p>You can check the Zed log at:\n<code>C:\\Users\\YOU\\AppData\\Local\\Zed\\logs\\Zed.log</code></p>\n<p>If you see messages like:</p>\n<ul>\n<li><code>Zed failed to open a window: NoSupportedDeviceFound</code></li>\n<li><code>ERROR_INITIALIZATION_FAILED</code></li>\n<li><code>GPU Crashed</code></li>\n<li><code>ERROR_SURFACE_LOST_KHR</code></li>\n</ul>\n<p>Then Vulkan might not be working properly on your system. In most cases, updating your GPU drivers may help resolve this.</p>\n<p>If there's nothing Vulkan-related in the logs and you happen to have Bandicam installed, try uninstalling it. Zed is currently not compatible with Bandicam.</p>\n\n</main>",
+  "content_text": "Building Zed for Windows\n\nThe following commands may be executed in any shell.\n\nRepository\nClone down the Zed repository.\nDependencies\n\n\nInstall rustup\n\n\nInstall either Visual Studio with the optional components MSVC v*** - VS YYYY C++ x64/x86 build tools and MSVC v*** - VS YYYY C++ x64/x86 Spectre-mitigated libs (latest) (v*** is your VS version and YYYY is year when your VS was released. Pay attention to the architecture and change it to yours if needed.)\n\n\nOr, if you prefer to have a slimmer installer of only the MSVC compiler tools, you can install the build tools (+libs as above) and the \"Desktop development with C++\" workload.\nBut beware this installation is not automatically picked up by rustup. You must initialize your environment variables by first launching the \"developer\" shell (cmd/powershell) this installation places in the start menu or in Windows Terminal and then compile.\n\n\nInstall Windows 11 or 10 SDK depending on your system, but ensure that at least Windows 10 SDK version 2104 (10.0.20348.0) is installed on your machine. You can download it from the Windows SDK Archive\n\n\nInstall CMake (required by a dependency). Or you can install it through Visual Studio Installer, then manually add the bin directory to your PATH, for example: C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin.\n\n\nIf you can't compile Zed, make sure that you have at least the following components installed in case of a Visual Studio installation:\n{\n  \"version\": \"1.0\",\n  \"components\": [\n    \"Microsoft.VisualStudio.Component.CoreEditor\",\n    \"Microsoft.VisualStudio.Workload.CoreEditor\",\n    \"Microsoft.VisualStudio.Component.VC.Tools.x86.x64\",\n    \"Microsoft.VisualStudio.ComponentGroup.WebToolsExtensions.CMake\",\n    \"Microsoft.VisualStudio.Component.VC.CMake.Project\",\n    \"Microsoft.VisualStudio.Component.Windows11SDK.26100\",\n    \"Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre\"\n  ],\n  \"extensions\": []\n}\n\nOr if in case of just Build Tools, the following components:\n{\n  \"version\": \"1.0\",\n  \"components\": [\n    \"Microsoft.VisualStudio.Component.Roslyn.Compiler\",\n    \"Microsoft.Component.MSBuild\",\n    \"Microsoft.VisualStudio.Component.CoreBuildTools\",\n    \"Microsoft.VisualStudio.Workload.MSBuildTools\",\n    \"Microsoft.VisualStudio.Component.Windows10SDK\",\n    \"Microsoft.VisualStudio.Component.VC.CoreBuildTools\",\n    \"Microsoft.VisualStudio.Component.VC.Tools.x86.x64\",\n    \"Microsoft.VisualStudio.Component.VC.Redist.14.Latest\",\n    \"Microsoft.VisualStudio.Component.Windows11SDK.26100\",\n    \"Microsoft.VisualStudio.Component.VC.CMake.Project\",\n    \"Microsoft.VisualStudio.Component.TextTemplating\",\n    \"Microsoft.VisualStudio.Component.VC.CoreIde\",\n    \"Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Core\",\n    \"Microsoft.VisualStudio.Workload.VCTools\",\n    \"Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre\"\n  ],\n  \"extensions\": []\n}\n\nThe list can be obtained as follows:\n\nOpen the Visual Studio Installer\nClick on More in the Installed tab\nClick on Export configuration\n\nBackend Dependencies (optional)\nIf you are looking to develop Zed collaboration features using a local collabortation server, please see: Local Collaboration docs.\nNotes\nYou should modify the pg_hba.conf file in the data directory to use trust instead of scram-sha-256 for the host method. Otherwise, the connection will fail with the error password authentication failed. The pg_hba.conf file typically locates at C:\\Program Files\\PostgreSQL\\17\\data\\pg_hba.conf. After the modification, the file should look like this:\n# IPv4 local connections:\nhost    all             all             127.0.0.1/32            trust\n# IPv6 local connections:\nhost    all             all             ::1/128                 trust\n\nAlso, if you are using a non-latin Windows version, you must modify thelc_messages parameter in the postgresql.conf file in the data directory to English_United States.1252 (or whatever UTF8-compatible encoding you have). Otherwise, the database will panic. The postgresql.conf file should look like this:\n# lc_messages = 'Chinese (Simplified)_China.936' # locale for system error message strings\nlc_messages = 'English_United States.1252'\n\nAfter this, you should restart the postgresql service. Press the win key + R to launch the Run window. Type the services.msc and hit the OK button to open the Services Manager. Then, find the postgresql-x64-XX service, right-click on it, and select Restart.\nBuilding from source\nOnce you have the dependencies installed, you can build Zed using Cargo.\nFor a debug build:\ncargo run\n\nFor a release build:\ncargo run --release\n\nAnd to run the tests:\ncargo test --workspace\n\nInstalling from msys2\nZed does not support unofficial MSYS2 Zed packages built for Mingw-w64. Please report any issues you may have with mingw-w64-zed to msys2/MINGW-packages/issues.\nPlease refer to MSYS2 documentation first.\nTroubleshooting\nSetting RUSTFLAGS env var breaks builds\nIf you set the RUSTFLAGS env var, it will override the rustflags settings in .cargo/config.toml which is required to properly build Zed.\nSince these settings can vary from time to time, the build errors you receive may vary from linker errors, to other stranger errors.\nIf you'd like to add extra rust flags, you may do 1 of the following in .cargo/config.toml:\nAdd your flags in the build section\n[build]\nrustflags = [\"-C\", \"symbol-mangling-version=v0\", \"--cfg\", \"tokio_unstable\"]\n\nAdd your flags in the windows target section\n[target.'cfg(target_os = \"windows\")']\nrustflags = [\n    \"--cfg\",\n    \"windows_slim_errors\",\n    \"-C\",\n    \"target-feature=+crt-static\",\n]\n\nOr, you can create a new .cargo/config.toml in the same folder as the Zed repo (see below). This is particularly useful if you are doing CI builds since you don't have to edit the original .cargo/config.toml.\nupper_dir\n├── .cargo          // <-- Make this folder\n│   └── config.toml // <-- Make this file\n└── zed\n    ├── .cargo\n    │   └── config.toml\n    └── crates\n        ├── assistant\n        └── ...\n\nIn the new (above) .cargo/config.toml, if we wanted to add --cfg gles to our rustflags, it would look like this\n[target.'cfg(all())']\nrustflags = [\"--cfg\", \"gles\"]\n\nCargo errors claiming that a dependency is using unstable features\nTry cargo clean and cargo build.\nSTATUS_ACCESS_VIOLATION\nThis error can happen if you are using the \"rust-lld.exe\" linker. Consider trying a different linker.\nIf you are using a global config, consider moving the Zed repository to a nested directory and add a .cargo/config.toml with a custom linker config in the parent directory.\nSee this issue for more information #12041\nInvalid RC path selected\nSometimes, depending on the security rules applied to your laptop, you may get the following error while compiling Zed:\nerror: failed to run custom build command for `zed(C:\\Users\\USER\\src\\zed\\crates\\zed)`\n\nCaused by:\n  process didn't exit successfully: `C:\\Users\\USER\\src\\zed\\target\\debug\\build\\zed-b24f1e9300107efc\\build-script-build` (exit code: 1)\n  --- stdout\n  cargo:rerun-if-changed=../../.git/logs/HEAD\n  cargo:rustc-env=ZED_COMMIT_SHA=25e2e9c6727ba9b77415588cfa11fd969612adb7\n  cargo:rustc-link-arg=/stack:8388608\n  cargo:rerun-if-changed=resources/windows/app-icon.ico\n  package.metadata.winresource does not exist\n  Selected RC path: 'bin\\x64\\rc.exe'\n\n  --- stderr\n  The system cannot find the path specified. (os error 3)\nwarning: build failed, waiting for other jobs to finish...\n\nIn order to fix this issue, you can manually set the ZED_RC_TOOLKIT_PATH environment variable to the RC toolkit path. Usually, you can set it to:\nC:\\Program Files (x86)\\Windows Kits\\10\\bin\\<SDK_version>\\x64.\nSee this issue for more information.\nBuild fails: Path too long\nYou may receive an error like the following when building\nerror: failed to get `pet` as a dependency of package `languages v0.1.0 (D:\\a\\zed-windows-builds\\zed-windows-builds\\crates\\languages)`\n\nCaused by:\n  failed to load source for dependency `pet`\n\nCaused by:\n  Unable to update https://github.com/microsoft/python-environment-tools.git?rev=ffcbf3f28c46633abd5448a52b1f396c322e0d6c#ffcbf3f2\n\nCaused by:\n  path too long: 'C:/Users/runneradmin/.cargo/git/checkouts/python-environment-tools-903993894b37a7d2/ffcbf3f/crates/pet-conda/tests/unix/conda_env_without_manager_but_found_in_history/some_other_location/conda_install/conda-meta/python-fastjsonschema-2.16.2-py310hca03da5_0.json'; class=Filesystem (30)\n\nIn order to solve this, you can enable longpath support for git and Windows.\nFor git: git config --system core.longpaths true\nAnd for Windows with this PS command:\nNew-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem\" -Name \"LongPathsEnabled\" -Value 1 -PropertyType DWORD -Force\n\nFor more information on this, please see win32 docs\n(note that you will need to restart your system after enabling longpath support)\nGraphics issues\nZed fails to launch\nCurrently, Zed uses Vulkan as its graphics API on Windows. However, Vulkan isn't always the most reliable on Windows, so if Zed fails to launch, it's likely a Vulkan-related issue.\nYou can check the Zed log at:\nC:\\Users\\YOU\\AppData\\Local\\Zed\\logs\\Zed.log\nIf you see messages like:\n\nZed failed to open a window: NoSupportedDeviceFound\nERROR_INITIALIZATION_FAILED\nGPU Crashed\nERROR_SURFACE_LOST_KHR\n\nThen Vulkan might not be working properly on your system. In most cases, updating your GPU drivers may help resolve this.\nIf there's nothing Vulkan-related in the logs and you happen to have Bandicam installed, try uninstalling it. Zed is currently not compatible with Bandicam.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:44"
+}

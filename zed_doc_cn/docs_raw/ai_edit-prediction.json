@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/ai/edit-prediction.html",
+  "title": "Edit Prediction | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"edit-prediction\"><a class=\"header\" href=\"#edit-prediction\">Edit Prediction</a></h1>\n<p>Edit Prediction is Zed's native mechanism for predicting the code you want to write through AI.\nEach keystroke sends a new request to our <a href=\"https://huggingface.co/zed-industries/zeta\">open source, open dataset Zeta model</a> and it returns with individual or multi-line suggestions that can be quickly accepted by pressing <code>tab</code>.</p>\n<h2 id=\"configuring-zeta\"><a class=\"header\" href=\"#configuring-zeta\">Configuring Zeta</a></h2>\n<p>Zed's Edit Prediction was initially introduced via a banner on the title bar.\nClicking on it would take you to a modal with a button (\"Enable Edit Prediction\") that sets <code>zed</code> as your <code>edit_prediction_provider</code>.</p>\n<p><img alt=\"Onboarding banner and modal\" src=\"https://zed.dev/img/edit-prediction/docs.webp\"/></p>\n<p>But, if you haven't come across the banner, Zed's Edit Prediction is the default edit prediction provider and you should see it right away in your status bar.</p>\n<h3 id=\"switching-modes\"><a class=\"header\" href=\"#switching-modes\">Switching Modes</a></h3>\n<p>Zed's Edit Prediction comes with two different display modes:</p>\n<ol>\n<li><code>eager</code> (default): predictions are displayed inline as long as it doesn't conflict with language server completions</li>\n<li><code>subtle</code>: predictions only appear inline when holding a modifier key (<code>alt</code> by default)</li>\n</ol>\n<p>Toggle between them via the <code>mode</code> key:</p>\n<pre><code class=\"language-json\">\"edit_predictions\": {\n  \"mode\": \"eager\" | \"subtle\"\n},\n</code></pre>\n<p>Or directly via the UI through the status bar menu:</p>\n<p><img alt=\"Edit Prediction status bar menu, with the modes toggle.\" src=\"https://zed.dev/img/edit-prediction/status-bar-menu.webp\"/></p>\n<h3 id=\"edit-predictions-conflict\"><a class=\"header\" href=\"#edit-predictions-conflict\">Conflict With Other <code>tab</code> Actions</a></h3>\n<p>By default, when <code>tab</code> would normally perform a different action, Zed requires a modifier key to accept predictions:</p>\n<ol>\n<li>When the language server completions menu is visible.</li>\n<li>When your cursor isn't at the right indentation level.</li>\n</ol>\n<p>In these cases, <code>alt-tab</code> is used instead to accept the prediction. When the language server completions menu is open, holding <code>alt</code> first will cause it to temporarily disappear in order to preview the prediction within the buffer.</p>\n<p>On Linux, <code>alt-tab</code> is often used by the window manager for switching windows, so <code>alt-l</code> is provided as the default binding for accepting predictions. <code>tab</code> and <code>alt-tab</code> also work, but aren't displayed by default.</p>\n<p><code class=\"hljs\">editor: accept partial edit prediction</code> (<kbd class=\"keybinding\">ctrl-cmd-right|alt-right</kbd>) can be used to accept the current edit prediction up to the next word boundary.</p>\n<p>See the <a href=\"#github-copilot\">Configuring GitHub Copilot</a> and <a href=\"#supermaven\">Configuring Supermaven</a> sections below for configuration of other providers. Only text insertions at the current cursor are supported for these providers, whereas the Zeta model provides multiple predictions including deletions.</p>\n<h2 id=\"edit-predictions-keybinding\"><a class=\"header\" href=\"#edit-predictions-keybinding\">Configuring Edit Prediction Keybindings</a></h2>\n<p>By default, <code>tab</code> is used to accept edit predictions. You can use another keybinding by inserting this in your keymap:</p>\n<pre><code class=\"language-json\">{\n  \"context\": \"Editor &amp;&amp; edit_prediction\",\n  \"bindings\": {\n    // Here we also allow `alt-enter` to accept the prediction\n    \"alt-enter\": \"editor::AcceptEditPrediction\"\n  }\n}\n</code></pre>\n<p>When there's a <a href=\"#edit-predictions-conflict\">conflict with the <code>tab</code> key</a>, Zed uses a different context to accept keybindings (<code>edit_prediction_conflict</code>). If you want to use a different one, you can insert this in your keymap:</p>\n<pre><code class=\"language-json\">{\n  \"context\": \"Editor &amp;&amp; edit_prediction_conflict\",\n  \"bindings\": {\n    \"ctrl-enter\": \"editor::AcceptEditPrediction\" // Example of a modified keybinding\n  }\n}\n</code></pre>\n<p>If your keybinding contains a modifier (<code>ctrl</code> in the example above), it will also be used to preview the edit prediction and temporarily hide the language server completion menu.</p>\n<p>You can also bind this action to keybind without a modifier. In that case, Zed will use the default modifier (<code>alt</code>) to preview the edit prediction.</p>\n<pre><code class=\"language-json\">{\n  \"context\": \"Editor &amp;&amp; edit_prediction_conflict\",\n  \"bindings\": {\n    // Here we bind tab to accept even when there's a language server completion\n    // or the cursor isn't at the correct indentation level\n    \"tab\": \"editor::AcceptEditPrediction\"\n  }\n}\n</code></pre>\n<p>To maintain the use of the modifier key for accepting predictions when there is a language server completions menu, but allow <code>tab</code> to accept predictions regardless of cursor position, you can specify the context further with <code>showing_completions</code>:</p>\n<pre><code class=\"language-json\">{\n  \"context\": \"Editor &amp;&amp; edit_prediction_conflict &amp;&amp; !showing_completions\",\n  \"bindings\": {\n    // Here we don't require a modifier unless there's a language server completion\n    \"tab\": \"editor::AcceptEditPrediction\"\n  }\n}\n</code></pre>\n<h3 id=\"keybinding-example-always-use-alt-tab\"><a class=\"header\" href=\"#keybinding-example-always-use-alt-tab\">Keybinding Example: Always Use Alt-Tab</a></h3>\n<p>The keybinding example below causes <code>alt-tab</code> to always be used instead of sometimes using <code>tab</code>. You might want this in order to have just one keybinding to use for accepting edit predictions, since the behavior of <code>tab</code> varies based on context.</p>\n<pre><code class=\"language-json\">  {\n    \"context\": \"Editor &amp;&amp; edit_prediction\",\n    \"bindings\": {\n      \"alt-tab\": \"editor::AcceptEditPrediction\"\n    }\n  },\n  // Bind `tab` back to its original behavior.\n  {\n    \"context\": \"Editor\",\n    \"bindings\": {\n      \"tab\": \"editor::Tab\"\n    }\n  },\n  {\n    \"context\": \"Editor &amp;&amp; showing_completions\",\n    \"bindings\": {\n      \"tab\": \"editor::ComposeCompletion\"\n    }\n  },\n</code></pre>\n<p>If <code>\"vim_mode\": true</code> is set within <code>settings.json</code>, then additional bindings are needed after the above to return <code>tab</code> to its original behavior:</p>\n<pre><code class=\"language-json\">  {\n    \"context\": \"(VimControl &amp;&amp; !menu) || vim_mode == replace || vim_mode == waiting\",\n    \"bindings\": {\n      \"tab\": \"vim::Tab\"\n    }\n  },\n  {\n    \"context\": \"vim_mode == literal\",\n    \"bindings\": {\n      \"tab\": [\"vim::Literal\", [\"tab\", \"\\u0009\"]]\n    }\n  },\n</code></pre>\n<h3 id=\"keybinding-example-displaying-tab-and-alt-tab-on-linux\"><a class=\"header\" href=\"#keybinding-example-displaying-tab-and-alt-tab-on-linux\">Keybinding Example: Displaying Tab and Alt-Tab on Linux</a></h3>\n<p>While <code>tab</code> and <code>alt-tab</code> are supported on Linux, <code>alt-l</code> is displayed instead. If your window manager does not reserve <code>alt-tab</code>, and you would prefer to use <code>tab</code> and <code>alt-tab</code>, include these bindings in <code>keymap.json</code>:</p>\n<pre><code class=\"language-json\">  {\n    \"context\": \"Editor &amp;&amp; edit_prediction\",\n    \"bindings\": {\n      \"tab\": \"editor::AcceptEditPrediction\",\n      // Optional: This makes the default `alt-l` binding do nothing.\n      \"alt-l\": null\n    }\n  },\n  {\n    \"context\": \"Editor &amp;&amp; edit_prediction_conflict\",\n    \"bindings\": {\n      \"alt-tab\": \"editor::AcceptEditPrediction\",\n      // Optional: This makes the default `alt-l` binding do nothing.\n      \"alt-l\": null\n    }\n  },\n</code></pre>\n<h3 id=\"edit-predictions-missing-keybinding\"><a class=\"header\" href=\"#edit-predictions-missing-keybinding\">Missing keybind</a></h3>\n<p>Zed requires at least one keybinding for the <code class=\"hljs\">editor: accept edit prediction</code> action in both the <code>Editor &amp;&amp; edit_prediction</code> and <code>Editor &amp;&amp; edit_prediction_conflict</code> contexts (<a href=\"#edit-predictions-keybinding\">learn more above</a>).</p>\n<p>If you have previously bound the default keybindings to different actions in the global context, you will not be able to preview or accept edit predictions. For example:</p>\n<pre><code class=\"language-json\">[\n  // Your keymap\n  {\n    \"bindings\": {\n      // Binds `alt-tab` to a different action globally\n      \"alt-tab\": \"menu::SelectNext\"\n    }\n  }\n]\n</code></pre>\n<p>To fix this, you can specify your own keybinding for accepting edit predictions:</p>\n<pre><code class=\"language-json\">[\n  // ...\n  {\n    \"context\": \"Editor &amp;&amp; edit_prediction_conflict\",\n    \"bindings\": {\n      \"alt-l\": \"editor::AcceptEditPrediction\"\n    }\n  }\n]\n</code></pre>\n<p>If you would like to use the default keybinding, you can free it up by either moving yours to a more specific context or changing it to something else.</p>\n<h2 id=\"disabling-automatic-edit-prediction\"><a class=\"header\" href=\"#disabling-automatic-edit-prediction\">Disabling Automatic Edit Prediction</a></h2>\n<p>There are different levels in which you can disable edit predictions to be displayed, including not having it turned on at all.</p>\n<p>Alternatively, if you have Zed set as your provider, consider <a href=\"#switching-modes\">using Subtle Mode</a>.</p>\n<h3 id=\"on-buffers\"><a class=\"header\" href=\"#on-buffers\">On Buffers</a></h3>\n<p>To not have predictions appear automatically as you type, set this within <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"show_edit_predictions\": false\n}\n</code></pre>\n<p>This hides every indication that there is a prediction available, regardless of <a href=\"#switching-modes\">the display mode</a> you're in (valid only if you have Zed as your provider).\nStill, you can trigger edit predictions manually by executing <code class=\"hljs\">editor: show edit prediction</code> or hitting <kbd class=\"keybinding\">alt-tab|alt-&lt;/kbd&gt;.</kbd></p>\n<h3 id=\"for-specific-languages\"><a class=\"header\" href=\"#for-specific-languages\">For Specific Languages</a></h3>\n<p>To not have predictions appear automatically as you type when working with a specific language, set this within <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"language\": {\n    \"python\": {\n      \"show_edit_predictions\": false\n    }\n  }\n}\n</code></pre>\n<h3 id=\"in-specific-directories\"><a class=\"header\" href=\"#in-specific-directories\">In Specific Directories</a></h3>\n<p>To disable edit predictions for specific directories or files, set this within <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"edit_predictions\": {\n    \"disabled_globs\": [\"~/.config/zed/settings.json\"]\n  }\n}\n</code></pre>\n<h3 id=\"turning-off-completely\"><a class=\"header\" href=\"#turning-off-completely\">Turning Off Completely</a></h3>\n<p>To completely turn off edit prediction across all providers, explicitly set the settings to <code>none</code>, like so:</p>\n<pre><code class=\"language-json\">\"features\": {\n  \"edit_prediction_provider\": \"none\"\n},\n</code></pre>\n<h2 id=\"github-copilot\"><a class=\"header\" href=\"#github-copilot\">Configuring GitHub Copilot</a></h2>\n<p>To use GitHub Copilot as your provider, set this within <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"features\": {\n    \"edit_prediction_provider\": \"copilot\"\n  }\n}\n</code></pre>\n<p>You should be able to sign-in to GitHub Copilot by clicking on the Copilot icon in the status bar and following the setup instructions.</p>\n<h3 id=\"github-copilot-enterprise\"><a class=\"header\" href=\"#github-copilot-enterprise\">Using GitHub Copilot Enterprise</a></h3>\n<p>If your organization uses GitHub Copilot Enterprise, you can configure Zed to use your enterprise instance by specifying the enterprise URI in your <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"edit_predictions\": {\n    \"copilot\": {\n      \"enterprise_uri\": \"https://your.enterprise.domain\"\n    }\n  }\n}\n</code></pre>\n<p>Replace <code>\"https://your.enterprise.domain\"</code> with the URL provided by your GitHub Enterprise administrator (e.g., <code>https://foo.ghe.com</code>).</p>\n<p>Once set, Zed will route Copilot requests through your enterprise endpoint. When you sign in by clicking the Copilot icon in the status bar, you will be redirected to your configured enterprise URL to complete authentication. All other Copilot features and usage remain the same.</p>\n<p>Copilot can provide multiple completion alternatives, and these can be navigated with the following actions:</p>\n<ul>\n<li><code class=\"hljs\">editor: next edit prediction</code> (<kbd class=\"keybinding\">alt-tab|alt-]</kbd>): To cycle to the next edit prediction</li>\n<li><code class=\"hljs\">editor: previous edit prediction</code> (<kbd class=\"keybinding\">alt-shift-tab|alt-[</kbd>): To cycle to the previous edit prediction</li>\n</ul>\n<h2 id=\"supermaven\"><a class=\"header\" href=\"#supermaven\">Configuring Supermaven</a></h2>\n<p>To use Supermaven as your provider, set this within <code>settings.json</code>:</p>\n<pre><code class=\"language-json\">{\n  \"features\": {\n    \"edit_prediction_provider\": \"supermaven\"\n  }\n}\n</code></pre>\n<p>You should be able to sign-in to Supermaven by clicking on the Supermaven icon in the status bar and following the setup instructions.</p>\n<h2 id=\"see-also\"><a class=\"header\" href=\"#see-also\">See also</a></h2>\n<p>You may also use the <a href=\"./agent-panel.html\">Agent Panel</a> or the <a href=\"./inline-assistant.html\">Inline Assistant</a> to interact with language models, see the <a href=\"./overview.html\">AI documentation</a> for more information on the other AI features in Zed.</p>\n\n</main>",
+  "content_text": "Edit Prediction\nEdit Prediction is Zed's native mechanism for predicting the code you want to write through AI.\nEach keystroke sends a new request to our open source, open dataset Zeta model and it returns with individual or multi-line suggestions that can be quickly accepted by pressing tab.\nConfiguring Zeta\nZed's Edit Prediction was initially introduced via a banner on the title bar.\nClicking on it would take you to a modal with a button (\"Enable Edit Prediction\") that sets zed as your edit_prediction_provider.\n\nBut, if you haven't come across the banner, Zed's Edit Prediction is the default edit prediction provider and you should see it right away in your status bar.\nSwitching Modes\nZed's Edit Prediction comes with two different display modes:\n\neager (default): predictions are displayed inline as long as it doesn't conflict with language server completions\nsubtle: predictions only appear inline when holding a modifier key (alt by default)\n\nToggle between them via the mode key:\n\"edit_predictions\": {\n  \"mode\": \"eager\" | \"subtle\"\n},\n\nOr directly via the UI through the status bar menu:\n\nConflict With Other tab Actions\nBy default, when tab would normally perform a different action, Zed requires a modifier key to accept predictions:\n\nWhen the language server completions menu is visible.\nWhen your cursor isn't at the right indentation level.\n\nIn these cases, alt-tab is used instead to accept the prediction. When the language server completions menu is open, holding alt first will cause it to temporarily disappear in order to preview the prediction within the buffer.\nOn Linux, alt-tab is often used by the window manager for switching windows, so alt-l is provided as the default binding for accepting predictions. tab and alt-tab also work, but aren't displayed by default.\neditor: accept partial edit prediction (ctrl-cmd-right|alt-right) can be used to accept the current edit prediction up to the next word boundary.\nSee the Configuring GitHub Copilot and Configuring Supermaven sections below for configuration of other providers. Only text insertions at the current cursor are supported for these providers, whereas the Zeta model provides multiple predictions including deletions.\nConfiguring Edit Prediction Keybindings\nBy default, tab is used to accept edit predictions. You can use another keybinding by inserting this in your keymap:\n{\n  \"context\": \"Editor && edit_prediction\",\n  \"bindings\": {\n    // Here we also allow `alt-enter` to accept the prediction\n    \"alt-enter\": \"editor::AcceptEditPrediction\"\n  }\n}\n\nWhen there's a conflict with the tab key, Zed uses a different context to accept keybindings (edit_prediction_conflict). If you want to use a different one, you can insert this in your keymap:\n{\n  \"context\": \"Editor && edit_prediction_conflict\",\n  \"bindings\": {\n    \"ctrl-enter\": \"editor::AcceptEditPrediction\" // Example of a modified keybinding\n  }\n}\n\nIf your keybinding contains a modifier (ctrl in the example above), it will also be used to preview the edit prediction and temporarily hide the language server completion menu.\nYou can also bind this action to keybind without a modifier. In that case, Zed will use the default modifier (alt) to preview the edit prediction.\n{\n  \"context\": \"Editor && edit_prediction_conflict\",\n  \"bindings\": {\n    // Here we bind tab to accept even when there's a language server completion\n    // or the cursor isn't at the correct indentation level\n    \"tab\": \"editor::AcceptEditPrediction\"\n  }\n}\n\nTo maintain the use of the modifier key for accepting predictions when there is a language server completions menu, but allow tab to accept predictions regardless of cursor position, you can specify the context further with showing_completions:\n{\n  \"context\": \"Editor && edit_prediction_conflict && !showing_completions\",\n  \"bindings\": {\n    // Here we don't require a modifier unless there's a language server completion\n    \"tab\": \"editor::AcceptEditPrediction\"\n  }\n}\n\nKeybinding Example: Always Use Alt-Tab\nThe keybinding example below causes alt-tab to always be used instead of sometimes using tab. You might want this in order to have just one keybinding to use for accepting edit predictions, since the behavior of tab varies based on context.\n  {\n    \"context\": \"Editor && edit_prediction\",\n    \"bindings\": {\n      \"alt-tab\": \"editor::AcceptEditPrediction\"\n    }\n  },\n  // Bind `tab` back to its original behavior.\n  {\n    \"context\": \"Editor\",\n    \"bindings\": {\n      \"tab\": \"editor::Tab\"\n    }\n  },\n  {\n    \"context\": \"Editor && showing_completions\",\n    \"bindings\": {\n      \"tab\": \"editor::ComposeCompletion\"\n    }\n  },\n\nIf \"vim_mode\": true is set within settings.json, then additional bindings are needed after the above to return tab to its original behavior:\n  {\n    \"context\": \"(VimControl && !menu) || vim_mode == replace || vim_mode == waiting\",\n    \"bindings\": {\n      \"tab\": \"vim::Tab\"\n    }\n  },\n  {\n    \"context\": \"vim_mode == literal\",\n    \"bindings\": {\n      \"tab\": [\"vim::Literal\", [\"tab\", \"\\u0009\"]]\n    }\n  },\n\nKeybinding Example: Displaying Tab and Alt-Tab on Linux\nWhile tab and alt-tab are supported on Linux, alt-l is displayed instead. If your window manager does not reserve alt-tab, and you would prefer to use tab and alt-tab, include these bindings in keymap.json:\n  {\n    \"context\": \"Editor && edit_prediction\",\n    \"bindings\": {\n      \"tab\": \"editor::AcceptEditPrediction\",\n      // Optional: This makes the default `alt-l` binding do nothing.\n      \"alt-l\": null\n    }\n  },\n  {\n    \"context\": \"Editor && edit_prediction_conflict\",\n    \"bindings\": {\n      \"alt-tab\": \"editor::AcceptEditPrediction\",\n      // Optional: This makes the default `alt-l` binding do nothing.\n      \"alt-l\": null\n    }\n  },\n\nMissing keybind\nZed requires at least one keybinding for the editor: accept edit prediction action in both the Editor && edit_prediction and Editor && edit_prediction_conflict contexts (learn more above).\nIf you have previously bound the default keybindings to different actions in the global context, you will not be able to preview or accept edit predictions. For example:\n[\n  // Your keymap\n  {\n    \"bindings\": {\n      // Binds `alt-tab` to a different action globally\n      \"alt-tab\": \"menu::SelectNext\"\n    }\n  }\n]\n\nTo fix this, you can specify your own keybinding for accepting edit predictions:\n[\n  // ...\n  {\n    \"context\": \"Editor && edit_prediction_conflict\",\n    \"bindings\": {\n      \"alt-l\": \"editor::AcceptEditPrediction\"\n    }\n  }\n]\n\nIf you would like to use the default keybinding, you can free it up by either moving yours to a more specific context or changing it to something else.\nDisabling Automatic Edit Prediction\nThere are different levels in which you can disable edit predictions to be displayed, including not having it turned on at all.\nAlternatively, if you have Zed set as your provider, consider using Subtle Mode.\nOn Buffers\nTo not have predictions appear automatically as you type, set this within settings.json:\n{\n  \"show_edit_predictions\": false\n}\n\nThis hides every indication that there is a prediction available, regardless of the display mode you're in (valid only if you have Zed as your provider).\nStill, you can trigger edit predictions manually by executing editor: show edit prediction or hitting alt-tab|alt-</kbd>.\nFor Specific Languages\nTo not have predictions appear automatically as you type when working with a specific language, set this within settings.json:\n{\n  \"language\": {\n    \"python\": {\n      \"show_edit_predictions\": false\n    }\n  }\n}\n\nIn Specific Directories\nTo disable edit predictions for specific directories or files, set this within settings.json:\n{\n  \"edit_predictions\": {\n    \"disabled_globs\": [\"~/.config/zed/settings.json\"]\n  }\n}\n\nTurning Off Completely\nTo completely turn off edit prediction across all providers, explicitly set the settings to none, like so:\n\"features\": {\n  \"edit_prediction_provider\": \"none\"\n},\n\nConfiguring GitHub Copilot\nTo use GitHub Copilot as your provider, set this within settings.json:\n{\n  \"features\": {\n    \"edit_prediction_provider\": \"copilot\"\n  }\n}\n\nYou should be able to sign-in to GitHub Copilot by clicking on the Copilot icon in the status bar and following the setup instructions.\nUsing GitHub Copilot Enterprise\nIf your organization uses GitHub Copilot Enterprise, you can configure Zed to use your enterprise instance by specifying the enterprise URI in your settings.json:\n{\n  \"edit_predictions\": {\n    \"copilot\": {\n      \"enterprise_uri\": \"https://your.enterprise.domain\"\n    }\n  }\n}\n\nReplace \"https://your.enterprise.domain\" with the URL provided by your GitHub Enterprise administrator (e.g., https://foo.ghe.com).\nOnce set, Zed will route Copilot requests through your enterprise endpoint. When you sign in by clicking the Copilot icon in the status bar, you will be redirected to your configured enterprise URL to complete authentication. All other Copilot features and usage remain the same.\nCopilot can provide multiple completion alternatives, and these can be navigated with the following actions:\n\neditor: next edit prediction (alt-tab|alt-]): To cycle to the next edit prediction\neditor: previous edit prediction (alt-shift-tab|alt-[): To cycle to the previous edit prediction\n\nConfiguring Supermaven\nTo use Supermaven as your provider, set this within settings.json:\n{\n  \"features\": {\n    \"edit_prediction_provider\": \"supermaven\"\n  }\n}\n\nYou should be able to sign-in to Supermaven by clicking on the Supermaven icon in the status bar and following the setup instructions.\nSee also\nYou may also use the Agent Panel or the Inline Assistant to interact with language models, see the AI documentation for more information on the other AI features in Zed.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:14"
+}

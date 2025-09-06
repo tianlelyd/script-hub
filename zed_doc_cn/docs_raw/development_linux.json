@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/development/linux.html",
+  "title": "Linux | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"building-zed-for-linux\"><a class=\"header\" href=\"#building-zed-for-linux\">Building Zed for Linux</a></h1>\n<h2 id=\"repository\"><a class=\"header\" href=\"#repository\">Repository</a></h2>\n<p>Clone down the <a href=\"https://github.com/zed-industries/zed\">Zed repository</a>.</p>\n<h2 id=\"dependencies\"><a class=\"header\" href=\"#dependencies\">Dependencies</a></h2>\n<ul>\n<li>\n<p>Install <a href=\"https://www.rust-lang.org/tools/install\">rustup</a></p>\n</li>\n<li>\n<p>Install the necessary system libraries:</p>\n<pre><code class=\"language-sh\">script/linux\n</code></pre>\n<p>If you prefer to install the system libraries manually, you can find the list of required packages in the <code>script/linux</code> file.</p>\n</li>\n</ul>\n<h3 id=\"backend-dependencies\"><a class=\"header\" href=\"#backend-dependencies\">Backend Dependencies (optional)</a></h3>\n<p>If you are looking to develop Zed collaboration features using a local collabortation server, please see: <a href=\"./local-collaboration.html\">Local Collaboration</a> docs.</p>\n<h2 id=\"building-from-source\"><a class=\"header\" href=\"#building-from-source\">Building from source</a></h2>\n<p>Once the dependencies are installed, you can build Zed using <a href=\"https://doc.rust-lang.org/cargo/\">Cargo</a>.</p>\n<p>For a debug build of the editor:</p>\n<pre><code class=\"language-sh\">cargo run\n</code></pre>\n<p>And to run the tests:</p>\n<pre><code class=\"language-sh\">cargo test --workspace\n</code></pre>\n<p>In release mode, the primary user interface is the <code>cli</code> crate. You can run it in development with:</p>\n<pre><code class=\"language-sh\">cargo run -p cli\n</code></pre>\n<h2 id=\"installing-a-development-build\"><a class=\"header\" href=\"#installing-a-development-build\">Installing a development build</a></h2>\n<p>You can install a local build on your machine with:</p>\n<pre><code class=\"language-sh\">./script/install-linux\n</code></pre>\n<p>This will build zed and the cli in release mode and make them available at <code>~/.local/bin/zed</code>, installing .desktop files to <code>~/.local/share</code>.</p>\n<blockquote>\n<p><strong><em>Note</em></strong>: If you encounter linker errors similar to the following:</p>\n<pre><code class=\"language-bash\">error: linking with `cc` failed: exit status: 1 ...\n= note: /usr/bin/ld: /tmp/rustcISMaod/libaws_lc_sys-79f08eb6d32e546e.rlib(f8e4fd781484bd36-bcm.o): in function `aws_lc_0_25_0_handle_cpu_env':\n          /aws-lc/crypto/fipsmodule/cpucap/cpu_intel.c:(.text.aws_lc_0_25_0_handle_cpu_env+0x63): undefined reference to `__isoc23_sscanf'\n          /usr/bin/ld: /tmp/rustcISMaod/libaws_lc_sys-79f08eb6d32e546e.rlib(f8e4fd781484bd36-bcm.o): in function `pkey_rsa_ctrl_str':\n          /aws-lc/crypto/fipsmodule/evp/p_rsa.c:741:(.text.pkey_rsa_ctrl_str+0x20d): undefined reference to `__isoc23_strtol'\n          /usr/bin/ld: /aws-lc/crypto/fipsmodule/evp/p_rsa.c:752:(.text.pkey_rsa_ctrl_str+0x258): undefined reference to `__isoc23_strtol'\n          collect2: error: ld returned 1 exit status\n  = note: some `extern` functions couldn't be found; some native libraries may need to be installed or have their path specified\n  = note: use the `-l` flag to specify native libraries to link\n  = note: use the `cargo:rustc-link-lib` directive to specify the native libraries to link with Cargo (see https://doc.rust-lang.org/cargo/reference/build-scripts.html#rustc-link-lib)\nerror: could not compile `remote_server` (bin \"remote_server\") due to 1 previous error\n</code></pre>\n<p><strong>Cause</strong>:\nthis is caused by known bugs in aws-lc-rs(doesn't support GCC &gt;= 14): <a href=\"https://github.com/aws/aws-lc-rs/issues/569\">FIPS fails to build with GCC &gt;= 14</a>\n&amp; <a href=\"https://github.com/aws/aws-lc/issues/2010\">GCC-14 - build failure for FIPS module</a></p>\n<p>You can refer to <a href=\"https://github.com/zed-industries/zed/issues/24880\">linux: Linker error for remote_server when using script/install-linux</a> for more information.</p>\n<p><strong>Workarounds</strong>:\nSet the remote server target to <code>x86_64-unknown-linux-gnu</code> like so <code>export REMOTE_SERVER_TARGET=x86_64-unknown-linux-gnu; script/install-linux</code></p>\n</blockquote>\n<h2 id=\"wayland--x11\"><a class=\"header\" href=\"#wayland--x11\">Wayland &amp; X11</a></h2>\n<p>Zed supports both X11 and Wayland. By default, we pick whichever we can find at runtime. If you're on Wayland and want to run in X11 mode, use the environment variable <code>WAYLAND_DISPLAY=''</code>.</p>\n<h2 id=\"notes-for-packaging-zed\"><a class=\"header\" href=\"#notes-for-packaging-zed\">Notes for packaging Zed</a></h2>\n<p>Thank you for taking on the task of packaging Zed!</p>\n<h3 id=\"technical-requirements\"><a class=\"header\" href=\"#technical-requirements\">Technical requirements</a></h3>\n<p>Zed has two main binaries:</p>\n<ul>\n<li>You will need to build <code>crates/cli</code> and make its binary available in <code>$PATH</code> with the name <code>zed</code>.</li>\n<li>You will need to build <code>crates/zed</code> and put it at <code>$PATH/to/cli/../../libexec/zed-editor</code>. For example, if you are going to put the cli at <code>~/.local/bin/zed</code> put zed at <code>~/.local/libexec/zed-editor</code>. As some linux distributions (notably Arch) discourage the use of <code>libexec</code>, you can also put this binary at <code>$PATH/to/cli/../../lib/zed/zed-editor</code> (e.g. <code>~/.local/lib/zed/zed-editor</code>) instead.</li>\n<li>If you are going to provide a <code>.desktop</code> file you can find a template in <code>crates/zed/resources/zed.desktop.in</code>, and use <code>envsubst</code> to populate it with the values required. This file should also be renamed to <code>$APP_ID.desktop</code> so that the file <a href=\"https://github.com/zed-industries/zed/issues/12707#issuecomment-2168742761\">follows the FreeDesktop standards</a>. You should also make this desktop file executable (<code>chmod 755</code>).</li>\n<li>You will need to ensure that the necessary libraries are installed. You can get the current list by <a href=\"https://github.com/zed-industries/zed/blob/935cf542aebf55122ce6ed1c91d0fe8711970c82/script/bundle-linux#L65-L67\">inspecting the built binary</a> on your system.</li>\n<li>For an example of a complete build script, see <a href=\"https://github.com/zed-industries/zed/blob/935cf542aebf55122ce6ed1c91d0fe8711970c82/script/bundle-linux\">script/bundle-linux</a>.</li>\n<li>You can disable Zed's auto updates and provide instructions for users who try to update Zed manually by building (or running) Zed with the environment variable <code>ZED_UPDATE_EXPLANATION</code>. For example: <code>ZED_UPDATE_EXPLANATION=\"Please use flatpak to update zed.\"</code>.</li>\n<li>Make sure to update the contents of the <code>crates/zed/RELEASE_CHANNEL</code> file to 'nightly', 'preview', or 'stable', with no newline. This will cause Zed to use the credentials manager to remember a user's login.</li>\n</ul>\n<h3 id=\"other-things-to-note\"><a class=\"header\" href=\"#other-things-to-note\">Other things to note</a></h3>\n<p>At Zed, our priority has been to move fast and bring the latest technology to our users. We've long been frustrated at having software that is slow, out of date, or hard to configure, and so we've built our editor to those tastes.</p>\n<p>However, we realize that many distros have other priorities. We want to work with everyone to bring Zed to their favorite platforms. But there is a long way to go:</p>\n<ul>\n<li>Zed is a fast-moving early-phase project. We typically release 2-3 builds per week to fix user-reported issues and release major features.</li>\n<li>There are a couple of other <code>zed</code> binaries that may be present on Linux systems (<a href=\"https://openzfs.github.io/openzfs-docs/man/v2.2/8/zed.8.html\">1</a>, <a href=\"https://zed.brimdata.io/docs/commands/zed\">2</a>). If you want to rename our CLI binary because of these issues, we suggest <code>zedit</code>, <code>zeditor</code>, or <code>zed-cli</code>.</li>\n<li>Zed automatically installs the correct version of common developer tools in the same way as rustup/rbenv/pyenv, etc. We understand this is contentious, <a href=\"https://github.com/zed-industries/zed/issues/12589\">see here</a>.</li>\n<li>We allow users to install extensions locally and from <a href=\"https://github.com/zed-industries/extensions\">zed-industries/extensions</a>. These extensions may install further tooling as needed, such as language servers. In the long run, we would like to make this safer, <a href=\"https://github.com/zed-industries/zed/issues/12358\">see here</a>.</li>\n<li>Zed connects to several online services by default (AI, telemetry, collaboration). AI and our telemetry can be disabled by your users with their zed settings or by patching our <a href=\"https://github.com/zed-industries/zed/blob/main/assets/settings/default.json\">default settings file</a>.</li>\n<li>As a result of the above issues, zed currently does not play nice with sandboxes, <a href=\"https://github.com/zed-industries/zed/pull/12006#issuecomment-2130421220\">see here</a></li>\n</ul>\n<h2 id=\"flatpak\"><a class=\"header\" href=\"#flatpak\">Flatpak</a></h2>\n<blockquote>\n<p>Zed's current Flatpak integration exits the sandbox on startup. Workflows that rely on Flatpak's sandboxing may not work as expected.</p>\n</blockquote>\n<p>To build &amp; install the Flatpak package locally follow the steps below:</p>\n<ol>\n<li>Install Flatpak for your distribution as outlined <a href=\"https://flathub.org/setup\">here</a>.</li>\n<li>Run the <code>script/flatpak/deps</code> script to install the required dependencies.</li>\n<li>Run <code>script/flatpak/bundle-flatpak</code>.</li>\n<li>Now the package has been installed and has a bundle available at <code>target/release/{app-id}.flatpak</code>.</li>\n</ol>\n<h2 id=\"memory-profiling\"><a class=\"header\" href=\"#memory-profiling\">Memory profiling</a></h2>\n<p><a href=\"https://github.com/KDE/heaptrack\"><code>heaptrack</code></a> is quite useful for diagnosing memory leaks. To install it:</p>\n<pre><code class=\"language-sh\">$ sudo apt install heaptrack heaptrack-gui\n$ cargo install cargo-heaptrack\n</code></pre>\n<p>Then, to build and run Zed with the profiler attached:</p>\n<pre><code class=\"language-sh\">$ cargo heaptrack -b zed\n</code></pre>\n<p>When this zed instance is exited, terminal output will include a command to run <code>heaptrack_interpret</code> to convert the <code>*.raw.zst</code> profile to a <code>*.zst</code> file which can be passed to <code>heaptrack_gui</code> for viewing.</p>\n<h2 id=\"troubleshooting\"><a class=\"header\" href=\"#troubleshooting\">Troubleshooting</a></h2>\n<h3 id=\"cargo-errors-claiming-that-a-dependency-is-using-unstable-features\"><a class=\"header\" href=\"#cargo-errors-claiming-that-a-dependency-is-using-unstable-features\">Cargo errors claiming that a dependency is using unstable features</a></h3>\n<p>Try <code>cargo clean</code> and <code>cargo build</code>.</p>\n\n</main>",
+  "content_text": "Building Zed for Linux\nRepository\nClone down the Zed repository.\nDependencies\n\n\nInstall rustup\n\n\nInstall the necessary system libraries:\nscript/linux\n\nIf you prefer to install the system libraries manually, you can find the list of required packages in the script/linux file.\n\n\nBackend Dependencies (optional)\nIf you are looking to develop Zed collaboration features using a local collabortation server, please see: Local Collaboration docs.\nBuilding from source\nOnce the dependencies are installed, you can build Zed using Cargo.\nFor a debug build of the editor:\ncargo run\n\nAnd to run the tests:\ncargo test --workspace\n\nIn release mode, the primary user interface is the cli crate. You can run it in development with:\ncargo run -p cli\n\nInstalling a development build\nYou can install a local build on your machine with:\n./script/install-linux\n\nThis will build zed and the cli in release mode and make them available at ~/.local/bin/zed, installing .desktop files to ~/.local/share.\n\nNote: If you encounter linker errors similar to the following:\nerror: linking with `cc` failed: exit status: 1 ...\n= note: /usr/bin/ld: /tmp/rustcISMaod/libaws_lc_sys-79f08eb6d32e546e.rlib(f8e4fd781484bd36-bcm.o): in function `aws_lc_0_25_0_handle_cpu_env':\n          /aws-lc/crypto/fipsmodule/cpucap/cpu_intel.c:(.text.aws_lc_0_25_0_handle_cpu_env+0x63): undefined reference to `__isoc23_sscanf'\n          /usr/bin/ld: /tmp/rustcISMaod/libaws_lc_sys-79f08eb6d32e546e.rlib(f8e4fd781484bd36-bcm.o): in function `pkey_rsa_ctrl_str':\n          /aws-lc/crypto/fipsmodule/evp/p_rsa.c:741:(.text.pkey_rsa_ctrl_str+0x20d): undefined reference to `__isoc23_strtol'\n          /usr/bin/ld: /aws-lc/crypto/fipsmodule/evp/p_rsa.c:752:(.text.pkey_rsa_ctrl_str+0x258): undefined reference to `__isoc23_strtol'\n          collect2: error: ld returned 1 exit status\n  = note: some `extern` functions couldn't be found; some native libraries may need to be installed or have their path specified\n  = note: use the `-l` flag to specify native libraries to link\n  = note: use the `cargo:rustc-link-lib` directive to specify the native libraries to link with Cargo (see https://doc.rust-lang.org/cargo/reference/build-scripts.html#rustc-link-lib)\nerror: could not compile `remote_server` (bin \"remote_server\") due to 1 previous error\n\nCause:\nthis is caused by known bugs in aws-lc-rs(doesn't support GCC >= 14): FIPS fails to build with GCC >= 14\n& GCC-14 - build failure for FIPS module\nYou can refer to linux: Linker error for remote_server when using script/install-linux for more information.\nWorkarounds:\nSet the remote server target to x86_64-unknown-linux-gnu like so export REMOTE_SERVER_TARGET=x86_64-unknown-linux-gnu; script/install-linux\n\nWayland & X11\nZed supports both X11 and Wayland. By default, we pick whichever we can find at runtime. If you're on Wayland and want to run in X11 mode, use the environment variable WAYLAND_DISPLAY=''.\nNotes for packaging Zed\nThank you for taking on the task of packaging Zed!\nTechnical requirements\nZed has two main binaries:\n\nYou will need to build crates/cli and make its binary available in $PATH with the name zed.\nYou will need to build crates/zed and put it at $PATH/to/cli/../../libexec/zed-editor. For example, if you are going to put the cli at ~/.local/bin/zed put zed at ~/.local/libexec/zed-editor. As some linux distributions (notably Arch) discourage the use of libexec, you can also put this binary at $PATH/to/cli/../../lib/zed/zed-editor (e.g. ~/.local/lib/zed/zed-editor) instead.\nIf you are going to provide a .desktop file you can find a template in crates/zed/resources/zed.desktop.in, and use envsubst to populate it with the values required. This file should also be renamed to $APP_ID.desktop so that the file follows the FreeDesktop standards. You should also make this desktop file executable (chmod 755).\nYou will need to ensure that the necessary libraries are installed. You can get the current list by inspecting the built binary on your system.\nFor an example of a complete build script, see script/bundle-linux.\nYou can disable Zed's auto updates and provide instructions for users who try to update Zed manually by building (or running) Zed with the environment variable ZED_UPDATE_EXPLANATION. For example: ZED_UPDATE_EXPLANATION=\"Please use flatpak to update zed.\".\nMake sure to update the contents of the crates/zed/RELEASE_CHANNEL file to 'nightly', 'preview', or 'stable', with no newline. This will cause Zed to use the credentials manager to remember a user's login.\n\nOther things to note\nAt Zed, our priority has been to move fast and bring the latest technology to our users. We've long been frustrated at having software that is slow, out of date, or hard to configure, and so we've built our editor to those tastes.\nHowever, we realize that many distros have other priorities. We want to work with everyone to bring Zed to their favorite platforms. But there is a long way to go:\n\nZed is a fast-moving early-phase project. We typically release 2-3 builds per week to fix user-reported issues and release major features.\nThere are a couple of other zed binaries that may be present on Linux systems (1, 2). If you want to rename our CLI binary because of these issues, we suggest zedit, zeditor, or zed-cli.\nZed automatically installs the correct version of common developer tools in the same way as rustup/rbenv/pyenv, etc. We understand this is contentious, see here.\nWe allow users to install extensions locally and from zed-industries/extensions. These extensions may install further tooling as needed, such as language servers. In the long run, we would like to make this safer, see here.\nZed connects to several online services by default (AI, telemetry, collaboration). AI and our telemetry can be disabled by your users with their zed settings or by patching our default settings file.\nAs a result of the above issues, zed currently does not play nice with sandboxes, see here\n\nFlatpak\n\nZed's current Flatpak integration exits the sandbox on startup. Workflows that rely on Flatpak's sandboxing may not work as expected.\n\nTo build & install the Flatpak package locally follow the steps below:\n\nInstall Flatpak for your distribution as outlined here.\nRun the script/flatpak/deps script to install the required dependencies.\nRun script/flatpak/bundle-flatpak.\nNow the package has been installed and has a bundle available at target/release/{app-id}.flatpak.\n\nMemory profiling\nheaptrack is quite useful for diagnosing memory leaks. To install it:\n$ sudo apt install heaptrack heaptrack-gui\n$ cargo install cargo-heaptrack\n\nThen, to build and run Zed with the profiler attached:\n$ cargo heaptrack -b zed\n\nWhen this zed instance is exited, terminal output will include a command to run heaptrack_interpret to convert the *.raw.zst profile to a *.zst file which can be passed to heaptrack_gui for viewing.\nTroubleshooting\nCargo errors claiming that a dependency is using unstable features\nTry cargo clean and cargo build.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:15:42"
+}

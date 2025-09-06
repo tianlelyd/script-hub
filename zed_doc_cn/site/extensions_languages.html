@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Language Extensions | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="active">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#language-extensions" class="pagetoc-H1">Language Extensions</a>
+<a href="#language-metadata" class="pagetoc-H2">Language Metadata</a>
+<a href="#grammar" class="pagetoc-H2">Grammar</a>
+<a href="#tree-sitter-queries" class="pagetoc-H2">Tree-sitter Queries</a>
+<a href="#syntax-highlighting" class="pagetoc-H3">Syntax highlighting</a>
+<a href="#bracket-matching" class="pagetoc-H3">Bracket matching</a>
+<a href="#code-outlinestructure" class="pagetoc-H3">Code outline/structure</a>
+<a href="#auto-indentation" class="pagetoc-H3">Auto-indentation</a>
+<a href="#code-injections" class="pagetoc-H3">Code injections</a>
+<a href="#syntax-overrides" class="pagetoc-H3">Syntax overrides</a>
+<a href="#text-objects" class="pagetoc-H3">Text objects</a>
+<a href="#text-redactions" class="pagetoc-H3">Text redactions</a>
+<a href="#runnable-code-detection" class="pagetoc-H3">Runnable code detection</a>
+<a href="#language-servers" class="pagetoc-H2">Language Servers</a>
+<a href="#multi-language-support" class="pagetoc-H3">Multi-Language Support</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="language-extensions"><a class="header" href="#language-extensions">Language Extensions</a></h1>
+<p>Language support in Zed has several components:</p>
+<ul>
+<li>Language metadata and configuration</li>
+<li>Grammar</li>
+<li>Queries</li>
+<li>Language servers</li>
+</ul>
+<h2 id="language-metadata"><a class="header" href="#language-metadata">Language Metadata</a></h2>
+<p>Each language supported by Zed must be defined in a subdirectory inside the <code>languages</code> directory of your extension.</p>
+<p>This subdirectory must contain a file called <code>config.toml</code> file with the following structure:</p>
+<pre><code class="language-toml">name = "My Language"
+grammar = "my-language"
+path_suffixes = ["myl"]
+line_comments = ["# "]
+</code></pre>
+<ul>
+<li><code>name</code> (required) is the human readable name that will show up in the Select Language dropdown.</li>
+<li><code>grammar</code> (required) is the name of a grammar. Grammars are registered separately, described below.</li>
+<li><code>path_suffixes</code> is an array of file suffixes that should be associated with this language. Unlike <code>file_types</code> in settings, this does not support glob patterns.</li>
+<li><code>line_comments</code> is an array of strings that are used to identify line comments in the language. This is used for the <code>editor::ToggleComments</code> keybind: <kbd class="keybinding">cmd-/|ctrl-/</kbd> for toggling lines of code.</li>
+<li><code>tab_size</code> defines the indentation/tab size used for this language (default is <code>4</code>).</li>
+<li><code>hard_tabs</code> whether to indent with tabs (<code>true</code>) or spaces (<code>false</code>, the default).</li>
+<li><code>first_line_pattern</code> is a regular expression, that in addition to <code>path_suffixes</code> (above) or <code>file_types</code> in settings can be used to match files which should use this language. For example Zed uses this to identify Shell Scripts by matching the <a href="https://github.com/zed-industries/zed/blob/main/crates/languages/src/bash/config.toml">shebangs lines</a> in the first line of a script.</li>
+<li><code>debuggers</code> is an array of strings that are used to identify debuggers in the language. When launching a debugger's <code>New Process Modal</code>, Zed will order available debuggers by the order of entries in this array.</li>
+</ul>
+<!--
+TBD: Document `language_name/config.toml` keys
+
+- autoclose_before
+- brackets (start, end, close, newline, not_in: ["comment", "string"])
+- word_characters
+- prettier_parser_name
+- opt_into_language_servers
+- code_fence_block_name
+- scope_opt_in_language_servers
+- increase_indent_pattern, decrease_indent_pattern
+- collapsed_placeholder
+- auto_indent_on_paste, auto_indent_using_last_non_empty_line
+- overrides: `[overrides.element]`, `[overrides.string]`
+-->
+<h2 id="grammar"><a class="header" href="#grammar">Grammar</a></h2>
+<p>Zed uses the <a href="https://tree-sitter.github.io">Tree-sitter</a> parsing library to provide built-in language-specific features. There are grammars available for many languages, and you can also <a href="https://tree-sitter.github.io/tree-sitter/creating-parsers#writing-the-grammar">develop your own grammar</a>. A growing list of Zed features are built using pattern matching over syntax trees with Tree-sitter queries. As mentioned above, every language that is defined in an extension must specify the name of a Tree-sitter grammar that is used for parsing. These grammars are then registered separately in extensions' <code>extension.toml</code> file, like this:</p>
+<pre><code class="language-toml">[grammars.gleam]
+repository = "https://github.com/gleam-lang/tree-sitter-gleam"
+rev = "58b7cac8fc14c92b0677c542610d8738c373fa81"
+</code></pre>
+<p>The <code>repository</code> field must specify a repository where the Tree-sitter grammar should be loaded from, and the <code>rev</code> field must contain a Git revision to use, such as the SHA of a Git commit. If you're developing an extension locally and want to load a grammar from the local filesystem, you can use a <code>file://</code> URL for <code>repository</code>. An extension can provide multiple grammars by referencing multiple tree-sitter repositories.</p>
+<h2 id="tree-sitter-queries"><a class="header" href="#tree-sitter-queries">Tree-sitter Queries</a></h2>
+<p>Zed uses the syntax tree produced by the <a href="https://tree-sitter.github.io">Tree-sitter</a> query language to implement
+several features:</p>
+<ul>
+<li>Syntax highlighting</li>
+<li>Bracket matching</li>
+<li>Code outline/structure</li>
+<li>Auto-indentation</li>
+<li>Code injections</li>
+<li>Syntax overrides</li>
+<li>Text redactions</li>
+<li>Runnable code detection</li>
+<li>Selecting classes, functions, etc.</li>
+</ul>
+<p>The following sections elaborate on how <a href="https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax">Tree-sitter queries</a> enable these
+features in Zed, using <a href="https://www.json.org/json-en.html">JSON syntax</a> as a guiding example.</p>
+<h3 id="syntax-highlighting"><a class="header" href="#syntax-highlighting">Syntax highlighting</a></h3>
+<p>In Tree-sitter, the <code>highlights.scm</code> file defines syntax highlighting rules for a particular syntax.</p>
+<p>Here's an example from a <code>highlights.scm</code> for JSON:</p>
+<pre><code class="language-scheme">(string) @string
+
+(pair
+  key: (string) @property.json_key)
+
+(number) @number
+</code></pre>
+<p>This query marks strings, object keys, and numbers for highlighting. The following is a comprehensive list of captures supported by themes:</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@attribute</td><td>Captures attributes</td></tr>
+<tr><td>@boolean</td><td>Captures boolean values</td></tr>
+<tr><td>@comment</td><td>Captures comments</td></tr>
+<tr><td>@comment.doc</td><td>Captures documentation comments</td></tr>
+<tr><td>@constant</td><td>Captures constants</td></tr>
+<tr><td>@constructor</td><td>Captures constructors</td></tr>
+<tr><td>@embedded</td><td>Captures embedded content</td></tr>
+<tr><td>@emphasis</td><td>Captures emphasized text</td></tr>
+<tr><td>@emphasis.strong</td><td>Captures strongly emphasized text</td></tr>
+<tr><td>@enum</td><td>Captures enumerations</td></tr>
+<tr><td>@function</td><td>Captures functions</td></tr>
+<tr><td>@hint</td><td>Captures hints</td></tr>
+<tr><td>@keyword</td><td>Captures keywords</td></tr>
+<tr><td>@label</td><td>Captures labels</td></tr>
+<tr><td>@link_text</td><td>Captures link text</td></tr>
+<tr><td>@link_uri</td><td>Captures link URIs</td></tr>
+<tr><td>@number</td><td>Captures numeric values</td></tr>
+<tr><td>@operator</td><td>Captures operators</td></tr>
+<tr><td>@predictive</td><td>Captures predictive text</td></tr>
+<tr><td>@preproc</td><td>Captures preprocessor directives</td></tr>
+<tr><td>@primary</td><td>Captures primary elements</td></tr>
+<tr><td>@property</td><td>Captures properties</td></tr>
+<tr><td>@punctuation</td><td>Captures punctuation</td></tr>
+<tr><td>@punctuation.bracket</td><td>Captures brackets</td></tr>
+<tr><td>@punctuation.delimiter</td><td>Captures delimiters</td></tr>
+<tr><td>@punctuation.list_marker</td><td>Captures list markers</td></tr>
+<tr><td>@punctuation.special</td><td>Captures special punctuation</td></tr>
+<tr><td>@string</td><td>Captures string literals</td></tr>
+<tr><td>@string.escape</td><td>Captures escaped characters in strings</td></tr>
+<tr><td>@string.regex</td><td>Captures regular expressions</td></tr>
+<tr><td>@string.special</td><td>Captures special strings</td></tr>
+<tr><td>@string.special.symbol</td><td>Captures special symbols</td></tr>
+<tr><td>@tag</td><td>Captures tags</td></tr>
+<tr><td>@tag.doctype</td><td>Captures doctypes (e.g., in HTML)</td></tr>
+<tr><td>@text.literal</td><td>Captures literal text</td></tr>
+<tr><td>@title</td><td>Captures titles</td></tr>
+<tr><td>@type</td><td>Captures types</td></tr>
+<tr><td>@variable</td><td>Captures variables</td></tr>
+<tr><td>@variable.special</td><td>Captures special variables</td></tr>
+<tr><td>@variant</td><td>Captures variants</td></tr>
+</tbody></table>
+</div>
+<h3 id="bracket-matching"><a class="header" href="#bracket-matching">Bracket matching</a></h3>
+<p>The <code>brackets.scm</code> file defines matching brackets.</p>
+<p>Here's an example from a <code>brackets.scm</code> file for JSON:</p>
+<pre><code class="language-scheme">("[" @open "]" @close)
+("{" @open "}" @close)
+("\"" @open "\"" @close)
+</code></pre>
+<p>This query identifies opening and closing brackets, braces, and quotation marks.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@open</td><td>Captures opening brackets, braces, and quotes</td></tr>
+<tr><td>@close</td><td>Captures closing brackets, braces, and quotes</td></tr>
+</tbody></table>
+</div>
+<h3 id="code-outlinestructure"><a class="header" href="#code-outlinestructure">Code outline/structure</a></h3>
+<p>The <code>outline.scm</code> file defines the structure for the code outline.</p>
+<p>Here's an example from an <code>outline.scm</code> file for JSON:</p>
+<pre><code class="language-scheme">(pair
+  key: (string (string_content) @name)) @item
+</code></pre>
+<p>This query captures object keys for the outline structure.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@name</td><td>Captures the content of object keys</td></tr>
+<tr><td>@item</td><td>Captures the entire key-value pair</td></tr>
+<tr><td>@context</td><td>Captures elements that provide context for the outline item</td></tr>
+<tr><td>@context.extra</td><td>Captures additional contextual information for the outline item</td></tr>
+<tr><td>@annotation</td><td>Captures nodes that annotate outline item (doc comments, attributes, decorators)<sup class="footnote-reference"><a href="#1">1</a></sup></td></tr>
+</tbody></table>
+</div>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>These annotations are used by Assistant when generating code modification steps.</p>
+</div>
+<h3 id="auto-indentation"><a class="header" href="#auto-indentation">Auto-indentation</a></h3>
+<p>The <code>indents.scm</code> file defines indentation rules.</p>
+<p>Here's an example from an <code>indents.scm</code> file for JSON:</p>
+<pre><code class="language-scheme">(array "]" @end) @indent
+(object "}" @end) @indent
+</code></pre>
+<p>This query marks the end of arrays and objects for indentation purposes.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@end</td><td>Captures closing brackets and braces</td></tr>
+<tr><td>@indent</td><td>Captures entire arrays and objects for indentation</td></tr>
+</tbody></table>
+</div>
+<h3 id="code-injections"><a class="header" href="#code-injections">Code injections</a></h3>
+<p>The <code>injections.scm</code> file defines rules for embedding one language within another, such as code blocks in Markdown or SQL queries in Python strings.</p>
+<p>Here's an example from an <code>injections.scm</code> file for Markdown:</p>
+<pre><code class="language-scheme">(fenced_code_block
+  (info_string
+    (language) @injection.language)
+  (code_fence_content) @injection.content)
+
+((inline) @content
+ (#set! injection.language "markdown-inline"))
+</code></pre>
+<p>This query identifies fenced code blocks, capturing the language specified in the info string and the content within the block. It also captures inline content and sets its language to "markdown-inline".</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@injection.language</td><td>Captures the language identifier for a code block</td></tr>
+<tr><td>@injection.content</td><td>Captures the content to be treated as a different language</td></tr>
+</tbody></table>
+</div>
+<p>Note that we couldn't use JSON as an example here because it doesn't support language injections.</p>
+<h3 id="syntax-overrides"><a class="header" href="#syntax-overrides">Syntax overrides</a></h3>
+<p>The <code>overrides.scm</code> file defines syntactic <em>scopes</em> that can be used to override certain editor settings within specific language constructs.</p>
+<p>For example, there is a language-specific setting called <code>word_characters</code> that controls which non-alphabetic characters are considered part of a word, for example when you double click to select a variable. In JavaScript, "$" and "#" are considered word characters.</p>
+<p>There is also a language-specific setting called <code>completion_query_characters</code> that controls which characters trigger autocomplete suggestions. In JavaScript, when your cursor is within a <em>string</em>, "-" is should be considered a completion query character. To achieve this, the JavaScript <code>overrides.scm</code> file contains the following pattern:</p>
+<pre><code class="language-scheme">[
+  (string)
+  (template_string)
+] @string
+</code></pre>
+<p>And the JavaScript <code>config.toml</code> contains this setting:</p>
+<pre><code class="language-toml">word_characters = ["#", "$"]
+
+[overrides.string]
+completion_query_characters = ["-"]
+</code></pre>
+<p>You can also disable certain auto-closing brackets in a specific scope. For example, to prevent auto-closing <code>'</code> within strings, you could put the following in the JavaScript <code>config.toml</code>:</p>
+<pre><code class="language-toml">brackets = [
+  { start = "'", end = "'", close = true, newline = false, not_in = ["string"] },
+  # other pairs...
+]
+</code></pre>
+<h4 id="range-inclusivity"><a class="header" href="#range-inclusivity">Range inclusivity</a></h4>
+<p>By default, the ranges defined in <code>overrides.scm</code> are <em>exclusive</em>. So in the case above, if you cursor was <em>outside</em> the quotation marks delimiting the string, the <code>string</code> scope would not take effect. Sometimes, you may want to make the range <em>inclusive</em>. You can do this by adding the <code>.inclusive</code> suffix to the capture name in the query.</p>
+<p>For example, in JavaScript, we also disable auto-closing of single quotes within comments. And the comment scope must extend all the way to the newline after a line comment. To achieve this, the JavaScript <code>overrides.scm</code> contains the following pattern:</p>
+<pre><code class="language-scheme">(comment) @comment.inclusive
+</code></pre>
+<h3 id="text-objects"><a class="header" href="#text-objects">Text objects</a></h3>
+<p>The <code>textobjects.scm</code> file defines rules for navigating by text objects. This was added in Zed v0.165 and is currently used only in Vim mode.</p>
+<p>Vim provides two levels of granularity for navigating around files. Section-by-section with <code>[]</code> etc., and method-by-method with <code>]m</code> etc. Even languages that don't support functions and classes can work well by defining similar concepts. For example CSS defines a rule-set as a method, and a media-query as a class.</p>
+<p>For languages with closures, these typically should not count as functions in Zed. This is best-effort however, as languages like Javascript do not syntactically differentiate syntactically between closures and top-level function declarations.</p>
+<p>For languages with declarations like C, provide queries that match <code>@class.around</code> or <code>@function.around</code>. The <code>if</code> and <code>ic</code> text objects will default to these if there is no inside.</p>
+<p>If you are not sure what to put in textobjects.scm, both <a href="https://github.com/nvim-treesitter/nvim-treesitter-textobjects">nvim-treesitter-textobjects</a>, and the <a href="https://github.com/helix-editor/helix">Helix editor</a> have queries for many languages. You can refer to the Zed <a href="https://github.com/zed-industries/zed/tree/main/crates/languages/src">built-in languages</a> to see how to adapt these.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th><th>Vim mode</th></tr></thead><tbody>
+<tr><td>@function.around</td><td>An entire function definition or equivalent small section of a file.</td><td><code>[m</code>, <code>]m</code>, <code>[M</code>,<code>]M</code> motions. <code>af</code> text object</td></tr>
+<tr><td>@function.inside</td><td>The function body (the stuff within the braces).</td><td><code>if</code> text object</td></tr>
+<tr><td>@class.around</td><td>An entire class definition or equivalent large section of a file.</td><td><code>[[</code>, <code>]]</code>, <code>[]</code>, <code>][</code> motions. <code>ac</code> text object</td></tr>
+<tr><td>@class.inside</td><td>The contents of a class definition.</td><td><code>ic</code> text object</td></tr>
+<tr><td>@comment.around</td><td>An entire comment (e.g. all adjacent line comments, or a block comment)</td><td><code>gc</code> text object</td></tr>
+<tr><td>@comment.inside</td><td>The contents of a comment</td><td><code>igc</code> text object (rarely supported)</td></tr>
+</tbody></table>
+</div>
+<p>For example:</p>
+<pre><code class="language-scheme">; include only the content of the method in the function
+(method_definition
+    body: (_
+        "{"
+        (_)* @function.inside
+        "}")) @function.around
+
+; match function.around for declarations with no body
+(function_signature_item) @function.around
+
+; join all adjacent comments into one
+(comment)+ @comment.around
+</code></pre>
+<h3 id="text-redactions"><a class="header" href="#text-redactions">Text redactions</a></h3>
+<p>The <code>redactions.scm</code> file defines text redaction rules. When collaborating and sharing your screen, it makes sure that certain syntax nodes are rendered in a redacted mode to avoid them from leaking.</p>
+<p>Here's an example from a <code>redactions.scm</code> file for JSON:</p>
+<pre><code class="language-scheme">(pair value: (number) @redact)
+(pair value: (string) @redact)
+(array (number) @redact)
+(array (string) @redact)
+</code></pre>
+<p>This query marks number and string values in key-value pairs and arrays for redaction.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@redact</td><td>Captures values to be redacted</td></tr>
+</tbody></table>
+</div>
+<h3 id="runnable-code-detection"><a class="header" href="#runnable-code-detection">Runnable code detection</a></h3>
+<p>The <code>runnables.scm</code> file defines rules for detecting runnable code.</p>
+<p>Here's an example from an <code>runnables.scm</code> file for JSON:</p>
+<pre><code class="language-scheme">(
+    (document
+        (object
+            (pair
+                key: (string
+                    (string_content) @_name
+                    (#eq? @_name "scripts")
+                )
+                value: (object
+                    (pair
+                        key: (string (string_content) @run @script)
+                    )
+                )
+            )
+        )
+    )
+    (#set! tag package-script)
+    (#set! tag composer-script)
+)
+</code></pre>
+<p>This query detects runnable scripts in package.json and composer.json files.</p>
+<p>The <code>@run</code> capture specifies where the run button should appear in the editor. Other captures, except those prefixed with an underscore, are exposed as environment variables with a prefix of <code>ZED_CUSTOM_$(capture_name)</code> when running the code.</p>
+<div class="table-wrapper"><table><thead><tr><th>Capture</th><th>Description</th></tr></thead><tbody>
+<tr><td>@_name</td><td>Captures the "scripts" key</td></tr>
+<tr><td>@run</td><td>Captures the script name</td></tr>
+<tr><td>@script</td><td>Also captures the script name (for different purposes)</td></tr>
+</tbody></table>
+</div><!--
+TBD: `#set! tag`
+-->
+<h2 id="language-servers"><a class="header" href="#language-servers">Language Servers</a></h2>
+<p>Zed uses the <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> to provide advanced language support.</p>
+<p>An extension may provide any number of language servers. To provide a language server from your extension, add an entry to your <code>extension.toml</code> with the name of your language server and the language(s) it applies to:</p>
+<pre><code class="language-toml">[language_servers.my-language-server]
+name = "My Language LSP"
+languages = ["My Language"]
+</code></pre>
+<p>Then, in the Rust code for your extension, implement the <code>language_server_command</code> method on your extension:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl zed::Extension for MyExtension {
+    fn language_server_command(
+        &amp;mut self,
+        language_server_id: &amp;LanguageServerId,
+        worktree: &amp;zed::Worktree,
+    ) -&gt; Result&lt;zed::Command&gt; {
+        Ok(zed::Command {
+            command: get_path_to_language_server_executable()?,
+            args: get_args_for_language_server()?,
+            env: get_env_for_language_server()?,
+        })
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>You can customize the handling of the language server using several optional methods in the <code>Extension</code> trait. For example, you can control how completions are styled using the <code>label_for_completion</code> method. For a complete list of methods, see the <a href="https://docs.rs/zed_extension_api">API docs for the Zed extension API</a>.</p>
+<h3 id="multi-language-support"><a class="header" href="#multi-language-support">Multi-Language Support</a></h3>
+<p>If your language server supports additional languages, you can use <code>language_ids</code> to map Zed <code>languages</code> to the desired <a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem">LSP-specific <code>languageId</code></a> identifiers:</p>
+<pre><code class="language-toml">
+[language-servers.my-language-server]
+name = "Whatever LSP"
+languages = ["JavaScript", "HTML", "CSS"]
+
+[language-servers.my-language-server.language_ids]
+"JavaScript" = "javascript"
+"TSX" = "typescriptreact"
+"HTML" = "html"
+"CSS" = "css"
+</code></pre>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Using Debuggers | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="active">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#using-a-debugger" class="pagetoc-H1">Using a debugger</a>
+<a href="#using-zeds-built-in-debugger" class="pagetoc-H2">Using Zed's built-in debugger</a>
+<a href="#release-build-profile-considerations" class="pagetoc-H2">Release build profile considerations</a>
+<a href="#running-zed-with-a-shell-debugger-gdblldb" class="pagetoc-H2">Running Zed with a shell debugger GDB/LLDB</a>
+<a href="#background" class="pagetoc-H3">Background</a>
+<a href="#usage-with-zed" class="pagetoc-H3">Usage with Zed</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="using-a-debugger"><a class="header" href="#using-a-debugger">Using a debugger</a></h1>
+<blockquote>
+<p><strong>DISCLAIMER</strong>: This is not documentation for <a href="../debugger.html">configuring Zed's debugger</a>.
+Rather, it is intended to provide information on how to use a debugger while developing Zed itself to both Zed employees and external contributors.</p>
+</blockquote>
+<h2 id="using-zeds-built-in-debugger"><a class="header" href="#using-zeds-built-in-debugger">Using Zed's built-in debugger</a></h2>
+<p>While the Zed project is open you can open the <code>New Process Modal</code> and select the <code>Debug</code> tab. There you can see to debug configurations to debug Zed with, one for GDB and one for LLDB. Select the configuration you want and Zed will build and launch the binary.</p>
+<p>Please note, GDB isn't supported on arm Macbooks</p>
+<h2 id="release-build-profile-considerations"><a class="header" href="#release-build-profile-considerations">Release build profile considerations</a></h2>
+<p>By default, builds using the release profile (release is the profile used for production builds, i.e. nightly, preview, and stable) include limited debug info.</p>
+<p>This is done by setting the <code>profile.(release).debug</code> field in the root <code>Cargo.toml</code> field to <code>"limited"</code>.</p>
+<p>The official documentation for the <code>debug</code> field can be found <a href="https://doc.rust-lang.org/cargo/reference/profiles.html#debug">here</a>.
+But the TLDR is that <code>"limited"</code> strips type and variable level debug info.</p>
+<p>In release builds, this is done to reduce the binary size, as type and variable level debug info is not required, and does not impact the usability of generated stack traces.</p>
+<p>However, while the type and variable level debug info is not required for good stack traces, it is very important for a good experience using debuggers,
+as without the type and variable level debug info, the debugger has no way to resolve local variables, inspect them, format them using pretty-printers, etc.</p>
+<p>Therefore, in order to use a debugger to it's fullest extent when debugging a release build, you must compile a new Zed binary, with full debug info.</p>
+<p>The simplest way to do this, is to use the <code>--config</code> flag to override the <code>debug</code> field in the root <code>Cargo.toml</code> file when running <code>cargo run</code> or <code>cargo build</code> like so:</p>
+<pre><code class="language-sh">cargo run --config 'profile.release.debug="full"'
+cargo build --config 'profile.release.debug="full"'
+</code></pre>
+<blockquote>
+<p>If you wish to avoid passing the <code>--config</code> flag on every invocation of <code>cargo</code>. You may also change the section in the <a href="https://github.com/zed-industries/zed/blob/main/Cargo.toml">root <code>Cargo.toml</code></a></p>
+<p>from</p>
+<pre><code class="language-toml">[profile.release]
+debug = "limited"
+</code></pre>
+<p>to</p>
+<pre><code class="language-toml">[profile.release]
+debug = "full"
+</code></pre>
+<p>This will ensure all invocations of <code>cargo run --release</code> or <code>cargo build --release</code> will compile with full debug info.</p>
+<p><strong>WARNING:</strong> Make sure to avoid committing these changes!</p>
+</blockquote>
+<h2 id="running-zed-with-a-shell-debugger-gdblldb"><a class="header" href="#running-zed-with-a-shell-debugger-gdblldb">Running Zed with a shell debugger GDB/LLDB</a></h2>
+<h3 id="background"><a class="header" href="#background">Background</a></h3>
+<p>When installing rust through rustup, (the recommended way to do so when developing Zed, see the documentation for getting started on your platform <a href="../development.html">here</a>)
+a few additional scripts are installed and put on your path to assist with debugging binaries compiled with rust.</p>
+<p>These are <code>rust-gdb</code> and <code>rust-lldb</code> respectively.</p>
+<p>You can read more information about these scripts and why they are useful <a href="https://michaelwoerister.github.io/2015/03/27/rust-xxdb.html">here</a> if you are interested.</p>
+<p>However, the summary is that they are simple shell scripts that wrap the standard <code>gdb</code> and <code>lldb</code> commands, injecting the relevant commands and flags to enable additional
+rust-specific features such as pretty-printers and type information.</p>
+<p>Therefore, in order to use <code>rust-gdb</code> or <code>rust-lldb</code>, you must have <code>gdb</code> or <code>lldb</code> installed on your system. If you don't have them installed, you will need to install them in a manner appropriate for your platform.</p>
+<p>According to the <a href="https://michaelwoerister.github.io/2015/03/27/rust-xxdb.html">previously linked article</a>, "The minimum supported debugger versions are GDB 7.7 and LLDB 310. However, the general rule is: the newer the better." Therefore, it is recommended to install the latest version of <code>gdb</code> or <code>lldb</code> if possible.</p>
+<blockquote>
+<p><strong>Note</strong>: <code>rust-gdb</code> is not installed by default on Windows, as <code>gdb</code> support for windows is not very stable. It is recommended to use <code>lldb</code> with <code>rust-lldb</code> instead on Windows.</p>
+</blockquote>
+<p>If you are unfamiliar with <code>gdb</code> or <code>lldb</code>, you can learn more about them <a href="https://www.gnu.org/software/gdb/">here</a> and <a href="https://lldb.llvm.org/">here</a> respectively.</p>
+<h3 id="usage-with-zed"><a class="header" href="#usage-with-zed">Usage with Zed</a></h3>
+<p>After following the steps above for including full debug info when compiling Zed,
+You can either run <code>rust-gdb</code> or <code>rust-lldb</code> on the compiled Zed binary after building it with <code>cargo build</code>, by running one of the following commands:</p>
+<pre><code>rust-gdb target/debug/zed
+rust-lldb target/debug/zed
+</code></pre>
+<p>Alternatively, you can attach to a running instance of Zed (such as an instance of Zed started using <code>cargo run</code>) by running one of the following commands:</p>
+<pre><code>rust-gdb -p &lt;pid&gt;
+rust-lldb -p &lt;pid&gt;
+</code></pre>
+<p>Where <code>&lt;pid&gt;</code> is the process ID of the Zed instance you want to attach to.</p>
+<p>To get the process ID of a running Zed instance, you can use your systems process management tools such as <code>Task Manager</code> on windows or <code>Activity Monitor</code> on MacOS.</p>
+<p>Alternatively, you can run the <code>ps aux | grep zed</code> command on MacOS and Linux or <code>Get-Process | Select-Object Id, ProcessName</code> in an instance of PowerShell on Windows.</p>
+<h4 id="debugging-panics-and-crashes"><a class="header" href="#debugging-panics-and-crashes">Debugging Panics and Crashes</a></h4>
+<p>Debuggers can be an excellent tool for debugging the cause of panics and crashes in all programs, including Zed.</p>
+<p>By default, when a process that <code>gdb</code> or <code>lldb</code> is attached to hits an exception such as a panic, the debugger will automatically stop at the point of the panic and allow you to inspect the state of the program.</p>
+<p>Most likely, the point at which the debugger stops will be deep in the rust standard library panic or exception handling code, so you will need to navigate up the stack trace to find the actual cause of the panic.</p>
+<p>This can be accomplished using the <code>backtrace</code> command in combination with the <code>frame select</code> command in <code>lldb</code>, with similar commands available in <code>gdb</code>.</p>
+<p>Once the program is stopped, you will not be able to continue execution as you can before an exception is hit. However, you can jump around to different stack frames, and inspect the values of variables and expressions
+within each frame, which can be very useful in identifying the root cause of the crash.</p>
+<p>You can find additional information on debugging Zed crashes <a href="./debugging-crashes.html">here</a>.</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

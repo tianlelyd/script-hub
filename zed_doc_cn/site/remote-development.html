@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Remote Development | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="active">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#remote-development" class="pagetoc-H1">Remote Development</a>
+<a href="#overview" class="pagetoc-H2">Overview</a>
+<a href="#setup" class="pagetoc-H2">Setup</a>
+<a href="#supported-platforms" class="pagetoc-H2">Supported platforms</a>
+<a href="#configuration" class="pagetoc-H2">Configuration</a>
+<a href="#port-forwarding" class="pagetoc-H2">Port forwarding</a>
+<a href="#zed-settings" class="pagetoc-H2">Zed settings</a>
+<a href="#initializing-the-remote-server" class="pagetoc-H2">Initializing the remote server</a>
+<a href="#maintaining-the-ssh-connection" class="pagetoc-H2">Maintaining the SSH connection</a>
+<a href="#supported-ssh-options" class="pagetoc-H2">Supported SSH Options</a>
+<a href="#known-limitations" class="pagetoc-H2">Known Limitations</a>
+<a href="#feedback" class="pagetoc-H2">Feedback</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="remote-development"><a class="header" href="#remote-development">Remote Development</a></h1>
+<p>Remote Development allows you to code at the speed of thought, even when your codebase is not on your local machine. You use Zed locally so the UI is immediately responsive, but offload heavy computation to the development server so that you can work effectively.</p>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>Remote development requires two computers, your local machine that runs the Zed UI and the remote server which runs a Zed headless server. The two communicate over SSH, so you will need to be able to SSH from your local machine into the remote server to use this feature.</p>
+<p><img alt="Architectural overview of Zed Remote Development" src="https://zed.dev/img/remote-development/diagram.png"/></p>
+<p>On your local machine, Zed runs its UI, talks to language models, uses Tree-sitter to parse and syntax-highlight code, and store unsaved changes and recent projects. The source code, language servers, tasks, and the terminal all run on the remote server.</p>
+<blockquote>
+<p><strong>Note:</strong> The original version of remote development sent traffic via Zed's servers. As of Zed v0.157 you can no-longer use that mode.</p>
+</blockquote>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<ol>
+<li>Download and install the latest <a href="https://zed.dev/releases">Zed</a>. You need at least Zed v0.159.</li>
+<li>Use <kbd class="keybinding">ctrl-cmd-shift-o|alt-ctrl-shift-o</kbd> to open the "Remote Projects" dialog.</li>
+<li>Click "Connect New Server" and enter the command you use to SSH into the server. See <a href="#supported-ssh-options">Supported SSH options</a> for options you can pass.</li>
+<li>Your local machine will attempt to connect to the remote server using the <code>ssh</code> binary on your path. Assuming the connection is successful, Zed will download the server on the remote host and start it.</li>
+<li>Once the Zed server is running, you will be prompted to choose a path to open on the remote server.
+<blockquote>
+<p><strong>Note:</strong> Zed does not currently handle opening very large directories (for example, <code>/</code> or <code>~</code> that may have &gt;100,000 files) very well. We are working on improving this, but suggest in the meantime opening only specific projects, or subfolders of very large mono-repos.</p>
+</blockquote>
+</li>
+</ol>
+<p>For simple cases where you don't need any SSH arguments, you can run <code>zed ssh://[&lt;user&gt;@]&lt;host&gt;[:&lt;port&gt;]/&lt;path&gt;</code> to open a remote folder/file directly. If you'd like to hotlink into an SSH project, use a link of the format: <code>zed://ssh/[&lt;user&gt;@]&lt;host&gt;[:&lt;port&gt;]/&lt;path&gt;</code>.</p>
+<h2 id="supported-platforms"><a class="header" href="#supported-platforms">Supported platforms</a></h2>
+<p>The remote machine must be able to run Zed's server. The following platforms should work, though note that we have not exhaustively tested every Linux distribution:</p>
+<ul>
+<li>macOS Catalina or later (Intel or Apple Silicon)</li>
+<li>Linux (x86_64 or arm64, we do not yet support 32-bit platforms)</li>
+<li>Windows is not yet supported.</li>
+</ul>
+<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
+<p>The list of remote servers is stored in your settings file <kbd class="keybinding">cmd-,|ctrl-,</kbd>. You can edit this list using the Remote Projects dialog <kbd class="keybinding">ctrl-cmd-shift-o|alt-ctrl-shift-o</kbd>, which provides some robustness - for example it checks that the connection can be established before writing it to the settings file.</p>
+<pre><code class="language-json">{
+  "ssh_connections": [
+    {
+      "host": "192.168.1.10",
+      "projects": [{ "paths": ["~/code/zed/zed"] }]
+    }
+  ]
+}
+</code></pre>
+<p>Zed shells out to the <code>ssh</code> on your path, and so it will inherit any configuration you have in <code>~/.ssh/config</code> for the given host. That said, if you need to override anything you can configure the following additional options on each connection:</p>
+<pre><code class="language-json">{
+  "ssh_connections": [
+    {
+      "host": "192.168.1.10",
+      "projects": [{ "paths": ["~/code/zed/zed"] }],
+      // any argument to pass to the ssh master process
+      "args": ["-i", "~/.ssh/work_id_file"],
+      "port": 22, // defaults to 22
+      // defaults to your username on your local machine
+      "username": "me"
+    }
+  ]
+}
+</code></pre>
+<p>There are two additional Zed-specific options per connection, <code>upload_binary_over_ssh</code> and <code>nickname</code>:</p>
+<pre><code class="language-json">{
+  "ssh_connections": [
+    {
+      "host": "192.168.1.10",
+      "projects": [{ "paths": ["~/code/zed/zed"] }],
+      // by default Zed will download the server binary from the internet on the remote.
+      // When this is true, it'll be downloaded to your laptop and uploaded over SSH.
+      // This is useful when your remote server has restricted internet access.
+      "upload_binary_over_ssh": true,
+      // Shown in the Zed UI to help distinguish multiple hosts.
+      "nickname": "lil-linux"
+    }
+  ]
+}
+</code></pre>
+<p>If you use the command line to open a connection to a host by doing <code>zed ssh://192.168.1.10/~/.vimrc</code>, then extra options are read from your settings file by finding the first connection that matches the host/username/port of the URL on the command line.</p>
+<p>Additionally it's worth noting that while you can pass a password on the command line <code>zed ssh://user:password@host/~</code>, we do not support writing a password to your settings file. If you're connecting repeatedly to the same host, you should configure key-based authentication.</p>
+<h2 id="port-forwarding"><a class="header" href="#port-forwarding">Port forwarding</a></h2>
+<p>If you'd like to be able to connect to ports on your remote server from your local machine, you can configure port forwarding in your settings file. This is particularly useful for developing websites so you can load the site in your browser while working.</p>
+<pre><code class="language-json">{
+  "ssh_connections": [
+    {
+      "host": "192.168.1.10",
+      "port_forwards": [{ "local_port": 8080, "remote_port": 80 }]
+    }
+  ]
+}
+</code></pre>
+<p>This will cause requests from your local machine to <code>localhost:8080</code> to be forwarded to the remote machine's port 80. Under the hood this uses the <code>-L</code> argument to ssh.</p>
+<p>By default these ports are bound to localhost, so other computers in the same network as your development machine cannot access them. You can set the local_host to bind to a different interface, for example, 0.0.0.0 will bind to all local interfaces.</p>
+<pre><code class="language-json">{
+  "ssh_connections": [
+    {
+      "host": "192.168.1.10",
+      "port_forwards": [
+        {
+          "local_port": 8080,
+          "remote_port": 80,
+          "local_host": "0.0.0.0"
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+<p>These ports also default to the <code>localhost</code> interface on the remote host. If you need to change this, you can also set the remote host:</p>
+<pre><code class="language-json">{
+  "ssh_connections": [
+    {
+      "host": "192.168.1.10",
+      "port_forwards": [
+        {
+          "local_port": 8080,
+          "remote_port": 80,
+          "remote_host": "docker-host"
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h2 id="zed-settings"><a class="header" href="#zed-settings">Zed settings</a></h2>
+<p>When opening a remote project there are three relevant settings locations:</p>
+<ul>
+<li>The local Zed settings (in <code>~/.zed/settings.json</code> on macOS or <code>~/.config/zed/settings.json</code> on Linux) on your local machine.</li>
+<li>The server Zed settings (in the same place) on the remote server.</li>
+<li>The project settings (in <code>.zed/settings.json</code> or <code>.editorconfig</code> of your project)</li>
+</ul>
+<p>Both the local Zed and the server Zed read the project settings, but they are not aware of the other's main <code>settings.json</code>.</p>
+<p>Depending on the kind of setting you want to make, which settings file you should use:</p>
+<ul>
+<li>Project settings should be used for things that affect the project: indentation settings, which formatter / language server to use, etc.</li>
+<li>Server settings should be used for things that affect the server: paths to language servers, etc.</li>
+<li>Local settings should be used for things that affect the UI: font size, etc.</li>
+</ul>
+<p>In addition any extensions you have installed locally will be propagated to the remote server. This means that language servers, etc. will run correctly.</p>
+<h2 id="initializing-the-remote-server"><a class="header" href="#initializing-the-remote-server">Initializing the remote server</a></h2>
+<p>Once you provide the SSH options, Zed shells out to <code>ssh</code> on your local machine to create a ControlMaster connection with the options you provide.</p>
+<p>Any prompts that SSH needs will be shown in the UI, so you can verify host keys, type key passwords, etc.</p>
+<p>Once the master connection is established, Zed will check to see if the remote server binary is present in <code>~/.zed_server</code> on the remote, and that its version matches the current version of Zed that you're using.</p>
+<p>If it is not there or the version mismatches, Zed will try to download the latest version. By default, it will download from <code>https://zed.dev</code> directly, but if you set: <code>{"upload_binary_over_ssh":true}</code> in your settings for that server, it will download the binary to your local machine and then upload it to the remote server.</p>
+<p>If you'd like to maintain the server binary yourself you can. You can either download our prebuilt versions from <a href="https://github.com/zed-industries/zed/releases">GitHub</a>, or <a href="https://zed.dev/docs/development">build your own</a> with <code>cargo build -p remote_server --release</code>. If you do this, you must upload it to <code>~/.zed_server/zed-remote-server-{RELEASE_CHANNEL}-{VERSION}</code> on the server, for example <code>~/.zed_server/zed-remote-server-stable-0.181.6</code>. The version must exactly match the version of Zed itself you are using.</p>
+<h2 id="maintaining-the-ssh-connection"><a class="header" href="#maintaining-the-ssh-connection">Maintaining the SSH connection</a></h2>
+<p>Once the server is initialized. Zed will create new SSH connections (reusing the existing ControlMaster) to run the remote development server.</p>
+<p>Each connection tries to run the development server in proxy mode. This mode will start the daemon if it is not running, and reconnect to it if it is. This way when your connection drops and is restarted, you can continue to work without interruption.</p>
+<p>In the case that reconnecting fails, the daemon will not be re-used. That said, unsaved changes are by default persisted locally, so that you do not lose work. You can always reconnect to the project at a later date and Zed will restore unsaved changes.</p>
+<p>If you are struggling with connection issues, you should be able to see more information in the Zed log <code>cmd-shift-p Open Log</code>. If you are seeing things that are unexpected, please file a <a href="https://github.com/zed-industries/zed/issues/new">GitHub issue</a> or reach out in the #remoting-feedback channel in the <a href="https://zed.dev/community-links">Zed Discord</a>.</p>
+<h2 id="supported-ssh-options"><a class="header" href="#supported-ssh-options">Supported SSH Options</a></h2>
+<p>Under the hood, Zed shells out to the <code>ssh</code> binary to connect to the remote server. We create one SSH control master per project, and use then use that to multiplex SSH connections for the Zed protocol itself, any terminals you open and tasks you run. We read settings from your SSH config file, but if you want to specify additional options to the SSH control master you can configure Zed to set them.</p>
+<p>When typing in the "Connect New Server" dialog, you can use bash-style quoting to pass options containing a space. Once you have created a server it will be added to the <code>"ssh_connections": []</code> array in your settings file. You can edit the settings file directly to make changes to SSH connections.</p>
+<p>Supported options:</p>
+<ul>
+<li><code>-p</code> / <code>-l</code> - these are equivalent to passing the port and the username in the host string.</li>
+<li><code>-L</code> / <code>-R</code> for port forwarding</li>
+<li><code>-i</code> - to use a specific key file</li>
+<li><code>-o</code> - to set custom options</li>
+<li><code>-J</code> / <code>-w</code> - to proxy the SSH connection</li>
+<li><code>-F</code> for specifying an <code>ssh_config</code></li>
+<li>And also... <code>-4</code>, <code>-6</code>, <code>-A</code>, <code>-B</code>, <code>-C</code>, <code>-D</code>, <code>-I</code>, <code>-K</code>, <code>-P</code>, <code>-X</code>, <code>-Y</code>, <code>-a</code>, <code>-b</code>, <code>-c</code>, <code>-i</code>, <code>-k</code>, <code>-l</code>, <code>-m</code>, <code>-o</code>, <code>-p</code>, <code>-w</code>, <code>-x</code>, <code>-y</code></li>
+</ul>
+<p>Note that we deliberately disallow some options (for example <code>-t</code> or <code>-T</code>) that Zed will set for you.</p>
+<h2 id="known-limitations"><a class="header" href="#known-limitations">Known Limitations</a></h2>
+<ul>
+<li>You can't open files from the remote Terminal by typing the <code>zed</code> command.</li>
+</ul>
+<h2 id="feedback"><a class="header" href="#feedback">Feedback</a></h2>
+<p>Please join the #remoting-feedback channel in the <a href="https://zed.dev/community-links">Zed Discord</a>.</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

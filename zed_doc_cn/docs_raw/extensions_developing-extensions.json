@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/extensions/developing-extensions.html",
+  "title": "Developing Extensions | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"developing-extensions\"><a class=\"header\" href=\"#developing-extensions\">Developing Extensions</a></h1>\n<h2 id=\"extension-capabilities\"><a class=\"header\" href=\"#extension-capabilities\">Extension Capabilities</a></h2>\n<p>Extensions can add the following capabilities to Zed:</p>\n<ul>\n<li><a href=\"./languages.html\">Languages</a></li>\n<li><a href=\"./debugger-extensions.html\">Debuggers</a></li>\n<li><a href=\"./themes.html\">Themes</a></li>\n<li><a href=\"./icon-themes.html\">Icon Themes</a></li>\n<li><a href=\"./slash-commands.html\">Slash Commands</a></li>\n<li><a href=\"./mcp-extensions.html\">MCP Servers</a></li>\n</ul>\n<h2 id=\"developing-an-extension-locally\"><a class=\"header\" href=\"#developing-an-extension-locally\">Developing an Extension Locally</a></h2>\n<p>Before starting to develop an extension for Zed, be sure to <a href=\"https://www.rust-lang.org/tools/install\">install Rust via rustup</a>.</p>\n<blockquote>\n<p>Rust must be installed via rustup. If you have Rust installed via homebrew or otherwise, installing dev extensions will not work.</p>\n</blockquote>\n<p>When developing an extension, you can use it in Zed without needing to publish it by installing it as a <em>dev extension</em>.</p>\n<p>From the extensions page, click the <code>Install Dev Extension</code> button (or the <code class=\"hljs\">zed: install dev extension</code> action) and select the directory containing your extension.</p>\n<p>If you need to troubleshoot, you can check the Zed.log (<code class=\"hljs\">zed: open log</code>) for additional output. For debug output, close and relaunch zed with the <code>zed --foreground</code> from the command line which show more verbose INFO level logging.</p>\n<p>If you already have a published extension with the same name installed, your dev extension will override it.</p>\n<p>After installing the <code>Extensions</code> page will indicate that that the upstream extension is \"Overridden by dev extension\".</p>\n<p>Pre-installed extensions with the same name have to be uninstalled before installing the dev extension. See <a href=\"https://github.com/zed-industries/zed/issues/31106\">#31106</a> for more.</p>\n<h2 id=\"directory-structure-of-a-zed-extension\"><a class=\"header\" href=\"#directory-structure-of-a-zed-extension\">Directory Structure of a Zed Extension</a></h2>\n<p>A Zed extension is a Git repository that contains an <code>extension.toml</code>. This file must contain some\nbasic information about the extension:</p>\n<pre><code class=\"language-toml\">id = \"my-extension\"\nname = \"My extension\"\nversion = \"0.0.1\"\nschema_version = 1\nauthors = [\"Your Name &lt;you@example.com&gt;\"]\ndescription = \"My cool extension\"\nrepository = \"https://github.com/your-name/my-zed-extension\"\n</code></pre>\n<p>In addition to this, there are several other optional files and directories that can be used to add functionality to a Zed extension. An example directory structure of an extension that provides all capabilities is as follows:</p>\n<pre><code>my-extension/\n  extension.toml\n  Cargo.toml\n  src/\n    lib.rs\n  languages/\n    my-language/\n      config.toml\n      highlights.scm\n  themes/\n    my-theme.json\n</code></pre>\n<h2 id=\"webassembly\"><a class=\"header\" href=\"#webassembly\">WebAssembly</a></h2>\n<p>Procedural parts of extensions are written in Rust and compiled to WebAssembly. To develop an extension that includes custom code, include a <code>Cargo.toml</code> like this:</p>\n<pre><code class=\"language-toml\">[package]\nname = \"my-extension\"\nversion = \"0.0.1\"\nedition = \"2021\"\n\n[lib]\ncrate-type = [\"cdylib\"]\n\n[dependencies]\nzed_extension_api = \"0.1.0\"\n</code></pre>\n<p>Use the latest version of the <a href=\"https://crates.io/crates/zed_extension_api\"><code>zed_extension_api</code></a> available on crates.io. Make sure it's still <a href=\"https://github.com/zed-industries/zed/blob/main/crates/extension_api#compatible-zed-versions\">compatible with Zed versions</a> you want to support.</p>\n<p>In the <code>src/lib.rs</code> file in your Rust crate you will need to define a struct for your extension and implement the <code>Extension</code> trait, as well as use the <code>register_extension!</code> macro to register your extension:</p>\n<pre><code class=\"language-rs\">use zed_extension_api as zed;\n\nstruct MyExtension {\n    // ... state\n}\n\nimpl zed::Extension for MyExtension {\n    // ...\n}\n\nzed::register_extension!(MyExtension);\n</code></pre>\n<blockquote>\n<p><code>stdout</code>/<code>stderr</code> is forwarded directly to the Zed process. In order to see <code>println!</code>/<code>dbg!</code> output from your extension, you can start Zed in your terminal with a <code>--foreground</code> flag.</p>\n</blockquote>\n<h2 id=\"forking-and-cloning-the-repo\"><a class=\"header\" href=\"#forking-and-cloning-the-repo\">Forking and cloning the repo</a></h2>\n<ol>\n<li>Fork the repo</li>\n</ol>\n<blockquote>\n<p>Note: It is very helpful if you fork the <code>zed-industries/extensions</code> repo to a personal GitHub account instead of a GitHub organization, as this allows Zed staff to push any needed changes to your PR to expedite the publishing process.</p>\n</blockquote>\n<ol start=\"2\">\n<li>Clone the repo to your local machine</li>\n</ol>\n<pre><code class=\"language-sh\"># Substitute the url of your fork here:\n# git clone https://github.com/zed-industries/extensions\ncd extensions\ngit submodule init\ngit submodule update\n</code></pre>\n<h2 id=\"publishing-your-extension\"><a class=\"header\" href=\"#publishing-your-extension\">Publishing your extension</a></h2>\n<p>To publish an extension, open a PR to <a href=\"https://github.com/zed-industries/extensions\">the <code>zed-industries/extensions</code> repo</a>.</p>\n<p>In your PR, do the following:</p>\n<ol>\n<li>Add your extension as a Git submodule within the <code>extensions/</code> directory</li>\n</ol>\n<pre><code class=\"language-sh\">git submodule add https://github.com/your-username/foobar-zed.git extensions/foobar\ngit add extensions/foobar\n</code></pre>\n<blockquote>\n<p>All extension submodules must use HTTPS URLs and not SSH URLS (<code>git@github.com</code>).</p>\n</blockquote>\n<ol start=\"2\">\n<li>Add a new entry to the top-level <code>extensions.toml</code> file containing your extension:</li>\n</ol>\n<pre><code class=\"language-toml\">[my-extension]\nsubmodule = \"extensions/my-extension\"\nversion = \"0.0.1\"\n</code></pre>\n<blockquote>\n<p>If your extension is in a subdirectory within the submodule you can use the <code>path</code> field to point to where the extension resides.</p>\n</blockquote>\n<ol start=\"3\">\n<li>Run <code>pnpm sort-extensions</code> to ensure <code>extensions.toml</code> and <code>.gitmodules</code> are sorted</li>\n</ol>\n<p>Once your PR is merged, the extension will be packaged and published to the Zed extension registry.</p>\n<blockquote>\n<p>Extension IDs and names should not contain <code>zed</code> or <code>Zed</code>, since they are all Zed extensions.</p>\n</blockquote>\n<h2 id=\"updating-an-extension\"><a class=\"header\" href=\"#updating-an-extension\">Updating an extension</a></h2>\n<p>To update an extension, open a PR to <a href=\"https://github.com/zed-industries/extensions\">the <code>zed-industries/extensions</code> repo</a>.</p>\n<p>In your PR do the following:</p>\n<ol>\n<li>Update the extension's submodule to the commit of the new version.</li>\n<li>Update the <code>version</code> field for the extension in <code>extensions.toml</code>\n<ul>\n<li>Make sure the <code>version</code> matches the one set in <code>extension.toml</code> at the particular commit.</li>\n</ul>\n</li>\n</ol>\n<p>If you'd like to automate this process, there is a <a href=\"https://github.com/huacnlee/zed-extension-action\">community GitHub Action</a> you can use.</p>\n\n</main>",
+  "content_text": "Developing Extensions\nExtension Capabilities\nExtensions can add the following capabilities to Zed:\n\nLanguages\nDebuggers\nThemes\nIcon Themes\nSlash Commands\nMCP Servers\n\nDeveloping an Extension Locally\nBefore starting to develop an extension for Zed, be sure to install Rust via rustup.\n\nRust must be installed via rustup. If you have Rust installed via homebrew or otherwise, installing dev extensions will not work.\n\nWhen developing an extension, you can use it in Zed without needing to publish it by installing it as a dev extension.\nFrom the extensions page, click the Install Dev Extension button (or the zed: install dev extension action) and select the directory containing your extension.\nIf you need to troubleshoot, you can check the Zed.log (zed: open log) for additional output. For debug output, close and relaunch zed with the zed --foreground from the command line which show more verbose INFO level logging.\nIf you already have a published extension with the same name installed, your dev extension will override it.\nAfter installing the Extensions page will indicate that that the upstream extension is \"Overridden by dev extension\".\nPre-installed extensions with the same name have to be uninstalled before installing the dev extension. See #31106 for more.\nDirectory Structure of a Zed Extension\nA Zed extension is a Git repository that contains an extension.toml. This file must contain some\nbasic information about the extension:\nid = \"my-extension\"\nname = \"My extension\"\nversion = \"0.0.1\"\nschema_version = 1\nauthors = [\"Your Name <you@example.com>\"]\ndescription = \"My cool extension\"\nrepository = \"https://github.com/your-name/my-zed-extension\"\n\nIn addition to this, there are several other optional files and directories that can be used to add functionality to a Zed extension. An example directory structure of an extension that provides all capabilities is as follows:\nmy-extension/\n  extension.toml\n  Cargo.toml\n  src/\n    lib.rs\n  languages/\n    my-language/\n      config.toml\n      highlights.scm\n  themes/\n    my-theme.json\n\nWebAssembly\nProcedural parts of extensions are written in Rust and compiled to WebAssembly. To develop an extension that includes custom code, include a Cargo.toml like this:\n[package]\nname = \"my-extension\"\nversion = \"0.0.1\"\nedition = \"2021\"\n\n[lib]\ncrate-type = [\"cdylib\"]\n\n[dependencies]\nzed_extension_api = \"0.1.0\"\n\nUse the latest version of the zed_extension_api available on crates.io. Make sure it's still compatible with Zed versions you want to support.\nIn the src/lib.rs file in your Rust crate you will need to define a struct for your extension and implement the Extension trait, as well as use the register_extension! macro to register your extension:\nuse zed_extension_api as zed;\n\nstruct MyExtension {\n    // ... state\n}\n\nimpl zed::Extension for MyExtension {\n    // ...\n}\n\nzed::register_extension!(MyExtension);\n\n\nstdout/stderr is forwarded directly to the Zed process. In order to see println!/dbg! output from your extension, you can start Zed in your terminal with a --foreground flag.\n\nForking and cloning the repo\n\nFork the repo\n\n\nNote: It is very helpful if you fork the zed-industries/extensions repo to a personal GitHub account instead of a GitHub organization, as this allows Zed staff to push any needed changes to your PR to expedite the publishing process.\n\n\nClone the repo to your local machine\n\n# Substitute the url of your fork here:\n# git clone https://github.com/zed-industries/extensions\ncd extensions\ngit submodule init\ngit submodule update\n\nPublishing your extension\nTo publish an extension, open a PR to the zed-industries/extensions repo.\nIn your PR, do the following:\n\nAdd your extension as a Git submodule within the extensions/ directory\n\ngit submodule add https://github.com/your-username/foobar-zed.git extensions/foobar\ngit add extensions/foobar\n\n\nAll extension submodules must use HTTPS URLs and not SSH URLS (git@github.com).\n\n\nAdd a new entry to the top-level extensions.toml file containing your extension:\n\n[my-extension]\nsubmodule = \"extensions/my-extension\"\nversion = \"0.0.1\"\n\n\nIf your extension is in a subdirectory within the submodule you can use the path field to point to where the extension resides.\n\n\nRun pnpm sort-extensions to ensure extensions.toml and .gitmodules are sorted\n\nOnce your PR is merged, the extension will be packaged and published to the Zed extension registry.\n\nExtension IDs and names should not contain zed or Zed, since they are all Zed extensions.\n\nUpdating an extension\nTo update an extension, open a PR to the zed-industries/extensions repo.\nIn your PR do the following:\n\nUpdate the extension's submodule to the commit of the new version.\nUpdate the version field for the extension in extensions.toml\n\nMake sure the version matches the one set in extension.toml at the particular commit.\n\n\n\nIf you'd like to automate this process, there is a community GitHub Action you can use.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "../getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "../system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "../accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "../telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "../workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "../additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "../configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "../configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "../key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "../all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "../snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "../themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "../icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "../visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "../vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "../helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "../multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "../outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "../completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "../channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "../collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "../git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "../debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "../diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "../tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "../remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "../environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "../repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "../ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "../ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "../ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "../ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "../ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "../ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "../ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "../ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "../ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "../ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "../ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "../ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "../ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "../ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "../ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "../ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "../ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "../extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "../extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "../extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "../extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "../extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "../extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "../extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "../extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "../extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "../languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "../languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "../languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "../languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "../languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "../languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "../languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "../languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "../languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "../languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "../languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "../languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "../languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "../languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "../languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "../languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "../languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "../languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "../languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "../languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "../languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "../languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "../languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "../languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "../languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "../languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "../languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "../languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "../languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "../languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "../languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "../languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "../languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "../languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "../languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "../languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "../languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "../languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "../languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "../languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "../languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "../languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "../languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "../languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "../languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "../languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "../languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "../languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "../languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "../languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "../languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "../languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "../languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "../languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "../languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "../languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "../languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "../languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "../languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "../languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "../languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "../languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "../languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "../languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "../languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "../languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "../languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "../languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "../languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "../languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "../development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "../development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "../development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "../development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "../development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "../development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "../development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "../development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "../development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "../development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:46"
+}

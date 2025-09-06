@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/debugger.html",
+  "title": "Debugger | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"debugger\"><a class=\"header\" href=\"#debugger\">Debugger</a></h1>\n<p>Zed uses the <a href=\"https://microsoft.github.io/debug-adapter-protocol/\">Debug Adapter Protocol (DAP)</a> to provide debugging functionality across multiple programming languages.\nDAP is a standardized protocol that defines how debuggers, editors, and IDEs communicate with each other.\nIt allows Zed to support various debuggers without needing to implement language-specific debugging logic.\nZed implements the client side of the protocol, and various <em>debug adapters</em> implement the server side.</p>\n<p>This protocol enables features like setting breakpoints, stepping through code, inspecting variables,\nand more, in a consistent manner across different programming languages and runtime environments.</p>\n<h2 id=\"supported-languages\"><a class=\"header\" href=\"#supported-languages\">Supported Languages</a></h2>\n<p>To debug code written in a specific language, Zed needs to find a debug adapter for that language. Some debug adapters are provided by Zed without additional setup, and some are provided by <a href=\"./extensions/debugger-extensions.html\">language extensions</a>. The following languages currently have debug adapters available:</p>\n<!-- keep this sorted -->\n<ul>\n<li><a href=\"./languages/c.html#debugging\">C</a> (built-in)</li>\n<li><a href=\"./languages/cpp.html#debugging\">C++</a> (built-in)</li>\n<li><a href=\"./languages/go.html#debugging\">Go</a> (built-in)</li>\n<li><a href=\"./languages/javascript.html#debugging\">JavaScript</a> (built-in)</li>\n<li><a href=\"./languages/php.html#debugging\">PHP</a> (built-in)</li>\n<li><a href=\"./languages/python.html#debugging\">Python</a> (built-in)</li>\n<li><a href=\"./languages/ruby.html#debugging\">Ruby</a> (provided by extension)</li>\n<li><a href=\"./languages/rust.html#debugging\">Rust</a> (built-in)</li>\n<li><a href=\"./languages/swift.html#debugging\">Swift</a> (provided by extension)</li>\n<li><a href=\"./languages/typescript.html#debugging\">TypeScript</a> (built-in)</li>\n</ul>\n<blockquote>\n<p>If your language isn't listed, you can contribute by adding a debug adapter for it. Check out our <a href=\"./extensions/debugger-extensions.html\">debugger extensions</a> documentation for more information.</p>\n</blockquote>\n<p>Follow those links for language- and adapter-specific information and examples, or read on for more about Zed's general debugging features that apply to all adapters.</p>\n<h2 id=\"getting-started\"><a class=\"header\" href=\"#getting-started\">Getting Started</a></h2>\n<p>For most languages, the fastest way to get started is to run <code class=\"hljs\">debugger: start</code> (<kbd class=\"keybinding\">f4|f4</kbd>). This opens the <em>new process modal</em>, which shows you a contextual list of preconfigured debug tasks for the current project. Debug tasks are created from tests, entry points (like a <code>main</code> function), and from other sources — consult the documentation for your language for full information about what's supported.</p>\n<p>You can open the same modal by clicking the \"plus\" button at the top right of the debug panel.</p>\n<p>For languages that don't provide preconfigured debug tasks (this includes C, C++, and some extension-supported languages), you can define debug configurations in the <code>.zed/debug.json</code> file in your project root. This file should be an array of configuration objects:</p>\n<pre><code class=\"language-json\">[\n  {\n    \"adapter\": \"CodeLLDB\",\n    \"label\": \"First configuration\"\n    // ...\n  },\n  {\n    \"adapter\": \"Debugpy\",\n    \"label\": \"Second configuration\"\n    // ...\n  }\n]\n</code></pre>\n<p>Check the documentation for your language for example configurations covering typical use-cases. Once you've added configurations to <code>.zed/debug.json</code>, they'll appear in the list in the new process modal.</p>\n<p>Zed will also load debug configurations from <code>.vscode/launch.json</code>, and show them in the new process modal if no configurations are found in <code>.zed/debug.json</code>.</p>\n<h3 id=\"launching--attaching\"><a class=\"header\" href=\"#launching--attaching\">Launching &amp; Attaching</a></h3>\n<p>Zed debugger offers two ways to debug your program; you can either <em>launch</em> a new instance of your program or <em>attach</em> to an existing process.\nWhich one you choose depends on what you are trying to achieve.</p>\n<p>When launching a new instance, Zed (and the underlying debug adapter) can often do a better job at picking up the debug information compared to attaching to an existing process, since it controls the lifetime of a whole program.\nRunning unit tests or a debug build of your application is a good use case for launching.</p>\n<p>Compared to launching, attaching to an existing process might seem inferior, but that's far from truth; there are cases where you cannot afford to restart your program, because for example, the bug is not reproducible outside of a production environment or some other circumstances.</p>\n<h2 id=\"configuration\"><a class=\"header\" href=\"#configuration\">Configuration</a></h2>\n<p>While configuration fields are debug adapter-dependent, most adapters support the following fields:</p>\n<pre><code class=\"language-json\">[\n  {\n    // The label for the debug configuration and used to identify the debug session inside the debug panel &amp; new process modal\n    \"label\": \"Example Start debugger config\",\n    // The debug adapter that Zed should use to debug the program\n    \"adapter\": \"Example adapter name\",\n    // Request:\n    //  - launch: Zed will launch the program if specified, or show a debug terminal with the right configuration\n    //  - attach: Zed will attach to a running program to debug it, or when the process_id is not specified, will show a process picker (only supported for node currently)\n    \"request\": \"launch\",\n    // The program to debug. This field supports path resolution with ~ or . symbols.\n    \"program\": \"path_to_program\",\n    // cwd: defaults to the current working directory of your project ($ZED_WORKTREE_ROOT)\n    \"cwd\": \"$ZED_WORKTREE_ROOT\"\n  }\n]\n</code></pre>\n<p>All configuration fields support <a href=\"./tasks.html#variables\">task variables</a>.</p>\n<h3 id=\"build-tasks\"><a class=\"header\" href=\"#build-tasks\">Build tasks</a></h3>\n<p>Zed also allows embedding a Zed task in a <code>build</code> field that is run before the debugger starts. This is useful for setting up the environment or running any necessary setup steps before the debugger starts.</p>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Build Binary\",\n    \"adapter\": \"CodeLLDB\",\n    \"program\": \"path_to_program\",\n    \"request\": \"launch\",\n    \"build\": {\n      \"command\": \"make\",\n      \"args\": [\"build\", \"-j8\"]\n    }\n  }\n]\n</code></pre>\n<p>Build tasks can also refer to the existing tasks by unsubstituted label:</p>\n<pre><code class=\"language-json\">[\n  {\n    \"label\": \"Build Binary\",\n    \"adapter\": \"CodeLLDB\",\n    \"program\": \"path_to_program\",\n    \"request\": \"launch\",\n    \"build\": \"my build task\" // Or \"my build task for $ZED_FILE\"\n  }\n]\n</code></pre>\n<h3 id=\"automatic-scenario-creation\"><a class=\"header\" href=\"#automatic-scenario-creation\">Automatic scenario creation</a></h3>\n<p>Given a Zed task, Zed can automatically create a scenario for you. Automatic scenario creation also powers our scenario creation from gutter.\nAutomatic scenario creation is currently supported for Rust, Go, Python, JavaScript, and TypeScript.</p>\n<h2 id=\"breakpoints\"><a class=\"header\" href=\"#breakpoints\">Breakpoints</a></h2>\n<p>To set a breakpoint, simply click next to the line number in the editor gutter.\nBreakpoints can be tweaked depending on your needs; to access additional options of a given breakpoint, right-click on the breakpoint icon in the gutter and select the desired option.\nAt present, you can:</p>\n<ul>\n<li>Add a log to a breakpoint, which will output a log message whenever that breakpoint is hit.</li>\n<li>Make the breakpoint conditional, which will only stop at the breakpoint when the condition is met. The syntax for conditions is adapter-specific.</li>\n<li>Add a hit count to a breakpoint, which will only stop at the breakpoint after it's hit a certain number of times.</li>\n<li>Disable a breakpoint, which will prevent it from being hit while leaving it visible in the gutter.</li>\n</ul>\n<p>Some debug adapters (e.g. CodeLLDB and JavaScript) will also <em>verify</em> whether your breakpoints can be hit; breakpoints that cannot be hit are surfaced more prominently in the UI.</p>\n<p>All breakpoints enabled for a given project are also listed in \"Breakpoints\" item in your debugging session UI. From \"Breakpoints\" item in your UI you can also manage exception breakpoints.\nThe debug adapter will then stop whenever an exception of a given kind occurs. Which exception types are supported depends on the debug adapter.</p>\n<h2 id=\"settings\"><a class=\"header\" href=\"#settings\">Settings</a></h2>\n<p>The settings for the debugger are grouped under the <code>debugger</code> key in <code>settings.json</code>:</p>\n<ul>\n<li><code>dock</code>: Determines the position of the debug panel in the UI.</li>\n<li><code>stepping_granularity</code>: Determines the stepping granularity.</li>\n<li><code>save_breakpoints</code>: Whether the breakpoints should be reused across Zed sessions.</li>\n<li><code>button</code>: Whether to show the debug button in the status bar.</li>\n<li><code>timeout</code>: Time in milliseconds until timeout error when connecting to a TCP debug adapter.</li>\n<li><code>log_dap_communications</code>: Whether to log messages between active debug adapters and Zed.</li>\n<li><code>format_dap_log_messages</code>: Whether to format DAP messages when adding them to the debug adapter logger.</li>\n</ul>\n<h3 id=\"dock\"><a class=\"header\" href=\"#dock\">Dock</a></h3>\n<ul>\n<li>Description: The position of the debug panel in the UI.</li>\n<li>Default: <code>bottom</code></li>\n<li>Setting: debugger.dock</li>\n</ul>\n<p><strong>Options</strong></p>\n<ol>\n<li><code>left</code> - The debug panel will be docked to the left side of the UI.</li>\n<li><code>right</code> - The debug panel will be docked to the right side of the UI.</li>\n<li><code>bottom</code> - The debug panel will be docked to the bottom of the UI.</li>\n</ol>\n<pre><code class=\"language-json\">\"debugger\": {\n  \"dock\": \"bottom\"\n},\n</code></pre>\n<h3 id=\"stepping-granularity\"><a class=\"header\" href=\"#stepping-granularity\">Stepping granularity</a></h3>\n<ul>\n<li>Description: The Step granularity that the debugger will use</li>\n<li>Default: <code>line</code></li>\n<li>Setting: <code>debugger.stepping_granularity</code></li>\n</ul>\n<p><strong>Options</strong></p>\n<ol>\n<li>Statement - The step should allow the program to run until the current statement has finished executing.\nThe meaning of a statement is determined by the adapter and it may be considered equivalent to a line.\nFor example 'for(int i = 0; i &lt; 10; i++)' could be considered to have 3 statements 'int i = 0', 'i &lt; 10', and 'i++'.</li>\n</ol>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"stepping_granularity\": \"statement\"\n  }\n}\n</code></pre>\n<ol start=\"2\">\n<li>Line - The step should allow the program to run until the current source line has executed.</li>\n</ol>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"stepping_granularity\": \"line\"\n  }\n}\n</code></pre>\n<ol start=\"3\">\n<li>Instruction - The step should allow one instruction to execute (e.g. one x86 instruction).</li>\n</ol>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"stepping_granularity\": \"instruction\"\n  }\n}\n</code></pre>\n<h3 id=\"save-breakpoints\"><a class=\"header\" href=\"#save-breakpoints\">Save Breakpoints</a></h3>\n<ul>\n<li>Description: Whether the breakpoints should be saved across Zed sessions.</li>\n<li>Default: <code>true</code></li>\n<li>Setting: <code>debugger.save_breakpoints</code></li>\n</ul>\n<p><strong>Options</strong></p>\n<p><code>boolean</code> values</p>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"save_breakpoints\": true\n  }\n}\n</code></pre>\n<h3 id=\"button\"><a class=\"header\" href=\"#button\">Button</a></h3>\n<ul>\n<li>Description: Whether the button should be displayed in the debugger toolbar.</li>\n<li>Default: <code>true</code></li>\n<li>Setting: <code>debugger.show_button</code></li>\n</ul>\n<p><strong>Options</strong></p>\n<p><code>boolean</code> values</p>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"show_button\": true\n  }\n}\n</code></pre>\n<h3 id=\"timeout\"><a class=\"header\" href=\"#timeout\">Timeout</a></h3>\n<ul>\n<li>Description: Time in milliseconds until timeout error when connecting to a TCP debug adapter.</li>\n<li>Default: <code>2000</code></li>\n<li>Setting: <code>debugger.timeout</code></li>\n</ul>\n<p><strong>Options</strong></p>\n<p><code>integer</code> values</p>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"timeout\": 3000\n  }\n}\n</code></pre>\n<h3 id=\"inline-values\"><a class=\"header\" href=\"#inline-values\">Inline Values</a></h3>\n<ul>\n<li>Description: Whether to enable editor inlay hints showing the values of variables in your code during debugging sessions.</li>\n<li>Default: <code>true</code></li>\n<li>Setting: <code>inlay_hints.show_value_hints</code></li>\n</ul>\n<p><strong>Options</strong></p>\n<pre><code class=\"language-json\">{\n  \"inlay_hints\": {\n    \"show_value_hints\": false\n  }\n}\n</code></pre>\n<p>Inline value hints can also be toggled from the Editor Controls menu in the editor toolbar.</p>\n<h3 id=\"log-dap-communications\"><a class=\"header\" href=\"#log-dap-communications\">Log Dap Communications</a></h3>\n<ul>\n<li>Description: Whether to log messages between active debug adapters and Zed. (Used for DAP development)</li>\n<li>Default: false</li>\n<li>Setting: debugger.log_dap_communications</li>\n</ul>\n<p><strong>Options</strong></p>\n<p><code>boolean</code> values</p>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"log_dap_communications\": true\n  }\n}\n</code></pre>\n<h3 id=\"format-dap-log-messages\"><a class=\"header\" href=\"#format-dap-log-messages\">Format Dap Log Messages</a></h3>\n<ul>\n<li>Description: Whether to format DAP messages when adding them to the debug adapter logger. (Used for DAP development)</li>\n<li>Default: false</li>\n<li>Setting: debugger.format_dap_log_messages</li>\n</ul>\n<p><strong>Options</strong></p>\n<p><code>boolean</code> values</p>\n<pre><code class=\"language-json\">{\n  \"debugger\": {\n    \"format_dap_log_messages\": true\n  }\n}\n</code></pre>\n<h3 id=\"customizing-debug-adapters\"><a class=\"header\" href=\"#customizing-debug-adapters\">Customizing Debug Adapters</a></h3>\n<ul>\n<li>Description: Custom program path and arguments to override how Zed launches a specific debug adapter.</li>\n<li>Default: Adapter-specific</li>\n<li>Setting: <code>dap.$ADAPTER.binary</code> and <code>dap.$ADAPTER.args</code></li>\n</ul>\n<p>You can pass <code>binary</code>, <code>args</code>, or both. <code>binary</code> should be a path to a <em>debug adapter</em> (like <code>lldb-dap</code>) not a <em>debugger</em> (like <code>lldb</code> itself). The <code>args</code> setting overrides any arguments that Zed would otherwise pass to the adapter.</p>\n<pre><code class=\"language-json\">{\n  \"dap\": {\n    \"CodeLLDB\": {\n      \"binary\": \"/Users/name/bin/lldb-dap\",\n      \"args\": [\"--wait-for-debugger\"]\n    }\n  }\n}\n</code></pre>\n<h2 id=\"theme\"><a class=\"header\" href=\"#theme\">Theme</a></h2>\n<p>The Debugger supports the following theme options:</p>\n<ul>\n<li><code>debugger.accent</code>: Color used to accent breakpoint &amp; breakpoint-related symbols</li>\n<li><code>editor.debugger_active_line.background</code>: Background color of active debug line</li>\n</ul>\n<h2 id=\"troubleshooting\"><a class=\"header\" href=\"#troubleshooting\">Troubleshooting</a></h2>\n<p>If you're running into problems with the debugger, please <a href=\"https://github.com/zed-industries/zed/issues/new?template=04_bug_debugger.yml\">open a GitHub issue</a> or <a href=\"https://cal.com/team/zed-research/debugger\">schedule an onboarding call</a> with us so we can help understand and fix your issue.</p>\n<p>There are also some features you can use to gather more information about the problem:</p>\n<ul>\n<li>When you have a session running in the debug panel, you can run the <code class=\"hljs\">dev: copy debug adapter arguments</code> action to copy a JSON blob to the clipboard that describes how Zed initialized the session. This is especially useful when the session failed to start, and is great context to add if you open a GitHub issue.</li>\n<li>You can also use the <code class=\"hljs\">dev: open debug adapter logs</code> action to see a trace of all of Zed's communications with debug adapters during the most recent debug sessions.</li>\n</ul>\n\n</main>",
+  "content_text": "Debugger\nZed uses the Debug Adapter Protocol (DAP) to provide debugging functionality across multiple programming languages.\nDAP is a standardized protocol that defines how debuggers, editors, and IDEs communicate with each other.\nIt allows Zed to support various debuggers without needing to implement language-specific debugging logic.\nZed implements the client side of the protocol, and various debug adapters implement the server side.\nThis protocol enables features like setting breakpoints, stepping through code, inspecting variables,\nand more, in a consistent manner across different programming languages and runtime environments.\nSupported Languages\nTo debug code written in a specific language, Zed needs to find a debug adapter for that language. Some debug adapters are provided by Zed without additional setup, and some are provided by language extensions. The following languages currently have debug adapters available:\n\n\nC (built-in)\nC++ (built-in)\nGo (built-in)\nJavaScript (built-in)\nPHP (built-in)\nPython (built-in)\nRuby (provided by extension)\nRust (built-in)\nSwift (provided by extension)\nTypeScript (built-in)\n\n\nIf your language isn't listed, you can contribute by adding a debug adapter for it. Check out our debugger extensions documentation for more information.\n\nFollow those links for language- and adapter-specific information and examples, or read on for more about Zed's general debugging features that apply to all adapters.\nGetting Started\nFor most languages, the fastest way to get started is to run debugger: start (f4|f4). This opens the new process modal, which shows you a contextual list of preconfigured debug tasks for the current project. Debug tasks are created from tests, entry points (like a main function), and from other sources — consult the documentation for your language for full information about what's supported.\nYou can open the same modal by clicking the \"plus\" button at the top right of the debug panel.\nFor languages that don't provide preconfigured debug tasks (this includes C, C++, and some extension-supported languages), you can define debug configurations in the .zed/debug.json file in your project root. This file should be an array of configuration objects:\n[\n  {\n    \"adapter\": \"CodeLLDB\",\n    \"label\": \"First configuration\"\n    // ...\n  },\n  {\n    \"adapter\": \"Debugpy\",\n    \"label\": \"Second configuration\"\n    // ...\n  }\n]\n\nCheck the documentation for your language for example configurations covering typical use-cases. Once you've added configurations to .zed/debug.json, they'll appear in the list in the new process modal.\nZed will also load debug configurations from .vscode/launch.json, and show them in the new process modal if no configurations are found in .zed/debug.json.\nLaunching & Attaching\nZed debugger offers two ways to debug your program; you can either launch a new instance of your program or attach to an existing process.\nWhich one you choose depends on what you are trying to achieve.\nWhen launching a new instance, Zed (and the underlying debug adapter) can often do a better job at picking up the debug information compared to attaching to an existing process, since it controls the lifetime of a whole program.\nRunning unit tests or a debug build of your application is a good use case for launching.\nCompared to launching, attaching to an existing process might seem inferior, but that's far from truth; there are cases where you cannot afford to restart your program, because for example, the bug is not reproducible outside of a production environment or some other circumstances.\nConfiguration\nWhile configuration fields are debug adapter-dependent, most adapters support the following fields:\n[\n  {\n    // The label for the debug configuration and used to identify the debug session inside the debug panel & new process modal\n    \"label\": \"Example Start debugger config\",\n    // The debug adapter that Zed should use to debug the program\n    \"adapter\": \"Example adapter name\",\n    // Request:\n    //  - launch: Zed will launch the program if specified, or show a debug terminal with the right configuration\n    //  - attach: Zed will attach to a running program to debug it, or when the process_id is not specified, will show a process picker (only supported for node currently)\n    \"request\": \"launch\",\n    // The program to debug. This field supports path resolution with ~ or . symbols.\n    \"program\": \"path_to_program\",\n    // cwd: defaults to the current working directory of your project ($ZED_WORKTREE_ROOT)\n    \"cwd\": \"$ZED_WORKTREE_ROOT\"\n  }\n]\n\nAll configuration fields support task variables.\nBuild tasks\nZed also allows embedding a Zed task in a build field that is run before the debugger starts. This is useful for setting up the environment or running any necessary setup steps before the debugger starts.\n[\n  {\n    \"label\": \"Build Binary\",\n    \"adapter\": \"CodeLLDB\",\n    \"program\": \"path_to_program\",\n    \"request\": \"launch\",\n    \"build\": {\n      \"command\": \"make\",\n      \"args\": [\"build\", \"-j8\"]\n    }\n  }\n]\n\nBuild tasks can also refer to the existing tasks by unsubstituted label:\n[\n  {\n    \"label\": \"Build Binary\",\n    \"adapter\": \"CodeLLDB\",\n    \"program\": \"path_to_program\",\n    \"request\": \"launch\",\n    \"build\": \"my build task\" // Or \"my build task for $ZED_FILE\"\n  }\n]\n\nAutomatic scenario creation\nGiven a Zed task, Zed can automatically create a scenario for you. Automatic scenario creation also powers our scenario creation from gutter.\nAutomatic scenario creation is currently supported for Rust, Go, Python, JavaScript, and TypeScript.\nBreakpoints\nTo set a breakpoint, simply click next to the line number in the editor gutter.\nBreakpoints can be tweaked depending on your needs; to access additional options of a given breakpoint, right-click on the breakpoint icon in the gutter and select the desired option.\nAt present, you can:\n\nAdd a log to a breakpoint, which will output a log message whenever that breakpoint is hit.\nMake the breakpoint conditional, which will only stop at the breakpoint when the condition is met. The syntax for conditions is adapter-specific.\nAdd a hit count to a breakpoint, which will only stop at the breakpoint after it's hit a certain number of times.\nDisable a breakpoint, which will prevent it from being hit while leaving it visible in the gutter.\n\nSome debug adapters (e.g. CodeLLDB and JavaScript) will also verify whether your breakpoints can be hit; breakpoints that cannot be hit are surfaced more prominently in the UI.\nAll breakpoints enabled for a given project are also listed in \"Breakpoints\" item in your debugging session UI. From \"Breakpoints\" item in your UI you can also manage exception breakpoints.\nThe debug adapter will then stop whenever an exception of a given kind occurs. Which exception types are supported depends on the debug adapter.\nSettings\nThe settings for the debugger are grouped under the debugger key in settings.json:\n\ndock: Determines the position of the debug panel in the UI.\nstepping_granularity: Determines the stepping granularity.\nsave_breakpoints: Whether the breakpoints should be reused across Zed sessions.\nbutton: Whether to show the debug button in the status bar.\ntimeout: Time in milliseconds until timeout error when connecting to a TCP debug adapter.\nlog_dap_communications: Whether to log messages between active debug adapters and Zed.\nformat_dap_log_messages: Whether to format DAP messages when adding them to the debug adapter logger.\n\nDock\n\nDescription: The position of the debug panel in the UI.\nDefault: bottom\nSetting: debugger.dock\n\nOptions\n\nleft - The debug panel will be docked to the left side of the UI.\nright - The debug panel will be docked to the right side of the UI.\nbottom - The debug panel will be docked to the bottom of the UI.\n\n\"debugger\": {\n  \"dock\": \"bottom\"\n},\n\nStepping granularity\n\nDescription: The Step granularity that the debugger will use\nDefault: line\nSetting: debugger.stepping_granularity\n\nOptions\n\nStatement - The step should allow the program to run until the current statement has finished executing.\nThe meaning of a statement is determined by the adapter and it may be considered equivalent to a line.\nFor example 'for(int i = 0; i < 10; i++)' could be considered to have 3 statements 'int i = 0', 'i < 10', and 'i++'.\n\n{\n  \"debugger\": {\n    \"stepping_granularity\": \"statement\"\n  }\n}\n\n\nLine - The step should allow the program to run until the current source line has executed.\n\n{\n  \"debugger\": {\n    \"stepping_granularity\": \"line\"\n  }\n}\n\n\nInstruction - The step should allow one instruction to execute (e.g. one x86 instruction).\n\n{\n  \"debugger\": {\n    \"stepping_granularity\": \"instruction\"\n  }\n}\n\nSave Breakpoints\n\nDescription: Whether the breakpoints should be saved across Zed sessions.\nDefault: true\nSetting: debugger.save_breakpoints\n\nOptions\nboolean values\n{\n  \"debugger\": {\n    \"save_breakpoints\": true\n  }\n}\n\nButton\n\nDescription: Whether the button should be displayed in the debugger toolbar.\nDefault: true\nSetting: debugger.show_button\n\nOptions\nboolean values\n{\n  \"debugger\": {\n    \"show_button\": true\n  }\n}\n\nTimeout\n\nDescription: Time in milliseconds until timeout error when connecting to a TCP debug adapter.\nDefault: 2000\nSetting: debugger.timeout\n\nOptions\ninteger values\n{\n  \"debugger\": {\n    \"timeout\": 3000\n  }\n}\n\nInline Values\n\nDescription: Whether to enable editor inlay hints showing the values of variables in your code during debugging sessions.\nDefault: true\nSetting: inlay_hints.show_value_hints\n\nOptions\n{\n  \"inlay_hints\": {\n    \"show_value_hints\": false\n  }\n}\n\nInline value hints can also be toggled from the Editor Controls menu in the editor toolbar.\nLog Dap Communications\n\nDescription: Whether to log messages between active debug adapters and Zed. (Used for DAP development)\nDefault: false\nSetting: debugger.log_dap_communications\n\nOptions\nboolean values\n{\n  \"debugger\": {\n    \"log_dap_communications\": true\n  }\n}\n\nFormat Dap Log Messages\n\nDescription: Whether to format DAP messages when adding them to the debug adapter logger. (Used for DAP development)\nDefault: false\nSetting: debugger.format_dap_log_messages\n\nOptions\nboolean values\n{\n  \"debugger\": {\n    \"format_dap_log_messages\": true\n  }\n}\n\nCustomizing Debug Adapters\n\nDescription: Custom program path and arguments to override how Zed launches a specific debug adapter.\nDefault: Adapter-specific\nSetting: dap.$ADAPTER.binary and dap.$ADAPTER.args\n\nYou can pass binary, args, or both. binary should be a path to a debug adapter (like lldb-dap) not a debugger (like lldb itself). The args setting overrides any arguments that Zed would otherwise pass to the adapter.\n{\n  \"dap\": {\n    \"CodeLLDB\": {\n      \"binary\": \"/Users/name/bin/lldb-dap\",\n      \"args\": [\"--wait-for-debugger\"]\n    }\n  }\n}\n\nTheme\nThe Debugger supports the following theme options:\n\ndebugger.accent: Color used to accent breakpoint & breakpoint-related symbols\neditor.debugger_active_line.background: Background color of active debug line\n\nTroubleshooting\nIf you're running into problems with the debugger, please open a GitHub issue or schedule an onboarding call with us so we can help understand and fix your issue.\nThere are also some features you can use to gather more information about the problem:\n\nWhen you have a session running in the debug panel, you can run the dev: copy debug adapter arguments action to copy a JSON blob to the clipboard that describes how Zed initialized the session. This is especially useful when the session failed to start, and is great context to add if you open a GitHub issue.\nYou can also use the dev: open debug adapter logs action to see a trace of all of Zed's communications with debug adapters during the most recent debug sessions.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:11:48"
+}

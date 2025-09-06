@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-color-scheme="light" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8" />
+    <title>Agent Panel | Zed 代码编辑器文档</title>
+    <meta name="description" content="学习如何使用和自定义 Zed，快速、协作的代码编辑器。官方文档涵盖功能、配置、AI 工具和工作流程。" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="rgb(247, 247, 242)" />
+    
+    <style>
+        /* 基础样式 - 模仿原网站 */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f2;
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* 布局结构 */
+        #body-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        #sidebar {
+            width: 300px;
+            background: #fff;
+            border-right: 1px solid #e5e5e5;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-scrollbox {
+            padding: 20px;
+        }
+        
+        .chapter {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .part-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+        
+        .chapter-item {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chapter-item a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .chapter-item a:hover {
+            background: #f0f0f0;
+            color: #0066cc;
+        }
+        
+        .chapter-item a.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-left: 20px;
+        }
+        
+        /* 主内容区 */
+        #page-wrapper {
+            margin-left: 300px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部菜单栏 */
+        #menu-bar {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .left-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-button:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .menu-title img {
+            height: 32px;
+        }
+        
+        .download-button {
+            background: #1976d2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        
+        .download-button:hover {
+            background: #1565c0;
+        }
+        
+        /* 主内容 */
+        #content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        main {
+            position: relative;
+        }
+        
+        /* 页面内目录 */
+        .sidetoc {
+            position: absolute;
+            right: -200px;
+            top: 0;
+            width: 180px;
+        }
+        
+        .pagetoc {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .toc-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .pagetoc a {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+        
+        .pagetoc a:hover {
+            color: #1976d2;
+            border-left-color: #1976d2;
+        }
+        
+        /* 文档内容样式 */
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 0.5em;
+        }
+        
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            font-weight: 400;
+            margin: 2em 0 1em 0;
+        }
+        
+        h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 1.5em 0 0.8em 0;
+        }
+        
+        p {
+            margin: 1em 0;
+            color: #444;
+        }
+        
+        a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        .keybinding {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: inherit;
+            font-size: 0.85em;
+        }
+        
+        ul, ol {
+            padding-left: 2em;
+        }
+        
+        li {
+            margin: 0.5em 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 1.5em 0;
+        }
+        
+        /* 底部导航 */
+        .footer-buttons {
+            margin-top: 3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-button:hover {
+            background: #f8f8f8;
+            border-color: #1976d2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidetoc { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.visible {
+                transform: translateX(0);
+            }
+            
+            #page-wrapper {
+                margin-left: 0;
+            }
+            
+            #content {
+                padding: 20px;
+            }
+        }
+        
+        /* 主题切换样式 */
+        .theme-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            list-style: none;
+            margin: 0;
+            padding: 4px 0;
+            min-width: 100px;
+        }
+        
+        .theme {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .theme:hover {
+            background: #f0f0f0;
+        }
+        
+        .theme-selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body class="js sidebar-visible">
+    <div id="body-container">
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden" />
+        
+        <nav id="sidebar" class="sidebar" aria-label="目录" aria-hidden="false">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter">
+<li class="part-title">基础功能</li>
+<li class="chapter-item"><a href="getting-started.html" class="">快速开始</a></li>
+<li class="chapter-item"><a href="system-requirements.html" class="">系统需求</a></li>
+<li class="chapter-item"><a href="accounts.html" class="">账户</a></li>
+<li class="chapter-item"><a href="linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="telemetry.html" class="">遥测</a></li>
+<li class="chapter-item"><a href="workspace-persistence.html" class="">工作区持久化</a></li>
+<li class="chapter-item"><a href="additional-learning-materials.html" class="">更多学习资料</a></li>
+<li class="part-title">配置</li>
+<li class="chapter-item"><a href="configuring-zed.html" class="">配置 Zed</a></li>
+<li class="chapter-item"><a href="configuring-languages.html" class="">配置语言</a></li>
+<li class="chapter-item"><a href="key-bindings.html" class="">Key Bindings</a></li>
+<li class="chapter-item"><a href="all-actions.html" class="">所有操作</a></li>
+<li class="chapter-item"><a href="snippets.html" class="">代码片段</a></li>
+<li class="chapter-item"><a href="themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="visual-customization.html" class="">视觉自定义</a></li>
+<li class="chapter-item"><a href="vim.html" class="">Vim</a></li>
+<li class="chapter-item"><a href="helix.html" class="">Helix</a></li>
+<li class="part-title">使用 Zed</li>
+<li class="chapter-item"><a href="multibuffers.html" class="">多缓冲区</a></li>
+<li class="chapter-item"><a href="outline-panel.html" class="">大纲面板</a></li>
+<li class="chapter-item"><a href="completions.html" class="">Completions</a></li>
+<li class="chapter-item"><a href="channels.html" class="">频道</a></li>
+<li class="chapter-item"><a href="collaboration.html" class="">协作</a></li>
+<li class="chapter-item"><a href="git.html" class="">Git</a></li>
+<li class="chapter-item"><a href="debugger.html" class="">调试器</a></li>
+<li class="chapter-item"><a href="diagnostics.html" class="">诊断</a></li>
+<li class="chapter-item"><a href="tasks.html" class="">任务</a></li>
+<li class="chapter-item"><a href="remote-development.html" class="">远程开发</a></li>
+<li class="chapter-item"><a href="environment.html" class="">Environment</a></li>
+<li class="chapter-item"><a href="repl.html" class="">Repl</a></li>
+<li class="part-title">AI</li>
+<li class="chapter-item"><a href="ai_overview.html" class="">概览</a></li>
+<li class="chapter-item"><a href="ai_agent-panel.html" class="active">Agent 面板</a></li>
+<li class="chapter-item"><a href="ai_tools.html" class="">工具</a></li>
+<li class="chapter-item"><a href="ai_external-agents.html" class="">外部 Agent</a></li>
+<li class="chapter-item"><a href="ai_inline-assistant.html" class="">内联助手</a></li>
+<li class="chapter-item"><a href="ai_edit-prediction.html" class="">编辑预测</a></li>
+<li class="chapter-item"><a href="ai_text-threads.html" class="">文本线程</a></li>
+<li class="chapter-item"><a href="ai_rules.html" class="">规则</a></li>
+<li class="chapter-item"><a href="ai_mcp.html" class="">Mcp</a></li>
+<li class="chapter-item"><a href="ai_configuration.html" class="">配置</a></li>
+<li class="chapter-item"><a href="ai_llm-providers.html" class="">Llm Providers</a></li>
+<li class="chapter-item"><a href="ai_agent-settings.html" class="">Agent 设置</a></li>
+<li class="chapter-item"><a href="ai_subscription.html" class="">订阅</a></li>
+<li class="chapter-item"><a href="ai_plans-and-usage.html" class="">Plans And Usage</a></li>
+<li class="chapter-item"><a href="ai_billing.html" class="">计费</a></li>
+<li class="chapter-item"><a href="ai_models.html" class="">模型</a></li>
+<li class="chapter-item"><a href="ai_privacy-and-security.html" class="">Privacy And Security</a></li>
+<li class="chapter-item"><a href="ai_ai-improvement.html" class="">Ai Improvement</a></li>
+<li class="part-title">扩展</li>
+<li class="chapter-item"><a href="extensions.html" class="">扩展</a></li>
+<li class="chapter-item"><a href="extensions_installing-extensions.html" class="">安装扩展</a></li>
+<li class="chapter-item"><a href="extensions_developing-extensions.html" class="">开发扩展</a></li>
+<li class="chapter-item"><a href="extensions_languages.html" class="">Languages</a></li>
+<li class="chapter-item"><a href="extensions_debugger-extensions.html" class="">调试器扩展</a></li>
+<li class="chapter-item"><a href="extensions_themes.html" class="">主题</a></li>
+<li class="chapter-item"><a href="extensions_icon-themes.html" class="">图标主题</a></li>
+<li class="chapter-item"><a href="extensions_slash-commands.html" class="">Slash Commands</a></li>
+<li class="chapter-item"><a href="extensions_mcp-extensions.html" class="">Mcp Extensions</a></li>
+<li class="part-title">语言支持</li>
+<li class="chapter-item"><a href="languages.html" class="">Languages</a></li>
+<li class="part-title">开发 Zed</li>
+<li class="chapter-item"><a href="development.html" class="">Development</a></li>
+<li class="chapter-item"><a href="development_macos.html" class="">Macos</a></li>
+<li class="chapter-item"><a href="development_linux.html" class="">Linux</a></li>
+<li class="chapter-item"><a href="development_windows.html" class="">Windows</a></li>
+<li class="chapter-item"><a href="development_freebsd.html" class="">Freebsd</a></li>
+<li class="chapter-item"><a href="development_local-collaboration.html" class="">本地协作</a></li>
+<li class="chapter-item"><a href="development_debuggers.html" class="">Debuggers</a></li>
+<li class="chapter-item"><a href="development_glossary.html" class="">术语表</a></li>
+<li class="chapter-item"><a href="development_releases.html" class="">Releases</a></li>
+<li class="chapter-item"><a href="development_debugging-crashes.html" class="">调试崩溃</a></li>
+</ol>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+            <div id="menu-bar" class="menu-bar">
+                <div class="left-buttons">
+                    <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="切换目录" aria-label="切换目录">
+                        ☰
+                    </label>
+                    <button id="theme-toggle" class="icon-button" type="button" title="切换主题" aria-label="切换主题">
+                        🎨
+                    </button>
+                </div>
+
+                <header class="menu-title">
+                    <a href="/">
+                        <img src="https://zed.dev/logo_wordmark_1500.webp" alt="Zed Industries" />
+                    </a>
+                </header>
+
+                <div class="right-buttons">
+                    <a class="download-button" href="https://zed.dev/download" title="下载 Zed" aria-label="下载 Zed">
+                        下载 Zed
+                    </a>
+                </div>
+            </div>
+
+            <div id="content" class="content">
+                <main>
+                    <div class="sidetoc">
+<nav class="pagetoc">
+<p class="toc-title">本页内容</p>
+<a href="#agent-panel" class="pagetoc-H1">Agent 面板</a>
+<a href="#getting-started" class="pagetoc-H2">快速开始</a>
+<a href="#overview" class="pagetoc-H2">概览</a>
+<a href="#new-thread" class="pagetoc-H3">创建新线程</a>
+<a href="#editing-messages" class="pagetoc-H3">编辑消息</a>
+<a href="#checkpoints" class="pagetoc-H3">检查点</a>
+<a href="#navigating-history" class="pagetoc-H3">导航历史记录</a>
+<a href="#following-the-agent" class="pagetoc-H3">跟随 Agent</a>
+<a href="#get-notified" class="pagetoc-H3">获取通知</a>
+<a href="#reviewing-changes" class="pagetoc-H3">查看更改</a>
+<a href="#adding-context" class="pagetoc-H2">添加上下文</a>
+<a href="#token-usage" class="pagetoc-H3">令牌使用量</a>
+<a href="#changing-models" class="pagetoc-H2">切换模型</a>
+<a href="#using-tools" class="pagetoc-H2">使用工具</a>
+<a href="#profiles" class="pagetoc-H3">配置文件</a>
+<a href="#tool-approval" class="pagetoc-H3">工具授权</a>
+<a href="#model-support" class="pagetoc-H3">模型支持</a>
+<a href="#mcp-servers" class="pagetoc-H3">MCP 服务器</a>
+<a href="#text-threads" class="pagetoc-H2">文本线程</a>
+<a href="#errors-and-debugging" class="pagetoc-H2">错误和调试</a>
+<a href="#feedback" class="pagetoc-H2">反馈</a>
+</nav>
+</div>
+                    <main>
+
+<h1 id="agent-panel"><a class="header" href="#agent-panel">Agent 面板</a></h1>
+<p>Agent 面板允许您与多种大语言模型和编程 Agent 交互，它们可以帮助您完成各种任务，如生成代码、理解代码库以及其他一般性查询（如写邮件、文档等）。</p>
+<p>要打开它，请在<a href="../getting-started.html#command-palette">命令面板</a>中使用 <code>agent: new thread</code> 操作，或点击状态栏中的 ✨（火花）图标。</p>
+<h2 id="getting-started"><a class="header" href="#getting-started">快速开始</a></h2>
+<p>如果您是第一次使用 Agent 面板，需要配置至少一个大语言模型提供商或外部 Agent。
+您可以通过以下方式配置：</p>
+<ol>
+<li><a href="https://zed.dev/pricing">subscribing to our Pro plan</a>, so you have access to our hosted models</li>
+<li><a href="./llm-providers.html#use-your-own-keys">bringing your own API keys</a> for your desired provider</li>
+<li>using an external agent like <a href="./external-agents.html#gemini-cli">Gemini CLI</a> or <a href="./external-agents.html#claude-code">Claude Code</a></li>
+</ol>
+<h2 id="overview"><a class="header" href="#overview">概览</a></h2>
+<p>配置好大语言模型提供商或外部 Agent 后，在消息编辑器中输入内容并按 <code>Enter</code> 键提交您的提示。
+如果您需要更多的输入空间，可以使用 <kbd class="keybinding">shift-alt-escape|shift-alt-escape</kbd> 扩展消息编辑器。</p>
+<p>您将开始看到响应流式传入，同时显示模型正在使用<a href="./tools.html">哪些工具</a>来完成您的提示。
+从这个时候开始，您可以使用下面概述的许多支持的功能。</p>
+<blockquote>
+<p>请注意，对于外部 Agent（如 <a href="./external-agents.html#gemini-cli">Gemini CLI</a> 或 <a href="./external-agents.html#claude-code">Claude Code</a>），下面概述的一些功能目前<em>尚未</em>支持——例如，<em>从历史记录中恢复线程</em>、<em>检查点</em>、<em>令牌使用量显示</em>、<em>模型选择</em>等功能。我们希望在未来支持所有这些功能。</p>
+</blockquote>
+<h3 id="new-thread"><a class="header" href="#new-thread">创建新线程</a></h3>
+<p>默认情况下，Agent 面板使用 Zed 的内置 Agent。</p>
+<p>要更改这一点，请转到 Agent 面板右上角的加号按钮并选择其他选项。
+您可以选择创建一个新的<a href="./text-threads.html">文本线程</a>，或者如果您已连接了<a href="./external-agents.html">外部 Agent</a>，也可以与它们创建新线程。</p>
+<h3 id="editing-messages"><a class="header" href="#editing-messages">编辑消息</a></h3>
+<p>您发送给 AI 的任何消息都可以编辑。
+您可以点击包含您消息的卡片，并使用调整后的提示和/或新的上下文内容重新提交。</p>
+<h3 id="checkpoints"><a class="header" href="#checkpoints">检查点</a></h3>
+<p>每当 AI 执行编辑操作时，您应该在消息顶部看到一个“恢复检查点”按钮，允许您将代码库返回到该消息之前的状态。</p>
+<p>即使您在编辑尝试进行到一半时中断了线程，检查点按钮也会出现，因为这可能是您发现 Agent 没有朝着正确的方向发展并想要返回的时候。</p>
+<h3 id="navigating-history"><a class="header" href="#navigating-history">导航历史记录</a></h3>
+<p>要快速在最近打开的线程中导航，可以在面板编辑器获得焦点时使用 <kbd class="keybinding">cmd-shift-j|ctrl-shift-j</kbd> 快捷键，或者点击面板右上角的菜单图标按钮打开下拉菜单，显示最近的六个线程。</p>
+<p>此菜单中的项目功能类似于选项卡，关闭它们不会删除线程；相反，它只是将它们从最近列表中删除。</p>
+<p>要查看所有历史对话，请在同一菜单中选择 <code>View All</code> 选项或使用 <kbd class="keybinding">cmd-shift-h|ctrl-shift-h</kbd> 快捷键。</p>
+<h3 id="following-the-agent"><a class="header" href="#following-the-agent">跟随 Agent</a></h3>
+<p>Zed 内置了协作功能。
+这种方式也扩展到与 AI 的协作。
+要跟随 Agent 阅读您的代码库并执行编辑，请点击面板左下角的"十字准星"图标按钮。</p>
+<p>您也可以通过键盘操作实现：在提交消息时同时按下 <code>cmd</code>/<code>ctrl</code> 修饰键和 <code>enter</code> 键。</p>
+<h3 id="get-notified"><a class="header" href="#get-notified">获取通知</a></h3>
+<p>如果您向 Agent 发送了提示，然后转到其他地方，将 Zed 放在后台，您可以通过以下方式获得响应完成的通知：</p>
+<ul>
+<li>在您屏幕右上角出现的视觉通知</li>
+<li>或者声音通知</li>
+</ul>
+<p>您可以根据自己的喜好，同时使用两种通知方式或单独使用其中一种。</p>
+<p>您可以通过使用 <code>agent.notify_when_agent_waiting</code> 和 <code>agent.play_sound_when_agent_done</code> 设置键来自定义它们的行为，包括完全关闭它们。</p>
+<h3 id="reviewing-changes"><a class="header" href="#reviewing-changes">查看更改</a></h3>
+<p>一旦 Agent 对您的项目做出了更改，面板将显示哪些文件以及有多少文件被编辑过。</p>
+<p>要查看具体哪些文件被编辑了，请展开消息编辑器上方显示的折叠栏，或点击 <code>Review Changes</code> 按钮（<kbd class="keybinding">shift-ctrl-r|shift-ctrl-r</kbd>），该按钮会打开一个显示所有更改的多缓冲区选项卡。</p>
+<p>您可以拒绝或接受每个单独的更改块，或者 Agent 做出的整套更改。</p>
+<p>编辑差异也会在各个缓冲区中显示。
+因此，如果您的活动选项卡有 AI 做出的编辑，您将看到与多缓冲区中相同的接受/拒绝控件的差异。</p>
+<h2 id="adding-context"><a class="header" href="#adding-context">添加上下文</a></h2>
+<p>尽管 Zed 的 Agent 在阅读您的代码库以自主获取相关文件、目录和其他上下文方面非常高效，但仍然鼓励手动添加上下文，作为加速和提高 AI 响应质量的方法。</p>
+<p>要添加任何文件、目录、符号、之前的线程、规则文件甚至网页作为上下文，请在编辑器中输入 <code>@</code> 来提及它们。</p>
+<p>Agent 面板也支持粘贴图像作为上下文。</p>
+<h3 id="token-usage"><a class="header" href="#token-usage">令牌使用量</a></h3>
+<p>Zed 在面板消息编辑器中配置文件选择器附近显示您当前活动线程消耗的令牌数量。
+根据您添加的上下文片段数量，您的令牌消耗可能会迅速增长。</p>
+<p>考虑到这一点，一旦您接近模型的上下文窗口，消息编辑器下方会出现一个横幅，建议开始一个新线程，并将当前线程总结并添加为上下文。
+您也可以通过右上角的“Agent Options”菜单在任何时候对正在进行的线程执行此操作。</p>
+<h2 id="changing-models"><a class="header" href="#changing-models">切换模型</a></h2>
+<p>在您配置了 LLM 提供商——无论是通过<a href="./llm-providers.html#use-your-own-keys">自定义 API 密钥</a>还是通过<a href="./models.html">Zed 的托管模型</a>——之后，您可以通过点击消息编辑器上的模型选择器或使用 <kbd class="keybinding">cmd-alt-/|ctrl-alt-/</kbd> 快捷键在它们之间切换。</p>
+<h2 id="using-tools"><a class="header" href="#using-tools">使用工具</a></h2>
+<p>新的 Agent 面板支持工具调用，这使得 Agent 可以进行编辑。
+Zed 带有<a href="./tools.html">多个内置工具</a>，允许模型执行各种任务，如搜索代码库、编辑文件、运行命令等。</p>
+<p>您也可以通过 <a href="./mcp.html">MCP 服务器</a>扩展可用工具集。</p>
+<h3 id="profiles"><a class="header" href="#profiles">配置文件</a></h3>
+<p>配置文件作为对工具进行分组的方式。
+Zed 提供三个内置配置文件，您可以创建任意数量的自定义配置文件。</p>
+<h4 id="built-in-profiles"><a class="header" href="#built-in-profiles">Built-in Profiles</a></h4>
+<ul>
+<li><code>Write</code>：具有工具的配置文件，允许 LLM 写入您的文件并运行终端命令。这个配置文件基本上开启了所有内置工具。</li>
+<li><code>Ask</code>：具有只读工具的配置文件。适合在不担心 Agent 做出更改的情况下询问有关代码库的问题。</li>
+<li><code>Minimal</code>：没有工具的配置文件。适合与 LLM 进行一般性对话，不需要代码库知识。</li>
+</ul>
+<p>您可以通过点击配置文件选择器按钮 &gt; <code>Configure Profiles…</code> &gt; 您想要查看的配置文件来探索每个配置文件中启用的具体工具。</p>
+<h4 id="custom-profiles"><a class="header" href="#custom-profiles">Custom Profiles</a></h4>
+<p>You can create a custom profile via the <code>Configure Profiles…</code> option in the profile selector.
+From here, you can choose to <code>Add New Profile</code> or fork an existing one with a custom name and your preferred set of tools.</p>
+<p>You can also override built-in profiles.
+With a built-in profile selected, in the profile selector, navigate to <code>Configure Tools</code>, and select the tools you'd like.</p>
+<p>Zed will store this profile in your settings using the same profile name as the default you overrode.</p>
+<p>All custom profiles can be edited via the UI or by hand under the <code>assistant.profiles</code> key in your <code>settings.json</code> file.</p>
+<h3 id="tool-approval"><a class="header" href="#tool-approval">Tool Approval</a></h3>
+<p>Zed's Agent Panel surfaces the <code>agent.always_allow_tool_actions</code> setting that, if turned to <code>false</code>, will require you to give permission to any editing attempt as well as tool calls coming from MCP servers.</p>
+<p>You can change that by setting this key to <code>true</code> in either your <code>settings.json</code> or via the Agent Panel's settings view.</p>
+<h3 id="model-support"><a class="header" href="#model-support">Model Support</a></h3>
+<p>Tool calling needs to be individually supported by each model and model provider.
+Therefore, despite the presence of tools, some models may not have the ability to pick them up yet in Zed.
+You should see a "No tools" label if you select a model that falls into this case.</p>
+<p>We want to support all of them, though!
+We may prioritize which ones to focus on based on popularity and user feedback, so feel free to help and contribute to fast-track those that don't fit this bill.</p>
+<p>All <a href="./models.html">Zed's hosted models</a> support tool calling out-of-the-box.</p>
+<h3 id="mcp-servers"><a class="header" href="#mcp-servers">MCP Servers</a></h3>
+<p>Similarly to the built-in tools, some models may not support all tools included in a given MCP Server.
+Zed's UI will inform about this via a warning icon that appears close to the model selector.</p>
+<h2 id="text-threads"><a class="header" href="#text-threads">文本线程</a></h2>
+<p><a href="./text-threads.html">"Text Threads"</a> present your conversation with the LLM in a different format—as raw text.
+With text threads, you have full control over the conversation data.
+You can remove and edit responses from the LLM, swap roles, and include more context earlier in the conversation.</p>
+<p>For users who have been with us for some time, you'll notice that text threads are our original assistant panel—users love it for the control it offers.
+We do not plan to deprecate text threads, but it should be noted that if you want the AI to write to your code base autonomously, that's only available in the newer, and now default, "Threads".</p>
+<h2 id="errors-and-debugging"><a class="header" href="#errors-and-debugging">错误和调试</a></h2>
+<p>In case of any error or strange LLM response behavior, the best way to help the Zed team debug is by reaching for the <code>agent: open thread as markdown</code> action and attaching that data as part of your issue on GitHub.</p>
+<p>You can also open threads as Markdown by clicking on the file icon button, to the right of the thumbs down button, when focused on the panel's editor.</p>
+<h2 id="feedback"><a class="header" href="#feedback">反馈</a></h2>
+<p>Every change we make to Zed's system prompt and tool set, needs to be backed by a thorough eval with good scores.</p>
+<p>Every time the LLM performs a weird change or investigates a certain topic in your code base incorrectly, it's an indication that there's an improvement opportunity.</p>
+<blockquote>
+<p>Note that rating responses will send your data related to that response to Zed's servers.
+See <a href="./ai-improvement.html">AI Improvement</a> and <a href="./privacy-and-security.html">Privacy and Security</a> for more information about Zed's approach to AI improvement, privacy, and security.
+<strong><em>If you don't want data persisted on Zed's servers, don't rate</em></strong>. We will not collect data for improving our Agentic offering without you explicitly rating responses.</p>
+</blockquote>
+<p>The best way you can help influence the next change to Zed's system prompt and tools is by rating the LLM's response via the thumbs up/down buttons at the end of every response.
+In case of a thumbs down, a new text area will show up where you can add more specifics about what happened.</p>
+<p>You can provide feedback on the thread at any point after the agent responds, and multiple times within the same thread.</p>
+
+</main>
+                    
+        <div class="footer-buttons">
+            <a href="getting-started.html" class="footer-button">
+                ← 快速开始
+            </a>
+            <a href="ai_overview.html" class="footer-button">
+                AI 概览 →
+            </a>
+        </div>
+        
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+        
+        // 侧边栏切换功能
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('visible');
+        });
+    </script>
+</body>
+</html>

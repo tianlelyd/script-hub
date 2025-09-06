@@ -1,0 +1,586 @@
+{
+  "url": "https://zed.dev/docs/repl.html",
+  "title": "REPL | Zed Code Editor Documentation",
+  "content": "<main>\n\n<h1 id=\"repl\"><a class=\"header\" href=\"#repl\">REPL</a></h1>\n<h2 id=\"getting-started\"><a class=\"header\" href=\"#getting-started\">Getting started</a></h2>\n<p>Bring the power of <a href=\"https://docs.jupyter.org/en/latest/projects/kernels.html\">Jupyter kernels</a> to your editor! The built-in REPL for Zed allows you to run code interactively in your editor similarly to a notebook with your own text files.</p>\n<figure style=\"width: 100%; margin: 0; overflow: hidden; border-top-left-radius: 2px; border-top-right-radius: 2px;\">\n<video controls=\"\" loop=\"\" playsinline=\"\">\n<source src=\"https://customer-snccc0j9v3kfzkif.cloudflarestream.com/aec66e79f23d6d1a0bee5e388a3f17cc/downloads/default.mp4\" type='video/webm; codecs=\"vp8.0, vorbis\"'/>\n<source src=\"https://customer-snccc0j9v3kfzkif.cloudflarestream.com/aec66e79f23d6d1a0bee5e388a3f17cc/downloads/default.mp4\" type='video/mp4; codecs=\"avc1.4D401E, mp4a.40.2\"'/>\n<source src=\"https://zed.dev/img/post/repl/typescript-deno-kernel-markdown.png\" type=\"image/png\"/>\n</video>\n</figure>\n<h2 id=\"installation\"><a class=\"header\" href=\"#installation\">Installation</a></h2>\n<p>Zed supports running code in multiple languages. To get started, you need to install a kernel for the language you want to use.</p>\n<p><strong>Currently supported languages:</strong></p>\n<ul>\n<li><a href=\"#python\">Python (ipykernel)</a></li>\n<li><a href=\"#typescript-deno\">TypeScript (Deno)</a></li>\n<li><a href=\"#r-ark\">R (Ark)</a></li>\n<li><a href=\"#r-xeus\">R (Xeus)</a></li>\n<li><a href=\"#julia\">Julia</a></li>\n<li><a href=\"#scala\">Scala (Almond)</a></li>\n</ul>\n<p>Once installed, you can start using the REPL in the respective language files, or other places those languages are supported, such as Markdown. If you recently added the kernels, run the <code>repl: refresh kernelspecs</code> command to make them available in the editor.</p>\n<h2 id=\"using-the-repl\"><a class=\"header\" href=\"#using-the-repl\">Using the REPL</a></h2>\n<p>To start the REPL, open a file with the language you want to use and use the <code>repl: run</code> command (defaults to <code>ctrl-shift-enter</code> on macOS) to run a block, selection, or line. You can also click on the REPL icon in the toolbar.</p>\n<p>The <code>repl: run</code> command will be executed on your selection(s), and the result will be displayed below the selection.</p>\n<p>Outputs can be cleared with the <code>repl: clear outputs</code> command, or from the REPL menu in the toolbar.</p>\n<h3 id=\"cell-mode\"><a class=\"header\" href=\"#cell-mode\">Cell mode</a></h3>\n<p>Zed supports <a href=\"https://jupytext.readthedocs.io/en/latest/formats-scripts.html\">notebooks as scripts</a> using the <code># %%</code> cell separator in Python and <code>// %%</code> in TypeScript. This allows you to write code in a single file and run it as if it were a notebook, cell by cell.</p>\n<p>The <code>repl: run</code> command will run each block of code between the <code># %%</code> markers as a separate cell.</p>\n<pre><code class=\"language-python\"># %% Cell 1\nimport time\nimport numpy as np\n\n# %% Cell 2\nimport matplotlib.pyplot as plt\nimport matplotlib.pyplot as plt\nfrom matplotlib import style\nstyle.use('ggplot')\n</code></pre>\n<h2 id=\"language-specific-instructions\"><a class=\"header\" href=\"#language-specific-instructions\">Language specific instructions</a></h2>\n<h3 id=\"python\"><a class=\"header\" href=\"#python\">Python</a></h3>\n<h4 id=\"global-environment\"><a class=\"header\" href=\"#global-environment\">Global environment</a></h4>\n<div class=\"warning\">\n<p>On macOS, your system Python will <em>not</em> work. Either set up <a href=\"https://github.com/pyenv/pyenv?tab=readme-ov-file#installation\">pyenv</a> or use a virtual environment.</p>\n</div>\n<p>To setup your current Python to have an available kernel, run:</p>\n<pre><code class=\"language-sh\">pip install ipykernel\npython -m ipykernel install --user\n</code></pre>\n<h4 id=\"conda-environment\"><a class=\"header\" href=\"#conda-environment\">Conda Environment</a></h4>\n<pre><code class=\"language-sh\">source activate myenv\nconda install ipykernel\npython -m ipykernel install --user --name myenv --display-name \"Python (myenv)\"\n</code></pre>\n<h4 id=\"virtualenv-with-pip\"><a class=\"header\" href=\"#virtualenv-with-pip\">Virtualenv with pip</a></h4>\n<pre><code class=\"language-sh\">source activate myenv\npip install ipykernel\npython -m ipykernel install --user --name myenv --display-name \"Python (myenv)\"\n</code></pre>\n<h3 id=\"r-ark\"><a class=\"header\" href=\"#r-ark\">R (Ark Kernel)</a></h3>\n<p>Install <a href=\"https://github.com/posit-dev/ark/releases\">Ark</a> by downloading the release for your operating system. For example, for macOS just unpack <code>ark</code> binary and put it into <code>/usr/local/bin</code>. Then run:</p>\n<pre><code class=\"language-sh\">ark --install\n</code></pre>\n<h3 id=\"r-xeus\"><a class=\"header\" href=\"#r-xeus\">R (Xeus Kernel)</a></h3>\n<ul>\n<li>Install <a href=\"https://github.com/jupyter-xeus/xeus-r\">Xeus-R</a></li>\n<li>Install the R Extension for Zed (search for <code>R</code> in Zed Extensions)</li>\n</ul>\n<!--\nTBD: Improve R REPL (Ark Kernel) instructions\n-->\n<h3 id=\"typescript-deno\"><a class=\"header\" href=\"#typescript-deno\">Typescript: Deno</a></h3>\n<ul>\n<li><a href=\"https://docs.deno.com/runtime/manual/getting_started/installation/\">Install Deno</a> and then install the Deno jupyter kernel:</li>\n</ul>\n<pre><code class=\"language-sh\">deno jupyter --install\n</code></pre>\n<!--\nTBD: Improve R REPL (Ark Kernel) instructions\n-->\n<h3 id=\"julia\"><a class=\"header\" href=\"#julia\">Julia</a></h3>\n<ul>\n<li>Download and install Julia from the <a href=\"https://julialang.org/downloads/\">official website</a>.</li>\n<li>Install the Julia Extension for Zed (search for <code>Julia</code> in Zed Extensions)</li>\n</ul>\n<!--\nTBD: Improve Julia REPL instructions\n-->\n<h3 id=\"scala\"><a class=\"header\" href=\"#scala\">Scala</a></h3>\n<ul>\n<li><a href=\"https://www.scala-lang.org/download/\">Install Scala</a> with <code>cs setup</code> (Coursier):\n<ul>\n<li><code>brew install coursier/formulas/coursier &amp;&amp; cs setup</code></li>\n</ul>\n</li>\n<li>REPL (Almond) <a href=\"https://almond.sh/docs/quick-start-install\">setup instructions</a>:\n<ul>\n<li><code>brew install --cask temurin</code> (Eclipse foundation official OpenJDK binaries)</li>\n<li><code>brew install coursier/formulas/coursier &amp;&amp; cs setup</code></li>\n<li><code>coursier launch --use-bootstrap almond -- --install</code></li>\n</ul>\n</li>\n</ul>\n<h2 id=\"changing-kernels\"><a class=\"header\" href=\"#changing-kernels\">Changing which kernel is used per language</a></h2>\n<p>Zed automatically detects the available kernels on your system. If you need to configure a different default kernel for a\nlanguage, you can assign a kernel for any supported language in your <code>settings.json</code>.</p>\n<pre><code class=\"language-json\">{\n  \"jupyter\": {\n    \"kernel_selections\": {\n      \"python\": \"conda-env\",\n      \"typescript\": \"deno\",\n      \"javascript\": \"deno\",\n      \"r\": \"ark\"\n    }\n  }\n}\n</code></pre>\n<h2 id=\"debugging-kernelspecs\"><a class=\"header\" href=\"#debugging-kernelspecs\">Debugging Kernelspecs</a></h2>\n<p>Available kernels are shown via the <code>repl: sessions</code> command. To refresh the kernels you can run, use the <code>repl: refresh kernelspecs</code> command.</p>\n<p>If you have <code>jupyter</code> installed, you can run <code>jupyter kernelspec list</code> to see the available kernels.</p>\n<pre><code class=\"language-sh\">$ jupyter kernelspec list\nAvailable kernels:\n  ark                   /Users/z/Library/Jupyter/kernels/ark\n  conda-base            /Users/z/Library/Jupyter/kernels/conda-base\n  deno                  /Users/z/Library/Jupyter/kernels/deno\n  python-chatlab-dev    /Users/z/Library/Jupyter/kernels/python-chatlab-dev\n  python3               /Users/z/Library/Jupyter/kernels/python3\n  ruby                  /Users/z/Library/Jupyter/kernels/ruby\n  rust                  /Users/z/Library/Jupyter/kernels/rust\n</code></pre>\n<blockquote>\n<p>Note: Zed makes best effort usage of <code>sys.prefix</code> and <code>CONDA_PREFIX</code> to find kernels in Python environments. If you want explicitly control run <code>python -m ipykernel install --user --name myenv --display-name \"Python (myenv)\"</code> to install the kernel directly while in the environment.</p>\n</blockquote>\n\n</main>",
+  "content_text": "REPL\nGetting started\nBring the power of Jupyter kernels to your editor! The built-in REPL for Zed allows you to run code interactively in your editor similarly to a notebook with your own text files.\n\n\n\n\n\n\n\nInstallation\nZed supports running code in multiple languages. To get started, you need to install a kernel for the language you want to use.\nCurrently supported languages:\n\nPython (ipykernel)\nTypeScript (Deno)\nR (Ark)\nR (Xeus)\nJulia\nScala (Almond)\n\nOnce installed, you can start using the REPL in the respective language files, or other places those languages are supported, such as Markdown. If you recently added the kernels, run the repl: refresh kernelspecs command to make them available in the editor.\nUsing the REPL\nTo start the REPL, open a file with the language you want to use and use the repl: run command (defaults to ctrl-shift-enter on macOS) to run a block, selection, or line. You can also click on the REPL icon in the toolbar.\nThe repl: run command will be executed on your selection(s), and the result will be displayed below the selection.\nOutputs can be cleared with the repl: clear outputs command, or from the REPL menu in the toolbar.\nCell mode\nZed supports notebooks as scripts using the # %% cell separator in Python and // %% in TypeScript. This allows you to write code in a single file and run it as if it were a notebook, cell by cell.\nThe repl: run command will run each block of code between the # %% markers as a separate cell.\n# %% Cell 1\nimport time\nimport numpy as np\n\n# %% Cell 2\nimport matplotlib.pyplot as plt\nimport matplotlib.pyplot as plt\nfrom matplotlib import style\nstyle.use('ggplot')\n\nLanguage specific instructions\nPython\nGlobal environment\n\nOn macOS, your system Python will not work. Either set up pyenv or use a virtual environment.\n\nTo setup your current Python to have an available kernel, run:\npip install ipykernel\npython -m ipykernel install --user\n\nConda Environment\nsource activate myenv\nconda install ipykernel\npython -m ipykernel install --user --name myenv --display-name \"Python (myenv)\"\n\nVirtualenv with pip\nsource activate myenv\npip install ipykernel\npython -m ipykernel install --user --name myenv --display-name \"Python (myenv)\"\n\nR (Ark Kernel)\nInstall Ark by downloading the release for your operating system. For example, for macOS just unpack ark binary and put it into /usr/local/bin. Then run:\nark --install\n\nR (Xeus Kernel)\n\nInstall Xeus-R\nInstall the R Extension for Zed (search for R in Zed Extensions)\n\n\nTypescript: Deno\n\nInstall Deno and then install the Deno jupyter kernel:\n\ndeno jupyter --install\n\n\nJulia\n\nDownload and install Julia from the official website.\nInstall the Julia Extension for Zed (search for Julia in Zed Extensions)\n\n\nScala\n\nInstall Scala with cs setup (Coursier):\n\nbrew install coursier/formulas/coursier && cs setup\n\n\nREPL (Almond) setup instructions:\n\nbrew install --cask temurin (Eclipse foundation official OpenJDK binaries)\nbrew install coursier/formulas/coursier && cs setup\ncoursier launch --use-bootstrap almond -- --install\n\n\n\nChanging which kernel is used per language\nZed automatically detects the available kernels on your system. If you need to configure a different default kernel for a\nlanguage, you can assign a kernel for any supported language in your settings.json.\n{\n  \"jupyter\": {\n    \"kernel_selections\": {\n      \"python\": \"conda-env\",\n      \"typescript\": \"deno\",\n      \"javascript\": \"deno\",\n      \"r\": \"ark\"\n    }\n  }\n}\n\nDebugging Kernelspecs\nAvailable kernels are shown via the repl: sessions command. To refresh the kernels you can run, use the repl: refresh kernelspecs command.\nIf you have jupyter installed, you can run jupyter kernelspec list to see the available kernels.\n$ jupyter kernelspec list\nAvailable kernels:\n  ark                   /Users/z/Library/Jupyter/kernels/ark\n  conda-base            /Users/z/Library/Jupyter/kernels/conda-base\n  deno                  /Users/z/Library/Jupyter/kernels/deno\n  python-chatlab-dev    /Users/z/Library/Jupyter/kernels/python-chatlab-dev\n  python3               /Users/z/Library/Jupyter/kernels/python3\n  ruby                  /Users/z/Library/Jupyter/kernels/ruby\n  rust                  /Users/z/Library/Jupyter/kernels/rust\n\n\nNote: Zed makes best effort usage of sys.prefix and CONDA_PREFIX to find kernels in Python environments. If you want explicitly control run python -m ipykernel install --user --name myenv --display-name \"Python (myenv)\" to install the kernel directly while in the environment.",
+  "nav_structure": [
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "Getting Started",
+      "href": "getting-started.html"
+    },
+    {
+      "text": "System Requirements",
+      "href": "system-requirements.html"
+    },
+    {
+      "text": "Accounts",
+      "href": "accounts.html"
+    },
+    {
+      "text": "Linux",
+      "href": "linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "windows.html"
+    },
+    {
+      "text": "Telemetry",
+      "href": "telemetry.html"
+    },
+    {
+      "text": "Workspace Persistence",
+      "href": "workspace-persistence.html"
+    },
+    {
+      "text": "Additional Learning Materials",
+      "href": "additional-learning-materials.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Zed",
+      "href": "configuring-zed.html"
+    },
+    {
+      "text": "Configuring Languages",
+      "href": "configuring-languages.html"
+    },
+    {
+      "text": "Key bindings",
+      "href": "key-bindings.html"
+    },
+    {
+      "text": "All Actions",
+      "href": "all-actions.html"
+    },
+    {
+      "text": "Snippets",
+      "href": "snippets.html"
+    },
+    {
+      "text": "Themes",
+      "href": "themes.html"
+    },
+    {
+      "text": "Icon Themes",
+      "href": "icon-themes.html"
+    },
+    {
+      "text": "Visual Customization",
+      "href": "visual-customization.html"
+    },
+    {
+      "text": "Vim Mode",
+      "href": "vim.html"
+    },
+    {
+      "text": "Helix Mode",
+      "href": "helix.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Multibuffers",
+      "href": "multibuffers.html"
+    },
+    {
+      "text": "Outline Panel",
+      "href": "outline-panel.html"
+    },
+    {
+      "text": "Code Completions",
+      "href": "completions.html"
+    },
+    {
+      "text": "Channels",
+      "href": "channels.html"
+    },
+    {
+      "text": "Collaboration",
+      "href": "collaboration.html"
+    },
+    {
+      "text": "Git",
+      "href": "git.html"
+    },
+    {
+      "text": "Debugger",
+      "href": "debugger.html"
+    },
+    {
+      "text": "Diagnostics",
+      "href": "diagnostics.html"
+    },
+    {
+      "text": "Tasks",
+      "href": "tasks.html"
+    },
+    {
+      "text": "Remote Development",
+      "href": "remote-development.html"
+    },
+    {
+      "text": "Environment Variables",
+      "href": "environment.html"
+    },
+    {
+      "text": "REPL",
+      "href": "repl.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Overview",
+      "href": "ai/overview.html"
+    },
+    {
+      "text": "Agent Panel",
+      "href": "ai/agent-panel.html"
+    },
+    {
+      "text": "Tools",
+      "href": "ai/tools.html"
+    },
+    {
+      "text": "External Agents",
+      "href": "ai/external-agents.html"
+    },
+    {
+      "text": "Inline Assistant",
+      "href": "ai/inline-assistant.html"
+    },
+    {
+      "text": "Edit Prediction",
+      "href": "ai/edit-prediction.html"
+    },
+    {
+      "text": "Text Threads",
+      "href": "ai/text-threads.html"
+    },
+    {
+      "text": "Rules",
+      "href": "ai/rules.html"
+    },
+    {
+      "text": "Model Context Protocol",
+      "href": "ai/mcp.html"
+    },
+    {
+      "text": "Configuration",
+      "href": "ai/configuration.html"
+    },
+    {
+      "text": "LLM Providers",
+      "href": "ai/llm-providers.html"
+    },
+    {
+      "text": "Agent Settings",
+      "href": "ai/agent-settings.html"
+    },
+    {
+      "text": "Subscription",
+      "href": "ai/subscription.html"
+    },
+    {
+      "text": "Plans and Usage",
+      "href": "ai/plans-and-usage.html"
+    },
+    {
+      "text": "Billing",
+      "href": "ai/billing.html"
+    },
+    {
+      "text": "Models",
+      "href": "ai/models.html"
+    },
+    {
+      "text": "Privacy and Security",
+      "href": "ai/privacy-and-security.html"
+    },
+    {
+      "text": "AI Improvement",
+      "href": "ai/ai-improvement.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Overview",
+      "href": "extensions.html"
+    },
+    {
+      "text": "Installing Extensions",
+      "href": "extensions/installing-extensions.html"
+    },
+    {
+      "text": "Developing Extensions",
+      "href": "extensions/developing-extensions.html"
+    },
+    {
+      "text": "Language Extensions",
+      "href": "extensions/languages.html"
+    },
+    {
+      "text": "Debugger Extensions",
+      "href": "extensions/debugger-extensions.html"
+    },
+    {
+      "text": "Theme Extensions",
+      "href": "extensions/themes.html"
+    },
+    {
+      "text": "Icon Theme Extensions",
+      "href": "extensions/icon-themes.html"
+    },
+    {
+      "text": "Slash Command Extensions",
+      "href": "extensions/slash-commands.html"
+    },
+    {
+      "text": "MCP Server Extensions",
+      "href": "extensions/mcp-extensions.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "All Languages",
+      "href": "languages.html"
+    },
+    {
+      "text": "Ansible",
+      "href": "languages/ansible.html"
+    },
+    {
+      "text": "AsciiDoc",
+      "href": "languages/asciidoc.html"
+    },
+    {
+      "text": "Astro",
+      "href": "languages/astro.html"
+    },
+    {
+      "text": "Bash",
+      "href": "languages/bash.html"
+    },
+    {
+      "text": "Biome",
+      "href": "languages/biome.html"
+    },
+    {
+      "text": "C",
+      "href": "languages/c.html"
+    },
+    {
+      "text": "C++",
+      "href": "languages/cpp.html"
+    },
+    {
+      "text": "C#",
+      "href": "languages/csharp.html"
+    },
+    {
+      "text": "Clojure",
+      "href": "languages/clojure.html"
+    },
+    {
+      "text": "CSS",
+      "href": "languages/css.html"
+    },
+    {
+      "text": "Dart",
+      "href": "languages/dart.html"
+    },
+    {
+      "text": "Deno",
+      "href": "languages/deno.html"
+    },
+    {
+      "text": "Diff",
+      "href": "languages/diff.html"
+    },
+    {
+      "text": "Docker",
+      "href": "languages/docker.html"
+    },
+    {
+      "text": "Elixir",
+      "href": "languages/elixir.html"
+    },
+    {
+      "text": "Elm",
+      "href": "languages/elm.html"
+    },
+    {
+      "text": "Emmet",
+      "href": "languages/emmet.html"
+    },
+    {
+      "text": "Erlang",
+      "href": "languages/erlang.html"
+    },
+    {
+      "text": "Fish",
+      "href": "languages/fish.html"
+    },
+    {
+      "text": "GDScript",
+      "href": "languages/gdscript.html"
+    },
+    {
+      "text": "Gleam",
+      "href": "languages/gleam.html"
+    },
+    {
+      "text": "GLSL",
+      "href": "languages/glsl.html"
+    },
+    {
+      "text": "Go",
+      "href": "languages/go.html"
+    },
+    {
+      "text": "Groovy",
+      "href": "languages/groovy.html"
+    },
+    {
+      "text": "Haskell",
+      "href": "languages/haskell.html"
+    },
+    {
+      "text": "Helm",
+      "href": "languages/helm.html"
+    },
+    {
+      "text": "HTML",
+      "href": "languages/html.html"
+    },
+    {
+      "text": "Java",
+      "href": "languages/java.html"
+    },
+    {
+      "text": "JavaScript",
+      "href": "languages/javascript.html"
+    },
+    {
+      "text": "Julia",
+      "href": "languages/julia.html"
+    },
+    {
+      "text": "JSON",
+      "href": "languages/json.html"
+    },
+    {
+      "text": "Jsonnet",
+      "href": "languages/jsonnet.html"
+    },
+    {
+      "text": "Kotlin",
+      "href": "languages/kotlin.html"
+    },
+    {
+      "text": "Lua",
+      "href": "languages/lua.html"
+    },
+    {
+      "text": "Luau",
+      "href": "languages/luau.html"
+    },
+    {
+      "text": "Makefile",
+      "href": "languages/makefile.html"
+    },
+    {
+      "text": "Markdown",
+      "href": "languages/markdown.html"
+    },
+    {
+      "text": "Nim",
+      "href": "languages/nim.html"
+    },
+    {
+      "text": "OCaml",
+      "href": "languages/ocaml.html"
+    },
+    {
+      "text": "PHP",
+      "href": "languages/php.html"
+    },
+    {
+      "text": "PowerShell",
+      "href": "languages/powershell.html"
+    },
+    {
+      "text": "Prisma",
+      "href": "languages/prisma.html"
+    },
+    {
+      "text": "Proto",
+      "href": "languages/proto.html"
+    },
+    {
+      "text": "PureScript",
+      "href": "languages/purescript.html"
+    },
+    {
+      "text": "Python",
+      "href": "languages/python.html"
+    },
+    {
+      "text": "R",
+      "href": "languages/r.html"
+    },
+    {
+      "text": "Rego",
+      "href": "languages/rego.html"
+    },
+    {
+      "text": "ReStructuredText",
+      "href": "languages/rst.html"
+    },
+    {
+      "text": "Racket",
+      "href": "languages/racket.html"
+    },
+    {
+      "text": "Roc",
+      "href": "languages/roc.html"
+    },
+    {
+      "text": "Ruby",
+      "href": "languages/ruby.html"
+    },
+    {
+      "text": "Rust",
+      "href": "languages/rust.html"
+    },
+    {
+      "text": "Scala",
+      "href": "languages/scala.html"
+    },
+    {
+      "text": "Scheme",
+      "href": "languages/scheme.html"
+    },
+    {
+      "text": "Shell Script",
+      "href": "languages/sh.html"
+    },
+    {
+      "text": "SQL",
+      "href": "languages/sql.html"
+    },
+    {
+      "text": "Svelte",
+      "href": "languages/svelte.html"
+    },
+    {
+      "text": "Swift",
+      "href": "languages/swift.html"
+    },
+    {
+      "text": "Tailwind CSS",
+      "href": "languages/tailwindcss.html"
+    },
+    {
+      "text": "Terraform",
+      "href": "languages/terraform.html"
+    },
+    {
+      "text": "TOML",
+      "href": "languages/toml.html"
+    },
+    {
+      "text": "TypeScript",
+      "href": "languages/typescript.html"
+    },
+    {
+      "text": "Uiua",
+      "href": "languages/uiua.html"
+    },
+    {
+      "text": "Vue",
+      "href": "languages/vue.html"
+    },
+    {
+      "text": "XML",
+      "href": "languages/xml.html"
+    },
+    {
+      "text": "YAML",
+      "href": "languages/yaml.html"
+    },
+    {
+      "text": "Yara",
+      "href": "languages/yara.html"
+    },
+    {
+      "text": "Yarn",
+      "href": "languages/yarn.html"
+    },
+    {
+      "text": "Zig",
+      "href": "languages/zig.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "Developing Zed",
+      "href": "development.html"
+    },
+    {
+      "text": "macOS",
+      "href": "development/macos.html"
+    },
+    {
+      "text": "Linux",
+      "href": "development/linux.html"
+    },
+    {
+      "text": "Windows",
+      "href": "development/windows.html"
+    },
+    {
+      "text": "FreeBSD",
+      "href": "development/freebsd.html"
+    },
+    {
+      "text": "Local Collaboration",
+      "href": "development/local-collaboration.html"
+    },
+    {
+      "text": "Using Debuggers",
+      "href": "development/debuggers.html"
+    },
+    {
+      "text": "Glossary",
+      "href": "development/glossary.html"
+    },
+    {
+      "text": "Release Process",
+      "href": "development/releases.html"
+    },
+    {
+      "text": "Debugging Crashes",
+      "href": "development/debugging-crashes.html"
+    }
+  ],
+  "page_toc": [],
+  "scraped_at": "2025-09-06 14:12:00"
+}
