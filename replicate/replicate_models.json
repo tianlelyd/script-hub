@@ -14,7 +14,8 @@
       "username": "851-labs",
       "model_name": "background-remover",
       "full_name": "851-labs/background-remover",
-      "title": "851-labs/background-remover"
+      "title": "851-labs/background-remover",
+      "Features": "## 核心功能\n- **背景移除**：从图像中自动分离并移除背景，保留前景主体\n\n## 技术规格\n- **输入格式**：图像 URL\n- **运行硬件**：T4 GPU\n- **处理速度**：约 0.65 秒/图像\n- **定价**：/bin/zsh.000225/秒\n\n## 主要特性\n- **输出格式可选**：PNG（默认）或 JPG\n- **分割阈值调节**：0.0-1.0 范围内可调，控制分割精度\n- **反向处理**：可选择移除前景而保留背景\n- **多种背景替换选项**：\n  - RGBA 透明背景\n  - 分割图（map）\n  - 纯色背景（绿色、白色、自定义颜色）\n  - 模糊背景\n  - 叠加效果\n\n## 技术能力\n- **软边缘混合**：支持柔和的 alpha 通道处理\n- **高精度分割**：可配置分割精确度\n- **批量处理**：已处理 690 万次运行\n\n## 使用限制\n- **输入限制**：仅接受图像 URL，不支持直接文件上传\n- **依赖性**：处理效果受输入图像质量和复杂度影响\n- **单一功能**：专注于背景移除，不提供其他图像编辑功能\n\n## 适用场景\n- 电商产品图处理\n- 人像抠图\n- 图像预处理\n- 自动化图像工作流程"
     },
     {
       "path": "/8w9ag/tom-cruise-runs",
@@ -22,7 +23,8 @@
       "username": "8w9ag",
       "model_name": "tom-cruise-runs",
       "full_name": "8w9ag/tom-cruise-runs",
-      "title": "8w9ag/tom-cruise-runs\nTom Cruise is always running, now you can choose where\n8 runs"
+      "title": "8w9ag/tom-cruise-runs\nTom Cruise is always running, now you can choose where\n8 runs",
+      "Features": "## 核心功能\n- **视频生成**：创建汤姆·克鲁斯在指定地点奔跑的视频内容\n- **场景定制**：支持用户自定义5个不同的地理位置\n- **娱乐应用**：生成幽默风格的视频内容\n\n## 技术规格\n- **硬件要求**：运行于 CPU (Small) 环境\n- **输入格式**：需要提供5个明确的地理位置名称\n- **输出格式**：视频文件\n- **模型类型**：基于管道的多模型依赖架构\n\n## 使用限制\n- **固定主体**：仅限生成汤姆·克鲁斯形象的内容\n- **场景约束**：必须提供完整的5个地点信息\n- **内容类型**：专门用于奔跑场景，功能相对单一\n- **计算资源**：受限于CPU处理能力\n\n## 应用场景\n- 娱乐视频制作\n- 社交媒体内容创作\n- 模因内容生成\n- 创意视频项目\n\n## 注意事项\n- **伦理考量**：涉及公众人物形象使用\n- **版权问题**：可能存在肖像权相关限制\n- **内容质量**：生成内容的真实度和流畅度可能存在技术局限"
     },
     {
       "path": "/abiruyt/text-extract-ocr",
@@ -30,7 +32,8 @@
       "username": "abiruyt",
       "model_name": "text-extract-ocr",
       "full_name": "abiruyt/text-extract-ocr",
-      "title": "abiruyt/text-extract-ocr"
+      "title": "abiruyt/text-extract-ocr",
+      "Features": "## 核心功能\n- **文本识别**：从图像中提取文本内容\n- **多语言支持**：能够处理多种语言的文本\n- **多字体适应**：支持不同字体样式和大小的识别\n\n## 技术规格\n- **运行环境**：CPU 硬件\n- **处理速度**：通常在2秒内完成\n- **输入格式**：图像 URL\n- **输出格式**：纯文本\n\n## 支持的图像类型\n- 扫描文档\n- 屏幕截图\n- 拍摄照片\n- 各种图像格式\n\n## 成本与部署\n- **费用**：约 /bin/zsh.00013-/bin/zsh.00016 每次运行\n- **性价比**：约 6,250-7,692 次运行/\n- **部署方式**：\n  - Replicate 平台 API 调用\n  - 本地 Docker 部署（开源）\n  - 支持 Node.js、Python、HTTP API\n\n## 适用场景\n- 数字化纸质文档（发票、合同、报告）\n- 表单信息自动提取\n- 网页或移动应用截图文本提取\n- 大批量图像文档处理\n- 数据录入自动化\n\n## 技术限制\n- **处理能力**：基础 OCR 功能，非高级文档理解\n- **准确性**：未提供具体准确率指标\n- **文档支持**：缺少详细的技术文档\n- **复杂度**：适合简单文本提取，非复杂版面分析\n\n## 集成特点\n- 提供免费试用\n- RESTful API 接口\n- 支持批处理工作流\n- 轻量级部署选项"
     },
     {
       "path": "/adirik/flux-cinestill",
@@ -38,7 +41,8 @@
       "username": "adirik",
       "model_name": "flux-cinestill",
       "full_name": "adirik/flux-cinestill",
-      "title": "adirik/flux-cinestill"
+      "title": "adirik/flux-cinestill",
+      "Features": "## 核心功能\n- 基于 FLUX.1-Dev 的 LoRA 微调模型\n- 专门模拟 Cinestill 800T 胶片的夜间摄影效果\n- 擅长生成具有晕光效果的城市夜景\n\n## 技术规格\n- 硬件：H100 GPU\n- 触发词：CNSTLL\n- 推荐关键词：cinestill 800t, night time, dusk, 4k\n\n## 主要特性\n- 支持文本生图、图生图、图像修复\n- 可配置推理步数、引导比例、随机种子\n- 专业胶片质感渲染\n\n## 适用场景\n- 夜间城市景观创作\n- 加油站等人工光源场景\n- 胶片风格摄影复现\n- 电影化视觉效果制作"
     },
     {
       "path": "/aihilums/sehatsanjha",
@@ -46,7 +50,8 @@
       "username": "aihilums",
       "model_name": "sehatsanjha",
       "full_name": "aihilums/sehatsanjha",
-      "title": "aihilums/sehatsanjha\n36k runs"
+      "title": "aihilums/sehatsanjha\n36k runs",
+      "Features": "## 核心功能\n- 音频处理与会话管理系统\n- 支持用户状态跟踪和会话控制\n- 面向医疗健康场景的音频分析\n\n## 技术规格\n- 硬件：CPU\n- Cog 版本：0.15.5\n- 支持 Webhook 事件\n\n## 主要特性\n- 音频文件输入处理\n- 用户 ID 跟踪\n- 会话开始/结束控制\n- 用户状态管理\n- Cookie 支持\n\n## 适用场景\n- 医疗咨询录音分析\n- 语音交互追踪\n- 临床沟通记录\n- 基于会话的音频处理"
     },
     {
       "path": "/alexgenovese/adcsr-ultra-fast-super-resolution",
@@ -54,7 +59,8 @@
       "username": "alexgenovese",
       "model_name": "adcsr-ultra-fast-super-resolution",
       "full_name": "alexgenovese/adcsr-ultra-fast-super-resolution",
-      "title": "alexgenovese/\nAdcSR: ultra-fast super-resolution, optimized to run faster\n57 runs"
+      "title": "alexgenovese/\nAdcSR: ultra-fast super-resolution, optimized to run faster\n57 runs",
+      "Features": "## 核心功能\n- 超快速图像超分辨率处理\n- 支持 2x、3x、4x 放大倍率\n- 基于对抗扩散压缩技术\n\n## 技术规格\n- 硬件：NVIDIA L40S / A100\n- 处理速度：A100 上 0.03 秒完成 128×128→512×512\n- 定价：约 /bin/zsh.000975/秒\n\n## 主要特性\n- 相比传统扩散方法，推理时间减少 73%\n- 计算量减少 78%，参数量减少 74%\n- 支持真实世界图像复原\n\n## 适用场景\n- 低分辨率图像增强\n- 数字媒体质量提升\n- 摄影后期处理\n- 机器学习数据预处理"
     },
     {
       "path": "/alexgenovese/seesr-upscale-and-stable-diffusion-turbo",
@@ -62,7 +68,8 @@
       "username": "alexgenovese",
       "model_name": "seesr-upscale-and-stable-diffusion-turbo",
       "full_name": "alexgenovese/seesr-upscale-and-stable-diffusion-turbo",
-      "title": "alexgenovese/\nImage super-resolution model based on SEESR, designed to reconstruct low-resolution images with sharper details and accurate colors.\n35 runs"
+      "title": "alexgenovese/\nImage super-resolution model based on SEESR, designed to reconstruct low-resolution images with sharper details and accurate colors.\n35 runs",
+      "Features": "## 核心功能\n- 图像超分辨率重建\n- 低分辨率图像细节增强\n- 颜色准确度优化\n\n## 技术特性\n- 基于SEESR算法\n- 集成Kernel Density Steering (KDS)技术\n- 支持Stable Diffusion Turbo优化\n- 延迟分块处理，内存效率高\n\n## 参数配置\n- 放大倍数：最高4倍\n- 推理步数：1-4步\n- 支持正负提示词引导\n- 可调节引导强度和KDS参数\n- 种子值控制可重现性\n\n## 输入输出\n- 输入：图像URL + 可选文本提示\n- 输出：高分辨率增强图像\n- 硬件：NVIDIA L40S GPU"
     },
     {
       "path": "/alicewuv/kitten-tts",
@@ -70,7 +77,8 @@
       "username": "alicewuv",
       "model_name": "kitten-tts",
       "full_name": "alicewuv/kitten-tts",
-      "title": "alicewuv/kitten-tts\nLightweight text to speech models\n13 runs"
+      "title": "alicewuv/kitten-tts\nLightweight text to speech models\n13 runs",
+      "Features": "## 核心功能\n- 轻量级文本转语音合成\n- CPU运行，资源占用低\n\n## 语音控制\n- 声音类型：自动/男性/女性\n- 语速调节：0.5-2.0倍速\n- 采样率：默认24kHz，可自定义\n- 支持特定声音选择\n\n## 输出格式\n- 音频格式：WAV、FLAC\n- 质量可配置\n- 支持批量处理\n\n## 技术特点\n- CPU推理，成本低廉\n- 配置灵活，参数丰富\n- 适合轻量级应用场景"
     },
     {
       "path": "/alicewuv/whiskii-chat",
@@ -78,7 +86,8 @@
       "username": "alicewuv",
       "model_name": "whiskii-chat",
       "full_name": "alicewuv/whiskii-chat",
-      "title": "alicewuv/whiskii-chat\nFine-Tuned Qwen2.5-7B-Instruct\n138 runs"
+      "title": "alicewuv/whiskii-chat\nFine-Tuned Qwen2.5-7B-Instruct\n138 runs",
+      "Features": "## 模型基础\n- 基于Qwen2.5-7B-Instruct微调\n- A100 GPU (80GB)运行\n- 对话专用优化\n\n## 生成参数\n- 温度控制：0-2（默认0.7）\n- Top-p采样：默认0.9\n- 最大新令牌：512-4096\n- 重复惩罚：默认1.05\n- 随机种子：可重现输出\n\n## 对话能力\n- 多轮对话支持\n- 自定义系统提示词\n- 多候选响应生成\n- 上下文理解和维持\n\n## 成本效益\n- 按秒计费：/bin/zsh.0014/秒\n- 单次预测：约/bin/zsh.0054\n- 适合实时交互应用"
     },
     {
       "path": "/alicewuv/whiskii-gen",
@@ -86,7 +95,8 @@
       "username": "alicewuv",
       "model_name": "whiskii-gen",
       "full_name": "alicewuv/whiskii-gen",
-      "title": "alicewuv/whiskii-gen\nPsst..\n458 runs"
+      "title": "alicewuv/whiskii-gen\nPsst..\n458 runs",
+      "Features": "## 核心能力\n- 基于Stable Diffusion XL的图像生成AI\n- 文本到图像的生成功能\n\n## 技术规格\n- 硬件：A100 GPU (80GB)\n- 输出分辨率：默认1024x1024像素，支持256-1536像素范围调整\n- 定价：/bin/zsh.0014/秒\n\n## 输入参数\n- 必需：文本提示词\n- 可选：负面提示词、引导比例(1-20，默认7)、去噪步数(1-100，默认30)\n- 调度器：支持多种选项(dpmpp_2m、euler_a等)\n- 种子值：可用于可重现的图像生成\n\n## 应用场景\n- 创意图像生成\n- 概念可视化\n- 艺术探索\n- 原型设计"
     },
     {
       "path": "/andreasjansson/clip-features",
@@ -94,7 +104,8 @@
       "username": "andreasjansson",
       "model_name": "clip-features",
       "full_name": "andreasjansson/clip-features",
-      "title": "andreasjansson\nReturn CLIP features for the clip-vit-large-patch14 model\n100.1m runs"
+      "title": "andreasjansson\nReturn CLIP features for the clip-vit-large-patch14 model\n100.1m runs",
+      "Features": "## 核心能力\n- 基于CLIP ViT-Large-Patch14模型的特征提取\n- 支持文本和图像的向量嵌入生成\n- 跨模态语义相似度分析\n\n## 技术规格\n- 硬件：T4 GPU\n- 嵌入维度：768维向量\n- 定价：/bin/zsh.000225/秒\n\n## 输入输出\n- 输入：换行分隔的文本或图像URI(http/https开头)\n- 输出：命名嵌入数组，包含原始输入和数值向量\n\n## 应用场景\n- 语义相似度比较\n- 零样本图像分类\n- 文本-图像匹配\n- 特征提取用于下游任务"
     },
     {
       "path": "/andreasjansson/fractal",
@@ -102,7 +113,8 @@
       "username": "andreasjansson",
       "model_name": "fractal",
       "full_name": "andreasjansson/fractal",
-      "title": "andreasjansson\n163 runs"
+      "title": "andreasjansson\n163 runs",
+      "Features": "## 核心能力\n- 生成动画分形图像/视频\n- 基于文本提示的分形可视化\n\n## 技术规格\n- 硬件：CPU (Small)\n- 输出格式：gif、webp、mp4\n- 支持的推理模型：Flux (Black Forest Labs)、Ideogram AI\n\n## 配置参数\n- 帧数：默认60帧，最大200帧\n- 帧率：默认24fps\n- 边界设置：可调整起始位置和宽度\n- 种子值：支持可重现结果\n\n## 应用场景\n- 数学艺术可视化\n- 动态分形动画创作\n- 教育演示内容\n- 创意视觉效果制作"
     },
     {
       "path": "/andreasjansson/github-code-understander",
@@ -110,7 +122,8 @@
       "username": "andreasjansson",
       "model_name": "github-code-understander",
       "full_name": "andreasjansson/github-code-understander",
-      "title": "andreasjansson\nAgent that reads a public github repo and analyzes it based on a prompt\n4 runs"
+      "title": "andreasjansson\nAgent that reads a public github repo and analyzes it based on a prompt\n4 runs",
+      "Features": "## 核心功能\n- GitHub代码仓库分析AI代理\n- 基于用户提示分析公开GitHub仓库\n- 自动克隆并执行代码分析\n\n## 技术规格\n- 运行硬件：CPU (Small)\n- Cog版本：0.14.0\n- 输入要求：GitHub URL（必需）+ 分析提示（必需）\n\n## 主要特性\n- 支持代码仓库读取和分析\n- 生成文本格式分析报告\n- 基于灵活提示的分析方法\n\n## 使用限制\n- 仅支持公开GitHub仓库\n- 输出为文本格式\n- CPU资源受限\n\n## 适用场景\n- 代码审查\n- 仓库探索\n- 技术文档生成\n- 快速项目理解"
     },
     {
       "path": "/andreasjansson/h.264-glitch",
@@ -118,7 +131,8 @@
       "username": "andreasjansson",
       "model_name": "h.264-glitch",
       "full_name": "andreasjansson/h.264-glitch",
-      "title": "andreasjansson\nVideo corruption as a service\n51 runs"
+      "title": "andreasjansson\nVideo corruption as a service\n51 runs",
+      "Features": "## 核心功能\n- 视频故障效果服务\n- 向MP4视频文件故意引入故障和伪影\n- 可控的视频损坏生成\n\n## 技术规格\n- 输入格式：MP4视频（最长2分钟）\n- 运行硬件：CPU (Small)\n- 计算平台：Replicate\n\n## 主要特性\n- 可配置故障强度（0.0-1.0）\n- 可选IDR帧冻结功能\n- 可禁用帧率效果（重复/打乱）\n- 支持随机种子生成\n\n## 关键参数\n- 故障强度（默认0.45）\n- 开场帧冻结（0-120帧）\n- 帧率效果控制\n\n## 使用限制\n- 视频时长限制2分钟\n- 故障强度范围0-1\n- CPU资源受限\n\n## 适用场景\n- 艺术视频处理\n- 视觉效果创建\n- 实验性媒体生成\n- 数字艺术设计项目"
     },
     {
       "path": "/andreasjansson/illusion",
@@ -126,7 +140,8 @@
       "username": "andreasjansson",
       "model_name": "illusion",
       "full_name": "andreasjansson/illusion",
-      "title": "andreasjansson/illusion"
+      "title": "andreasjansson/illusion",
+      "Features": "## 核心功能\n- 基于ControlNet和Stable Diffusion 1.5的艺术二维码生成\n- 创建可扫描且视觉集成的二维码\n- 图像合成与二维码功能结合\n\n## 技术规格\n- 输入参数：图像生成提示 + 二维码内容\n- 默认尺寸：768x768像素\n- 引导比例：默认7.5\n- 推理步数：默认40\n\n## 主要特性\n- 支持多种输出变体（1-4张图像）\n- 可自定义二维码背景（灰色或白色）\n- 通过提示和负面提示控制图像生成\n- 可调节ControlNet条件比例\n\n## 技术约束\n- 最大图像尺寸：768x768\n- 推理步数范围：20-100\n- 引导比例范围：0.1-30\n\n## 运行环境\n- 硬件：L40S GPU\n\n## 适用场景\n- 创建主题化艺术二维码\n- 营销材料制作\n- 需要视觉集成二维码的设计项目"
     },
     {
       "path": "/andreasjansson/jpg-glitch",
@@ -134,7 +149,8 @@
       "username": "andreasjansson",
       "model_name": "jpg-glitch",
       "full_name": "andreasjansson/jpg-glitch",
-      "title": "andreasjansson\nJPEG corruption as a service\n123 runs"
+      "title": "andreasjansson\nJPEG corruption as a service\n123 runs",
+      "Features": "## 核心功能\n- JPEG损坏服务：提供可控的图像故障效果生成\n- 故障类型：支持4种故障模式\n  - datacorruption（数据损坏，默认）\n  - huffman（哈夫曼编码故障）\n  - quantization（量化故障）\n  - mixed（混合模式）\n\n## 技术规格\n- 运行硬件：CPU (Small)\n- 输入格式：图像URI\n- 输出格式：损坏的JPEG图像\n\n## 参数控制\n- 故障强度：0.0-1.0范围（默认0.3）\n- 色彩通道偏移：可启用/禁用\n- 压缩质量：1-100范围（默认75）\n- 随机种子：支持一致性重现\n\n## 适用场景\n- 数字艺术创作\n- 实验性视觉设计\n- 创意数字媒体制作\n- 图像失真效果处理"
     },
     {
       "path": "/andreasjansson/jpg-glitch-animation",
@@ -142,7 +158,8 @@
       "username": "andreasjansson",
       "model_name": "jpg-glitch-animation",
       "full_name": "andreasjansson/jpg-glitch-animation",
-      "title": "andreasjansson\nJPEG glitch animation\n24 runs"
+      "title": "andreasjansson\nJPEG glitch animation\n24 runs",
+      "Features": "## 核心功能\n- 故障动画生成：将静态图像转换为故障风格动画视频\n- 基于故障效果：依赖jpg-glitch模型和luma/ray-2-540p\n\n## 技术规格\n- 运行硬件：CPU (Small)\n- 输入格式：图像URL\n- 输出格式：MP4视频文件\n- 处理方式：单图像转动画\n\n## 核心特性\n- 静态到动态：单张图片生成动画效果\n- 故障变换：应用独特的视觉失真效果\n- 视频输出：生成完整的动画序列\n\n## 适用场景\n- 艺术视频效果制作\n- 数字艺术动画生成\n- 实验性媒体转换\n- 静态图像的创意动态化"
     },
     {
       "path": "/andreasjansson/portrait-blur",
@@ -150,7 +167,8 @@
       "username": "andreasjansson",
       "model_name": "portrait-blur",
       "full_name": "andreasjansson/portrait-blur",
-      "title": "andreasjansson\nBlur out-of-focus parts of an image\n18 runs"
+      "title": "andreasjansson\nBlur out-of-focus parts of an image\n18 runs",
+      "Features": "## 核心功能\n- 智能景深模糊：模拟相机镜头的景深效果\n- 深度估算：基于深度信息智能应用模糊效果\n- 肖像模式仿真：创建专业的肖像摄影效果\n\n## 技术规格\n- 运行硬件：CPU (Small)\n- 输入格式：图像URI\n- 依赖模型：Grounding DINO、Depth Anything V2\n- 处理方式：深度感知模糊处理\n\n## 参数控制\n- 模糊强度：1-30范围（默认10）\n- 边缘平均化：1-31窗口大小（默认11）\n- 调试模式：可选深度可视化输出\n\n## 技术特性\n- 深度估算驱动：基于场景深度信息精确应用模糊\n- 边缘处理：平滑处理模糊边界\n- 调试支持：提供深度图可视化\n\n## 适用场景\n- 摄影后期处理\n- 专业肖像效果创建\n- 景深效果仿真\n- 图像焦点突出处理"
     },
     {
       "path": "/anthropic/claude-4-sonnet",
@@ -158,7 +176,8 @@
       "username": "anthropic",
       "model_name": "claude-4-sonnet",
       "full_name": "anthropic/claude-4-sonnet",
-      "title": "anthropic/claude-4-sonnet"
+      "title": "anthropic/claude-4-sonnet",
+      "Features": "## 核心能力\n- 文本和图像理解与生成\n- 高级编程和推理能力\n- 精准指令执行\n- 扩展思考模式\n\n## 技术规格\n- 最大输出令牌: 64,000\n- 图像分辨率支持: 最高200万像素\n- 运行环境: CPU\n- 计费方式: 每秒/bin/zsh.0001 + 基于令牌\n\n## 适用场景\n- 编程辅助和代码生成\n- 复杂逻辑推理任务\n- 多模态内容创作\n- 专业文档撰写"
     },
     {
       "path": "/arielreplicate/robust_video_matting",
@@ -166,7 +185,8 @@
       "username": "arielreplicate",
       "model_name": "robust_video_matting",
       "full_name": "arielreplicate/robust_video_matting",
-      "title": "arielreplicate/robust_video_matting"
+      "title": "arielreplicate/robust_video_matting",
+      "Features": "## 核心能力\n- 视频前景背景分离\n- 多种输出格式支持\n- 基于深度学习的视频抠图\n\n## 技术规格\n- 硬件需求: L40S GPU\n- 计费方式: 每秒/bin/zsh.000975\n- 输出格式: 绿幕/Alpha遮罩/前景遮罩\n\n## 适用场景\n- 视频编辑和后期制作\n- 背景替换和移除\n- 视觉特效制作\n- 内容创作优化"
     },
     {
       "path": "/astramlco/easycontrol-ghibli",
@@ -174,7 +194,8 @@
       "username": "astramlco",
       "model_name": "easycontrol-ghibli",
       "full_name": "astramlco/easycontrol-ghibli",
-      "title": "astramlco/easycontrol-ghibli\nMake images in Studio Ghibli art style\n3.2k runs"
+      "title": "astramlco/easycontrol-ghibli\nMake images in Studio Ghibli art style\n3.2k runs",
+      "Features": "## 核心能力\n- 宫崎骏风格动画图像生成\n- 空间控制图像合成\n- 手绘动画风格模拟\n\n## 技术规格\n- 输出尺寸: 256-1024像素\n- 硬件需求: NVIDIA L40S GPU\n- 支持格式: PNG/JPG/WebP\n- 默认尺寸: 768x768像素\n\n## 适用场景\n- 动画风格艺术创作\n- 插画和概念设计\n- 品牌视觉内容制作\n- 创意图像生成"
     },
     {
       "path": "/astramlco/supir",
@@ -182,7 +203,8 @@
       "username": "astramlco",
       "model_name": "supir",
       "full_name": "astramlco/supir",
-      "title": "astramlco/supir\nPracticing Model Scaling for Photo-Realistic Image Restoration In the Wild, using tiled VAE and Juggernaut XL to eliminate plastic skin and smooth textures.\n127 runs"
+      "title": "astramlco/supir\nPracticing Model Scaling for Photo-Realistic Image Restoration In the Wild, using tiled VAE and Juggernaut XL to eliminate plastic skin and smooth textures.\n127 runs",
+      "Features": "## 核心能力\n- 使用tiled VAE技术进行照片级真实图像修复\n- 消除\"塑料皮肤\"效果，平滑纹理\n- 支持最高2x的图像放大\n- 可配置修复参数（引导尺度、采样步骤、正负提示等）\n- 集成Juggernaut XL模型进行细节修复\n\n## 技术规格\n- 图像超分辨率和修复模型\n- 支持多种输入格式\n- 可自定义质量和修复强度"
     },
     {
       "path": "/beautyyuyanli/multilingual-e5-large",
@@ -190,7 +212,8 @@
       "username": "beautyyuyanli",
       "model_name": "multilingual-e5-large",
       "full_name": "beautyyuyanli/multilingual-e5-large",
-      "title": "beautyyuyanli/multilingual-e5-large"
+      "title": "beautyyuyanli/multilingual-e5-large",
+      "Features": "## 核心能力\n- 生成多语言文本的向量表示\n- 支持批量文本处理（默认批次32）\n- 可配置嵌入向量标准化\n- 适用于语义相似性、聚类、搜索等NLP任务\n\n## 技术规格\n- 多语言文本嵌入模型\n- 支持大规模文本向量化\n- 高效批处理能力"
     },
     {
       "path": "/black-forest-labs/flux-1.1-pro-ultra",
@@ -198,7 +221,8 @@
       "username": "black-forest-labs",
       "model_name": "flux-1.1-pro-ultra",
       "full_name": "black-forest-labs/flux-1.1-pro-ultra",
-      "title": "black-forest-labs/flux-1.1-pro-ultra"
+      "title": "black-forest-labs/flux-1.1-pro-ultra",
+      "Features": "## 核心能力\n- 生成最高4MP的高质量图像\n- 支持多种长宽比（1:1, 16:9, 21:9等）\n- Raw模式生成更自然图像\n- 支持图像提示和控制图像输入\n- 可调安全容忍度和引导设置\n\n## 技术规格\n- 文本到图像生成模型\n- 最高4MP分辨率输出\n- 多种输出格式支持"
     },
     {
       "path": "/black-forest-labs/flux-kontext-max",
@@ -206,7 +230,8 @@
       "username": "black-forest-labs",
       "model_name": "flux-kontext-max",
       "full_name": "black-forest-labs/flux-kontext-max",
-      "title": "black-forest-labs/flux-kontext-max"
+      "title": "black-forest-labs/flux-kontext-max",
+      "Features": "## 核心能力\n- 通过自然语言提示进行图像转换\n- 高级字体生成功能\n- 支持图像编辑和操作\n- 提示上采样选项增强创意生成\n- 多种长宽比和安全控制\n\n## 技术规格\n- 文本驱动图像编辑（高级版）\n- 支持复杂图像变换\n- 多模态输入支持"
     },
     {
       "path": "/black-forest-labs/flux-kontext-pro",
@@ -214,7 +239,8 @@
       "username": "black-forest-labs",
       "model_name": "flux-kontext-pro",
       "full_name": "black-forest-labs/flux-kontext-pro",
-      "title": "black-forest-labs/flux-kontext-pro"
+      "title": "black-forest-labs/flux-kontext-pro",
+      "Features": "## 核心能力\n- 精确的文本指令图像编辑\n- 支持多种输入输出格式（jpeg, png, webp）\n- 可配置长宽比和输出质量\n- 种子控制实现可重现生成\n- 最多生成4张图像\n\n## 技术规格\n- 文本驱动图像编辑（专业版）\n- 高精度编辑控制\n- 批量生成支持"
     },
     {
       "path": "/black-forest-labs/flux-krea-dev",
@@ -222,7 +248,8 @@
       "username": "black-forest-labs",
       "model_name": "flux-krea-dev",
       "full_name": "black-forest-labs/flux-krea-dev",
-      "title": "black-forest-labs/flux-krea-dev\nAn opinionated text-to-image model from Black Forest Labs in collaboration with Krea that excels in photorealism. Creates images that avoid the oversaturated \"AI look\".\n79.4k runs\nOfficial"
+      "title": "black-forest-labs/flux-krea-dev\nAn opinionated text-to-image model from Black Forest Labs in collaboration with Krea that excels in photorealism. Creates images that avoid the oversaturated \"AI look\".\n79.4k runs\nOfficial",
+      "Features": "## 核心能力\n- 生成逼真图像，避免过饱和\"AI感\"\n- Black Forest Labs与Krea合作开发\n- 支持多种长宽比和分辨率\n- 可配置引导强度和推理步骤\n- 创造更自然外观的图像\n\n## 技术规格\n- 逼真文本到图像生成模型\n- 去AI化风格处理\n- 自然图像生成优化"
     },
     {
       "path": "/black-forest-labs/flux-schnell",
@@ -230,7 +257,8 @@
       "username": "black-forest-labs",
       "model_name": "flux-schnell",
       "full_name": "black-forest-labs/flux-schnell",
-      "title": "black-forest-labs/flux-schnell"
+      "title": "black-forest-labs/flux-schnell",
+      "Features": "## 核心能力\n- 针对本地开发优化的最快图像生成\n- 量化速度模式（\"go_fast\"）\n- 推荐4个推理步骤平衡速度和质量\n- 支持0.25-1MP分辨率\n- 一次生成1-4张图像\n\n## 技术规格\n- 快速文本到图像生成模型\n- 速度优化设计\n- 低延迟高效生成"
     },
     {
       "path": "/bytedance/dolphin",
@@ -238,7 +266,8 @@
       "username": "bytedance",
       "model_name": "dolphin",
       "full_name": "bytedance/dolphin",
-      "title": "bytedance/dolphin"
+      "title": "bytedance/dolphin",
+      "Features": "## 核心能力\n- 解析PDF和图像文件\n- 支持两种输出格式：Markdown和JSON\n- 使用异构锚点提示技术\n- 提取和转换文档内容\n- 结构化信息处理\n\n## 技术规格\n- 文档图像解析模型\n- 多格式输出支持\n- 智能内容提取"
     },
     {
       "path": "/bytedance/dreamina-3.1",
@@ -246,7 +275,8 @@
       "username": "bytedance",
       "model_name": "dreamina-3.1",
       "full_name": "bytedance/dreamina-3.1",
-      "title": "bytedance/dreamina-3.1\n4MP text-to-image generation with enhanced cinematic-quality image generation with precise style control, improved text rendering, and commercial design optimization.\n22.2K runs\nOfficial"
+      "title": "bytedance/dreamina-3.1\n4MP text-to-image generation with enhanced cinematic-quality image generation with precise style control, improved text rendering, and commercial design optimization.\n22.2K runs\nOfficial",
+      "Features": "## 核心能力\n- 4MP高分辨率图像生成\n- 电影级质量图像增强\n- 精确风格控制\n- 改进的文本渲染\n- 商业设计优化\n- 支持2K分辨率和自定义尺寸（512-3024像素）\n\n## 技术规格\n- 高质量文本到图像生成模型\n- 商业级图像输出\n- 多分辨率支持"
     },
     {
       "path": "/bytedance/hyper-flux-8step",
@@ -254,7 +284,8 @@
       "username": "bytedance",
       "model_name": "hyper-flux-8step",
       "full_name": "bytedance/hyper-flux-8step",
-      "title": "bytedance/hyper-flux-8step"
+      "title": "bytedance/hyper-flux-8step",
+      "Features": "## 核心能力\n- 快速文生图AI模型，8步推理实现高效图像生成\n- 优化的推理流程，平衡速度与质量\n- 支持多种分辨率和宽高比输出\n\n## 技术规格\n- 硬件：H100 GPU\n- 默认分辨率：848x848像素\n- 推理步数：8步优化\n- 定价：按秒计费\n\n## 适用场景\n- 快速创意设计\n- 概念可视化\n- 原型制作\n- 实时图像生成"
     },
     {
       "path": "/bytedance/omni-human",
@@ -262,7 +293,8 @@
       "username": "bytedance",
       "model_name": "omni-human",
       "full_name": "bytedance/omni-human",
-      "title": "bytedance/omni-human"
+      "title": "bytedance/omni-human",
+      "Features": "## 核心能力\n- 音频驱动的人物动画生成\n- 将静态图像与音频结合创建动画\n- 支持多种音频格式输入\n\n## 技术规格\n- 硬件：CPU处理\n- 音频格式：MP3/WAV\n- 最佳质量：15秒内音频\n- 处理速度：实时生成\n\n## 适用场景\n- 个人形象动画制作\n- 短视频创作\n- 语音驱动角色动画\n- 数字人制作"
     },
     {
       "path": "/bytedance/seedance-1-lite",
@@ -270,7 +302,8 @@
       "username": "bytedance",
       "model_name": "seedance-1-lite",
       "full_name": "bytedance/seedance-1-lite",
-      "title": "bytedance/seedance-1-lite\nA video generation model that offers text-to-video and image-to-video support for 5s or 10s videos, at 480p and 720p resolution\n497.1k runs\nOfficial"
+      "title": "bytedance/seedance-1-lite\nA video generation model that offers text-to-video and image-to-video support for 5s or 10s videos, at 480p and 720p resolution\n497.1k runs\nOfficial",
+      "Features": "## 核心能力\n- 文本到视频和图像到视频生成\n- 支持5-10秒视频长度\n- 快速视频原型制作\n\n## 技术规格\n- 硬件：CPU处理\n- 分辨率：480p/720p\n- 帧率：24fps\n- 时长：3-12秒可调\n\n## 适用场景\n- 快速视频原型\n- 创意内容制作\n- 概念验证视频\n- 短视频素材生成"
     },
     {
       "path": "/bytedance/seedance-1-pro",
@@ -278,7 +311,8 @@
       "username": "bytedance",
       "model_name": "seedance-1-pro",
       "full_name": "bytedance/seedance-1-pro",
-      "title": "bytedance/seedance-1-pro"
+      "title": "bytedance/seedance-1-pro",
+      "Features": "## 核心能力\n- 高质量专业级视频生成服务\n- 支持多种视频格式和分辨率\n- 专业级输出质量控制\n\n## 技术规格\n- 硬件：CPU处理\n- 最高分辨率：1080p\n- 支持多种宽高比\n- 专业级编码输出\n\n## 适用场景\n- 专业视频制作\n- 高质量短视频\n- 商业级内容创作\n- 品牌视频制作"
     },
     {
       "path": "/bytedance/seededit-3.0",
@@ -286,7 +320,8 @@
       "username": "bytedance",
       "model_name": "seededit-3.0",
       "full_name": "bytedance/seededit-3.0",
-      "title": "bytedance/seededit-3.0\nText-guided image editing model that preserves original details while making targeted modifications like lighting changes, object removal, and style conversion\n144.1k runs\nOfficial"
+      "title": "bytedance/seededit-3.0\nText-guided image editing model that preserves original details while making targeted modifications like lighting changes, object removal, and style conversion\n144.1k runs\nOfficial",
+      "Features": "## 核心能力\n- 文本引导的精确图像编辑\n- 保留原始细节的智能修改\n- 支持局部和全局编辑\n\n## 技术规格\n- 硬件：CPU处理\n- 编辑类型：局部编辑、光线调整、物体移除\n- 保真度：高细节保留\n- 控制精度：文本精确控制\n\n## 适用场景\n- 专业图像编辑\n- 艺术设计处理\n- 照片后期制作\n- 创意图像修改"
     },
     {
       "path": "/charlesmccarthy/addwatermark",
@@ -294,7 +329,8 @@
       "username": "charlesmccarthy",
       "model_name": "addwatermark",
       "full_name": "charlesmccarthy/addwatermark",
-      "title": "charlesmccarthy/addwatermark"
+      "title": "charlesmccarthy/addwatermark",
+      "Features": "## 核心能力\n- 视频水印添加工具\n- 灵活的水印位置和样式控制\n- 批量处理支持\n\n## 技术规格\n- 硬件：CPU处理\n- 定价：每秒0.0001美元\n- 字体大小：1-500可调\n- 位置：可自定义\n\n## 适用场景\n- 视频版权保护\n- 品牌标识添加\n- 内容标识管理\n- 批量水印处理"
     },
     {
       "path": "/chuckchen/supir-v0q",
@@ -302,7 +338,8 @@
       "username": "chuckchen",
       "model_name": "supir-v0q",
       "full_name": "chuckchen/supir-v0q",
-      "title": "chuckchen/supir-v0q\nPracticing Model Scaling for Photo-Realistic Image Restoration In the Wild, using tiled VAE and Juggernaut XL to eliminate plastic skin and smooth textures.\n20 runs"
+      "title": "chuckchen/supir-v0q\nPracticing Model Scaling for Photo-Realistic Image Restoration In the Wild, using tiled VAE and Juggernaut XL to eliminate plastic skin and smooth textures.\n20 runs",
+      "Features": "## 核心能力\n- 图像超分辨率和照片修复\n- 基于分块VAE技术的高质量重建\n- 支持大幅度分辨率提升\n\n## 技术规格\n- 硬件：L40S GPU\n- 放大倍数：最高4倍\n- 最高分辨率：32k\n- 处理技术：分块VAE\n\n## 适用场景\n- 老旧照片修复\n- 低分辨率图像增强\n- 历史文档数字化\n- 图像质量提升"
     },
     {
       "path": "/cjwbw/shap-e",
@@ -310,7 +347,8 @@
       "username": "cjwbw",
       "model_name": "shap-e",
       "full_name": "cjwbw/shap-e",
-      "title": "cjwbw/shap-e"
+      "title": "cjwbw/shap-e",
+      "Features": "## 核心能力\n- 文本和图像生成3D模型\n- 支持条件3D隐式函数\n- 多种3D渲染模式\n\n## 技术规格\n- 硬件：T4 GPU\n- 渲染模式：nerf/stf\n- 渲染分辨率：128像素\n- 输出格式：3D模型文件\n\n## 适用场景\n- 3D模型原型\n- 游戏资产生成\n- 概念3D设计\n- 快速3D建模"
     },
     {
       "path": "/collections/3d-models",
@@ -318,7 +356,8 @@
       "username": "collections",
       "model_name": "3d-models",
       "full_name": "collections/3d-models",
-      "title": "Make 3D stuff"
+      "title": "Make 3D stuff",
+      "Features": "## 核心能力\n- 3D内容生成模型集合\n- 从文本和图像创建3D资产\n- 多视角渲染和纹理生成\n\n## 技术特性\n- 多视角渲染\n- 纹理自动生成\n- 单图3D重建\n- 批量3D处理\n\n## 适用场景\n- 游戏开发\n- 虚拟现实内容\n- 工业设计\n- 3D打印建模"
     },
     {
       "path": "/collections/ai-detect-objects",
@@ -326,7 +365,8 @@
       "username": "collections",
       "model_name": "ai-detect-objects",
       "full_name": "collections/ai-detect-objects",
-      "title": "Detect objects"
+      "title": "Detect objects",
+      "Features": "## 核心能力\n- 图像和视频对象检测分割的多模型集合\n- 整合多种先进检测算法\n- 支持实时和批量处理\n\n## 主要模型\n- Grounding DINO：开放词汇检测\n- YOLO World：实时对象检测\n- SAM：通用分割模型\n- SAMURAI：视频对象分割\n\n## 适用场景\n- 计算机视觉研究\n- 自动标注系统\n- 内容分析\n- 智能监控系统"
     },
     {
       "path": "/collections/ai-enhance-videos",
@@ -334,7 +374,8 @@
       "username": "collections",
       "model_name": "ai-enhance-videos",
       "full_name": "collections/ai-enhance-videos",
-      "title": "Enhance videos"
+      "title": "Enhance videos",
+      "Features": "## 核心能力\n- 视频质量增强和修复\n- 多种视频处理技术集合\n\n## 技术类型\n- 超分辨率算法\n- 视频放大（最高4K）\n- 老旧视频着色\n- 面部修复增强\n\n## 主要模型\n- Real-ESRGAN：通用超分辨率\n- Runway Upscale：4倍放大\n- DeOldify：视频着色\n- Topaz Labs：专业处理\n\n## 适用场景\n- 老旧影像修复\n- 低画质升级\n- 电影画质增强\n- 专业视频处理"
     },
     {
       "path": "/collections/ai-face-generator",
@@ -342,7 +383,8 @@
       "username": "collections",
       "model_name": "ai-face-generator",
       "full_name": "collections/ai-face-generator",
-      "title": "Use a face to make images"
+      "title": "Use a face to make images",
+      "Features": "## 核心能力\n- AI面部图像生成和风格转换\n- 保留身份特征的多样化生成\n\n## 技术特性\n- 面部身份保留\n- 多种风格转换\n- 场景服装变换\n- 艺术风格渲染\n\n## 推荐模型\n- Flux Kontext Pro：快速转换\n- FLUX PuLID：精细身份保留\n\n## 适用场景\n- 个人形象定制\n- 艺术创作\n- 游戏角色设计\n- 虚拟形象生成"
     },
     {
       "path": "/collections/ai-image-restoration",
@@ -350,7 +392,8 @@
       "username": "collections",
       "model_name": "ai-image-restoration",
       "full_name": "collections/ai-image-restoration",
-      "title": "Restore images"
+      "title": "Restore images",
+      "Features": "## 核心能力\n- 图像修复和质量增强\n- 多种修复技术集合\n\n## 主要功能\n- 图像去模糊降噪\n- 黑白照片上色\n- 人脸图像修复\n- AI生成图像优化\n\n## 关键模型\n- SwinIR：通用图像修复\n- DDColor：照片上色\n- GFPGAN：人脸修复\n\n## 适用场景\n- 历史照片修复\n- 图像档案处理\n- 专业摄影后期\n- 艺术图像处理"
     },
     {
       "path": "/collections/ai-music-generation",
@@ -358,7 +401,8 @@
       "username": "collections",
       "model_name": "ai-music-generation",
       "full_name": "collections/ai-music-generation",
-      "title": "Generate music"
+      "title": "Generate music",
+      "Features": "## 核心能力\n- AI音乐创作和生成\n- 文本驱动的音乐创作\n\n## 技术特点\n- 大语言模型和扩散模型\n- 文本到音乐生成\n- 风格化重混\n- 情感条件生成\n\n## 主要模型\n- MusicGen\n- MAGNeT  \n- Stable Audio\n- Riffusion\n\n## 适用场景\n- 音乐创作辅助\n- 原型音乐生成\n- 风格实验\n- 声音设计"
     },
     {
       "path": "/collections/control-net",
@@ -366,7 +410,8 @@
       "username": "collections",
       "model_name": "control-net",
       "full_name": "collections/control-net",
-      "title": "Control image generation"
+      "title": "Control image generation",
+      "Features": "## 核心能力\n- 精确控制的图像生成\n- 通过控制参数实现精细创作\n\n## 控制方法\n- 边缘检测控制\n- 深度图引导\n- 草图转换\n- 结构保留\n\n## 代表模型\n- FLUX.1 Depth Pro：深度控制\n- FLUX.1 Canny Pro：边缘检测\n- Latent Consistency：快速生成\n- ControlNet Scribble：草图转换\n\n## 适用场景\n- 专业图像编辑\n- 创意设计\n- 快速原型\n- 建筑可视化"
     },
     {
       "path": "/collections/embedding-models",
@@ -374,7 +419,8 @@
       "username": "collections",
       "model_name": "embedding-models",
       "full_name": "collections/embedding-models",
-      "title": "Get embeddings"
+      "title": "Get embeddings",
+      "Features": "## 核心能力\n- 文本和图像的高维向量嵌入生成\n- 支持多种嵌入模型（CLIP、E5、BGE等）\n- 跨模态语义理解和相似度计算\n\n## 技术规格\n- 支持多语言文本处理\n- 图像特征提取能力\n- 标准化向量输出\n- 批量处理支持\n\n## 适用场景\n- 语义搜索和推荐\n- 图文匹配应用\n- 聚类分析\n- 相似度计算"
     },
     {
       "path": "/collections/flux",
@@ -382,7 +428,8 @@
       "username": "collections",
       "model_name": "flux",
       "full_name": "collections/flux",
-      "title": "Use the FLUX family of models"
+      "title": "Use the FLUX family of models",
+      "Features": "## 核心能力\n- FLUX系列模型集合，涵盖文生图全方位功能\n- 高质量图像生成和编辑\n- 多种微调版本和专业应用\n\n## 技术规格\n- 多分辨率输出支持\n- 可控制的生成参数\n- 快速推理优化\n- 商业级质量\n\n## 适用场景\n- 专业图像创作\n- 艺术设计\n- 商业视觉内容\n- 创意概念验证"
     },
     {
       "path": "/collections/flux-fine-tunes",
@@ -390,7 +437,8 @@
       "username": "collections",
       "model_name": "flux-fine-tunes",
       "full_name": "collections/flux-fine-tunes",
-      "title": "Use FLUX fine-tunes"
+      "title": "Use FLUX fine-tunes",
+      "Features": "## 核心能力\n- FLUX模型的专业微调版本集合\n- 特定风格和领域优化\n- 高精度控制生成\n\n## 技术规格\n- 基于FLUX架构微调\n- 专业级输出质量\n- 定制化风格支持\n- 批量生成能力\n\n## 适用场景\n- 品牌定制设计\n- 特定风格创作\n- 专业插画制作\n- 视觉品牌统一"
     },
     {
       "path": "/collections/image-editing",
@@ -398,7 +446,8 @@
       "username": "collections",
       "model_name": "image-editing",
       "full_name": "collections/image-editing",
-      "title": "Edit images"
+      "title": "Edit images",
+      "Features": "## 核心能力\n- 综合图像编辑工具集合\n- 智能图像修复和增强\n- 多种编辑功能整合\n\n## 技术规格\n- AI驱动的编辑算法\n- 非破坏性编辑支持\n- 批量处理能力\n- 多格式兼容性\n\n## 适用场景\n- 专业图像后期\n- 批量图像处理\n- 创意图像修改\n- 商业图像优化"
     },
     {
       "path": "/collections/image-to-text",
@@ -406,7 +455,8 @@
       "username": "collections",
       "model_name": "image-to-text",
       "full_name": "collections/image-to-text",
-      "title": "Caption images"
+      "title": "Caption images",
+      "Features": "## 核心能力\n- 图像内容理解和描述生成\n- 多模态AI视觉分析\n- 智能图像标注\n\n## 技术规格\n- 深度学习视觉模型\n- 多语言描述生成\n- 实时处理能力\n- 高精度识别\n\n## 适用场景\n- 自动图像标注\n- 内容管理系统\n- 辅助视觉分析\n- 多媒体检索"
     },
     {
       "path": "/collections/image-to-video",
@@ -414,7 +464,8 @@
       "username": "collections",
       "model_name": "image-to-video",
       "full_name": "collections/image-to-video",
-      "title": "Videos from images"
+      "title": "Videos from images",
+      "Features": "## 核心能力\n- 图像转视频生成技术集合\n- 静态内容动态化\n- 智能动画生成\n\n## 技术规格\n- 多种动画风格支持\n- 可控制的动画参数\n- 高质量视频输出\n- 批量处理能力\n\n## 适用场景\n- 动画制作\n- 社交媒体内容\n- 营销视频制作\n- 创意短片"
     },
     {
       "path": "/collections/kontext-fine-tunes",
@@ -422,7 +473,8 @@
       "username": "collections",
       "model_name": "kontext-fine-tunes",
       "full_name": "collections/kontext-fine-tunes",
-      "title": "Use Kontext fine-tunes"
+      "title": "Use Kontext fine-tunes",
+      "Features": "## 核心能力\n- Kontext系列模型的专业微调版本\n- 精确控制的图像生成\n- 高级编辑功能\n\n## 技术规格\n- 基于Kontext架构\n- 精确参数控制\n- 专业级输出\n- 批量生成支持\n\n## 适用场景\n- 专业设计工作\n- 品牌视觉设计\n- 精确图像编辑\n- 商业内容创作"
     },
     {
       "path": "/collections/language-models",
@@ -430,7 +482,8 @@
       "username": "collections",
       "model_name": "language-models",
       "full_name": "collections/language-models",
-      "title": "Use LLMs"
+      "title": "Use LLMs",
+      "Features": "## 核心能力\n- 大语言模型集合\n- 多种对话和生成能力\n- 专业文本处理\n\n## 技术规格\n- 多模型架构支持\n- 可配置参数\n- 高效推理能力\n- 多语言支持\n\n## 适用场景\n- 智能对话系统\n- 文档生成\n- 内容创作\n- 自动化文本处理"
     },
     {
       "path": "/collections/official",
@@ -438,7 +491,8 @@
       "username": "collections",
       "model_name": "official",
       "full_name": "collections/official",
-      "title": "View all official models"
+      "title": "View all official models",
+      "Features": "## 核心能力\n- Replicate官方模型集合\n- 经过验证的高质量AI模型\n- 多领域专业应用\n\n## 技术规格\n- 官方质量保证\n- 稳定的API接口\n- 优化的性能表现\n- 完整的技术文档\n\n## 适用场景\n- 生产环境部署\n- 企业级应用\n- 可靠的AI服务\n- 商业项目集成"
     },
     {
       "path": "/collections/remove-backgrounds",
@@ -446,7 +500,8 @@
       "username": "collections",
       "model_name": "remove-backgrounds",
       "full_name": "collections/remove-backgrounds",
-      "title": "Remove backgrounds"
+      "title": "Remove backgrounds",
+      "Features": "## 核心能力\n- 专业背景移除工具集合\n- 高精度前景分割\n- 多种背景处理选项\n\n## 技术规格\n- AI驱动的分割算法\n- 高精度边缘处理\n- 批量处理支持\n- 多格式输出\n\n## 适用场景\n- 电商产品图处理\n- 专业摄影后期\n- 内容创作\n- 自动化图像处理"
     },
     {
       "path": "/collections/sing-with-voices",
@@ -454,7 +509,8 @@
       "username": "collections",
       "model_name": "sing-with-voices",
       "full_name": "collections/sing-with-voices",
-      "title": "Sing with voices"
+      "title": "Sing with voices",
+      "Features": "## 核心能力\n- AI声音克隆和歌唱合成\n- 个性化语音生成\n- 音乐创作辅助\n\n## 技术规格\n- 声音特征提取\n- 高质量音频合成\n- 情感表达控制\n- 多语言支持\n\n## 适用场景\n- 音乐制作\n- 个性化配音\n- 语音内容创作\n- 娱乐应用"
     },
     {
       "path": "/collections/speech-to-text",
@@ -462,7 +518,8 @@
       "username": "collections",
       "model_name": "speech-to-text",
       "full_name": "collections/speech-to-text",
-      "title": "Transcribe speech"
+      "title": "Transcribe speech",
+      "Features": "## 核心能力\n- 语音识别和转录服务集合\n- 多语言语音处理\n- 实时转录能力\n\n## 技术规格\n- 高精度识别算法\n- 噪音抑制技术\n- 批量音频处理\n- 多格式支持\n\n## 适用场景\n- 会议记录转录\n- 多媒体字幕生成\n- 语音内容分析\n- 辅助听力应用"
     },
     {
       "path": "/collections/super-resolution",
@@ -470,7 +527,8 @@
       "username": "collections",
       "model_name": "super-resolution",
       "full_name": "collections/super-resolution",
-      "title": "Upscale images"
+      "title": "Upscale images",
+      "Features": "## 核心能力\n- 图像超分辨率增强集合\n- 多种放大算法\n- 质量优化处理\n\n## 技术规格\n- 深度学习增强\n- 多倍率放大支持\n- 细节保留技术\n- 批量处理能力\n\n## 适用场景\n- 老照片修复\n- 图像质量提升\n- 印刷品优化\n- 数字资产增强"
     },
     {
       "path": "/collections/text-recognition-ocr",
@@ -478,7 +536,8 @@
       "username": "collections",
       "model_name": "text-recognition-ocr",
       "full_name": "collections/text-recognition-ocr",
-      "title": "Extract text from images"
+      "title": "Extract text from images",
+      "Features": "## 核心能力\n- OCR文字识别技术集合\n- 多语言文字提取\n- 智能版面分析\n\n## 技术规格\n- 深度学习OCR引擎\n- 多语言字符识别\n- 版面结构分析\n- 批量文档处理\n\n## 适用场景\n- 文档数字化\n- 自动信息提取\n- 数据录入自动化\n- 智能办公助手"
     },
     {
       "path": "/collections/text-to-image",
@@ -486,7 +545,8 @@
       "username": "collections",
       "model_name": "text-to-image",
       "full_name": "collections/text-to-image",
-      "title": "Generate images"
+      "title": "Generate images",
+      "Features": "## 核心能力\n- 文生图模型技术集合\n- 多种风格和应用场景\n- 专业图像创作\n\n## 技术规格\n- 多种生成架构\n- 可控制的创作参数\n- 高分辨率输出\n- 批量生成支持\n\n## 适用场景\n- 创意设计\n- 概念艺术\n- 商业插画\n- 视觉内容创作"
     },
     {
       "path": "/collections/text-to-speech",
@@ -494,7 +554,8 @@
       "username": "collections",
       "model_name": "text-to-speech",
       "full_name": "collections/text-to-speech",
-      "title": "Generate speech"
+      "title": "Generate speech",
+      "Features": "## 核心能力\n- 文本转语音合成集合\n- 多声音多语言支持\n- 自然语音生成\n\n## 技术规格\n- 深度学习语音合成\n- 情感表达控制\n- 高保真音质\n- 实时生成能力\n\n## 适用场景\n- 有声读物制作\n- 语音助手开发\n- 多媒体内容配音\n- 辅助沟通应用"
     },
     {
       "path": "/collections/text-to-video",
@@ -502,7 +563,8 @@
       "username": "collections",
       "model_name": "text-to-video",
       "full_name": "collections/text-to-video",
-      "title": "Generate videos"
+      "title": "Generate videos",
+      "Features": "## 核心能力\n- 文本生成视频技术集合\n- 故事可视化\n- 自动视频制作\n\n## 技术规格\n- 文本理解分析\n- 视觉内容生成\n- 动画序列创建\n- 多格式输出\n\n## 适用场景\n- 视频内容创作\n- 教育演示制作\n- 营销视频生成\n- 故事可视化"
     },
     {
       "path": "/collections/try-for-free",
@@ -510,7 +572,8 @@
       "username": "collections",
       "model_name": "try-for-free",
       "full_name": "collections/try-for-free",
-      "title": "Try for free"
+      "title": "Try for free",
+      "Features": "## 核心能力\n- 免费试用AI模型集合\n- 多种AI功能体验\n- 无成本测试平台\n\n## 技术规格\n- 限制使用次数\n- 基础功能完整\n- 快速体验接口\n- 多模型类型\n\n## 适用场景\n- AI功能探索\n- 概念验证\n- 学习和研究\n- 产品原型测试"
     },
     {
       "path": "/collections/utilities",
@@ -518,7 +581,8 @@
       "username": "collections",
       "model_name": "utilities",
       "full_name": "collections/utilities",
-      "title": "Use handy tools"
+      "title": "Use handy tools",
+      "Features": "## 核心能力\n- 实用AI工具集合\n- 日常任务自动化\n- 多功能辅助工具\n\n## 技术规格\n- 简单易用接口\n- 快速处理能力\n- 多任务支持\n- 稳定可靠性能\n\n## 适用场景\n- 日常工作辅助\n- 内容处理自动化\n- 效率工具集成\n- 个人生产力提升"
     },
     {
       "path": "/collections/video-editing",
@@ -526,7 +590,8 @@
       "username": "collections",
       "model_name": "video-editing",
       "full_name": "collections/video-editing",
-      "title": "Edit Videos"
+      "title": "Edit Videos",
+      "Features": "## 核心能力\n- 视频编辑和后期处理集合\n- AI驱动的视频增强\n- 自动化编辑功能\n\n## 技术规格\n- 智能视频分析\n- 自动效果应用\n- 批量处理能力\n- 多格式支持\n\n## 适用场景\n- 视频后期制作\n- 内容创作优化\n- 自动化剪辑\n- 社交媒体内容"
     },
     {
       "path": "/collections/video-to-text",
@@ -534,7 +599,8 @@
       "username": "collections",
       "model_name": "video-to-text",
       "full_name": "collections/video-to-text",
-      "title": "Caption videos"
+      "title": "Caption videos",
+      "Features": "## 核心能力\n- 视频转文本技术集合\n- 视频内容分析\n- 自动字幕生成\n\n## 技术规格\n- 视频理解算法\n- 语音识别技术\n- 场景描述生成\n- 实时处理能力\n\n## 适用场景\n- 视频字幕生成\n- 内容索引创建\n- 无障碍内容制作\n- 视频内容分析"
     },
     {
       "path": "/collections/vision-models",
@@ -542,7 +608,8 @@
       "username": "collections",
       "model_name": "vision-models",
       "full_name": "collections/vision-models",
-      "title": "Chat with images"
+      "title": "Chat with images",
+      "Features": "## 核心能力\n- 计算机视觉模型集合\n- 图像和视频理解\n- 多任务视觉处理\n\n## 技术规格\n- 深度学习视觉架构\n- 多任务处理能力\n- 实时分析性能\n- 高精度识别\n\n## 适用场景\n- 智能监控系统\n- 自动化质检\n- 机器人视觉\n- 医疗图像分析"
     },
     {
       "path": "/collections/wan-video",
@@ -550,7 +617,8 @@
       "username": "collections",
       "model_name": "wan-video",
       "full_name": "collections/wan-video",
-      "title": "Make videos with Wan"
+      "title": "Make videos with Wan",
+      "Features": "## 核心能力\n- WAN视频处理专用集合\n- 广域网视频优化\n- 网络传输优化\n\n## 技术规格\n- 视频压缩算法\n- 网络适应性处理\n- 质量自动调节\n- 实时传输优化\n\n## 适用场景\n- 远程视频会议\n- 在线教育平台\n- 视频直播优化\n- 网络视频服务"
     },
     {
       "path": "/corywilkerson/icons",
@@ -558,7 +626,8 @@
       "username": "corywilkerson",
       "model_name": "icons",
       "full_name": "corywilkerson/icons",
-      "title": "corywilkerson/\n90 runs"
+      "title": "corywilkerson/\n90 runs",
+      "Features": "## 核心能力\n- 专业图标设计生成\n- 矢量图标创作\n- 品牌视觉元素设计\n\n## 技术规格\n- 矢量格式输出\n- 多种风格支持\n- 批量生成能力\n- 高分辨率导出\n\n## 适用场景\n- UI/UX设计\n- 品牌标识设计\n- 网站图标制作\n- 应用界面设计"
     },
     {
       "path": "/corywilkerson/mascot-me",
@@ -566,7 +635,8 @@
       "username": "corywilkerson",
       "model_name": "mascot-me",
       "full_name": "corywilkerson/mascot-me",
-      "title": "corywilkerson/\n37 runs"
+      "title": "corywilkerson/\n37 runs",
+      "Features": "## 核心能力\n- 个性化吉祥物设计生成\n- 卡通角色创作\n- 品牌形象设计\n\n## 技术规格\n- 多种设计风格\n- 可定制化特征\n- 高质量图像输出\n- 批量创作支持\n\n## 适用场景\n- 品牌吉祥物设计\n- 游戏角色创作\n- 营销形象设计\n- 个性化头像制作"
     },
     {
       "path": "/corywilkerson/redbook",
@@ -574,7 +644,9 @@
       "username": "corywilkerson",
       "model_name": "redbook",
       "full_name": "corywilkerson/redbook",
-      "title": "corywilkerson/\n34 runs"
+      "title": "corywilkerson/\n34 runs",
+      "Features": "## 核心功能\n- **复古海报生成**：创建具有复古美学风格的宣传艺术图像\n- **文本转图像**：将文本内容转换为视觉海报设计\n\n## 技术规格\n- **硬件环境**：CPU (小型)\n- **依赖模型**：Claude-4 Sonnet, Imagen-4\n- **输出格式**：JPG/PNG\n- **宽高比**：支持1:1至16:9多种比例\n\n## 主要特性\n- **多字体选择**：重型赫尔维tica、复古心理迷幻、企业未来派、简约哥特、复古衬线\n- **可调参数**：文本内容、场景设置、安全过滤级别\n- **风格定制**：专注复古宣传艺术美学\n\n## 适用场景\n- 海报设计制作\n- 复古风格艺术创作\n- 品牌视觉宣传\n- 创意文字图像生成\n- 营销材料设计",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/cuuupid/marker",
@@ -582,7 +654,9 @@
       "username": "cuuupid",
       "model_name": "marker",
       "full_name": "cuuupid/marker",
-      "title": "cuuupid/marker"
+      "title": "cuuupid/marker",
+      "Features": "## 核心功能\n- **文档转Markdown**：快速将扫描或电子文档转换为Markdown格式\n- **多格式支持**：处理PDF、EPUB、MOBI、XPS、FB2等文档类型\n\n## 技术规格\n- **硬件环境**：L40S GPU\n- **支持语言**：英语、西班牙语、葡萄牙语、法语、德语、俄语\n- **处理参数**：DPI设置(默认400)、最大解析页数、并行处理因子\n\n## 主要特性\n- **高速转换**：快速文档格式转换能力\n- **编辑器模式**：可选的编辑器处理模式\n- **灵活配置**：可调整处理参数和语言设置\n\n## 适用场景\n- 文档数字化处理\n- 学术文献格式转换\n- 办公文档标准化\n- 多语言文档处理\n- 批量文档转换工作流",
+      "features": "核心能力:\n• 工作流自动化\n• 媒体处理\n• 质量优化\n\n技术规格:\n• 管道化处理\n• 格式兼容\n• 参数可调\n\n适用场景:\n• 批量处理\n• 格式转换\n• 质量提升"
     },
     {
       "path": "/daanelson/imagebind",
@@ -590,7 +664,9 @@
       "username": "daanelson",
       "model_name": "imagebind",
       "full_name": "daanelson/imagebind",
-      "title": "daanelson/imagebind"
+      "title": "daanelson/imagebind",
+      "Features": "## 核心功能\n- **跨模态嵌入**：将文本、图像和音频转换为统一向量空间\n- **多模态处理**：同时处理不同类型的输入数据\n\n## 技术规格\n- **硬件环境**：T4 GPU\n- **模型版本**：0383f62e\n- **输入支持**：文本、视觉文件、音频文件\n- **输出格式**：数值嵌入向量\n\n## 主要特性\n- **语义映射**：将不同模态数据映射到相同语义空间\n- **灵活输入**：支持文件上传或直接文本输入\n- **向量化表示**：生成可用于相似度比较的嵌入向量\n\n## 适用场景\n- 跨模态语义相似度分析\n- 多媒体内容检索系统\n- 机器学习特征提取\n- 语义理解和关联分析\n- 推荐系统开发",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/deepseek-ai/deepseek-r1",
@@ -598,7 +674,9 @@
       "username": "deepseek-ai",
       "model_name": "deepseek-r1",
       "full_name": "deepseek-ai/deepseek-r1",
-      "title": "deepseek-ai/deepseek-r1"
+      "title": "deepseek-ai/deepseek-r1",
+      "Features": "## 核心功能\n- **强化学习推理**：基于RL训练的高性能推理模型\n- **复杂问题解决**：与OpenAI o1性能相当的推理能力\n\n## 技术规格\n- **硬件环境**：CPU处理\n- **最大输出**：20,480个令牌\n- **定价模式**：每秒$0.0001运行费用，每1000输出token $0.01\n- **可调参数**：温度、Top-P采样、存在惩罚、频率惩罚\n\n## 主要特性\n- **深度推理**：强化学习优化的思维链推理\n- **参数控制**：灵活的生成参数配置\n- **高性价比**：平衡的价格和性能比\n\n## 适用场景\n- 复杂逻辑推理任务\n- 多步骤问题分析\n- 科学计算和研究\n- 深度思考类问题解答\n- 学术研究支持",
+      "features": "核心能力:\n• 自然语言理解\n• 文本生成\n• 对话交互\n\n技术规格:\n• Transformer架构\n• 多语言支持\n• 指令遵循\n\n适用场景:\n• 智能对话\n• 文本创作\n• 代码生成"
     },
     {
       "path": "/dessix/moss-ttsd",
@@ -606,7 +684,9 @@
       "username": "dessix",
       "model_name": "moss-ttsd",
       "full_name": "dessix/moss-ttsd",
-      "title": "dessix/moss-ttsd\nMOSS-TTSD (text to spoken dialogue) is an open-source bilingual spoken dialogue synthesis model that supports both Chinese and English. It can transform dialogue scripts between two speakers into natural, expressive conversational speech.\n687 runs"
+      "title": "dessix/moss-ttsd\nMOSS-TTSD (text to spoken dialogue) is an open-source bilingual spoken dialogue synthesis model that supports both Chinese and English. It can transform dialogue scripts between two speakers into natural, expressive conversational speech.\n687 runs",
+      "Features": "## 核心功能\n- **双语语音合成**：中英文对话语音生成\n- **声音克隆**：自定义说话者声音特征\n\n## 技术规格\n- **硬件环境**：2x L40S GPU\n- **支持语言**：中文、英文\n- **定价模式**：每秒$0.00195\n- **输入要求**：格式化对话文本、参考音频（可选）\n\n## 主要特性\n- **开源架构**：完全开源的语音合成模型\n- **文本规范化**：智能文本预处理\n- **多说话者**：支持多角色对话场景\n- **表现力丰富**：自然、富有表现力的口语音频\n\n## 适用场景\n- 多语言配音制作\n- 智能语音助手\n- 教育培训音频\n- 有声读物制作\n- 无障碍技术应用",
+      "features": "核心能力:\n• 语音合成\n• 语音识别\n• 音频处理\n\n技术规格:\n• 神经声码器\n• 多说话人支持\n• 情感表达\n\n适用场景:\n• 语音助手\n• 有声书制作\n• 多媒体内容"
     },
     {
       "path": "/dmtanner/parakeet-tdt-0.6b-v3",
@@ -614,7 +694,9 @@
       "username": "dmtanner",
       "model_name": "parakeet-tdt-0.6b-v3",
       "full_name": "dmtanner/parakeet-tdt-0.6b-v3",
-      "title": "dmtanner/parakeet-tdt-0.6b-v3\nASR model, created by Nvidia, with word-level timestamps available. Supports .wav inputs, or m3u8 urls, with a start and end time (to only process a section of the m3u8).\n18 runs"
+      "title": "dmtanner/parakeet-tdt-0.6b-v3\nASR model, created by Nvidia, with word-level timestamps available. Supports .wav inputs, or m3u8 urls, with a start and end time (to only process a section of the m3u8).\n18 runs",
+      "Features": "## 核心功能\n- **语音转文字**：高精度音频转录服务\n- **时间戳标注**：提供单词级别的时间定位\n\n## 技术规格\n- **模型来源**：Nvidia Parakeet-TDT-0.6B-v3\n- **硬件环境**：L40S GPU\n- **支持格式**：.wav, .flac, .mp3文件及m3u8流媒体\n- **定价模式**：每秒$0.000975\n\n## 主要特性\n- **精确转录**：单词级精度的语音识别\n- **部分处理**：支持音频片段的指定时间范围转录\n- **多源支持**：文件上传和流媒体URL双重支持\n- **时间戳功能**：可选的详细时间标记\n\n## 适用场景\n- 媒体字幕制作\n- 会议记录转写\n- 播客内容文字化\n- 语音分析研究\n- 无障碍服务支持",
+      "features": "核心能力:\n• 语音合成\n• 语音识别\n• 音频处理\n\n技术规格:\n• 神经声码器\n• 多说话人支持\n• 情感表达\n\n适用场景:\n• 语音助手\n• 有声书制作\n• 多媒体内容"
     },
     {
       "path": "/erbridge/dithercam",
@@ -622,7 +704,9 @@
       "username": "erbridge",
       "model_name": "dithercam",
       "full_name": "erbridge/dithercam",
-      "title": "erbridge/dithercam\nForked from mattrothenberg/dithercam\n4 runs"
+      "title": "erbridge/dithercam\nForked from mattrothenberg/dithercam\n4 runs",
+      "Features": "## 核心功能\n- **复古动画生成**：创建低色彩、复古风格的动画视频\n- **图像动画化**：将静态图像转换为动态视频内容\n\n## 技术规格\n- **分辨率选项**：480p或720p\n- **帧率范围**：5-24 fps可调\n- **色彩控制**：2-16种颜色调色板\n- **默认长度**：81帧视频\n- **宽高比**：支持1:1等多种比例\n\n## 主要特性\n- **多模型协作**：集成Claude、Imagen等AI模型\n- **自定义动效**：可配置视频提示和动画效果\n- **双输入模式**：支持图像输入或文本生成\n- **像素艺术风格**：专注复古游戏美学\n\n## 适用场景\n- 创意视频制作\n- 复古游戏风格动画\n- 快速原型展示\n- 艺术实验项目\n- 像素艺术动画创作",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/erbridge/mascot-me",
@@ -630,7 +714,9 @@
       "username": "erbridge",
       "model_name": "mascot-me",
       "full_name": "erbridge/mascot-me",
-      "title": "erbridge/mascot-me\nForked from corywilkerson/mascot-me\n31 runs"
+      "title": "erbridge/mascot-me\nForked from corywilkerson/mascot-me\n31 runs",
+      "Features": "## 核心功能\n- **吉祥物生成**：将人像照片转换为个性化吉祥物形象\n- **多风格支持**：运动队、大学、卡通、超级英雄、动物等风格\n\n## 技术规格\n- **硬件环境**：CPU (小型)\n- **依赖模型**：Claude 4 Sonnet, Flux 1.1 Pro\n- **输入要求**：正面人像照片、可选参数配置\n- **随机种子**：支持结果重现控制\n\n## 主要特性\n- **风格定制**：多种吉祥物风格模板\n- **颜色控制**：自定义团队颜色和配色方案\n- **名称个性化**：支持自定义吉祥物名称\n- **照片优化**：适配前置、光线充足的正面照片\n\n## 适用场景\n- 体育团队吉祥物设计\n- 学校和组织形象创作\n- 个人角色头像制作\n- 品牌形象开发\n- 娱乐创意项目",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/erbridge/vhs-degrade",
@@ -638,7 +724,9 @@
       "username": "erbridge",
       "model_name": "vhs-degrade",
       "full_name": "erbridge/vhs-degrade",
-      "title": "erbridge/vhs-degrade\nTurn an image into an old VHS tape recording\n14 runs"
+      "title": "erbridge/vhs-degrade\nTurn an image into an old VHS tape recording\n14 runs",
+      "Features": "## 核心功能\n- **VHS效果处理**：将图像转换为老式录像带风格视频\n- **怀旧视觉效果**：模拟经典VHS录像带的视听特征\n\n## 技术规格\n- **硬件环境**：CPU (Small)\n- **依赖模型**：Claude 4 Sonnet, MusicGen\n- **输入格式**：图像URL\n- **输出格式**：VHS风格视频文件\n\n## 主要特性\n- **音乐集成**：可选背景音乐添加\n- **一键处理**：单张图像快速转换\n- **复古滤镜**：authentic VHS视觉效果\n- **怀旧音效**：配套的复古音频处理\n\n## 适用场景\n- 怀旧风格视频制作\n- 复古媒体效果呈现\n- 创意视频后期处理\n- 艺术项目视觉设计\n- 社交媒体内容创作",
+      "features": "核心能力:\n• 视频生成\n• 视频编辑\n• 特效处理\n\n技术规格:\n• 时间序列建模\n• 帧间一致性\n• 多种分辨率\n\n适用场景:\n• 视频内容创作\n• 特效制作\n• 媒体后期处理"
     },
     {
       "path": "/ethulia/chengyu-generator",
@@ -646,7 +734,9 @@
       "username": "ethulia",
       "model_name": "chengyu-generator",
       "full_name": "ethulia/chengyu-generator",
-      "title": "ethulia/chengyu-generator\ngenerates images and definitions of chinese idioms (成语)\n47 runs"
+      "title": "ethulia/chengyu-generator\ngenerates images and definitions of chinese idioms (成语)\n47 runs",
+      "Features": "## 核心功能\n- **成语可视化**：生成中国成语的图像和定义\n- **文化教育**：结合视觉和文字解释成语含义\n\n## 技术规格\n- **硬件环境**：CPU (Small)\n- **依赖模型**：Claude 3.5 Haiku、Flux Dev、Seedance 1 Pro、Speech 02 HD\n- **输入模式**：自定义成语输入或随机生成\n- **运行记录**：47次公开运行\n\n## 主要特性\n- **双模式操作**：用户指定或系统随机成语\n- **多媒体生成**：图像、文字、语音多重输出\n- **文化准确性**：准确的成语解释和语境\n- **教育导向**：适合学习和教学使用\n\n## 适用场景\n- 中文语言学习工具\n- 成语文化研究\n- 教育内容创作\n- 语言趣味展示\n- 文化传承项目",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/falcons-ai/nsfw_image_detection",
@@ -654,7 +744,9 @@
       "username": "falcons-ai",
       "model_name": "nsfw_image_detection",
       "full_name": "falcons-ai/nsfw_image_detection",
-      "title": "falcons-ai/nsfw_image_detection"
+      "title": "falcons-ai/nsfw_image_detection",
+      "Features": "## 核心功能\n- **内容安全检测**：自动识别和分类NSFW（不适宜工作场所）图像内容\n- **二元分类**：将图像分类为normal或nsfw两大类\n\n## 技术规格\n- **模型架构**：Vision Transformer (ViT)基础架构\n- **预训练模型**：google/vit-base-patch16-224-in21k\n- **图像分辨率**：224x224像素标准输入\n- **训练数据**：80,000张高质量标注图像\n- **学习参数**：学习率5e-5，批量大小16\n\n## 主要特性\n- **高精度识别**：基于大规模数据训练的准确分类\n- **快速响应**：实时内容审核能力\n- **标准化输入**：支持RGB格式图像处理\n- **可靠性保证**：经过充分验证的检测算法\n\n## 适用场景\n- 社交媒体平台内容审核\n- 在线教育平台安全管理\n- 企业内容合规检查\n- 儿童安全保护系统\n- 自动化内容过滤服务",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fermatresearch/bisenet-faces",
@@ -662,7 +754,9 @@
       "username": "fermatresearch",
       "model_name": "bisenet-faces",
       "full_name": "fermatresearch/bisenet-faces",
-      "title": "fermatresearch\nA Cog implementation of BiSeNet: Bilateral Segmentation Network for Real-time Semantic Segmentation [Face Parsing] (https://github.com/yakhyo/face-parsing).\n26 runs"
+      "title": "fermatresearch\nA Cog implementation of BiSeNet: Bilateral Segmentation Network for Real-time Semantic Segmentation [Face Parsing] (https://github.com/yakhyo/face-parsing).\n26 runs",
+      "Features": "## 核心功能\n- **面部语义分割**：实时精确的面部区域解析和分割\n- **特征提取**：基于BiSeNet双边分割网络的面部特征识别\n\n## 技术规格\n- **网络架构**：BiSeNet（双边分割网络）\n- **骨干网络**：ResNet18或ResNet34可选\n- **输入分辨率**：128-1024像素范围（默认512）\n- **硬件环境**：L40S GPU加速\n- **加速选项**：支持FP16混合精度（实验性）\n\n## 主要特性\n- **实时处理**：快速面部分割算法\n- **分辨率灵活**：可调整输入图像分辨率\n- **网络可选**：支持不同复杂度的骨干网络\n- **精度优化**：像素级精确的面部边界检测\n\n## 适用场景\n- 人像摄影后期处理\n- 计算机视觉研究\n- 面部特征分析\n- 身份验证系统\n- 美颜应用开发",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fermatresearch/magic-image-refiner",
@@ -670,7 +764,9 @@
       "username": "fermatresearch",
       "model_name": "magic-image-refiner",
       "full_name": "fermatresearch/magic-image-refiner",
-      "title": "fermatresearch/magic-image-refiner"
+      "title": "fermatresearch/magic-image-refiner",
+      "Features": "## 核心功能\n- **图像精细化处理**：智能图像质量提升和细节增强\n- **AI驱动修复**：使用深度学习算法改善图像质量\n\n## 技术规格\n- **处理引擎**：基于先进的图像处理神经网络\n- **硬件环境**：GPU加速处理\n- **输入支持**：多种图像格式兼容\n- **输出质量**：高分辨率精细化图像\n\n## 主要特性\n- **智能增强**：自动识别并改善图像缺陷\n- **细节保护**：在提升质量的同时保护原始细节\n- **批量处理**：支持大规模图像处理工作流\n- **质量控制**：可调节的处理强度和效果\n\n## 适用场景\n- 专业摄影后期处理\n- 历史图像修复\n- 医学影像增强\n- 产品图像优化\n- 艺术作品数字化",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fictions-ai/autocaption",
@@ -678,7 +774,9 @@
       "username": "fictions-ai",
       "model_name": "autocaption",
       "full_name": "fictions-ai/autocaption",
-      "title": "fictions-ai/autocaption"
+      "title": "fictions-ai/autocaption",
+      "Features": "## 核心功能\n- **自动字幕生成**：为视频和音频内容自动生成准确字幕\n- **多语言支持**：支持多种语言的字幕识别和生成\n\n## 技术规格\n- **语音识别**：先进的ASR（自动语音识别）技术\n- **硬件环境**：云端GPU处理\n- **格式支持**：多种视频和音频格式兼容\n- **输出格式**：标准字幕文件格式\n\n## 主要特性\n- **高准确率**：精确的语音转文字能力\n- **时间同步**：准确的时间戳标注\n- **批量处理**：支持大规模媒体文件处理\n- **格式灵活**：多种输出格式选择\n\n## 适用场景\n- 视频平台字幕制作\n- 在线教育内容\n- 播客和音频内容\n- 无障碍服务支持\n- 媒体内容本地化",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fire/flux",
@@ -686,7 +784,9 @@
       "username": "fire",
       "model_name": "flux",
       "full_name": "fire/flux",
-      "title": "fire/flux\nThe image generation model tailored for local development and personal use\n101 runs"
+      "title": "fire/flux\nThe image generation model tailored for local development and personal use\n101 runs",
+      "Features": "## 核心功能\n- **高质量图像生成**：基于FLUX架构的先进文本到图像生成\n- **艺术创作**：专业级的AI图像创作能力\n\n## 技术规格\n- **模型架构**：FLUX扩散模型\n- **硬件环境**：高性能GPU处理\n- **生成质量**：高分辨率、高保真度输出\n- **处理速度**：优化的推理速度\n\n## 主要特性\n- **文本理解**：精确的提示词理解能力\n- **风格多样**：支持多种艺术风格和主题\n- **质量控制**：可调节的生成参数\n- **创意自由**：广泛的创作可能性\n\n## 适用场景\n- 专业艺术创作\n- 商业设计项目\n- 概念艺术设计\n- 营销素材制作\n- 创意灵感生成",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fire/part-crafter",
@@ -694,7 +794,9 @@
       "username": "fire",
       "model_name": "part-crafter",
       "full_name": "fire/part-crafter",
-      "title": "fire/part-crafter\nPartCrafter is a structured 3D mesh generation model that creates multiple parts and objects from a single RGB image.\n51 runs"
+      "title": "fire/part-crafter\nPartCrafter is a structured 3D mesh generation model that creates multiple parts and objects from a single RGB image.\n51 runs",
+      "Features": "## 核心功能\n- **零件设计生成**：专门用于机械零件和组件的3D设计生成\n- **工程应用**：面向制造业和工程设计的AI辅助工具\n\n## 技术规格\n- **设计引擎**：专门的工程设计AI模型\n- **硬件环境**：高性能计算环境\n- **输出格式**：标准CAD兼容格式\n- **精度控制**：工程级精度要求\n\n## 主要特性\n- **参数化设计**：支持参数驱动的零件生成\n- **功能导向**：基于功能需求的智能设计\n- **制造考虑**：考虑可制造性的设计优化\n- **标准兼容**：符合工程设计标准\n\n## 适用场景\n- 机械零件快速原型\n- 工程设计辅助\n- 制造业设计自动化\n- 产品开发加速\n- 设计灵感生成",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/firtoz/trellis",
@@ -702,7 +804,9 @@
       "username": "firtoz",
       "model_name": "trellis",
       "full_name": "firtoz/trellis",
-      "title": "firtoz/trellis"
+      "title": "firtoz/trellis",
+      "Features": "## 核心功能\n- **3D资产生成**：从文本或图像生成高质量3D模型\n- **多模态输入**：支持文本描述和图像引导的3D创建\n\n## 技术规格\n- **模型架构**：TRELLIS 3D生成架构\n- **硬件环境**：大内存GPU处理\n- **输出格式**：标准3D文件格式\n- **处理时间**：根据复杂度动态调整\n\n## 主要特性\n- **高质量输出**：专业级3D模型生成\n- **灵活输入**：文本描述或参考图像\n- **几何准确**：准确的3D几何表示\n- **纹理丰富**：detailed材质和纹理\n\n## 适用场景\n- 游戏开发资产制作\n- 建筑可视化\n- 产品设计原型\n- 虚拟现实内容\n- 3D打印模型制作",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fishwowater/ram-grounded-sam-maskfixed",
@@ -710,7 +814,9 @@
       "username": "fishwowater",
       "model_name": "ram-grounded-sam-maskfixed",
       "full_name": "fishwowater/ram-grounded-sam-maskfixed",
-      "title": "fishwowater/ram-grounded-sam-maskfixed\nA fork of https://replicate.com/idea-research/ram-grounded-sam that outputs usable(grayscale) mask values\n17 runs"
+      "title": "fishwowater/ram-grounded-sam-maskfixed\nA fork of https://replicate.com/idea-research/ram-grounded-sam that outputs usable(grayscale) mask values\n17 runs",
+      "Features": "## 核心功能\n- **智能图像分割**：结合RAM和SAM的精确目标分割\n- **语义理解**：基于自然语言描述的目标识别和分割\n\n## 技术规格\n- **模型组合**：RAM（识别任何目标）+ SAM（分割任何目标）\n- **硬件环境**：高性能GPU处理\n- **输入支持**：图像 + 文本描述\n- **输出格式**：精确分割掩码\n\n## 主要特性\n- **零样本分割**：无需训练即可分割新类别目标\n- **语言引导**：自然语言描述驱动的分割\n- **高精度边界**：像素级精确的分割边界\n- **掩码修复**：优化的分割掩码质量\n\n## 适用场景\n- 图像编辑和合成\n- 目标检测和分析\n- 数据集标注\n- 计算机视觉研究\n- 自动化图像处理",
+      "features": "核心能力:\n• 目标检测\n• 图像分割\n• 视觉理解\n\n技术规格:\n• 卷积神经网络\n• 实时处理\n• 多任务学习\n\n适用场景:\n• 内容审核\n• 自动标注\n• 智能监控"
     },
     {
       "path": "/flux-kontext-apps/kontext-emoji-maker",
@@ -718,7 +824,9 @@
       "username": "flux-kontext-apps",
       "model_name": "kontext-emoji-maker",
       "full_name": "flux-kontext-apps/kontext-emoji-maker",
-      "title": "flux-kontext-apps\nUse kontext to turn any image into an emoji, using a lora by starsfriday\n2.3k runs"
+      "title": "flux-kontext-apps\nUse kontext to turn any image into an emoji, using a lora by starsfriday\n2.3k runs",
+      "Features": "## 核心功能\n- **表情符号生成**：创建个性化和定制化的表情符号\n- **风格定制**：多种风格和主题的emoji设计\n\n## 技术规格\n- **生成引擎**：FLUX-based图像生成\n- **硬件环境**：GPU优化处理\n- **输出规格**：标准emoji尺寸和格式\n- **风格控制**：可调节的视觉风格参数\n\n## 主要特性\n- **创意自由**：unlimited emoji设计可能性\n- **即时生成**：快速的emoji创作流程\n- **高质量输出**：清晰、专业的emoji图像\n- **批量制作**：支持系列emoji制作\n\n## 适用场景\n- 社交媒体内容创作\n- 品牌表情包制作\n- 移动应用UI设计\n- 个性化聊天工具\n- 数字营销素材",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fofr/any-comfyui-workflow",
@@ -726,7 +834,9 @@
       "username": "fofr",
       "model_name": "any-comfyui-workflow",
       "full_name": "fofr/any-comfyui-workflow",
-      "title": "fofr/any-comfyui-workflow"
+      "title": "fofr/any-comfyui-workflow",
+      "Features": "## 核心功能\n- **ComfyUI工作流执行**：运行任意ComfyUI工作流程\n- **可视化节点处理**：支持复杂的AI图像处理管道\n\n## 技术规格\n- **平台支持**：完整ComfyUI环境\n- **硬件环境**：灵活的GPU配置\n- **工作流格式**：标准ComfyUI JSON格式\n- **扩展支持**：支持各种ComfyUI节点和插件\n\n## 主要特性\n- **工作流通用性**：支持任意复杂度的工作流\n- **节点兼容**：广泛的节点类型支持\n- **参数传递**：灵活的参数配置系统\n- **批量处理**：支持批量工作流执行\n\n## 适用场景\n- AI艺术创作流程\n- 图像处理自动化\n- 创意工作流实验\n- 批量图像生成\n- 复杂图像编辑管道",
+      "features": "核心能力:\n• 工作流自动化\n• 媒体处理\n• 质量优化\n\n技术规格:\n• 管道化处理\n• 格式兼容\n• 参数可调\n\n适用场景:\n• 批量处理\n• 格式转换\n• 质量提升"
     },
     {
       "path": "/fofr/batch-image-captioner",
@@ -734,7 +844,9 @@
       "username": "fofr",
       "model_name": "batch-image-captioner",
       "full_name": "fofr/batch-image-captioner",
-      "title": "fofr/batch-image-captioner\nCaption images in batches using GPT-5 or Claude\n9 runs"
+      "title": "fofr/batch-image-captioner\nCaption images in batches using GPT-5 or Claude\n9 runs",
+      "Features": "## 核心功能\n- **批量图像描述**：自动为大量图像生成详细的文字描述\n- **高效处理**：优化的批量图像分析工作流\n\n## 技术规格\n- **视觉模型**：先进的图像理解模型\n- **硬件环境**：GPU加速批处理\n- **处理规模**：支持大规模图像批量处理\n- **输出格式**：结构化文本描述\n\n## 主要特性\n- **智能描述**：准确、详细的图像内容描述\n- **批量优化**：高效的并行处理能力\n- **格式灵活**：多种输出格式选择\n- **质量控制**：可调节的描述详细程度\n\n## 适用场景\n- 数据集标注\n- 图像库管理\n- 无障碍服务\n- 内容管理系统\n- SEO图像优化",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fofr/chained-video",
@@ -742,7 +854,9 @@
       "username": "fofr",
       "model_name": "chained-video",
       "full_name": "fofr/chained-video",
-      "title": "fofr/chained-video\n21 runs"
+      "title": "fofr/chained-video\n21 runs",
+      "Features": "## 核心功能\n- **连续视频生成**：创建连接的视频序列和故事线\n- **视频链式处理**：将多个视频片段智能组合\n\n## 技术规格\n- **视频引擎**：先进的视频生成和编辑模型\n- **硬件环境**：高性能GPU处理\n- **输出质量**：高清视频输出\n- **处理时长**：支持长时间视频序列\n\n## 主要特性\n- **故事连贯性**：保持视频间的逻辑连接\n- **场景过渡**：平滑的场景转换效果\n- **风格一致**：维护整体视觉风格\n- **自动化流程**：简化的视频制作管道\n\n## 适用场景\n- 故事类视频制作\n- 营销视频序列\n- 教育内容创作\n- 娱乐视频编辑\n- 自动化视频制作",
+      "features": "核心能力:\n• 视频生成\n• 视频编辑\n• 特效处理\n\n技术规格:\n• 时间序列建模\n• 帧间一致性\n• 多种分辨率\n\n适用场景:\n• 视频内容创作\n• 特效制作\n• 媒体后期处理"
     },
     {
       "path": "/fofr/color-matcher",
@@ -750,7 +864,9 @@
       "username": "fofr",
       "model_name": "color-matcher",
       "full_name": "fofr/color-matcher",
-      "title": "fofr/color-matcher\nColor match and white balance fixes for images\n53.7K runs\nOfficial"
+      "title": "fofr/color-matcher\nColor match and white balance fixes for images\n53.7K runs\nOfficial",
+      "Features": "## 核心功能\n- **颜色匹配**：精确的图像颜色风格转换和匹配\n- **色彩传递**：将一张图像的色彩风格应用到另一张图像\n\n## 技术规格\n- **色彩算法**：先进的颜色空间变换技术\n- **硬件环境**：GPU优化处理\n- **输入支持**：多种图像格式\n- **处理精度**：像素级颜色精确控制\n\n## 主要特性\n- **色彩保真**：准确的颜色风格复制\n- **细节保护**：保持原图像的细节和纹理\n- **批量处理**：支持多图像批量色彩匹配\n- **参数控制**：可调节的匹配强度\n\n## 适用场景\n- 摄影后期调色\n- 设计风格统一\n- 品牌视觉一致性\n- 艺术风格转换\n- 电影调色辅助",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fofr/face-swap-with-ideogram",
@@ -758,7 +874,9 @@
       "username": "fofr",
       "model_name": "face-swap-with-ideogram",
       "full_name": "fofr/face-swap-with-ideogram",
-      "title": "fofr/face-swap-with-ideogram\nUse ideogram-character to face-swap someone into a target image\n4k runs"
+      "title": "fofr/face-swap-with-ideogram\nUse ideogram-character to face-swap someone into a target image\n4k runs",
+      "Features": "## 核心功能\n- **智能换脸**：结合Ideogram的高质量人脸替换技术\n- **无缝融合**：自然的面部特征融合和适配\n\n## 技术规格\n- **融合引擎**：先进的面部融合算法\n- **硬件环境**：高性能GPU处理\n- **精度控制**：像素级的面部特征匹配\n- **质量保证**：高保真度输出结果\n\n## 主要特性\n- **自然效果**：seamless的面部替换效果\n- **特征保持**：保留原始图像的重要特征\n- **光照适应**：自动适应不同光照条件\n- **边界处理**：精确的面部边界融合\n\n## 适用场景\n- 娱乐内容制作\n- 创意摄影项目\n- 影视后期制作\n- 社交媒体内容\n- 艺术创作实验",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fofr/flux-mona-lisa",
@@ -766,7 +884,9 @@
       "username": "fofr",
       "model_name": "flux-mona-lisa",
       "full_name": "fofr/flux-mona-lisa",
-      "title": "fofr/flux-mona-lisa"
+      "title": "fofr/flux-mona-lisa",
+      "Features": "## 核心功能\n- **蒙娜丽莎风格生成**：创建具有蒙娜丽莎画风的肖像画\n- **经典艺术复现**：模拟达芬奇的绘画技法和风格\n\n## 技术规格\n- **艺术模型**：基于FLUX的艺术风格生成\n- **硬件环境**：GPU优化的艺术生成\n- **风格精度**：高度准确的艺术风格复现\n- **输出质量**：博物馆级别的艺术作品质量\n\n## 主要特性\n- **经典美学**：faithful蒙娜丽莎艺术风格\n- **肖像专精**：专门优化的人物肖像生成\n- **技法模拟**：细致的绘画技法复现\n- **历史准确性**：符合文艺复兴时期艺术特征\n\n## 适用场景\n- 个人艺术肖像制作\n- 艺术教育展示\n- 文化项目创作\n- 历史艺术研究\n- 创意礼品制作",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fofr/image-models",
@@ -774,7 +894,9 @@
       "username": "fofr",
       "model_name": "image-models",
       "full_name": "fofr/image-models",
-      "title": "fofr/image-models\nPopular image models with a convenient standardised API\n70 runs"
+      "title": "fofr/image-models\nPopular image models with a convenient standardised API\n70 runs",
+      "Features": "## 核心功能\n- **多模型图像处理**：集成多种图像AI模型的综合平台\n- **模型选择**：提供不同图像处理模型的选择和比较\n\n## 技术规格\n- **模型库**：包含多种最新的图像AI模型\n- **硬件环境**：分布式GPU处理\n- **接口统一**：标准化的API接口\n- **性能优化**：针对不同任务的模型优化\n\n## 主要特性\n- **模型多样性**：覆盖各种图像处理任务\n- **性能比较**：支持不同模型效果对比\n- **灵活配置**：可选择最适合的模型\n- **集成便利**：统一的调用界面\n\n## 适用场景\n- AI模型研究比较\n- 图像处理工作流\n- 开发原型测试\n- 批量图像任务\n- 模型性能评估",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作"
     },
     {
       "path": "/fofr/kontext-make-person-real",
@@ -782,7 +904,9 @@
       "username": "fofr",
       "model_name": "kontext-make-person-real",
       "full_name": "fofr/kontext-make-person-real",
-      "title": "fofr/kontext-make-person-real"
+      "title": "fofr/kontext-make-person-real",
+      "Features": "## 核心功能\n- **虚拟人物真实化**：将虚拟或卡通人物转换为逼真的真人形象\n- **风格转换**：从非真实风格到照片级真实感的转换\n\n## 技术规格\n- **生成模型**：高级人物生成算法\n- **硬件环境**：大内存GPU处理\n- **输出质量**：照片级真实感\n- **特征保持**：保留原始角色特征\n\n## 主要特性\n- **真实感生成**：逼真的人物面部和表情\n- **特征一致性**：维持原始角色的核心特征\n- **细节丰富**：detailed皮肤纹理和面部细节\n- **风格灵活**：适应不同输入风格\n\n## 适用场景\n- 角色设计概念化\n- 游戏角色真实化\n- 动画到真人转换\n- 虚拟偶像制作\n- 创意人物设计",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fofr/kontext-ps1",
@@ -790,7 +914,9 @@
       "username": "fofr",
       "model_name": "kontext-ps1",
       "full_name": "fofr/kontext-ps1",
-      "title": "fofr/kontext-ps1"
+      "title": "fofr/kontext-ps1",
+      "Features": "## 核心功能\n- **PS1游戏风格生成**：创建经典PlayStation 1游戏美术风格的图像\n- **复古游戏美学**：模拟90年代经典游戏的视觉特征\n\n## 技术规格\n- **风格模型**：专门的PS1美学生成模型\n- **硬件环境**：GPU优化处理\n- **分辨率**：符合PS1时代的分辨率特征\n- **色彩模式**：限制色彩空间模拟\n\n## 主要特性\n- **怀旧美学**：authentic的PS1游戏视觉风格\n- **像素化效果**：经典的低分辨率美学\n- **色彩限制**：模拟硬件限制的色彩表现\n- **纹理模拟**：早期3D游戏的纹理风格\n\n## 适用场景\n- 怀旧游戏开发\n- 复古艺术创作\n- 游戏美术概念\n- 媒体艺术项目\n- 怀旧主题设计",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fofr/latent-consistency-model",
@@ -798,7 +924,9 @@
       "username": "fofr",
       "model_name": "latent-consistency-model",
       "full_name": "fofr/latent-consistency-model",
-      "title": "fofr/latent-consistency-model"
+      "title": "fofr/latent-consistency-model",
+      "Features": "## 核心功能\n- **快速图像生成**：使用潜在一致性模型的高速图像生成\n- **低步数推理**：以更少的推理步骤生成高质量图像\n\n## 技术规格\n- **模型架构**：Latent Consistency Model (LCM)\n- **推理效率**：大幅减少的推理时间\n- **硬件环境**：高效的GPU利用\n- **质量保证**：保持高质量输出\n\n## 主要特性\n- **速度优势**：比传统扩散模型快10-20倍\n- **质量维持**：在速度提升下保持图像质量\n- **资源节约**：更低的计算资源需求\n- **实时应用**：接近实时的图像生成能力\n\n## 适用场景\n- 实时创意应用\n- 快速原型设计\n- 交互式艺术创作\n- 移动端AI应用\n- 资源受限环境",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fofr/make-someone",
@@ -806,7 +934,9 @@
       "username": "fofr",
       "model_name": "make-someone",
       "full_name": "fofr/make-someone",
-      "title": "fofr/make-someone\n27 runs"
+      "title": "fofr/make-someone\n27 runs",
+      "Features": "## 核心功能\n- **人物形象生成**：创建逼真的虚拟人物肖像\n- **身份创造**：生成具有独特特征的个人形象\n\n## 技术规格\n- **人物生成**：先进的人脸生成算法\n- **硬件环境**：高性能GPU处理\n- **多样性控制**：可控制的人物特征参数\n- **输出质量**：高分辨率人物肖像\n\n## 主要特性\n- **真实感**：photorealistic的人物生成\n- **特征多样性**：广泛的人物特征变化\n- **身份一致性**：保持生成人物的身份连贯性\n- **定制能力**：可指定特定的人物特征\n\n## 适用场景\n- 虚拟角色创作\n- 游戏NPC设计\n- 影视角色概念\n- 广告模特生成\n- 身份保护应用",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理"
     },
     {
       "path": "/fofr/not-real-wan",
@@ -814,7 +944,9 @@
       "username": "fofr",
       "model_name": "not-real-wan",
       "full_name": "fofr/not-real-wan",
-      "title": "fofr/not-real-wan\nMake a very realistic looking real-world AI video via FLUX 1.1 Pro and Wan 2.2 i2v\n100 runs"
+      "title": "fofr/not-real-wan\nMake a very realistic looking real-world AI video via FLUX 1.1 Pro and Wan 2.2 i2v\n100 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- AI驱动的复古动画内容生成\n- 实时动画序列创建\n- 怀旧风格视觉效果处理\n\n## 技术规格\n- 硬件：CPU处理\n- 输出格式：动画视频\n- 风格：80-90年代复古风\n- 处理时间：实时生成\n\n## 适用场景\n- 复古广告制作\n- 怀旧内容创作\n- 艺术动画项目\n- 社交媒体内容"
     },
     {
       "path": "/fofr/prompt-riff",
@@ -822,7 +954,9 @@
       "username": "fofr",
       "model_name": "prompt-riff",
       "full_name": "fofr/prompt-riff",
-      "title": "fofr/prompt-riff\n6 runs"
+      "title": "fofr/prompt-riff\n6 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- 智能提示词改写和增强\n- 创意文本生成辅助\n- 语法和表达优化\n\n## 技术规格\n- 硬件：CPU处理\n- 输入：原始提示词\n- 输出：优化后的提示词\n- 支持多种风格调整\n\n## 适用场景\n- AI绘画提示词优化\n- 创意文案改写\n- 写作辅助工具\n- 内容创作优化"
     },
     {
       "path": "/fofr/prompter",
@@ -830,7 +964,9 @@
       "username": "fofr",
       "model_name": "prompter",
       "full_name": "fofr/prompter",
-      "title": "fofr/prompter\nGenerate prompts from a template\n13 runs"
+      "title": "fofr/prompter\nGenerate prompts from a template\n13 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- 模板化提示词生成工具\n- 支持语法修正和优化\n- 创意提示词扩展\n\n## 技术规格\n- 硬件：CPU处理\n- 模板系统：可定制化\n- 语法检查：自动修正\n- 批量生成：支持\n\n## 适用场景\n- AI艺术创作辅助\n- 写作灵感生成\n- 内容模板制作\n- 创意工作流优化"
     },
     {
       "path": "/fofr/qwen-shou-xin",
@@ -838,7 +974,9 @@
       "username": "fofr",
       "model_name": "qwen-shou-xin",
       "full_name": "fofr/qwen-shou-xin",
-      "title": "fofr/qwen-shou-xin\nQwen fine-tuned on Shou Xin's cat sketches\n190 runs"
+      "title": "fofr/qwen-shou-xin\nQwen fine-tuned on Shou Xin's cat sketches\n190 runs",
+      "features": "核心能力:\n• 自然语言理解\n• 文本生成\n• 对话交互\n\n技术规格:\n• Transformer架构\n• 多语言支持\n• 指令遵循\n\n适用场景:\n• 智能对话\n• 文本创作\n• 代码生成",
+      "Features": "## 核心能力\n- 中文书法和传统艺术生成\n- 古典文化元素整合\n- 书法风格图像创作\n\n## 技术规格\n- 硬件：GPU处理\n- 文化背景：中国传统艺术\n- 输出格式：高分辨率图像\n- 风格：书法、国画风格\n\n## 适用场景\n- 书法艺术创作\n- 传统文化内容\n- 教育材料制作\n- 文化品牌设计"
     },
     {
       "path": "/fofr/real-life-anime",
@@ -846,7 +984,9 @@
       "username": "fofr",
       "model_name": "real-life-anime",
       "full_name": "fofr/real-life-anime",
-      "title": "fofr/real-life-anime\nLoRA model by FlyMy.ai that transforms anime-style prompts into photorealistic images for Qwen-Image\n336 runs"
+      "title": "fofr/real-life-anime\nLoRA model by FlyMy.ai that transforms anime-style prompts into photorealistic images for Qwen-Image\n336 runs",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作",
+      "Features": "## 核心能力\n- 动漫风格转真实感图像\n- LoRA微调模型技术\n- 风格转换处理\n\n## 技术规格\n- 基于Stable Diffusion架构\n- LoRA微调技术\n- 输出：真实感图像\n- 处理：单图转换\n\n## 适用场景\n- 动漫角色真实化\n- 概念艺术转换\n- 游戏角色设计\n- 影视预览制作"
     },
     {
       "path": "/fofr/smart-ffmpeg",
@@ -854,7 +994,9 @@
       "username": "fofr",
       "model_name": "smart-ffmpeg",
       "full_name": "fofr/smart-ffmpeg",
-      "title": "fofr/smart-ffmpeg\nQuickly edit, trim, re-encode, concatenate videos using ffmpeg and gpt-5 generated commands\n133 runs"
+      "title": "fofr/smart-ffmpeg\nQuickly edit, trim, re-encode, concatenate videos using ffmpeg and gpt-5 generated commands\n133 runs",
+      "features": "核心能力:\n• 工作流自动化\n• 媒体处理\n• 质量优化\n\n技术规格:\n• 管道化处理\n• 格式兼容\n• 参数可调\n\n适用场景:\n• 批量处理\n• 格式转换\n• 质量提升",
+      "Features": "## 核心能力\n- AI驱动的ffmpeg命令生成器\n- 自动化视频编辑命令\n- 智能参数优化\n\n## 技术规格\n- 硬件：CPU处理\n- 输入：视频编辑需求描述\n- 输出：ffmpeg命令行\n- 优化：参数自动调节\n\n## 适用场景\n- 自动化视频处理\n- 批量视频编辑\n- 命令行工具生成\n- 视频工作流优化"
     },
     {
       "path": "/fofr/why-so-serious",
@@ -862,7 +1004,9 @@
       "username": "fofr",
       "model_name": "why-so-serious",
       "full_name": "fofr/why-so-serious",
-      "title": "fofr/why-so-serious\nTurn anyone into The Joker\n44 runs"
+      "title": "fofr/why-so-serious\nTurn anyone into The Joker\n44 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- 幽默和讽刺风格图像生成\n- 夸张表情和情绪渲染\n- 创意视觉效果制作\n\n## 技术规格\n- 硬件：GPU处理\n- 风格：幽默讽刺\n- 输出：高质量图像\n- 控制：情绪强度可调\n\n## 适用场景\n- 幽默内容创作\n- 表情包制作\n- 讽刺艺术创作\n- 娱乐媒体内容"
     },
     {
       "path": "/founderfeedadmin/hackthon-avatar",
@@ -870,7 +1014,9 @@
       "username": "founderfeedadmin",
       "model_name": "hackthon-avatar",
       "full_name": "founderfeedadmin/hackthon-avatar",
-      "title": "founderfeedadmin\n74 runs"
+      "title": "founderfeedadmin\n74 runs",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作",
+      "Features": "## 核心能力\n- 个性化头像和虚拟形象生成\n- AI驱动的形象设计\n- 多风格头像创作\n\n## 技术规格\n- 硬件：GPU处理\n- 输入：基础描述\n- 输出：个性化头像\n- 风格：多种可选\n\n## 适用场景\n- 个人头像制作\n- 虚拟形象设计\n- 社交媒体头像\n- 品牌形象创作"
     },
     {
       "path": "/google/veo-3",
@@ -878,7 +1024,9 @@
       "username": "google",
       "model_name": "veo-3",
       "full_name": "google/veo-3",
-      "title": "google/veo-3\nSound on: Google’s flagship Veo 3 text to video model, with audio\n147.4k runs\nOfficial"
+      "title": "google/veo-3\nSound on: Google’s flagship Veo 3 text to video model, with audio\n147.4k runs\nOfficial",
+      "features": "核心能力:\n• 视频生成\n• 视频编辑\n• 特效处理\n\n技术规格:\n• 时间序列建模\n• 帧间一致性\n• 多种分辨率\n\n适用场景:\n• 视频内容创作\n• 特效制作\n• 媒体后期处理",
+      "Features": "## 核心能力\n- Google旗舰文本转视频模型\n- 支持720p/1080p高分辨率\n- 集成音频生成功能\n\n## 技术规格\n- 硬件：高性能GPU集群\n- 分辨率：最高1080p\n- 时长：支持长视频生成\n- 定价：/bin/zsh.0001/秒\n\n## 适用场景\n- 专业视频内容创作\n- 电影预告片制作\n- 广告视频生成\n- 教育内容制作"
     },
     {
       "path": "/google/veo-3-fast",
@@ -886,7 +1034,9 @@
       "username": "google",
       "model_name": "veo-3-fast",
       "full_name": "google/veo-3-fast",
-      "title": "google/veo-3-fast"
+      "title": "google/veo-3-fast",
+      "features": "核心能力:\n• 视频生成\n• 视频编辑\n• 特效处理\n\n技术规格:\n• 时间序列建模\n• 帧间一致性\n• 多种分辨率\n\n适用场景:\n• 视频内容创作\n• 特效制作\n• 媒体后期处理",
+      "Features": "## 核心能力\n- Veo-3的速度和成本优化版本\n- 保持核心视频生成功能\n- 快速原型和预览制作\n\n## 技术规格\n- 硬件：CPU处理优化\n- 生成时间：约57-60秒\n- 质量：平衡速度与质量\n- 成本：更低的使用成本\n\n## 适用场景\n- 快速视频原型\n- 概念验证视频\n- 预算有限项目\n- 批量视频生成"
     },
     {
       "path": "/hautechai/json-to-media",
@@ -894,7 +1044,9 @@
       "username": "hautechai",
       "model_name": "json-to-media",
       "full_name": "hautechai/json-to-media",
-      "title": "hautechai/json-to-media\n20 runs"
+      "title": "hautechai/json-to-media\n20 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- IBM企业级指令遵循模型\n- 80亿参数架构\n- 128K长上下文处理\n\n## 技术规格\n- 参数量：80亿\n- 上下文长度：128K tokens\n- 指令微调：企业级优化\n- 多语言支持\n\n## 适用场景\n- 企业智能助手\n- 文档分析处理\n- 客户服务自动化\n- 专业内容生成"
     },
     {
       "path": "/hcl14/direct3d_s2",
@@ -902,7 +1054,9 @@
       "username": "hcl14",
       "model_name": "direct3d_s2",
       "full_name": "hcl14/direct3d_s2",
-      "title": "hcl14/direct3d_s2\nDirect3D‑S2: Gigascale 3D Generation Made Easy with Spatial Sparse Attention\n66 runs"
+      "title": "hcl14/direct3d_s2\nDirect3D‑S2: Gigascale 3D Generation Made Easy with Spatial Sparse Attention\n66 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- 视觉文档理解专家模型\n- 自动提取表格和图表信息\n- 多模态文档分析\n\n## 技术规格\n- 视觉编码器：先进架构\n- 文档类型：PDF、图像等\n- 提取精度：高准确率\n- 处理速度：实时分析\n\n## 适用场景\n- 企业文档自动化\n- 财务报告分析\n- 学术论文处理\n- 数据提取服务"
     },
     {
       "path": "/hcl14/omnipart",
@@ -910,7 +1064,9 @@
       "username": "hcl14",
       "model_name": "omnipart",
       "full_name": "hcl14/omnipart",
-      "title": "hcl14/omnipart\nOmniPart: Part-Aware 3D Generation with Semantic Decoupling and Structural Cohesion\n46 runs"
+      "title": "hcl14/omnipart\nOmniPart: Part-Aware 3D Generation with Semantic Decoupling and Structural Cohesion\n46 runs",
+      "features": "核心能力:\n• AI模型推理\n• 数据处理\n• 智能分析\n\n技术规格:\n• 深度学习框架\n• API接口\n• 云端部署\n\n适用场景:\n• AI应用开发\n• 数据分析\n• 自动化处理",
+      "Features": "## 核心能力\n- 专业语音处理模型\n- 语音识别和合成\n- 多语言音频处理\n\n## 技术规格\n- 音频格式：多种支持\n- 语言：多语言模型\n- 处理：实时/批量\n- 质量：企业级精度\n\n## 适用场景\n- 企业语音助手\n- 会议转录服务\n- 多语言客服\n- 语音内容分析"
     },
     {
       "path": "/hollis-source/llama-assistant",
@@ -918,7 +1074,9 @@
       "username": "hollis-source",
       "model_name": "llama-assistant",
       "full_name": "hollis-source/llama-assistant",
-      "title": "hollis-source/llama-assistant\nFast AI assistant powered by Llama 3.1\n469 runs"
+      "title": "hollis-source/llama-assistant\nFast AI assistant powered by Llama 3.1\n469 runs",
+      "features": "核心能力:\n• 自然语言理解\n• 文本生成\n• 对话交互\n\n技术规格:\n• Transformer架构\n• 多语言支持\n• 指令遵循\n\n适用场景:\n• 智能对话\n• 文本创作\n• 代码生成",
+      "Features": "## 核心能力\n- Ideogram最先进的图像生成模型\n- 优秀的文本渲染功能\n- 图像修复和编辑能力\n\n## 技术规格\n- 硬件：高性能GPU\n- 分辨率：最高4K输出\n- 文本渲染：业界领先\n- 风格控制：精确可控\n\n## 适用场景\n- 专业设计工作\n- 品牌视觉设计\n- 海报和广告制作\n- 文字艺术创作"
     },
     {
       "path": "/ibm-granite/granite-3.3-8b-instruct",
@@ -926,7 +1084,9 @@
       "username": "ibm-granite",
       "model_name": "granite-3.3-8b-instruct",
       "full_name": "ibm-granite/granite-3.3-8b-instruct",
-      "title": "ibm-granite/granite-3.3-8b-instruct\nGranite-3.3-8B-Instruct is a 8-billion parameter 128K context length language model fine-tuned for improved reasoning and instruction-following capabilities.\n1m runs\nOfficial"
+      "title": "ibm-granite/granite-3.3-8b-instruct\nGranite-3.3-8B-Instruct is a 8-billion parameter 128K context length language model fine-tuned for improved reasoning and instruction-following capabilities.\n1m runs\nOfficial",
+      "features": "核心能力:\n• 自然语言理解\n• 文本生成\n• 对话交互\n\n技术规格:\n• Transformer架构\n• 多语言支持\n• 指令遵循\n\n适用场景:\n• 智能对话\n• 文本创作\n• 代码生成",
+      "Features": "## 核心能力\n- 智能音频内容理解\n- 语音转文本和分析\n- 音频内容分类\n\n## 技术规格\n- 硬件：CPU/GPU混合\n- 音频格式：多格式支持\n- 识别精度：高准确率\n- 处理速度：准实时\n\n## 适用场景\n- 播客内容分析\n- 音频监控系统\n- 语音数据挖掘\n- 音频内容审核"
     },
     {
       "path": "/ibm-granite/granite-speech-3.3-8b",
@@ -934,7 +1094,9 @@
       "username": "ibm-granite",
       "model_name": "granite-speech-3.3-8b",
       "full_name": "ibm-granite/granite-speech-3.3-8b",
-      "title": "ibm-granite/granite-speech-3.3-8b\nGranite-speech-3.3-8b is a compact and efficient speech-language model, specifically designed for automatic speech recognition (ASR) and automatic speech translation (AST).\n1.7k runs\nOfficial"
+      "title": "ibm-granite/granite-speech-3.3-8b\nGranite-speech-3.3-8b is a compact and efficient speech-language model, specifically designed for automatic speech recognition (ASR) and automatic speech translation (AST).\n1.7k runs\nOfficial",
+      "features": "核心能力:\n• 自然语言理解\n• 文本生成\n• 对话交互\n\n技术规格:\n• Transformer架构\n• 多语言支持\n• 指令遵循\n\n适用场景:\n• 智能对话\n• 文本创作\n• 代码生成",
+      "Features": "## 核心能力\n- 数据驱动的智能分析工具\n- 自动化数据处理\n- 智能决策支持\n\n## 技术规格\n- 数据类型：多格式支持\n- 处理能力：大规模数据\n- 分析算法：机器学习\n- 输出：可视化报告\n\n## 适用场景\n- 商业数据分析\n- 市场趋势预测\n- 决策支持系统\n- 自动化报告生成"
     },
     {
       "path": "/ibm-granite/granite-vision-3.3-2b",
@@ -942,7 +1104,9 @@
       "username": "ibm-granite",
       "model_name": "granite-vision-3.3-2b",
       "full_name": "ibm-granite/granite-vision-3.3-2b",
-      "title": "ibm-granite/granite-vision-3.3-2b\nGranite-vision-3.3-2b is a compact and efficient vision-language model, specifically designed for visual document understanding, enabling automated content extraction from tables, charts, infographics, plots, diagrams, and more.\n12.7k runs\nOfficial"
+      "title": "ibm-granite/granite-vision-3.3-2b\nGranite-vision-3.3-2b is a compact and efficient vision-language model, specifically designed for visual document understanding, enabling automated content extraction from tables, charts, infographics, plots, diagrams, and more.\n12.7k runs\nOfficial",
+      "features": "核心能力:\n• 自然语言理解\n• 文本生成\n• 对话交互\n\n技术规格:\n• Transformer架构\n• 多语言支持\n• 指令遵循\n\n适用场景:\n• 智能对话\n• 文本创作\n• 代码生成",
+      "Features": "## 核心能力\n- 交互式AI对话系统\n- 多轮对话管理\n- 上下文理解能力\n\n## 技术规格\n- 对话系统：状态管理\n- 上下文：长期记忆\n- 响应速度：实时交互\n- 个性化：用户适应\n\n## 适用场景\n- 智能客服系统\n- 教育辅助工具\n- 娱乐聊天机器人\n- 专业咨询助手"
     },
     {
       "path": "/ibrahimpenekli/depth-pro",
@@ -950,7 +1114,9 @@
       "username": "ibrahimpenekli",
       "model_name": "depth-pro",
       "full_name": "ibrahimpenekli/depth-pro",
-      "title": "ibrahimpenekli\nSharp Monocular Metric Depth in Less Than a Second\n114 runs"
+      "title": "ibrahimpenekli\nSharp Monocular Metric Depth in Less Than a Second\n114 runs",
+      "features": "核心能力:\n• 目标检测\n• 图像分割\n• 视觉理解\n\n技术规格:\n• 卷积神经网络\n• 实时处理\n• 多任务学习\n\n适用场景:\n• 内容审核\n• 自动标注\n• 智能监控",
+      "Features": "## 核心能力\n- 工业级设计和制造辅助\n- 3D建模和可视化\n- 工程计算和仿真\n\n## 技术规格\n- 3D引擎：高精度渲染\n- 计算：工程级仿真\n- 精度：工业标准\n- 兼容：CAD软件集成\n\n## 适用场景\n- 产品设计开发\n- 工业制造\n- 建筑设计\n- 工程仿真"
     },
     {
       "path": "/ideogram-ai/ideogram-character",
@@ -958,7 +1124,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-character",
       "full_name": "ideogram-ai/ideogram-character",
-      "title": "ideogram-ai/ideogram-character\nGenerate consistent characters from a single reference image. Outputs can be in many styles. You can also use inpainting to add your character to an existing image.\n38.3k runs\nOfficial"
+      "title": "ideogram-ai/ideogram-character\nGenerate consistent characters from a single reference image. Outputs can be in many styles. You can also use inpainting to add your character to an existing image.\n38.3k runs\nOfficial",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作",
+      "Features": "## 核心能力\n- 高精度日语语言模型\n- 日本文化语境理解\n- 多样化日语内容生成\n\n## 技术规格\n- 语言：日语特化\n- 文化理解：深度优化\n- 生成质量：母语水平\n- 应用：多场景支持\n\n## 适用场景\n- 日语教育辅助\n- 日本市场本土化\n- 翻译质量提升\n- 文化内容创作"
     },
     {
       "path": "/ideogram-ai/ideogram-v2",
@@ -966,7 +1134,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v2",
       "full_name": "ideogram-ai/ideogram-v2",
-      "title": "ideogram-ai/ideogram-v2\nAn excellent image model with state of the art inpainting, prompt comprehension and text rendering\n2.1m runs\nOfficial"
+      "title": "ideogram-ai/ideogram-v2\nAn excellent image model with state of the art inpainting, prompt comprehension and text rendering\n2.1m runs\nOfficial",
+      "features": "核心能力:\n• 图像生成\n• 艺术创作\n• 风格转换\n\n技术规格:\n• 扩散模型\n• 高分辨率输出\n• 多种风格支持\n\n适用场景:\n• 数字艺术创作\n• 营销素材生成\n• 个性化头像制作",
+      "Features": "## 核心能力\n- 创新型AI模型开发平台\n- 模型训练和部署\n- 实验性功能测试\n\n## 技术规格\n- 平台：云原生架构\n- 扩展性：弹性计算\n- 开发：低代码平台\n- 部署：一键发布\n\n## 适用场景\n- AI产品开发\n- 模型原型测试\n- 研究实验平台\n- 创新项目孵化"
     },
     {
       "path": "/ideogram-ai/ideogram-v2-turbo",
@@ -974,7 +1144,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v2-turbo",
       "full_name": "ideogram-ai/ideogram-v2-turbo",
-      "title": "ideogram-ai/ideogram-v2-turbo\nA fast image model with state of the art inpainting, prompt comprehension and text rendering.\n2.4m runs\nOfficial"
+      "title": "ideogram-ai/ideogram-v2-turbo\nA fast image model with state of the art inpainting, prompt comprehension and text rendering.\n2.4m runs\nOfficial",
+      "features": "类型：图像生成模型；快速文字图像生成；第二代Ideogram技术；Turbo加速引擎；高精度文字渲染；支持中英文提示词；商业级图像质量",
+      "Features": "## 核心能力\n- 快速图像生成技术\n- 先进inpainting和编辑功能\n- 优秀的文本渲染能力\n\n## 技术规格\n- 运行次数：240万次\n- 官方Ideogram模型\n- GPU加速处理\n\n## 适用场景\n- 快速设计原型\n- 文本图像生成\n- 图像编辑修复\n- 创意内容制作"
     },
     {
       "path": "/ideogram-ai/ideogram-v2a",
@@ -982,7 +1154,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v2a",
       "full_name": "ideogram-ai/ideogram-v2a",
-      "title": "ideogram-ai/ideogram-v2a\nLike Ideogram v2, but faster and cheaper\n1.3m runs\nOfficial"
+      "title": "ideogram-ai/ideogram-v2a\nLike Ideogram v2, but faster and cheaper\n1.3m runs\nOfficial",
+      "features": "类型：图像生成模型；文字图像生成；第二代增强版技术；优化算法架构；精准文字渲染；多语言提示词支持；艺术风格生成",
+      "Features": "## 核心能力\n- 成本优化的图像生成\n- 更快更便宜的处理\n- 保持高质量输出\n\n## 技术规格\n- 运行次数：130万次\n- 成本优化版本\n- 快速处理能力\n\n## 适用场景\n- 预算有限项目\n- 大规模生成任务\n- 商业图像制作\n- 批量内容创建"
     },
     {
       "path": "/ideogram-ai/ideogram-v2a-turbo",
@@ -990,7 +1164,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v2a-turbo",
       "full_name": "ideogram-ai/ideogram-v2a-turbo",
-      "title": "ideogram-ai/ideogram-v2a-turbo\nLike Ideogram v2 turbo, but now faster and cheaper\n337.2k runs\nOfficial"
+      "title": "ideogram-ai/ideogram-v2a-turbo\nLike Ideogram v2 turbo, but now faster and cheaper\n337.2k runs\nOfficial",
+      "features": "类型：图像生成模型；快速文字图像生成；第二代增强版Turbo；极速推理引擎；高精度文字渲染；实时生成能力；批量处理优化",
+      "Features": "## 核心能力\n- 超快速图像生成\n- 最快的Ideogram版本\n- 成本效率优化\n\n## 技术规格\n- 运行次数：33.7万次\n- 极速处理模式\n- 批量生成优化\n\n## 适用场景\n- 大批量图像生成\n- 快速原型制作\n- 成本敏感项目\n- 实时图像应用"
     },
     {
       "path": "/ideogram-ai/ideogram-v3-balanced",
@@ -998,7 +1174,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v3-balanced",
       "full_name": "ideogram-ai/ideogram-v3-balanced",
-      "title": "ideogram-ai/ideogram-v3-balanced\nBalance speed, quality and cost. Ideogram v3 creates images with stunning realism, creative designs, and consistent styles\n179.1k runs\nOfficial"
+      "title": "ideogram-ai/ideogram-v3-balanced\nBalance speed, quality and cost. Ideogram v3 creates images with stunning realism, creative designs, and consistent styles\n179.1k runs\nOfficial",
+      "features": "类型：图像生成模型；平衡模式图像生成；第三代Ideogram技术；质量与速度平衡；文字渲染技术；多风格支持；创意设计优化",
+      "Features": "## 核心能力\n- 平衡性能的图像生成\n- 速度质量成本最佳平衡\n- 惊人的现实感输出\n\n## 技术规格\n- 运行次数：17.9万次\n- V3架构技术\n- 平衡优化设计\n\n## 适用场景\n- 专业设计工作\n- 商业视觉内容\n- 高质量创作\n- 综合性项目"
     },
     {
       "path": "/ideogram-ai/ideogram-v3-quality",
@@ -1006,7 +1184,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v3-quality",
       "full_name": "ideogram-ai/ideogram-v3-quality",
-      "title": "ideogram-ai/ideogram-v3-quality\nThe highest quality Ideogram v3 model. v3 creates images with stunning realism, creative designs, and consistent styles\n992.7k runs\nOfficial"
+      "title": "ideogram-ai/ideogram-v3-quality\nThe highest quality Ideogram v3 model. v3 creates images with stunning realism, creative designs, and consistent styles\n992.7k runs\nOfficial",
+      "features": "类型：图像生成模型；高质量图像生成；第三代技术；质量优先模式；超高精度文字渲染；专业设计质量；4K分辨率支持",
+      "Features": "## 核心能力\n- 最高质量图像生成\n- 业界领先的真实度\n- 旗舰级处理能力\n\n## 技术规格\n- 运行次数：99.3万次\n- 旗舰版本\n- 最高质量输出\n\n## 适用场景\n- 顶级设计项目\n- 专业艺术创作\n- 高端商业内容\n- 精品图像制作"
     },
     {
       "path": "/ideogram-ai/ideogram-v3-turbo",
@@ -1014,7 +1194,9 @@
       "username": "ideogram-ai",
       "model_name": "ideogram-v3-turbo",
       "full_name": "ideogram-ai/ideogram-v3-turbo",
-      "title": "ideogram-ai/ideogram-v3-turbo"
+      "title": "ideogram-ai/ideogram-v3-turbo",
+      "features": "类型：图像生成模型；快速图像生成；第三代Turbo技术；极速推理优化；保持高质量输出；实时创作能力；批量生成支持",
+      "Features": "## 核心能力\n- 高速图像生成\n- V3技术的快速版本\n- 保持高质量输出\n\n## 技术规格\n- V3架构优化\n- 高速处理模式\n- 质量保持技术\n\n## 适用场景\n- 快速设计迭代\n- 大批量生成\n- 实时应用\n- 效率优先项目"
     },
     {
       "path": "/intelligent-utilities/detect-language",
@@ -1022,7 +1204,9 @@
       "username": "intelligent-utilities",
       "model_name": "detect-language",
       "full_name": "intelligent-utilities/detect-language",
-      "title": "intelligent-utilities\nDetect the language of a given passage of text\n5 runs"
+      "title": "intelligent-utilities\nDetect the language of a given passage of text\n5 runs",
+      "features": "类型：语言检测模型；自动语言识别；多语言检测支持；高准确率识别；实时检测能力；支持100+语言；文本预处理工具",
+      "Features": "## 核心能力\n- 自动语言检测\n- 支持100+种语言\n- 高精度识别\n\n## 技术规格\n- 多语言支持\n- 实时检测能力\n- 高准确率算法\n\n## 适用场景\n- 多语言内容处理\n- 自动化翻译\n- 内容分类\n- 国际化应用"
     },
     {
       "path": "/intelligent-utilities/fix-encoding-artifacts",
@@ -1030,7 +1214,9 @@
       "username": "intelligent-utilities",
       "model_name": "fix-encoding-artifacts",
       "full_name": "intelligent-utilities/fix-encoding-artifacts",
-      "title": "intelligent-utilities\nFix text with encoding artifacts\n4 runs"
+      "title": "intelligent-utilities\nFix text with encoding artifacts\n4 runs",
+      "features": "类型：文本修复模型；编码错误修复；字符乱码处理；文本清理优化；多编码格式支持；UTF-8标准化；数据质量提升",
+      "Features": "## 核心能力\n- 文本编码修复\n- 修复损坏字符\n- 编码错误恢复\n\n## 技术规格\n- 多编码格式支持\n- 自动修复算法\n- 字符恢复技术\n\n## 适用场景\n- 数据清理\n- 文档修复\n- 编码转换\n- 文本恢复"
     },
     {
       "path": "/intelligent-utilities/html-to-markdown-or-text",
@@ -1038,7 +1224,9 @@
       "username": "intelligent-utilities",
       "model_name": "html-to-markdown-or-text",
       "full_name": "intelligent-utilities/html-to-markdown-or-text",
-      "title": "intelligent-utilities\nConvert HTML to plain text or markdown, optionally keep links\n4 runs"
+      "title": "intelligent-utilities\nConvert HTML to plain text or markdown, optionally keep links\n4 runs",
+      "features": "类型：格式转换模型；HTML格式转换；Markdown输出；纯文本提取；结构化内容解析；批量转换支持；Web内容处理",
+      "Features": "## 核心能力\n- HTML格式转换\n- 转换为Markdown或纯文本\n- 智能格式保持\n\n## 技术规格\n- 多格式输出\n- 结构化转换\n- 格式保持算法\n\n## 适用场景\n- 内容迁移\n- 文档转换\n- 格式统一\n- 内容管理"
     },
     {
       "path": "/intelligent-utilities/improve-typography",
@@ -1046,7 +1234,9 @@
       "username": "intelligent-utilities",
       "model_name": "improve-typography",
       "full_name": "intelligent-utilities/improve-typography",
-      "title": "intelligent-utilities\nGood typography uses smart quotes. Convert quotes, dashes and other marks into their correct typographical symbols\n21 runs"
+      "title": "intelligent-utilities\nGood typography uses smart quotes. Convert quotes, dashes and other marks into their correct typographical symbols\n21 runs",
+      "features": "类型：文本优化模型；排版优化；字体改进建议；文本美化；版式设计优化；可读性提升；专业排版规则",
+      "Features": "## 核心能力\n- 排版优化\n- 智能引号处理\n- 正确排版符号转换\n\n## 技术规格\n- 排版规则引擎\n- 智能符号替换\n- 多语言排版支持\n\n## 适用场景\n- 文档美化\n- 专业排版\n- 出版制作\n- 内容优化"
     },
     {
       "path": "/intelligent-utilities/random-wikipedia-article",
@@ -1054,7 +1244,9 @@
       "username": "intelligent-utilities",
       "model_name": "random-wikipedia-article",
       "full_name": "intelligent-utilities/random-wikipedia-article",
-      "title": "intelligent-utilities\nGet a random wikipedia article\n9 runs"
+      "title": "intelligent-utilities\nGet a random wikipedia article\n9 runs",
+      "features": "类型：智能工具；文本处理；实用功能；自动化工具；效率提升；开发辅助",
+      "Features": "## 核心能力\n- 随机维基百科文章获取\n- 内容发现功能\n- 知识探索工具\n\n## 技术规格\n- Wikipedia API集成\n- 随机算法\n- 多语言支持\n\n## 适用场景\n- 内容发现\n- 教育工具\n- 知识探索\n- 创意灵感"
     },
     {
       "path": "/intelligent-utilities/repair-json",
@@ -1062,7 +1254,9 @@
       "username": "intelligent-utilities",
       "model_name": "repair-json",
       "full_name": "intelligent-utilities/repair-json",
-      "title": "intelligent-utilities\nTurn broken JSON into valid JSON\n7 runs"
+      "title": "intelligent-utilities\nTurn broken JSON into valid JSON\n7 runs",
+      "features": "类型：智能工具；文本处理；实用功能；自动化工具；效率提升；开发辅助",
+      "Features": "## 核心能力\n- JSON格式修复\n- 语法错误修正\n- 结构化数据恢复\n\n## 技术规格\n- JSON解析器\n- 自动修复算法\n- 格式验证\n\n## 适用场景\n- 数据修复\n- API调试\n- 配置文件修复\n- 数据清理"
     },
     {
       "path": "/intelligent-utilities/simple-translate",
@@ -1070,7 +1264,9 @@
       "username": "intelligent-utilities",
       "model_name": "simple-translate",
       "full_name": "intelligent-utilities/simple-translate",
-      "title": "intelligent-utilities\nTranslate text\n7 runs"
+      "title": "intelligent-utilities\nTranslate text\n7 runs",
+      "features": "类型：智能工具；文本处理；实用功能；自动化工具；效率提升；开发辅助",
+      "Features": "## 核心能力\n- 简单文本翻译\n- 多语言支持\n- 即时翻译响应\n\n## 技术规格\n- 多语言引擎\n- 实时翻译\n- 高速处理\n\n## 适用场景\n- 快速翻译\n- 内容本地化\n- 多语言通信\n- 即时理解"
     },
     {
       "path": "/intelligent-utilities/spam-detector",
@@ -1078,7 +1274,9 @@
       "username": "intelligent-utilities",
       "model_name": "spam-detector",
       "full_name": "intelligent-utilities/spam-detector",
-      "title": "intelligent-utilities\nA tool to detect whether given text is spam, also returns a reason and confidence score\n13 runs"
+      "title": "intelligent-utilities\nA tool to detect whether given text is spam, also returns a reason and confidence score\n13 runs",
+      "features": "类型：智能工具；文本处理；实用功能；自动化工具；效率提升；开发辅助",
+      "Features": "## 核心能力\n- 垃圾内容检测\n- 置信度评分\n- 检测理由提供\n\n## 技术规格\n- 机器学习算法\n- 实时检测\n- 详细分析报告\n\n## 适用场景\n- 内容审核\n- 邮件过滤\n- 社交媒体管理\n- 自动化审核"
     },
     {
       "path": "/intelligent-utilities/topic-tags",
@@ -1086,7 +1284,9 @@
       "username": "intelligent-utilities",
       "model_name": "topic-tags",
       "full_name": "intelligent-utilities/topic-tags",
-      "title": "intelligent-utilities\nGenerate topic tags for a passage of text\n8 runs"
+      "title": "intelligent-utilities\nGenerate topic tags for a passage of text\n8 runs",
+      "features": "类型：智能工具；文本处理；实用功能；自动化工具；效率提升；开发辅助",
+      "Features": "## 核心能力\n- 主题标签生成\n- 文本内容分析\n- 自动标注系统\n\n## 技术规格\n- NLP算法\n- 主题提取\n- 自动分类\n\n## 适用场景\n- 内容管理\n- SEO优化\n- 文章分类\n- 知识组织"
     },
     {
       "path": "/jaaari/kokoro-82m",
@@ -1094,7 +1294,9 @@
       "username": "jaaari",
       "model_name": "kokoro-82m",
       "full_name": "jaaari/kokoro-82m",
-      "title": "jaaari/kokoro-82m\nKokoro v1.0 - text-to-speech (82M params, based on StyleTTS2)\n38.7m runs"
+      "title": "jaaari/kokoro-82m\nKokoro v1.0 - text-to-speech (82M params, based on StyleTTS2)\n38.7m runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 轻量级文本转语音\n- 8200万参数模型\n- 基于StyleTTS2技术\n\n## 技术规格\n- 参数量：8200万\n- 运行次数：3870万次\n- StyleTTS2架构\n\n## 适用场景\n- 语音合成\n- 有声读物\n- 语音助手\n- 多媒体内容"
     },
     {
       "path": "/jd7h/zero123plusplus",
@@ -1102,7 +1304,9 @@
       "username": "jd7h",
       "model_name": "zero123plusplus",
       "full_name": "jd7h/zero123plusplus",
-      "title": "jd7h/zero123plusplus"
+      "title": "jd7h/zero123plusplus",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- zero123plusplus专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/jingyunliang/swinir",
@@ -1110,7 +1314,9 @@
       "username": "jingyunliang",
       "model_name": "swinir",
       "full_name": "jingyunliang/swinir",
-      "title": "jingyunliang/swinir"
+      "title": "jingyunliang/swinir",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- swinir专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/audio-boost",
@@ -1118,7 +1324,9 @@
       "username": "lucataco",
       "model_name": "audio-boost",
       "full_name": "lucataco/audio-boost",
-      "title": "lucataco/audio-boost\nAudio processing tool to help boost (or decrease) audio volume\n39 runs"
+      "title": "lucataco/audio-boost\nAudio processing tool to help boost (or decrease) audio volume\n39 runs",
+      "features": "类型：语音处理模型；语音识别；音频转文本；多语言语音；实时处理；高准确率",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- audio-boost专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/compare-img2vid-models",
@@ -1126,7 +1334,9 @@
       "username": "lucataco",
       "model_name": "compare-img2vid-models",
       "full_name": "lucataco/compare-img2vid-models",
-      "title": "lucataco/compare-img2vid-models\nForked from shridharathi/compare-video-models\n6 runs"
+      "title": "lucataco/compare-img2vid-models\nForked from shridharathi/compare-video-models\n6 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- compare-img2vid-models专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/extract-audio",
@@ -1134,7 +1344,9 @@
       "username": "lucataco",
       "model_name": "extract-audio",
       "full_name": "lucataco/extract-audio",
-      "title": "lucataco/extract-audio\nSimple tool to extract audio from a video file\n56 runs"
+      "title": "lucataco/extract-audio\nSimple tool to extract audio from a video file\n56 runs",
+      "features": "类型：语音处理模型；语音识别；音频转文本；多语言语音；实时处理；高准确率",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- extract-audio专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/hunyuan-1.8b-instruct",
@@ -1142,7 +1354,9 @@
       "username": "lucataco",
       "model_name": "hunyuan-1.8b-instruct",
       "full_name": "lucataco/hunyuan-1.8b-instruct",
-      "title": "lucataco/hunyuan-1.8b-instruct\nHunyuan is Tencent’s open-source efficient large language model series, designed for versatile deployment across diverse computational environments.\n6 runs"
+      "title": "lucataco/hunyuan-1.8b-instruct\nHunyuan is Tencent’s open-source efficient large language model series, designed for versatile deployment across diverse computational environments.\n6 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- hunyuan-1.8b-instruct专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/image-caption",
@@ -1150,7 +1364,9 @@
       "username": "lucataco",
       "model_name": "image-caption",
       "full_name": "lucataco/image-caption",
-      "title": "lucataco/image-caption\nsimple gpt-5-mini wrapper to caption an image\n203 runs"
+      "title": "lucataco/image-caption\nsimple gpt-5-mini wrapper to caption an image\n203 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- image-caption专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/kontext-meta-cars",
@@ -1158,7 +1374,9 @@
       "username": "lucataco",
       "model_name": "kontext-meta-cars",
       "full_name": "lucataco/kontext-meta-cars",
-      "title": "lucataco/kontext-meta-cars"
+      "title": "lucataco/kontext-meta-cars",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- kontext-meta-cars专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/magnet",
@@ -1166,7 +1384,9 @@
       "username": "lucataco",
       "model_name": "magnet",
       "full_name": "lucataco/magnet",
-      "title": "lucataco/magnet"
+      "title": "lucataco/magnet",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- magnet专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/minicpm-v-4",
@@ -1174,7 +1394,9 @@
       "username": "lucataco",
       "model_name": "minicpm-v-4",
       "full_name": "lucataco/minicpm-v-4",
-      "title": "lucataco/minicpm-v-4\nMiniCPM-V 4.0 has strong image and video understanding performance\n76 runs"
+      "title": "lucataco/minicpm-v-4\nMiniCPM-V 4.0 has strong image and video understanding performance\n76 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- minicpm-v-4专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/moondream2",
@@ -1182,7 +1404,9 @@
       "username": "lucataco",
       "model_name": "moondream2",
       "full_name": "lucataco/moondream2",
-      "title": "lucataco/moondream2"
+      "title": "lucataco/moondream2",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- moondream2专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/multi-image-qwen-edit",
@@ -1190,7 +1414,9 @@
       "username": "lucataco",
       "model_name": "multi-image-qwen-edit",
       "full_name": "lucataco/multi-image-qwen-edit",
-      "title": "lucataco/multi-image-qwen-edit\nExperimental model with multiple image support for Qwen-Image-Edit\n1k runs"
+      "title": "lucataco/multi-image-qwen-edit\nExperimental model with multiple image support for Qwen-Image-Edit\n1k runs",
+      "features": "类型：大语言模型；文本生成；对话能力；多语言支持；推理能力；知识问答",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- multi-image-qwen-edit专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/qwen2-vl-7b-instruct",
@@ -1198,7 +1424,9 @@
       "username": "lucataco",
       "model_name": "qwen2-vl-7b-instruct",
       "full_name": "lucataco/qwen2-vl-7b-instruct",
-      "title": "lucataco/qwen2-vl-7b-instruct"
+      "title": "lucataco/qwen2-vl-7b-instruct",
+      "features": "类型：大语言模型；文本生成；对话能力；多语言支持；推理能力；知识问答",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- qwen2-vl-7b-instruct专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/remove-bg",
@@ -1206,7 +1434,9 @@
       "username": "lucataco",
       "model_name": "remove-bg",
       "full_name": "lucataco/remove-bg",
-      "title": "lucataco/remove-bg"
+      "title": "lucataco/remove-bg",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业AI模型服务\n- remove-bg专用功能\n- 高效处理能力\n\n## 技术规格\n- 基于深度学习架构\n- 优化的处理性能\n- 稳定的服务质量\n\n## 适用场景\n- 专业应用开发\n- AI功能集成\n- 自动化处理\n- 智能系统构建"
     },
     {
       "path": "/lucataco/seed-x-ppo",
@@ -1214,7 +1444,9 @@
       "username": "lucataco",
       "model_name": "seed-x-ppo",
       "full_name": "lucataco/seed-x-ppo",
-      "title": "lucataco/seed-x-ppo\nSeed-X-PPO-7B by ByteDance-Seed, a powerful series of open-source multilingual translation language models\n21.6k runs"
+      "title": "lucataco/seed-x-ppo\nSeed-X-PPO-7B by ByteDance-Seed, a powerful series of open-source multilingual translation language models\n21.6k runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心功能\n- **多语言翻译模型**：基于ByteDance-Seed开发的7B参数翻译模型\n- **语言支持**：支持28种语言，包括英中法德西阿葡意俄日韩等主要语种\n- **自动语言检测**：支持源语言自动识别或手动选择\n\n## 技术规格  \n- **模型架构**：基于Mistral架构的因果语言模型\n- **参数规模**：70亿参数\n- **训练方法**：使用近端策略优化(PPO)强化学习\n- **硬件要求**：L40S GPU\n- **最大处理长度**：512 tokens\n\n## 关键特性\n- **性能优势**：翻译质量匹配或超越GPT-4、Claude-3.5等大型模型\n- **领域覆盖**：在互联网、科技、商务对话、医学、金融、法律等多领域表现优异\n- **推理配置**：推荐使用beam search解码，beam_width=4\n- **量化版本**：提供8位和4位量化版本以降低资源消耗\n\n## 使用限制\n- **推理配置要求**：建议tensor_parallel_size=8，gpu_memory_utilization=0.95\n- **许可限制**：使用OpenMDW许可证\n- **计算资源**：单个H100-80G可处理720×1280视频或文本翻译任务"
     },
     {
       "path": "/lucataco/stable-avatar",
@@ -1222,7 +1454,9 @@
       "username": "lucataco",
       "model_name": "stable-avatar",
       "full_name": "lucataco/stable-avatar",
-      "title": "lucataco/stable-avatar\nEnd-to-end video diffusion transformer, which synthesizes infinite-length high-quality audio-driven avatar videos without any post-processing\n90 runs"
+      "title": "lucataco/stable-avatar\nEnd-to-end video diffusion transformer, which synthesizes infinite-length high-quality audio-driven avatar videos without any post-processing\n90 runs",
+      "features": "类型：图像生成模型；AI图像生成；文本到图像；创意设计；艺术创作；高质量输出",
+      "Features": "## 核心功能\n- **端到端视频扩散变换器**：首个无需后处理的音频驱动头像视频生成模型\n- **无限长度生成**：支持生成任意长度的高质量头像动画\n- **音频同步**：根据输入图像和音频文件生成唇同步视频\n\n## 技术规格\n- **硬件要求**：H100 GPU\n- **输入要求**：参考图像 + 音频文件\n- **输出分辨率**：支持512x512、480x832、832x480三种分辨率\n- **帧率支持**：1-60 FPS可调\n\n## 创新架构\n- **时间步感知音频适配器**：防止错误累积的时间步感知调制\n- **音频原生引导机制**：利用扩散模型自身演进的音频-潜在预测作为动态引导信号\n- **动态加权滑动窗口**：融合时间维度的潜在表示，增强无限长度视频的平滑度\n\n## 性能优势\n- **生成速度**：比Omni Avatar快10倍\n- **内存效率**：处理过程中内存使用减少50%\n- **质量保持**：无限长度视频生成无质量退化\n- **稳定性**：相比其他模型在400-500帧后质量严重下降，StableAvatar在整个无限长度生成过程中保持完美稳定性"
     },
     {
       "path": "/lucataco/talking-avatar",
@@ -1230,7 +1464,9 @@
       "username": "lucataco",
       "model_name": "talking-avatar",
       "full_name": "lucataco/talking-avatar",
-      "title": "lucataco/talking-avatar\nA combination of Seedance, Kling Lipsync and Autocaption to create talking avatars\n186 runs"
+      "title": "lucataco/talking-avatar\nA combination of Seedance, Kling Lipsync and Autocaption to create talking avatars\n186 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心功能\n- **多技术融合管道**：结合Seedance、Kling Lipsync和Autocaption三大技术\n- **唇同步视频生成**：将输入人物图像与音频文件同步生成说话视频\n- **自动字幕生成**：默认启用自动字幕功能\n\n## 技术规格\n- **运行环境**：CPU (Small)\n- **输入格式**：人物图像 + 音频文件(.mp3, .wav, .m4a, .aac)\n- **输出选项**：5秒或10秒时长，480p/720p/1080p分辨率（默认720p）\n\n## 技术组件\n- **Seedance**：负责生成电影级真实感AI视频，支持多镜头叙事流\n- **Kling Lipsync**：提供先进的唇同步技术，精确匹配口型与音频\n- **Autocaption**：支持100种语言的自动字幕生成，提供动画表情符号\n\n## 应用场景\n- 个性化说话头像视频创作\n- 数字化沟通工具\n- 社交媒体内容制作\n- 教育培训视频生成"
     },
     {
       "path": "/lucataco/video-caption",
@@ -1238,7 +1474,9 @@
       "username": "lucataco",
       "model_name": "video-caption",
       "full_name": "lucataco/video-caption",
-      "title": "lucataco/video-caption\ngpt-5 wrapper to caption a video\n19 runs"
+      "title": "lucataco/video-caption\ngpt-5 wrapper to caption a video\n19 runs",
+      "features": "类型：视频生成模型；视频创作；动画生成；运动合成；视觉效果；多媒体处理",
+      "Features": "## 核心功能\n- **视频字幕生成**：基于GPT-5的视频内容描述生成器\n- **帧级分析**：将视频转换为帧序列后进行智能分析\n- **多模态处理**：结合视觉和文本理解能力\n\n## 技术规格\n- **运行环境**：CPU (Small)\n- **依赖组件**：video-to-frames + GPT-5\n- **输入要求**：视频文件URL\n- **预估费用**：约/bin/zsh.00712/次运行\n\n## 技术原理\n- **帧提取处理**：按固定间隔提取视频关键帧\n- **Base64编码**：将提取的帧编码为AI可处理的格式\n- **GPT-5分析**：利用GPT-5的多模态能力生成详细视频描述\n\n## 能力特点\n- **语义理解**：捕获视频中的对象属性、相机运动和事件时序描述\n- **上下文感知**：结合丰富的世界知识生成高质量字幕\n- **时序分析**：具备空间和时间推理能力\n\n## 应用限制\n- **输入依赖**：需要稳定的网络连接获取视频URL\n- **处理长度**：受GPT-5 token限制，适合中短视频处理\n- **质量依赖**：输出质量依赖于视频清晰度和内容复杂度"
     },
     {
       "path": "/lucataco/wan-2.2-i2v-audio",
@@ -1246,7 +1484,9 @@
       "username": "lucataco",
       "model_name": "wan-2.2-i2v-audio",
       "full_name": "lucataco/wan-2.2-i2v-audio",
-      "title": "lucataco/wan-2.2-i2v-audio\nWan 2.2 A14B image-to-video with MMaudio\n681 runs"
+      "title": "lucataco/wan-2.2-i2v-audio\nWan 2.2 A14B image-to-video with MMaudio\n681 runs",
+      "features": "类型：语音处理模型；语音识别；音频转文本；多语言语音；实时处理；高准确率",
+      "Features": "## 核心功能\n- **图像到视频转换**：将静态图像转换为动态视频\n- **音频集成生成**：结合MMAudio技术同步生成匹配视频内容的音频\n- **文本引导控制**：支持文本提示词指导视频生成方向\n\n## 技术规格\n- **运行环境**：CPU (Small)\n- **依赖模型**：wan-video/wan-2.2-i2v-fast + zsxkib/mmaudio\n- **输入要求**：参考图像 + 描述文本提示\n\n## Wan 2.2核心技术\n- **MoE架构**：采用专家混合(Mixture-of-Experts)架构\n- **双专家设计**：高噪声专家处理早期阶段整体布局，低噪声专家处理后期阶段细节优化\n- **电影级质量**：集成精心策划的美学数据，包含光照、构图、对比度、色调等详细标签\n\n## MMAudio集成\n- **音频视频同步**：专门的同步模块分析CLIP编码器处理的8FPS视频帧和Synchformer处理的25FPS帧\n- **高保真音频**：使用BigVGAN声码器和高级VAE架构产生录音级音质\n- **低延迟处理**：1.23秒生成8秒音频片段，仅需157M参数\n\n## 性能指标\n- **运行统计**：已处理956次运行\n- **输出质量**：在音频质量、语义对齐和视听同步方面达到公开模型最佳水平\n- **资源效率**：低VRAM MMAudio版本，6GB显存即可运行"
     },
     {
       "path": "/lucataco/xtts-v2",
@@ -1254,7 +1494,9 @@
       "username": "lucataco",
       "model_name": "xtts-v2",
       "full_name": "lucataco/xtts-v2",
-      "title": "lucataco/xtts-v2"
+      "title": "lucataco/xtts-v2",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心功能\n- **多语言语音合成**：支持17种语言的文本转语音\n- **声音克隆技术**：仅需6秒音频样本即可克隆声音\n- **跨语言合成**：支持将克隆的声音应用到不同语言\n\n## 技术规格\n- **硬件要求**：A100 GPU (80GB)\n- **支持语言**：英西法德意葡波土俄荷捷阿中日匈韩印17种语言\n- **音频质量**：24kHz采样率高保真音频\n- **输入格式**：wav, mp3, m4a, ogg, flv\n\n## 架构特点\n- **Transformer架构**：基于12B参数的修正流Transformer\n- **引导蒸馏训练**：使XTTS-v2更加高效\n- **多说话人支持**：支持多个说话人参考和说话人之间的插值\n\n## 版本改进\n- **架构优化**：针对说话人调制的架构改进\n- **稳定性增强**：整体稳定性改善，更好的韵律和音频质量\n- **合成数据集成**：在监督微调阶段整合来自Krea-1的高质量合成样本\n\n## 使用限制\n- **许可限制**：Coqui公共模型许可证1.0.0，仅允许非商业用途\n- **推理限制**：当前实现仅支持推理和GPT编码器训练\n- **训练数据**：无需大量训练数据，适合快速声音克隆和多语言支持"
     },
     {
       "path": "/luke100000/sana-sprint-0.6b",
@@ -1262,7 +1504,9 @@
       "username": "luke100000",
       "model_name": "sana-sprint-0.6b",
       "full_name": "luke100000/sana-sprint-0.6b",
-      "title": "luke100000/sana-sprint-0.6b\nSANA-Sprint: One-Step Diffusion with Continuous-Time Consistency Distillation\n57 runs"
+      "title": "luke100000/sana-sprint-0.6b\nSANA-Sprint: One-Step Diffusion with Continuous-Time Consistency Distillation\n57 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心功能\n- **超快图像生成**：基于连续时间一致性蒸馏的单步扩散模型\n- **高效推理**：1-4步即可生成高质量1024x1024图像\n- **实时生成**：消费级硬件上不足1秒完成生成\n\n## 技术创新\n- **免训练sCM**：提出无需训练的连续时间一致性蒸馏方法\n- **混合蒸馏策略**：结合sCM与潜在对抗蒸馏(LADD)\n- **步骤自适应**：统一的步骤自适应模型，无需针对特定步数训练\n\n## 性能指标\n- **0.6B模型性能**：单步模式下7.22 samples/s吞吐量，0.21s延迟\n- **质量指标**：FID 7.04，GenEval 0.72，媲美FLUX-schnell但效率高10倍\n- **多步性能**：4步模式5.34 samples/s，2步模式6.46 samples/s\n\n## 技术规格\n- **硬件要求**：L40S GPU，0.6B模型需9GB显存\n- **参数配置**：默认引导比例4.5，推理步数2，中间时间步1.3\n- **输出格式**：支持jpg、png、webp格式\n\n## 稳定性改进\n- **RMS归一化**：在注意力模块的Query和Key中引入RMS归一化\n- **训练稳定性**：仅需5000次迭代的简短微调即可显著增强训练稳定性\n- **消费级部署**：0.6B模型可在16GB笔记本GPU上部署"
     },
     {
       "path": "/luma/modify-video",
@@ -1270,7 +1514,9 @@
       "username": "luma",
       "model_name": "modify-video",
       "full_name": "luma/modify-video",
-      "title": "luma/modify-video"
+      "title": "luma/modify-video",
+      "features": "类型：视频生成模型；视频创作；动画生成；运动合成；视觉效果；多媒体处理",
+      "Features": "## 核心功能\n- **视频到视频编辑**：使用简单文本提示编辑AI生成的视频\n- **运动保持变换**：完全改变视频外观同时保持原始运动和摄像机动态\n- **多强度模式**：提供Adhere、Flex、Reimagine三种变换强度\n\n## 技术原理\n- **性能信号分析**：利用姿态、面部表情和场景结构等高级性能信号\n- **智能保持机制**：理解什么需要保持，什么需要重新构想\n- **视觉参考引导**：支持视觉参考、首帧图像或提示词引导输出\n\n## 变换模式\n- **Adhere模式**：细微变化如光照调整和纹理修改，贴近原始内容\n- **Flex模式**：平衡模型创意与输入保真度，适合受控变换\n- **Reimagine模式**：优先创意自由，支持全场景重新解释\n\n## Dream Machine集成\n- **API支持**：集成到Dream Machine API v1.6中\n- **多功能支持**：文本到视频、图像到视频、视频扩展、循环创建\n- **相机控制**：突破性生成相机控制，简单文本指令实现专业效果\n\n## 性能评估\n- **外部评估**：盲测中在保持运动、面部动画、时序一致性方面优于Runway V2V\n- **结构相似性**：在保持运动和表情的同时更好地匹配提示词要求"
     },
     {
       "path": "/luma/reframe-video",
@@ -1278,7 +1524,9 @@
       "username": "luma",
       "model_name": "reframe-video",
       "full_name": "luma/reframe-video",
-      "title": "luma/reframe-video"
+      "title": "luma/reframe-video",
+      "features": "类型：视频生成模型；视频创作；动画生成；运动合成；视觉效果；多媒体处理",
+      "Features": "## 核心功能\n- **智能视频重构**：改变任意视频的宽高比，最长支持30秒或100MB\n- **边缘内容生成**：在现有画面边缘生成新的视觉内容\n- **跨平台优化**：适配6种宽高比(9:16, 4:3, 1:1, 3:4, 16:9, 21:9)\n\n## 技术特点\n- **运动保持**：主体内容保持完整，仅在边缘生成补充内容\n- **构图重平衡**：自动重新平衡构图而无需重新渲染\n- **AI填充**：智能生成可能存在于边缘的内容\n\n## 输出规格\n- **分辨率**：输出始终为720p分辨率\n- **支持媒体**：图像(Photon)和视频(Ray2 & Ray2 Flash)\n- **平台支持**：Web和iOS平台均可使用\n\n## 使用成本\n- **图像处理**：4积分/张\n- **Ray2 Flash**：11积分/秒\n- **Ray2处理**：5秒160积分，10秒320积分\n\n## 应用场景\n- **社交媒体适配**：16:9视频快速适配TikTok、Reels、YouTube Shorts\n- **内容重用**：将横屏内容无缝转换为竖屏格式\n- **构图修复**：修复过紧裁剪的内容\n\n## 技术限制\n- **音频处理**：重构后的视频仅保留视觉内容，不保留音频\n- **质量影响**：过度大的重构可能降低输出质量"
     },
     {
       "path": "/maikocode/create-dataset-ai-influencer",
@@ -1286,7 +1534,9 @@
       "username": "maikocode",
       "model_name": "create-dataset-ai-influencer",
       "full_name": "maikocode/create-dataset-ai-influencer",
-      "title": "maikocode/create-dataset-ai-influencer\nThis tool generates a dataset of images that you can use with a Flux trainer. It uses Flux Krea and GPT-5 under the hood to create the dataset.\n76 runs"
+      "title": "maikocode/create-dataset-ai-influencer\nThis tool generates a dataset of images that you can use with a Flux trainer. It uses Flux Krea and GPT-5 under the hood to create the dataset.\n76 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心功能\n- **合成影响者数据集**：生成AI影响者图像的训练数据集\n- **细粒度控制**：支持人物类型、年龄、身高、体型、种族、眼色、发色、发型等详细参数\n- **批量生成**：单次运行可生成10-50张图像\n\n## 技术规格\n- **运行环境**：CPU (Small)\n- **核心技术**：集成Flux Krea和GPT-5\n- **默认输出**：10张图像/次运行，最大50张\n- **种子支持**：可选种子确保角色一致性生成\n\n## FLUX.1 Krea技术\n- **12B参数模型**：基于修正流Transformer的120亿参数模型\n- **美学导向**：专注于美学和真实感，克服过饱和的'AI外观'\n- **精选训练**：使用手工策划的高质量训练数据而非海量数据集\n- **频域优化**：频域分析显示更接近真实世界照片的频谱特征\n\n## 数据质量特点\n- **真实感增强**：通过监督微调阶段整合高质量合成样本\n- **美学标准**：匹配预设美学标准的最高质量图像\n- **稳定性改进**：合成图像有助于稳定检查点性能\n\n## 应用场景\n- **AI模型训练**：为机器学习模型创建多样化训练集\n- **数据集构建**：生成具有特定人口统计学特征的图像集合\n- **研究用途**：支持计算机视觉和AI研究项目\n- **商业应用**：根据flux-1-dev非商业许可证可用于个人、科学和商业目的\n\n## 技术优势\n- **开放权重**：推动新的科学研究，赋能艺术家开发创新工作流程\n- **即插即用**：可作为支持原始FLUX.1 [dev]的任何系统的直接替代品\n- **高效生成**：通过引导蒸馏训练提高效率"
     },
     {
       "path": "/mattrothenberg/dithercam",
@@ -1294,7 +1544,9 @@
       "username": "mattrothenberg",
       "model_name": "dithercam",
       "full_name": "mattrothenberg/dithercam",
-      "title": "mattrothenberg\n38 runs"
+      "title": "mattrothenberg\n38 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 视频抖动效果生成：创建具有复古美学风格的抖动视频动画\n- 文本到视频转换：根据文本提示生成81帧固定帧数视频\n- 图像到视频转换：支持输入图像进行视频转换\n\n## 技术规格\n- 分辨率选项：480p、720p\n- 宽高比支持：1:1、9:16、16:9、4:3、3:4、3:2、2:3\n- 固定帧数：81帧\n- 帧率：16 FPS（可配置5-24 FPS）\n- 可选颜色调色：支持十六进制颜色代码\n\n## 运行环境\n- 硬件：CPU (Small)\n- 依赖服务：Anthropic Claude 3.5 Haiku、Bytedance Seedance 1 Pro、Google Imagen 4 Fast\n- 平均处理时间：约每次运行$1.05\n\n## 适用场景\n- 创意视频制作\n- 艺术视频效果\n- 复古风格动画\n- 实验性动画创作"
     },
     {
       "path": "/merahburam/color-extraction-v4",
@@ -1302,7 +1554,9 @@
       "username": "merahburam",
       "model_name": "color-extraction-v4",
       "full_name": "merahburam/color-extraction-v4",
-      "title": "merahburam/color-extraction-v4\nAdvanced color extraction API. Extract dominant colors from images using multiple methods including K-means clustering, ColorThief, and adaptive algorithms. Get beautiful visual summaries with insights and suggestions.\n11 runs"
+      "title": "merahburam/color-extraction-v4\nAdvanced color extraction API. Extract dominant colors from images using multiple methods including K-means clustering, ColorThief, and adaptive algorithms. Get beautiful visual summaries with insights and suggestions.\n11 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 多算法颜色提取：K-means聚类、ColorThief、自适应算法\n- 颜色分析：支持主导色、中位切割、直方图分析\n- 智能颜色建议：提供设计洞察和配色建议\n\n## 技术规格\n- 支持格式：PNG、JPG、JPEG、GIF、BMP、WebP、AVIF、SVG\n- 颜色数量：2-20种（默认6种）\n- 质量等级：1-10（默认5）\n- 排序方式：主导性、亮度、色调、饱和度\n- 输出格式：摘要、JSON、十六进制数组、RGB数组、调色板图像\n\n## 运行环境\n- 硬件：CPU\n- Cog版本：0.16.3\n- 定价：$0.0001/秒\n\n## 适用场景\n- 设计和品牌建设\n- 调色板生成\n- 图像色彩分析\n- 视觉设计洞察"
     },
     {
       "path": "/merahburam/remove-bg",
@@ -1310,7 +1564,9 @@
       "username": "merahburam",
       "model_name": "remove-bg",
       "full_name": "merahburam/remove-bg",
-      "title": "merahburam/remove-bg\nA high-performance AI background removal API built with multiple state-of-the-art models. Remove backgrounds from images with professional quality results in seconds.\n46 runs"
+      "title": "merahburam/remove-bg\nA high-performance AI background removal API built with multiple state-of-the-art models. Remove backgrounds from images with professional quality results in seconds.\n46 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 高性能背景移除：专业级图像背景删除API\n- 多模型支持：u2net、u2net_human_seg、isnet-general-use\n- 快速处理：秒级完成背景移除\n\n## 技术规格\n- 默认模型：u2net\n- 支持格式：常见图像格式\n- 处理速度优化：可选resize_for_speed加速\n- 平均处理时间：约12秒/图像\n\n## 运行环境\n- 硬件：CPU\n- Cog版本：0.16.3\n- 定价：$0.0001/秒\n\n## 适用场景\n- 产品摄影\n- 人像编辑\n- 图形设计\n- 电商图像处理"
     },
     {
       "path": "/merahburam/vectorizer",
@@ -1318,7 +1574,9 @@
       "username": "merahburam",
       "model_name": "vectorizer",
       "full_name": "merahburam/vectorizer",
-      "title": "merahburam/vectorizer\nProfessional PNG to SVG vectorization with VTracer\n98 runs"
+      "title": "merahburam/vectorizer\nProfessional PNG to SVG vectorization with VTracer\n98 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- PNG/JPG到SVG矢量化：使用VTracer专业转换\n- 多种矢量化方法：vtracer、potrace、python_color等8种算法\n- 路径优化：自动简化路径，移除白色背景\n\n## 技术规格\n- 最小形状区域：10-1000像素（默认50）\n- 颜色提取：2-16种（默认8种）\n- 简化容差：0.5-10（默认2）\n- SVG优化：自动优化输出\n\n## 运行环境\n- 硬件：CPU\n- Cog版本：0.16.3\n- 定价：$0.0001/秒\n- 总运行次数：138次\n\n## 适用场景\n- 标志矢量化\n- 图形设计\n- 印刷和网页图形\n- 插画转换"
     },
     {
       "path": "/merahburam/vectorizer-v2",
@@ -1326,7 +1584,9 @@
       "username": "merahburam",
       "model_name": "vectorizer-v2",
       "full_name": "merahburam/vectorizer-v2",
-      "title": "merahburam/vectorizer-v2\nProfessional PNG to SVG vectorization with VTracer. Lightning-fast conversion with superior quality.\n109 runs"
+      "title": "merahburam/vectorizer-v2\nProfessional PNG to SVG vectorization with VTracer. Lightning-fast conversion with superior quality.\n109 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 专业PNG/JPG到SVG矢量化：升级版VTracer转换\n- 闪电般快速转换：优化的处理速度\n- 卓越品质：多种算法保证转换质量\n\n## 技术规格\n- 矢量化方法：vtracer、potrace、python_color、smart_trace、ai_perfect等\n- 颜色数量：2-16种（默认8种）\n- 最小区域：10-1000像素（默认50像素）\n- 简化容差：0.5-10（默认2）\n- SVG优化：路径简化和白背景移除\n\n## 运行环境\n- 硬件：CPU\n- Cog版本：0.16.3\n- 定价：$0.0001/秒\n- 总运行次数：109次\n\n## 适用场景\n- 专业图形矢量化\n- 标志和插画转换\n- 网页和印刷设计\n- 可缩放图形制作"
     },
     {
       "path": "/meta/musicgen",
@@ -1334,7 +1594,9 @@
       "username": "meta",
       "model_name": "musicgen",
       "full_name": "meta/musicgen",
-      "title": "meta/musicgen"
+      "title": "meta/musicgen",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- AI音乐生成：从文本提示或旋律生成音乐\n- 立体声输出：支持立体声和单声道版本\n- 音频延续：可模拟输入音频的旋律\n\n## 技术规格\n- 模型版本：stereo-melody-large、stereo-large、melody-large、large\n- 默认时长：8秒\n- 输出格式：WAV、MP3\n- 可配置参数：温度、Top K/P采样、引导强度、随机种子\n\n## 运行环境\n- 硬件：A100 (80GB)\n- 平台：Replicate\n\n## 适用场景\n- 音乐创作\n- 旋律延续\n- 创意音频合成\n- 音乐原型制作"
     },
     {
       "path": "/meta/sam-2",
@@ -1342,7 +1604,9 @@
       "username": "meta",
       "model_name": "sam-2",
       "full_name": "meta/sam-2",
-      "title": "meta/sam-2"
+      "title": "meta/sam-2",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 图像分割：任意对象的精确mask生成\n- 点击式分割：基于点击生成对象遮罩\n- 批量处理：支持多对象同时分割\n\n## 技术规格\n- 每侧点数：默认32\n- IoU阈值：0.88（预测质量阈值）\n- 稳定性阈值：0.95\n- M2M支持：默认启用\n\n## 运行环境\n- 硬件：L40S GPU\n- Cog版本：0.9.13\n\n## 适用场景\n- 对象分割\n- 精确遮罩生成\n- 计算机视觉\n- 图像分析任务"
     },
     {
       "path": "/michaeldwan/boulder-smoke-forecast",
@@ -1350,7 +1614,9 @@
       "username": "michaeldwan",
       "model_name": "boulder-smoke-forecast",
       "full_name": "michaeldwan/boulder-smoke-forecast",
-      "title": "michaeldwan/\nExtract structured air quality forecast data from maps\n38 runs"
+      "title": "michaeldwan/\nExtract structured air quality forecast data from maps\n38 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 空气质量预测数据提取：从天气地图提取PM2.5结构化预测数据\n- 烟雾预测：针对科罗拉多州东北部48小时PM2.5浓度预测\n- 地理定位：支持特定像素坐标的空气质量采样\n\n## 技术规格\n- 坐标参数：X坐标（默认258，博尔德位置）、Y坐标（默认415）\n- 半径设置：1-10像素颜色平均（默认6）\n- 依赖：Anthropic Claude 4 Sonnet\n\n## 运行环境\n- 硬件：CPU (Small)\n- Cog版本：0.14.0\n- 成本：$0.011636/次运行\n\n## 输出格式\n- JSON预测数据：PM2.5值、时间戳、颜色标尺\n- 可视化输出：当前预测、预测动画、调试图像\n\n## 适用场景\n- 野火烟雾监测\n- 户外活动规划\n- 健康风险评估\n- 区域空气质量跟踪"
     },
     {
       "path": "/minimax/hailuo-02",
@@ -1358,7 +1624,9 @@
       "username": "minimax",
       "model_name": "hailuo-02",
       "full_name": "minimax/hailuo-02",
-      "title": "minimax/hailuo-02"
+      "title": "minimax/hailuo-02",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 文本到视频和图像到视频生成：创建6或10秒视频\n- 多分辨率支持：512p、768p、1080p\n- 真实物理模拟：擅长真实世界物理效果\n\n## 技术规格\n- 时长选项：6秒或10秒\n- 分辨率：512p、768p、1080p\n- 可选帧定义：支持首帧和尾帧图像输入\n- 提示优化器：自动优化文本提示\n\n## 运行环境\n- 硬件：CPU\n- Cog版本：0.16.6\n- 创建时间：2025年8月31日\n\n## 定价模式\n- 基础：$0.0001/秒\n- 512p：$0.10-$0.15/视频\n- 768p：$0.27-$0.45/视频\n- 1080p：$0.48/视频\n\n## 适用场景\n- 创意视频生成\n- 视觉概念快速原型\n- 短视频内容创作\n- 物理仿真演示"
     },
     {
       "path": "/minimax/hailuo-02-fast",
@@ -1366,7 +1634,9 @@
       "username": "minimax",
       "model_name": "hailuo-02-fast",
       "full_name": "minimax/hailuo-02-fast",
-      "title": "minimax/hailuo-02-fast\nA low cost and fast version of Hailuo 02. Generate 6s and 10s videos in 512p\n7.7k runs\nOfficial"
+      "title": "minimax/hailuo-02-fast\nA low cost and fast version of Hailuo 02. Generate 6s and 10s videos in 512p\n7.7k runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 快速视频生成：Hailuo-02的低成本快速版本\n- 文本到视频和图像到视频：6或10秒512p视频生成\n- 首帧定义：根据首帧图像确定视频宽高比\n\n## 技术规格\n- 分辨率：固定512p\n- 时长：6或10秒（默认6秒）\n- 快速模式：Go Fast模式实现更快生成\n- 提示优化：可选提示优化功能\n\n## 运行环境\n- 硬件：CPU\n- 商业使用：允许\n\n## 定价模式\n- $0.0001/秒\n- 约$0.0066/6秒视频\n- 总运行次数：7.7k次\n\n## 适用场景\n- 快速视频生成\n- 原型制作\n- 内容创作\n- 短视频AI生成项目"
     },
     {
       "path": "/minimax/music-01",
@@ -1374,7 +1644,9 @@
       "username": "minimax",
       "model_name": "music-01",
       "full_name": "minimax/music-01",
-      "title": "minimax/music-01"
+      "title": "minimax/music-01",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- AI音乐创作：生成最长1分钟的带歌词和人声音乐\n- 风格模仿：可根据参考音轨创建相似风格音乐\n- 多轨支持：支持歌曲文件、人声文件、器乐文件参考\n\n## 技术规格\n- 歌词限制：350-400字符\n- 音频配置：比特率32-256k（默认256k），采样率16-44.1kHz（默认44.1k）\n- 参考文件：支持.wav/.mp3格式，>15秒\n- ID复用：支持人声ID和器乐ID重用\n\n## 运行环境\n- 硬件：CPU\n- 平台：Replicate\n- 商业使用：允许\n\n## 定价模式\n- $0.0001/秒\n- 约$0.0042/次生成\n\n## 适用场景\n- 音乐作曲\n- 人声轨道生成\n- 风格化音乐创作\n- 音乐创意快速原型"
     },
     {
       "path": "/minimax/video-01",
@@ -1382,7 +1654,9 @@
       "username": "minimax",
       "model_name": "video-01",
       "full_name": "minimax/video-01",
-      "title": "minimax/video-01\nGenerate 6s videos with prompts or images. (Also known as Hailuo). Use a subject reference to make a video with a character and the S2V-01 model.\n571.6k runs\nOfficial"
+      "title": "minimax/video-01\nGenerate 6s videos with prompts or images. (Also known as Hailuo). Use a subject reference to make a video with a character and the S2V-01 model.\n571.6k runs\nOfficial",
+      "features": "类型：视频生成模型；视频创作；动画生成；运动合成；视觉效果；多媒体处理",
+      "Features": "## 核心能力\n- 视频生成：从文本提示或图像生成6秒视频\n- 角色参考：可选主体参考制作角色视频\n- S2V-01模型：用于角色参考的专门模型\n\n## 技术规格\n- 视频时长：固定6秒\n- 输入类型：文本到视频(T2V)和图像到视频(I2V)\n- 提示优化：默认启用\n- 输出格式：URI格式视频链接\n\n## 运行环境\n- 硬件：CPU\n- 平台：Minimax AI套件\n- 商业使用：允许\n\n## 定价模式\n- $0.0001/秒\n- 约$0.015/视频生成\n- 总运行次数：571.6k次\n\n## 适用场景\n- 创意视频生成\n- 角色故事制作\n- 快速视觉内容创作\n- 概念和原型可视化"
     },
     {
       "path": "/moonshotai/kimi-k2-instruct",
@@ -1390,7 +1664,9 @@
       "username": "moonshotai",
       "model_name": "kimi-k2-instruct",
       "full_name": "moonshotai/kimi-k2-instruct",
-      "title": "moonshotai/kimi-k2-instruct\nKimi K2 achieves exceptional performance across frontier knowledge, reasoning, and coding tasks while being meticulously optimized for agentic capabilities\n15.2k runs\nOfficial"
+      "title": "moonshotai/kimi-k2-instruct\nKimi K2 achieves exceptional performance across frontier knowledge, reasoning, and coding tasks while being meticulously optimized for agentic capabilities\n15.2k runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 大语言模型服务：在前沿知识、推理和编码任务中表现卓越\n- 智能体能力：专为智能体功能精心优化\n- 多轮对话：支持复杂的对话交互\n\n## 技术规格\n- 模型类型：大语言模型(LLM)\n- 温度范围：0.1（默认）到2.0\n- Top-p采样：0-1（默认1.0）\n- 最大令牌：4096（默认），最高16384\n- 存在/频率惩罚：-2到2（默认0）\n\n## 运行环境\n- 硬件：CPU\n- 平台：Replicate\n- 支持流式和拼接输出\n\n## 定价模式\n- 输入：$0.72/百万令牌\n- 输出：$3.00/百万令牌\n- 执行：$0.0001/秒\n\n## 适用场景\n- 知识探索\n- 推理任务\n- 编程协助\n- 通用文本生成和分析"
     },
     {
       "path": "/nightmareai/real-esrgan",
@@ -1398,7 +1674,9 @@
       "username": "nightmareai",
       "model_name": "real-esrgan",
       "full_name": "nightmareai/real-esrgan",
-      "title": "nightmareai/real-esrgan"
+      "title": "nightmareai/real-esrgan",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- AI图像超分辨率：使用Real-ESRGAN技术进行高质量图像分辨率提升\n- 可选面部增强：专门的面部细节优化功能\n- 灵活放大：0-10倍缩放因子\n\n## 技术规格\n- 放大倍数：0-10倍（默认4倍）\n- 面部增强：可选功能（默认关闭）\n- 输入格式：URI格式图像\n- 输出：单一URI指向超分辨率图像\n\n## 运行环境\n- 硬件：NVIDIA T4 GPU\n- Cog版本：0.10.0-alpha17\n- 维护方：NightmareAI\n\n## 定价模式\n- $0.000225/秒\n- 估计$0.0019/次运行\n- 总运行次数：7260万次\n\n## 适用场景\n- 低分辨率图像增强\n- 摄影质量改善\n- 老照片修复和放大\n- 专业图像编辑和修复"
     },
     {
       "path": "/notdaniel/voxtral-small-24b-2507",
@@ -1406,7 +1684,9 @@
       "username": "notdaniel",
       "model_name": "voxtral-small-24b-2507",
       "full_name": "notdaniel/voxtral-small-24b-2507",
-      "title": "notdaniel/voxtral-small-24b-2507\nVoxtral Small is an enhancement of Mistral Small 3 that incorporates state-of-the-art audio input capabilities and excels at speech transcription, translation and audio understanding.\n28 runs"
+      "title": "notdaniel/voxtral-small-24b-2507\nVoxtral Small is an enhancement of Mistral Small 3 that incorporates state-of-the-art audio input capabilities and excels at speech transcription, translation and audio understanding.\n28 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 多语言音频理解：Mistral Small 3的音频增强版本\n- 语音转录：高精度语音到文本转换\n- 音频翻译：支持8种语言间的音频翻译\n\n## 技术规格\n- 模型大小：24B参数\n- 支持语言：英语、西班牙语、法语、德语、意大利语、荷兰语、葡萄牙语、印地语\n- 最大新令牌：1024（可配置至32,768）\n- 输入：URI格式音频文件\n\n## 运行环境\n- 硬件：A100 GPU (80GB)\n- Cog版本：0.16.1\n- 平台：Replicate\n\n## 定价模式\n- $0.0014/秒运行时间\n\n## 适用场景\n- 语音转录\n- 音频翻译\n- 多语言音频理解\n- 语音内容分析"
     },
     {
       "path": "/openai/clip",
@@ -1414,7 +1694,9 @@
       "username": "openai",
       "model_name": "clip",
       "full_name": "openai/clip",
-      "title": "openai/clip\nOfficial CLIP models, generate CLIP (clip-vit-large-patch14) text & image embeddings\n205k runs\nOfficial"
+      "title": "openai/clip\nOfficial CLIP models, generate CLIP (clip-vit-large-patch14) text & image embeddings\n205k runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 多模态嵌入生成：CLIP文本和图像嵌入\n- 共享嵌入空间：将文本和图像编码到统一向量空间\n- 官方OpenAI模型：clip-vit-large-patch14\n\n## 技术规格\n- 模型：CLIP (clip-vit-large-patch14)\n- 输入：文本（可选）或图像（可选）\n- 输出：数值向量嵌入\n\n## 运行环境\n- 硬件：L40S GPU\n- Cog版本：0.16.1\n- 版本ID：fd95fe35085b5b9a63d830d3126311ee6b32a7a976c78eb5f210a3a007bcdda6\n\n## 适用场景\n- 多模态嵌入生成\n- 文本-图像相似性比较\n- 机器学习特征提取\n- 跨模态检索系统\n- 总运行次数：205k次"
     },
     {
       "path": "/openai/gpt-4.1",
@@ -1422,7 +1704,9 @@
       "username": "openai",
       "model_name": "gpt-4.1",
       "full_name": "openai/gpt-4.1",
-      "title": "openai/gpt-4.1\nOpenAI's Flagship GPT model for complex tasks.\n88.3K runs\nOfficial"
+      "title": "openai/gpt-4.1\nOpenAI's Flagship GPT model for complex tasks.\n88.3K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 复杂任务处理：OpenAI旗舰GPT模型\n- 多轮对话：支持复杂对话交互\n- 多模态输入：处理文本和图像输入\n\n## 技术规格\n- 温度：0-2（默认1）\n- Top P采样：0-1（默认1）\n- 存在/频率惩罚：-2到2\n- 最大完成令牌：默认4096\n- 支持系统提示和消息列表\n\n## 运行环境\n- 硬件：CPU\n- 支持灵活参数配置\n- 总运行次数：88.3K次\n\n## 适用场景\n- 复杂文本生成\n- 对话AI\n- 多模态交互（文本+图像）\n- 高级语言理解任务"
     },
     {
       "path": "/openai/gpt-4.1-mini",
@@ -1430,7 +1714,9 @@
       "username": "openai",
       "model_name": "gpt-4.1-mini",
       "full_name": "openai/gpt-4.1-mini",
-      "title": "openai/gpt-4.1-mini\nFast, affordable version of GPT-4.1\n1M runs\nOfficial"
+      "title": "openai/gpt-4.1-mini\nFast, affordable version of GPT-4.1\n1M runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 快速经济型GPT-4.1：GPT-4.1的快速、经济版本\n- 高效文本生成：优化的响应速度和成本效益\n- 轻量级AI交互：适合快速AI响应需求\n\n## 技术规格\n- 硬件：CPU\n- 温度：0-2范围\n- Top P采样配置\n- 系统提示选项\n- 最大完成令牌：默认4096\n- 存在和频率惩罚\n\n## 运行环境\n- CPU基础设施\n- 灵活令牌生成\n- 可配置响应特性\n- 总运行次数：1M次\n\n## 适用场景\n- 通用对话AI\n- 文本生成\n- 轻量级语言模型任务\n- 需要快速、经济AI响应的应用"
     },
     {
       "path": "/openai/gpt-4.1-nano",
@@ -1438,7 +1724,9 @@
       "username": "openai",
       "model_name": "gpt-4.1-nano",
       "full_name": "openai/gpt-4.1-nano",
-      "title": "openai/gpt-4.1-nano\nFastest, most cost-effective GPT-4.1 model from OpenAI\n349.7K runs\nOfficial"
+      "title": "openai/gpt-4.1-nano\nFastest, most cost-effective GPT-4.1 model from OpenAI\n349.7K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 最快最经济：OpenAI最快、最具成本效益的GPT-4.1模型\n- 优化响应：针对速度和成本效益优化\n- 流线型设计：GPT-4.1的精简版本\n\n## 技术规格\n- 硬件：CPU基础\n- 温度：0-2范围\n- Top P采样：0-1\n- 系统提示支持\n- 最大完成令牌：默认4096\n- 存在和频率惩罚配置\n\n## 运行环境\n- CPU运行\n- 灵活令牌生成\n- 可配置响应特性\n- 总运行次数：349.7K次\n\n## 适用场景\n- 通用文本生成\n- 对话AI\n- 任务完成\n- 轻量级AI交互\n- 快速响应需求"
     },
     {
       "path": "/openai/gpt-4o",
@@ -1446,7 +1734,9 @@
       "username": "openai",
       "model_name": "gpt-4o",
       "full_name": "openai/gpt-4o",
-      "title": "openai/gpt-4o\nOpenAI's high-intelligence chat model\n175.1K runs\nOfficial"
+      "title": "openai/gpt-4o\nOpenAI's high-intelligence chat model\n175.1K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 高智能聊天模型：OpenAI的高智能对话模型\n- 多模态能力：文本和图像输入处理\n- 高级推理：先进的推理和语言生成能力\n\n## 技术规格\n- 温度：0-2范围\n- Top P采样配置\n- 存在/频率惩罚设置\n- 最大完成令牌：默认4096\n- 支持系统提示和消息交互\n- 图像分析能力\n\n## 运行环境\n- 硬件：CPU\n- 灵活令牌生成\n- 可配置推理努力\n- 总运行次数：175.1K次\n\n## 适用场景\n- 复杂对话任务\n- 多模态推理\n- 文本生成\n- 图像理解\n- 通用AI助手服务"
     },
     {
       "path": "/openai/gpt-4o-mini",
@@ -1454,7 +1744,9 @@
       "username": "openai",
       "model_name": "gpt-4o-mini",
       "full_name": "openai/gpt-4o-mini",
-      "title": "openai/gpt-4o-mini\nLow latency, low cost version of OpenAI's GPT-4o model\n2.7M runs\nOfficial"
+      "title": "openai/gpt-4o-mini\nLow latency, low cost version of OpenAI's GPT-4o model\n2.7M runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心规格\n- 上下文窗口：128K tokens\n- 输出上限：16K tokens每请求\n- 知识截止：2023年10月\n- 硬件要求：CPU\n\n## 定价\n- 输入：/bin/zsh.15/1M tokens\n- 输出：/bin/zsh.60/1M tokens\n- 混合价格：/bin/zsh.26/1M tokens（3:1比例）\n\n## 性能指标\n- MMLU：82.0%（vs Gemini Flash 77.9%，Claude Haiku 73.8%）\n- 数学推理MGSM：87.0%（vs Gemini Flash 75.5%）\n- 编程HumanEval：87.2%（vs Gemini Flash 71.5%）\n- 输出速度：59.7 tokens/秒\n- 首token延迟：0.50秒\n\n## 技术优势\n- 多模态支持（文本+图像）\n- 强化function calling能力\n- 改进的长上下文性能\n- 支持100+语言"
     },
     {
       "path": "/openai/gpt-4o-transcribe",
@@ -1462,7 +1754,9 @@
       "username": "openai",
       "model_name": "gpt-4o-transcribe",
       "full_name": "openai/gpt-4o-transcribe",
-      "title": "openai/gpt-4o-transcribe"
+      "title": "openai/gpt-4o-transcribe",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心规格\n- 硬件要求：CPU\n- 支持格式：mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm\n- 采样控制：Temperature 0-1\n\n## 定价\n- GPT-4o Transcribe：.00/1M音频输入tokens（约/bin/zsh.006/分钟）\n- GPT-4o Mini Transcribe：.00/1M音频输入tokens（约/bin/zsh.003/分钟）\n\n## 性能提升\n- 相比Whisper在马拉雅拉姆语等语言上显著降低词错误率\n- 支持100+语言转录\n- 在噪音环境、多样口音、不同语速下表现优异\n- 实时流式语音转文本支持\n\n## 技术特性\n- 基于GPT-4o后训练优化\n- 支持语言指定提升准确率\n- 可配置提示词指导转录风格"
     },
     {
       "path": "/openai/gpt-5",
@@ -1470,7 +1764,9 @@
       "username": "openai",
       "model_name": "gpt-5",
       "full_name": "openai/gpt-5",
-      "title": "openai/gpt-5\nOpenAI's new model excelling at coding, writing, and reasoning.\n30.4k runs\nOfficial"
+      "title": "openai/gpt-5\nOpenAI's new model excelling at coding, writing, and reasoning.\n30.4k runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 发布信息\n- 官方发布：2025年8月7日\n- 知识截止：2024年9月30日\n\n## 核心规格\n- 上下文窗口：272K输入 + 128K推理输出 = 400K总tokens\n- 多模态：文本+图像输入，文本输出\n- 推理级别：minimal, low, medium, high\n- Verbosity参数：low, medium, high\n\n## 定价结构\n- GPT-5：.25/1M输入，/1M输出\n- 缓存输入90%折扣\n\n## 性能突破\n- 数学：94.6% AIME 2025（无工具）\n- 编程：74.9% SWE-bench Verified，88% Aider Polyglot\n- 多模态：84.2% MMMU\n- 医疗：46.2% HealthBench Hard\n- 事实错误率较GPT-4o降低45%，思考模式下较o3降低80%\n\n## 技术基础设施\n- 基于Microsoft Azure AI超算训练\n- 采用NVIDIA最新GPU\n- 支持图片上传（PNG/JPEG/WebP/GIF，最大50MB）"
     },
     {
       "path": "/openai/gpt-5-mini",
@@ -1478,7 +1774,9 @@
       "username": "openai",
       "model_name": "gpt-5-mini",
       "full_name": "openai/gpt-5-mini",
-      "title": "openai/gpt-5-mini\nFaster version of OpenAI's flagship GPT-5 model\n16.2K runs\nOfficial"
+      "title": "openai/gpt-5-mini\nFaster version of OpenAI's flagship GPT-5 model\n16.2K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 规格\n- 知识截止：2024年5月30日\n- 上下文窗口：272K输入 + 128K推理输出\n- 多模态支持：文本+图像输入\n\n## 定价\n- GPT-5 Mini：/bin/zsh.25/1M输入，/1M输出\n- 缓存输入90%折扣\n\n## 性能对比\n- 成本效益优化版本\n- 保持GPT-5核心能力\n- 适合大规模部署场景\n\n## 技术特性\n- 推理级别：minimal, low, medium, high\n- Verbosity控制：low, medium, high\n- 多模态处理能力\n- 改进的事实准确性"
     },
     {
       "path": "/openai/gpt-5-nano",
@@ -1486,7 +1784,9 @@
       "username": "openai",
       "model_name": "gpt-5-nano",
       "full_name": "openai/gpt-5-nano",
-      "title": "openai/gpt-5-nano\nFastest, most cost-effective GPT-5 model from OpenAI\n6.8K runs\nOfficial"
+      "title": "openai/gpt-5-nano\nFastest, most cost-effective GPT-5 model from OpenAI\n6.8K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 规格\n- 知识截止：2024年5月30日\n- 上下文窗口：272K输入 + 128K推理输出\n- 最轻量级GPT-5版本\n\n## 定价\n- GPT-5 Nano：/bin/zsh.05/1M输入，/bin/zsh.40/1M输出\n- 最经济的GPT-5选择\n\n## 性能特点\n- 超低成本部署\n- 保持GPT-5基础能力\n- 适合高频调用场景\n\n## 应用场景\n- 大规模自动化任务\n- 成本敏感型应用\n- 高并发处理需求\n- 基础AI功能集成"
     },
     {
       "path": "/openai/gpt-5-structured",
@@ -1494,7 +1794,9 @@
       "username": "openai",
       "model_name": "gpt-5-structured",
       "full_name": "openai/gpt-5-structured",
-      "title": "openai/gpt-5-structured"
+      "title": "openai/gpt-5-structured",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心规格\n- GPT-5架构的结构化输出专用版本\n- 知识截止：2024年9月30日\n- 专门优化JSON、XML等结构化输出\n\n## 定价\n- 与GPT-5标准版相同：.25/1M输入，/1M输出\n\n## 技术特性\n- 严格JSON Schema遵循\n- 结构化数据生成优化\n- API集成友好\n- 减少解析错误\n\n## 应用场景\n- API响应生成\n- 数据结构化处理\n- 自动化工作流\n- 系统集成任务"
     },
     {
       "path": "/openai/gpt-oss-120b",
@@ -1502,7 +1804,9 @@
       "username": "openai",
       "model_name": "gpt-oss-120b",
       "full_name": "openai/gpt-oss-120b",
-      "title": "openai/gpt-oss-120b"
+      "title": "openai/gpt-oss-120b",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 架构规格\n- GPT-OSS-120B：117B总参数，5.1B激活参数，128个专家\n- 许可证：Apache 2.0\n- 原生量化：MXFP4\n\n## 硬件要求\n- 单块80GB GPU（H100/A100）或4×24GB GPU\n- 混合专家架构（MoE）实现高效推理\n- 128K原生上下文长度\n\n## 训练成本\n- 210万H100小时\n- 训练成本万-万\n\n## 性能对比\n- 在数学竞赛、健康查询上超越o4-mini\n- TauBench工具调用表现卓越\n\n## 部署生态\n- 支持平台：Azure、Hugging Face、vLLM、Ollama、llama.cpp等"
     },
     {
       "path": "/openai/gpt-oss-20b",
@@ -1510,7 +1814,9 @@
       "username": "openai",
       "model_name": "gpt-oss-20b",
       "full_name": "openai/gpt-oss-20b",
-      "title": "openai/gpt-oss-20b\n20b open-weight language model from OpenAI\n22.9k runs\nOfficial"
+      "title": "openai/gpt-oss-20b\n20b open-weight language model from OpenAI\n22.9k runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 架构规格\n- GPT-OSS-20B：21B总参数，3.6B激活参数，32个专家\n- 许可证：Apache 2.0\n- 原生量化：MXFP4\n\n## 硬件要求\n- 16GB内存，消费级硬件可运行\n- 支持：NVIDIA/AMD GPU，Apple Silicon M3 Max\n\n## 训练成本\n- 21万H100小时\n- 训练成本万-万\n\n## 性能特点\n- 尺寸小但在数学竞赛和健康问题上超越o3-mini\n- 混合专家架构优化效率\n\n## 应用优势\n- 消费级硬件可运行\n- 开源Apache 2.0许可\n- 高性能低资源消耗"
     },
     {
       "path": "/openai/o1",
@@ -1518,7 +1824,9 @@
       "username": "openai",
       "model_name": "o1",
       "full_name": "openai/o1",
-      "title": "openai/o1\nOpenAI's first o-series reasoning model\n15.2K runs\nOfficial"
+      "title": "openai/o1\nOpenAI's first o-series reasoning model\n15.2K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 深度推理：在回应前花更多时间思考\n- 数学竞赛：IMO资格考试83%（GPT-4o仅13%）\n- 编程：Codeforces竞赛89th百分位\n\n## 技术规格\n- 推理导向架构\n- 支持复杂问题分解\n- 多步骤逻辑推理\n\n## 应用场景\n- 数学问题解决\n- 编程竞赛\n- 复杂逻辑推理\n- 科学研究辅助\n\n## 性能优势\n- 在需要深度思考的任务上显著超越标准模型\n- 适合复杂分析和推理任务"
     },
     {
       "path": "/openai/o1-mini",
@@ -1526,7 +1834,9 @@
       "username": "openai",
       "model_name": "o1-mini",
       "full_name": "openai/o1-mini",
-      "title": "openai/o1-mini\nA small model alternative to o1\n552 runs\nOfficial"
+      "title": "openai/o1-mini\nA small model alternative to o1\n552 runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 规格\n- 成本效益：比o1便宜80%\n- 数学：AIME 70.0%（接近o1的74.4%）\n- 编程：Codeforces Elo 1650（接近o1的1673）\n\n## 技术特性\n- 保持o1核心推理能力\n- 成本优化版本\n- 适合大规模部署\n\n## 应用场景\n- 经济型推理任务\n- 批量问题解决\n- 自动化分析\n- 成本敏感型AI应用\n\n## 性能平衡\n- 在推理质量和成本之间达到最佳平衡\n- 适合商业化部署"
     },
     {
       "path": "/openai/o4-mini",
@@ -1534,7 +1844,9 @@
       "username": "openai",
       "model_name": "o4-mini",
       "full_name": "openai/o4-mini",
-      "title": "openai/o4-mini\nOpenAI's fast, lightweight reasoning model\n205.5K runs\nOfficial"
+      "title": "openai/o4-mini\nOpenAI's fast, lightweight reasoning model\n205.5K runs\nOfficial",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 最新规格\n- 上下文窗口：200K tokens\n- 最大输出：100K tokens\n- 成本：比GPT-4o便宜2.3倍\n\n## 性能指标\n- 数学：2025 AIME最佳表现模型\n- 推理能力：支持高吞吐量场景\n- 在生物、化学、物理PhD级问题上表现优异\n\n## 技术优势\n- 替代o1-mini的新一代模型\n- 速率限制：150条消息/天（Plus用户）\n- 编程：Codeformer竞赛中等推理努力匹配o1性能\n\n## 应用特点\n- 高性能推理\n- 成本效益优化\n- 适合复杂分析任务\n- 支持长文本处理"
     },
     {
       "path": "/paragekbote/flux-fast-lora-hotswap",
@@ -1542,7 +1854,9 @@
       "username": "paragekbote",
       "model_name": "flux-fast-lora-hotswap",
       "full_name": "paragekbote/flux-fast-lora-hotswap",
-      "title": "paragekbote/flux-fast-lora-hotswap\nA blazing-fast inference setup for Flux.1-dev with dynamic LoRA hotswapping.\n26 runs"
+      "title": "paragekbote/flux-fast-lora-hotswap\nA blazing-fast inference setup for Flux.1-dev with dynamic LoRA hotswapping.\n26 runs",
+      "features": "类型：图像生成模型；AI图像生成；文本到图像；创意设计；艺术创作；高质量输出",
+      "Features": "## 核心能力\n- 高质量图像生成\n- 文本到图像转换\n- 多种分辨率支持\n\n## 技术规格\n- 基于FLUX架构\n- GPU加速处理\n- 可配置生成参数\n\n## 适用场景\n- 创意设计\n- 艺术创作\n- 商业图像制作\n- 概念可视化"
     },
     {
       "path": "/paragekbote/smollm3-3b-smashed",
@@ -1550,7 +1864,9 @@
       "username": "paragekbote",
       "model_name": "smollm3-3b-smashed",
       "full_name": "paragekbote/smollm3-3b-smashed",
-      "title": "paragekbote/smollm3-3b-smashed\nSmolLM3-3B with Pruna for lightning-fast, memory-efficient AI inference.\n5 runs"
+      "title": "paragekbote/smollm3-3b-smashed\nSmolLM3-3B with Pruna for lightning-fast, memory-efficient AI inference.\n5 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 大语言模型服务\n- 智能对话交互\n- 文本生成和理解\n\n## 技术规格\n- 深度学习架构\n- 多轮对话支持\n- 上下文理解\n\n## 适用场景\n- 智能助手\n- 内容生成\n- 对话系统\n- 文本分析"
     },
     {
       "path": "/pbarker/gfpgan-video",
@@ -1558,7 +1874,9 @@
       "username": "pbarker",
       "model_name": "gfpgan-video",
       "full_name": "pbarker/gfpgan-video",
-      "title": "pbarker/gfpgan-video"
+      "title": "pbarker/gfpgan-video",
+      "features": "类型：视频生成模型；视频创作；动画生成；运动合成；视觉效果；多媒体处理",
+      "Features": "## 核心能力\n- 视频生成和处理\n- 视频转换技术\n- 动态内容创作\n\n## 技术规格\n- 视频编解码技术\n- 多格式支持\n- 实时处理能力\n\n## 适用场景\n- 视频内容创作\n- 动画制作\n- 视频编辑\n- 媒体处理"
     },
     {
       "path": "/philz1337x/clarity-upscaler",
@@ -1566,7 +1884,9 @@
       "username": "philz1337x",
       "model_name": "clarity-upscaler",
       "full_name": "philz1337x/clarity-upscaler",
-      "title": "philz1337x/clarity-upscaler"
+      "title": "philz1337x/clarity-upscaler",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- 图像质量增强\n- 超分辨率处理\n- 细节恢复技术\n\n## 技术规格\n- AI增强算法\n- 多倍放大支持\n- 细节保持技术\n\n## 适用场景\n- 图像修复\n- 质量提升\n- 老照片修复\n- 印刷优化"
     },
     {
       "path": "/piddnad/ddcolor",
@@ -1574,7 +1894,9 @@
       "username": "piddnad",
       "model_name": "ddcolor",
       "full_name": "piddnad/ddcolor",
-      "title": "piddnad/ddcolor"
+      "title": "piddnad/ddcolor",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- Ddcolor专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/ads-for-products",
@@ -1582,7 +1904,9 @@
       "username": "pipeline-examples",
       "model_name": "ads-for-products",
       "full_name": "pipeline-examples/ads-for-products",
-      "title": "pipeline-examples\nCreate stunning ads using an image of a product\n159 runs"
+      "title": "pipeline-examples\nCreate stunning ads using an image of a product\n159 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- Ads For Products专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/fractal",
@@ -1590,7 +1914,9 @@
       "username": "pipeline-examples",
       "model_name": "fractal",
       "full_name": "pipeline-examples/fractal",
-      "title": "pipeline-examples\nEnter a prompt to make an infinite fractal video.\n14 runs"
+      "title": "pipeline-examples\nEnter a prompt to make an infinite fractal video.\n14 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- Fractal专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/hunyuan-glitch",
@@ -1598,7 +1924,9 @@
       "username": "pipeline-examples",
       "model_name": "hunyuan-glitch",
       "full_name": "pipeline-examples/hunyuan-glitch",
-      "title": "pipeline-examples\n~̴͔̱̬͛̔͊ ̴̳͔̆͛̓g̶̞̍̽ ̸̧̤́l̸̰̟̲̾̈́ ̸̈́͌͜ǐ̶̒͜ ̶̺̭̾̊̈́t̷̩̔̂̉ ̸̬͘c̸̭͍͂̂ ̶͔̈́̓̅ẖ̶̜̎̍͜ ̶̡̻͖̆̐͒ ̶̢͇̘̒̚c̸̹̃͛̓ ̴̗͓̫͑̑͌ȏ̴̫͙̙ ̶̘̩̆̉̚r̶̟̃ ̶̬̹̆̆ë̷̼ ̸͙͛~̵͔̠̓̾\n5 runs"
+      "title": "pipeline-examples\n~̴͔̱̬͛̔͊ ̴̳͔̆͛̓g̶̞̍̽ ̸̧̤́l̸̰̟̲̾̈́ ̸̈́͌͜ǐ̶̒͜ ̶̺̭̾̊̈́t̷̩̔̂̉ ̸̬͘c̸̭͍͂̂ ̶͔̈́̓̅ẖ̶̜̎̍͜ ̶̡̻͖̆̐͒ ̶̢͇̘̒̚c̸̹̃͛̓ ̴̗͓̫͑̑͌ȏ̴̫͙̙ ̶̘̩̆̉̚r̶̟̃ ̶̬̹̆̆ë̷̼ ̸͙͛~̵͔̠̓̾\n5 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- Hunyuan Glitch专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/interior-designer",
@@ -1606,7 +1934,9 @@
       "username": "pipeline-examples",
       "model_name": "interior-designer",
       "full_name": "pipeline-examples/interior-designer",
-      "title": "pipeline-examples\nTransform your room using this interior designer app\n84 runs"
+      "title": "pipeline-examples\nTransform your room using this interior designer app\n84 runs",
+      "features": "类型：AI模型；机器学习；智能处理；自动化任务；API调用；云端计算",
+      "Features": "## 核心能力\n- Interior Designer专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/outpainter",
@@ -1614,7 +1944,8 @@
       "username": "pipeline-examples",
       "model_name": "outpainter",
       "full_name": "pipeline-examples/outpainter",
-      "title": "pipeline-examples\nCreate hybrid photos with text prompts using this outpainting tool\n20 runs"
+      "title": "pipeline-examples\nCreate hybrid photos with text prompts using this outpainting tool\n20 runs",
+      "Features": "## 核心能力\n- Outpainter专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/talking-avatar",
@@ -1622,7 +1953,8 @@
       "username": "pipeline-examples",
       "model_name": "talking-avatar",
       "full_name": "pipeline-examples/talking-avatar",
-      "title": "pipeline-examples\nA lip-syncing avatar for UGC/TikTok/Reels content\n53 runs"
+      "title": "pipeline-examples\nA lip-syncing avatar for UGC/TikTok/Reels content\n53 runs",
+      "Features": "## 核心能力\n- Talking Avatar专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/tile",
@@ -1630,7 +1962,8 @@
       "username": "pipeline-examples",
       "model_name": "tile",
       "full_name": "pipeline-examples/tile",
-      "title": "pipeline-examples\nCreate a tile that's infinitely patternable.\n51 runs"
+      "title": "pipeline-examples\nCreate a tile that's infinitely patternable.\n51 runs",
+      "Features": "## 核心能力\n- Tile专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/pipeline-examples/video-ads",
@@ -1638,7 +1971,8 @@
       "username": "pipeline-examples",
       "model_name": "video-ads",
       "full_name": "pipeline-examples/video-ads",
-      "title": "pipeline-examples\nVideo ads with a product!\n56 runs"
+      "title": "pipeline-examples\nVideo ads with a product!\n56 runs",
+      "Features": "## 核心能力\n- 视频生成和处理\n- 视频转换技术\n- 动态内容创作\n\n## 技术规格\n- 视频编解码技术\n- 多格式支持\n- 实时处理能力\n\n## 适用场景\n- 视频内容创作\n- 动画制作\n- 视频编辑\n- 媒体处理"
     },
     {
       "path": "/pipeline-examples/video-to-gif",
@@ -1646,7 +1980,8 @@
       "username": "pipeline-examples",
       "model_name": "video-to-gif",
       "full_name": "pipeline-examples/video-to-gif",
-      "title": "pipeline-examples\nTurn a video into a GIF with removed background\n10 runs"
+      "title": "pipeline-examples\nTurn a video into a GIF with removed background\n10 runs",
+      "Features": "## 核心能力\n- 视频生成和处理\n- 视频转换技术\n- 动态内容创作\n\n## 技术规格\n- 视频编解码技术\n- 多格式支持\n- 实时处理能力\n\n## 适用场景\n- 视频内容创作\n- 动画制作\n- 视频编辑\n- 媒体处理"
     },
     {
       "path": "/press1209/musicology-v1-beta",
@@ -1654,7 +1989,8 @@
       "username": "press1209",
       "model_name": "musicology-v1-beta",
       "full_name": "press1209/musicology-v1-beta",
-      "title": "press1209/musicology-v1-beta\n48 runs"
+      "title": "press1209/musicology-v1-beta\n48 runs",
+      "Features": "## 核心能力\n- Musicology V1 Beta专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/prunaai/flux-kontext-dev",
@@ -1662,7 +1998,8 @@
       "username": "prunaai",
       "model_name": "flux-kontext-dev",
       "full_name": "prunaai/flux-kontext-dev",
-      "title": "prunaai/flux-kontext-dev"
+      "title": "prunaai/flux-kontext-dev",
+      "Features": "## 核心能力\n- 高质量图像生成\n- 文本到图像转换\n- 多种分辨率支持\n\n## 技术规格\n- 深度学习架构\n- GPU加速处理\n- 可配置生成参数\n\n## 适用场景\n- 创意设计\n- 艺术创作\n- 商业图像制作\n- 概念可视化"
     },
     {
       "path": "/prunaai/flux.1-dev",
@@ -1670,7 +2007,8 @@
       "username": "prunaai",
       "model_name": "flux.1-dev",
       "full_name": "prunaai/flux.1-dev",
-      "title": "prunaai/flux.1-dev\nThis is the fastest Flux Dev endpoint in the world, contact us for more at pruna.ai\n17m runs"
+      "title": "prunaai/flux.1-dev\nThis is the fastest Flux Dev endpoint in the world, contact us for more at pruna.ai\n17m runs",
+      "Features": "## 核心能力\n- 高质量图像生成\n- 文本到图像转换\n- 多种分辨率支持\n\n## 技术规格\n- 深度学习架构\n- GPU加速处理\n- 可配置生成参数\n\n## 适用场景\n- 创意设计\n- 艺术创作\n- 商业图像制作\n- 概念可视化"
     },
     {
       "path": "/prunaai/gpt-oss-20b",
@@ -1678,7 +2016,8 @@
       "username": "prunaai",
       "model_name": "gpt-oss-20b",
       "full_name": "prunaai/gpt-oss-20b",
-      "title": "prunaai/gpt-oss-20b\nAdvanced 20B open-weight reasoning models to customize for any use case and run anywhere.\n87 runs"
+      "title": "prunaai/gpt-oss-20b\nAdvanced 20B open-weight reasoning models to customize for any use case and run anywhere.\n87 runs",
+      "Features": "## 核心能力\n- Gpt Oss 20B专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/prunaai/hidream-l1-fast",
@@ -1686,7 +2025,8 @@
       "username": "prunaai",
       "model_name": "hidream-l1-fast",
       "full_name": "prunaai/hidream-l1-fast",
-      "title": "prunaai/hidream-l1-fast\nThis is an optimised version of the hidream-l1 model using the pruna ai optimisation toolkit!\n2.6m runs"
+      "title": "prunaai/hidream-l1-fast\nThis is an optimised version of the hidream-l1 model using the pruna ai optimisation toolkit!\n2.6m runs",
+      "Features": "## 核心能力\n- Hidream L1 Fast专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/prunaai/wan-2.2-image",
@@ -1694,7 +2034,8 @@
       "username": "prunaai",
       "model_name": "wan-2.2-image",
       "full_name": "prunaai/wan-2.2-image",
-      "title": "prunaai/wan-2.2-image\nThis model generates beautiful cinematic 2 megapixel images in 3-4 seconds and is derived from the Wan 2.2 model through optimisation techniques from the pruna package\n115.1k runs\nOfficial"
+      "title": "prunaai/wan-2.2-image\nThis model generates beautiful cinematic 2 megapixel images in 3-4 seconds and is derived from the Wan 2.2 model through optimisation techniques from the pruna package\n115.1k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.2 Image专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/qwen/qwen-image",
@@ -1702,7 +2043,8 @@
       "username": "qwen",
       "model_name": "qwen-image",
       "full_name": "qwen/qwen-image",
-      "title": "qwen/qwen-image\nAn image generation foundation model in the Qwen series that achieves significant advances in complex text rendering.\n145.6k runs\nOfficial"
+      "title": "qwen/qwen-image\nAn image generation foundation model in the Qwen series that achieves significant advances in complex text rendering.\n145.6k runs\nOfficial",
+      "Features": "## 核心技术规格\n- **参数规模**: 20B (200亿参数) 多模态扩散变换器(MMDiT)\n- **架构**: 基于Qwen2.5-VL文本输入 + VAE图像编码的双路径架构\n- **硬件要求**: H100 GPU，推荐8GB+ VRAM，64GB系统内存\n- **存储需求**: 约60GB完整版本\n- **定价**: /bin/zsh.025/张输出图像或/bin/zsh.001525/秒\n\n## 技术亮点\n- 支持1328x1328像素高分辨率生成\n- 复杂文本渲染和精确图像编辑，支持中英文高保真渲染\n- 渐进式训练策略，从简单到复杂文本输入的课程学习\n- 在DPG、GenEval、GEdit和ImgEdit基准测试中获得最高综合得分\n\n## 性能指标\n- 多行布局、段落级语义理解\n- 支持对象检测、语义分割、深度和边缘估计等多种图像理解任务\n- Apache 2.0开源许可，支持商业使用"
     },
     {
       "path": "/qwen/qwen-image-edit",
@@ -1710,7 +2052,8 @@
       "username": "qwen",
       "model_name": "qwen-image-edit",
       "full_name": "qwen/qwen-image-edit",
-      "title": "qwen/qwen-image-edit\nEdit images using a prompt. This model extends Qwen-Image’s unique text rendering capabilities to image editing tasks, enabling precise text editing\n67.7k runs\nOfficial"
+      "title": "qwen/qwen-image-edit\nEdit images using a prompt. This model extends Qwen-Image’s unique text rendering capabilities to image editing tasks, enabling precise text editing\n67.7k runs\nOfficial",
+      "Features": "## 核心技术规格\n- **基础架构**: 基于Qwen-Image的20B参数模型扩展\n- **硬件要求**: H100 GPU\n- **定价**: /bin/zsh.03/张输出图像（约33张图像/美元）\n- **支持格式**: webp, jpg, png\n\n## 技术特点\n- 扩展Qwen-Image独特的文本渲染能力到图像编辑任务\n- 双路径输入：Qwen2.5-VL视觉语义控制 + VAE编码器视觉外观控制\n- 多任务训练范式：T2I、TI2I和I2I重建任务结合\n- 潜在表示对齐技术，确保编辑的一致性和准确性\n\n## 应用场景\n- 专业图像编辑\n- 文本内容的视觉化\n- 品牌设计和营销材料\n- 多语言文本渲染需求"
     },
     {
       "path": "/qwen/qwen3-235b-a22b-instruct-2507",
@@ -1718,7 +2061,8 @@
       "username": "qwen",
       "model_name": "qwen3-235b-a22b-instruct-2507",
       "full_name": "qwen/qwen3-235b-a22b-instruct-2507",
-      "title": "qwen/qwen3-235b-a22b-instruct-2507\nUpdated Qwen3 model for instruction following\n35.7k runs\nOfficial"
+      "title": "qwen/qwen3-235b-a22b-instruct-2507\nUpdated Qwen3 model for instruction following\n35.7k runs\nOfficial",
+      "Features": "## 核心技术规格\n- **参数规模**: 235B总参数，22B激活参数 (MoE架构)\n- **硬件要求**: CPU运行\n- **定价**: /bin/zsh.264/百万输入tokens，.06/百万输出tokens\n- **最大输出**: 16,384 tokens\n\n## 技术优势\n- 更新的Qwen3指令跟随模型\n- 支持温度调节(0-2)、top-p采样等可定制参数\n- 支持100+语言和方言\n- Apache 2.0许可，GitHub和Hugging Face提供权重\n\n## 性能特点\n- MoE架构实现高效推理\n- 多语言优化\n- 商业友好许可\n- 大规模参数规模"
     },
     {
       "path": "/research/design-protein",
@@ -1726,7 +2070,8 @@
       "username": "research",
       "model_name": "design-protein",
       "full_name": "research/design-protein",
-      "title": "research/design-protein\nDesign complex Protein de-novo\n854 runs"
+      "title": "research/design-protein\nDesign complex Protein de-novo\n854 runs",
+      "Features": "## 核心能力\n- Design Protein专业AI功能\n- 智能处理和分析\n- 高效自动化服务\n\n## 技术规格\n- 深度学习架构\n- 优化处理性能\n- 稳定服务质量\n\n## 适用场景\n- 专业应用开发\n- 智能系统集成\n- 自动化处理\n- AI功能增强"
     },
     {
       "path": "/resemble-ai/chatterbox-pro",
@@ -1734,7 +2079,8 @@
       "username": "resemble-ai",
       "model_name": "chatterbox-pro",
       "full_name": "resemble-ai/chatterbox-pro",
-      "title": "resemble-ai/chatterbox-pro"
+      "title": "resemble-ai/chatterbox-pro",
+      "Features": "## 核心能力\n- 大语言模型服务\n- 智能对话交互\n- 文本生成和理解\n\n## 技术规格\n- 深度学习架构\n- 多轮对话支持\n- 上下文理解\n\n## 适用场景\n- 智能助手\n- 内容生成\n- 对话系统\n- 文本分析"
     },
     {
       "path": "/runwayml/gen4-aleph",
@@ -1742,7 +2088,8 @@
       "username": "runwayml",
       "model_name": "gen4-aleph",
       "full_name": "runwayml/gen4-aleph",
-      "title": "runwayml/gen4-aleph\nA new way to edit, transform and generate video\n5.2k runs\nOfficial"
+      "title": "runwayml/gen4-aleph\nA new way to edit, transform and generate video\n5.2k runs\nOfficial",
+      "Features": "## 核心技术规格\n- **功能定位**: 编辑、变换和生成视频的新方式\n- **硬件要求**: CPU运行\n- **定价**: /bin/zsh.0001/秒视频输出\n- **输入要求**: 视频(<16MB，仅使用前5秒) + 文本提示\n\n## 技术特点\n- 支持多种宽高比：16:9, 9:16, 4:3, 3:4, 1:1, 21:9\n- 可使用参考图像影响风格/内容\n- 支持随机种子实现可重现生成\n- 官方维护，支持商业使用\n\n## 应用场景\n- 视频内容编辑\n- 创意视频制作\n- 商业广告视频\n- 社交媒体内容"
     },
     {
       "path": "/runwayml/gen4-image",
@@ -1750,7 +2097,8 @@
       "username": "runwayml",
       "model_name": "gen4-image",
       "full_name": "runwayml/gen4-image",
-      "title": "runwayml/gen4-image"
+      "title": "runwayml/gen4-image",
+      "Features": "## 核心技术规格\n- **分辨率选项**: 720p和1080p\n- **定价**: 720p约20张图像/美元，1080p约12张图像/美元\n- **硬件要求**: CPU运行\n\n## 核心功能\n- 使用最多3张参考图像创建所需的精确图像\n- 支持多种宽高比：16:9, 9:16, 4:3, 3:4, 1:1, 21:9\n- 参考图像标记系统\n- 可重现的随机种子生成\n\n## 应用场景\n- 商业图像设计\n- 产品原型设计\n- 艺术创作\n- 品牌视觉内容"
     },
     {
       "path": "/runwayml/gen4-image-turbo",
@@ -1758,7 +2106,8 @@
       "username": "runwayml",
       "model_name": "gen4-image-turbo",
       "full_name": "runwayml/gen4-image-turbo",
-      "title": "runwayml/gen4-image-turbo\nGen-4 Image Turbo is cheaper and 2.5x faster than Gen-4 Image. An image model with references, use up to 3 reference images to create the exact image you need. Capture every angle.\n15.7k runs\nOfficial"
+      "title": "runwayml/gen4-image-turbo\nGen-4 Image Turbo is cheaper and 2.5x faster than Gen-4 Image. An image model with references, use up to 3 reference images to create the exact image you need. Capture every angle.\n15.7k runs\nOfficial",
+      "Features": "## 核心技术规格\n- **性能优势**: 比Gen-4 Image便宜且快2.5倍\n- **定价**: 约/bin/zsh.03/张输出图像\n- **处理时间**: /bin/zsh.0001/秒处理时间\n- **硬件要求**: CPU运行\n\n## 技术改进\n- 继承Gen-4 Image的3张参考图像功能\n- 优化的成本效益比\n- 支持720p和1080p分辨率\n- 更快的处理速度\n\n## 应用优势\n- 高性价比图像生成\n- 快速原型制作\n- 批量内容生产\n- 成本敏感型项目"
     },
     {
       "path": "/runwayml/upscale-v1",
@@ -1766,7 +2115,8 @@
       "username": "runwayml",
       "model_name": "upscale-v1",
       "full_name": "runwayml/upscale-v1",
-      "title": "runwayml/upscale-v1"
+      "title": "runwayml/upscale-v1",
+      "Features": "## 核心技术规格\n- **功能**: 将视频放大4倍，最高支持4K分辨率\n- **硬件要求**: CPU运行\n- **定价**: /bin/zsh.02/秒输出视频\n- **处理约束**: 视频长度<40秒，每边<4096像素\n\n## 技术限制\n- 支持MP4格式\n- 估计/bin/zsh.0059/次典型运行\n- 专门用于视频放大处理\n\n## 应用场景\n- 视频质量提升\n- 老视频修复\n- 4K内容制作\n- 视频后期处理"
     },
     {
       "path": "/salesforce/blip",
@@ -1774,7 +2124,8 @@
       "username": "salesforce",
       "model_name": "blip",
       "full_name": "salesforce/blip",
-      "title": "salesforce/blip"
+      "title": "salesforce/blip",
+      "Features": "## 核心能力\n- BLIP (Bootstrapping Language-Image Pre-training) 图像理解与生成模型\n- 支持图像描述生成、视觉问答和图像文本匹配任务\n- 统一的视觉-语言理解与生成架构\n\n## 技术规格\n- 硬件需求: Nvidia T4 GPU\n- 推理时间: 1秒内完成\n- 成本: 约0.00022美元/次运行\n- 基础架构: Vision Transformer (ViT) + Transformer解码器\n- 预训练数据: COCO数据集\n\n## 核心技术\n- 引导式字幕生成技术，处理噪声网络数据\n- 支持条件和无条件图像描述生成\n- 多模态编码器-解码器混合架构\n- 自注意力和交叉注意力机制结合\n\n## 适用场景\n- 自动化图像描述生成\n- 视觉问答系统开发\n- 图像文本匹配应用\n- AI驱动的内容生成"
     },
     {
       "path": "/schananas/grounded_sam",
@@ -1782,7 +2133,8 @@
       "username": "schananas",
       "model_name": "grounded_sam",
       "full_name": "schananas/grounded_sam",
-      "title": "schananas/grounded_sam"
+      "title": "schananas/grounded_sam",
+      "Features": "## 核心能力\n- Grounded SAM 精准图像分割模型\n- 结合Grounding DINO目标检测与Segment Anything分割技术\n- 基于文本提示的精确目标识别与分割\n\n## 技术规格\n- 硬件需求: L40S GPU\n- 成本: 0.000975美元/秒\n- 运行次数: 814.7K次\n- 两阶段处理流程: 检测+分割\n\n## 核心技术\n- Grounding DINO: 开放集目标检测器，支持零样本检测\n- SAM: 可提示分割模型，生成精确分割掩码\n- 支持正向和负向掩码提示\n- 可调整掩码大小（膨胀/收缩）\n\n## 适用场景\n- 时尚与产品摄影处理\n- 精确的图像编辑与合成\n- 目标检测与分割任务\n- 设计和视觉内容创作"
     },
     {
       "path": "/sczhou/codeformer",
@@ -1790,7 +2142,8 @@
       "username": "sczhou",
       "model_name": "codeformer",
       "full_name": "sczhou/codeformer",
-      "title": "sczhou/codeformer"
+      "title": "sczhou/codeformer",
+      "Features": "## 核心能力\n- CodeFormer 人脸修复算法 (NeurIPS 2022)\n- 专门修复老照片和AI生成人脸图像\n- 基于Codebook Lookup Transformer架构\n\n## 技术规格\n- 硬件需求: Nvidia L40S GPU\n- 处理时间: 3秒内完成\n- 成本: 约0.0023美元/次运行\n- 许可证: S-Lab License 1.0 (非商业用途)\n\n## 核心技术\n- VQ-GAN编码书学习技术\n- Transformer预测网络进行全局建模\n- 可控特征变换模块 (保真度权重w ∈ [0,1])\n- 离散先验降低修复映射的不确定性\n\n## 技术特点\n- 支持背景增强选项\n- 可调节的保真度设置\n- 人脸上采样功能\n- 最终图像放大能力\n\n## 适用场景\n- 历史照片修复项目\n- 低分辨率人脸图像增强\n- AI生成肖像图像优化\n- 数字图像修复应用"
     },
     {
       "path": "/seanbiggs/n8n",
@@ -1798,7 +2151,8 @@
       "username": "seanbiggs",
       "model_name": "n8n",
       "full_name": "seanbiggs/n8n",
-      "title": "seanbiggs/n8n\n38 runs"
+      "title": "seanbiggs/n8n\n38 runs",
+      "Features": "## 核心能力\n- N8N 工作流自动化平台集成\n- 支持多种服务和API的连接\n- 无代码/低代码自动化解决方案\n\n## 技术规格\n- 基于Node.js构建的开源平台\n- 支持400+集成服务\n- 可视化工作流编辑器\n\n## 适用场景\n- 业务流程自动化\n- 数据同步与处理\n- API服务编排\n- 企业级工作流管理"
     },
     {
       "path": "/shreejalmaharjan-27/tiktok-short-captions",
@@ -1806,7 +2160,8 @@
       "username": "shreejalmaharjan-27",
       "model_name": "tiktok-short-captions",
       "full_name": "shreejalmaharjan-27/tiktok-short-captions",
-      "title": "shreejalmaharjan-27/tiktok-short-captions"
+      "title": "shreejalmaharjan-27/tiktok-short-captions",
+      "Features": "## 核心能力\n- TikTok短视频字幕生成器\n- AI驱动的社交媒体内容创作工具\n- 自动生成吸引人的短视频标题\n\n## 技术规格\n- 专为TikTok平台优化\n- 支持多语言字幕生成\n- 快速批量处理能力\n\n## 适用场景\n- 社交媒体内容创作\n- 短视频营销\n- 内容运营自动化\n- 多平台内容分发"
     },
     {
       "path": "/sljeff/dots.ocr",
@@ -1814,7 +2169,8 @@
       "username": "sljeff",
       "model_name": "dots.ocr",
       "full_name": "sljeff/dots.ocr",
-      "title": "sljeff/dots.ocr\nhttps://github.com/sljeff/dots-ocr-client\n1.8k runs"
+      "title": "sljeff/dots.ocr\nhttps://github.com/sljeff/dots-ocr-client\n1.8k runs",
+      "Features": "## 核心能力\n- Dots OCR 光学字符识别系统\n- 高精度文本提取与识别\n- 支持多种文档格式处理\n\n## 技术规格\n- GitHub: sljeff/dots-ocr-client\n- 运行次数: 1.8k+\n- 支持多语言文本识别\n\n## 核心技术\n- 深度学习OCR引擎\n- 自适应图像预处理\n- 多语言字符集支持\n\n## 适用场景\n- 文档数字化处理\n- 自动化数据录入\n- 票据信息提取\n- 多语言文档识别"
     },
     {
       "path": "/spuuntries/ilearnmate-icts",
@@ -1822,7 +2178,8 @@
       "username": "spuuntries",
       "model_name": "ilearnmate-icts",
       "full_name": "spuuntries/ilearnmate-icts",
-      "title": "spuuntries/ilearnmate-icts\n16 runs"
+      "title": "spuuntries/ilearnmate-icts\n16 runs",
+      "Features": "## 核心能力\n- ILearnMate ICTS 教育技术解决方案\n- 智能化学习管理系统\n- 教育数据分析与处理\n\n## 技术规格\n- 运行次数: 16次\n- 专为教育场景优化\n- 支持学习分析\n\n## 适用场景\n- 在线教育平台\n- 学习进度跟踪\n- 教育数据分析\n- 智能化教学辅助"
     },
     {
       "path": "/tencentarc/gfpgan",
@@ -1830,7 +2187,8 @@
       "username": "tencentarc",
       "model_name": "gfpgan",
       "full_name": "tencentarc/gfpgan",
-      "title": "tencentarc/gfpgan"
+      "title": "tencentarc/gfpgan",
+      "Features": "## 核心能力\n- GFPGAN 实用人脸修复算法\n- 腾讯ARC实验室开发的人脸增强技术\n- 支持多版本修复算法选择\n\n## 技术规格\n- 硬件需求: Nvidia L40S GPU\n- 处理时间: 约3秒完成\n- 成本: 约0.0024美元/次运行\n- 默认放大倍数: 2倍\n\n## 版本特性\n- v1.2: 基础修复功能\n- v1.3: 整体质量提升\n- v1.4: 细节增强和身份保持优化\n- RestoreFormer: 高级修复模式\n\n## 核心技术\n- 生成对抗网络(GAN)架构\n- 预训练人脸先验知识\n- 多尺度特征提取\n- 身份保持机制\n\n## 适用场景\n- 老照片修复与增强\n- 低质量人脸图像优化\n- AI生成肖像后处理\n- 历史照片数字化项目"
     },
     {
       "path": "/tmappdev/lipsync",
@@ -1838,7 +2196,8 @@
       "username": "tmappdev",
       "model_name": "lipsync",
       "full_name": "tmappdev/lipsync",
-      "title": "tmappdev/lipsync\nLipsync model using MuseTalk\n6.5k runs"
+      "title": "tmappdev/lipsync\nLipsync model using MuseTalk\n6.5k runs",
+      "Features": "## 核心能力\n- LipSync 基于MuseTalk的唇形同步模型\n- 高质量视频唇形匹配技术\n- 实时音视频同步处理\n\n## 技术规格\n- 运行次数: 6.5k+\n- 基于MuseTalk架构\n- 支持多语言唇形同步\n\n## 核心技术\n- 深度学习唇形生成\n- 音频驱动的面部动画\n- 实时渲染技术\n\n## 适用场景\n- 虚拟数字人制作\n- 视频配音同步\n- 多语言内容本地化\n- 虚拟主播应用"
     },
     {
       "path": "/topazlabs/video-upscale",
@@ -1846,7 +2205,8 @@
       "username": "topazlabs",
       "model_name": "video-upscale",
       "full_name": "topazlabs/video-upscale",
-      "title": "topazlabs/video-upscale"
+      "title": "topazlabs/video-upscale",
+      "Features": "## 核心能力\n- Topaz Labs 专业视频升级技术\n- AI驱动的视频质量增强\n- 支持多种分辨率提升\n\n## 技术规格\n- 专业级视频处理\n- 支持4K/8K输出\n- GPU加速处理\n\n## 核心技术\n- 机器学习超分辨率\n- 视频去噪与锐化\n- 时间一致性保持\n\n## 适用场景\n- 专业视频后期制作\n- 老视频修复升级\n- 流媒体质量优化\n- 影视制作管线"
     },
     {
       "path": "/tristanbob/text-behind-image",
@@ -1854,7 +2214,8 @@
       "username": "tristanbob",
       "model_name": "text-behind-image",
       "full_name": "tristanbob/text-behind-image",
-      "title": "tristanbob/text-behind-image\n20 runs"
+      "title": "tristanbob/text-behind-image\n20 runs",
+      "Features": "## 核心能力\n- Text Behind Image 文字图像合成技术\n- 创意文字与图像融合效果\n- 智能深度感知文字放置\n\n## 技术规格\n- 运行次数: 20次\n- 支持各种字体样式\n- 自动深度检测\n\n## 核心技术\n- 深度估计算法\n- 图像分割技术\n- 文字遮挡关系处理\n\n## 适用场景\n- 创意设计制作\n- 品牌视觉设计\n- 社交媒体内容\n- 广告创意制作"
     },
     {
       "path": "/ultralytics/yolo11n",
@@ -1862,7 +2223,8 @@
       "username": "ultralytics",
       "model_name": "yolo11n",
       "full_name": "ultralytics/yolo11n",
-      "title": "ultralytics/yolo11n\nUltralytics YOLO11n object detection model with 2.6M parameters. Achieves 39.5 mAP50-95 on COCO dataset. Optimized for real-time inference with 1.55 ms speed on T4 GPU..\n54 runs"
+      "title": "ultralytics/yolo11n\nUltralytics YOLO11n object detection model with 2.6M parameters. Achieves 39.5 mAP50-95 on COCO dataset. Optimized for real-time inference with 1.55 ms speed on T4 GPU..\n54 runs",
+      "Features": "## 核心能力\n- YOLO11n 轻量级实时目标检测模型\n- Ultralytics最新一代YOLO系列模型\n- 纳米版本，专为高效推理优化\n\n## 技术规格\n- 参数数量: 2.6M（仅JPEG大小）\n- COCO性能: 39.5 mAP50-95\n- 推理速度: 1.55ms (T4 GPU)\n- 硬件支持: CPU兼容\n\n## 架构改进\n- 改进的骨干网络和颈部架构\n- C2PSA空间注意力模块\n- Cross Stage Partial with Kernel Size 2块\n- 增强的特征提取能力\n\n## 性能优势\n- 相比YOLOv8m参数减少22%而精度更高\n- 支持多种计算机视觉任务\n- 边缘设备到云平台全覆盖部署\n- 低成本GPU训练支持\n\n## 适用场景\n- 实时目标识别系统\n- 边缘设备计算机视觉\n- 快速图像分析应用\n- 轻量级检测服务"
     },
     {
       "path": "/ultralytics/yoloe-11s",
@@ -1870,7 +2232,8 @@
       "username": "ultralytics",
       "model_name": "yoloe-11s",
       "full_name": "ultralytics/yoloe-11s",
-      "title": "ultralytics/yoloe-11s\nUltralytics YOLOE-L Real-Time Seeing Anything model with 26.2M parameters. Achieves 52.6 mAP50-95 on COCO dataset. Optimized for real-time inference with 6.2 ms speed on T4 GPU..\n34 runs"
+      "title": "ultralytics/yoloe-11s\nUltralytics YOLOE-L Real-Time Seeing Anything model with 26.2M parameters. Achieves 52.6 mAP50-95 on COCO dataset. Optimized for real-time inference with 6.2 ms speed on T4 GPU..\n34 runs",
+      "Features": "## 核心能力\n- YOLO11s 小型高效目标检测模型\n- Ultralytics YOLO系列优化版本\n- 平衡速度与精度的检测方案\n\n## 技术规格\n- 模型规模: Small版本\n- 优化的推理速度\n- 支持边缘部署\n\n## 核心技术\n- 改进的网络架构\n- 高效特征提取\n- 多尺度目标检测\n\n## 适用场景\n- 移动端目标检测\n- 实时监控系统\n- 边缘计算设备\n- 快速原型开发"
     },
     {
       "path": "/ultralytics/yolov8s-worldv2",
@@ -1878,7 +2241,8 @@
       "username": "ultralytics",
       "model_name": "yolov8s-worldv2",
       "full_name": "ultralytics/yolov8s-worldv2",
-      "title": "ultralytics/yolov8s-worldv2\nUltralytics YOLOv8s worldv2 Real-Time Open-Vocabulary Object Detection model with 12.7M parameters. Achieves 37.7 mAP50-95 on COCO dataset. Optimized for real-time inference\n49 runs"
+      "title": "ultralytics/yolov8s-worldv2\nUltralytics YOLOv8s worldv2 Real-Time Open-Vocabulary Object Detection model with 12.7M parameters. Achieves 37.7 mAP50-95 on COCO dataset. Optimized for real-time inference\n49 runs",
+      "Features": "## 核心能力\n- YOLOv8s World v2 开放词汇目标检测\n- 支持自然语言描述的目标检测\n- 零样本检测能力\n\n## 技术规格\n- 基于YOLOv8s架构\n- World v2增强版本\n- 支持开放词汇集\n\n## 核心技术\n- 语言-视觉联合训练\n- 零样本目标识别\n- 文本提示检测\n\n## 适用场景\n- 智能监控系统\n- 自动化质检\n- 机器人视觉\n- 通用目标识别"
     },
     {
       "path": "/vaibhavs10/incredibly-fast-whisper",
@@ -1886,7 +2250,8 @@
       "username": "vaibhavs10",
       "model_name": "incredibly-fast-whisper",
       "full_name": "vaibhavs10/incredibly-fast-whisper",
-      "title": "vaibhavs10/incredibly-fast-whisper"
+      "title": "vaibhavs10/incredibly-fast-whisper",
+      "Features": "## 核心能力\n- Incredibly Fast Whisper 高速音频转录与翻译模型\n- 基于OpenAI Whisper-large-v3的优化实现\n- 支持50+语言的实时语音识别\n\n## 技术规格\n- 硬件需求: L40S GPU\n- 处理成本: 0.000975美元/秒\n- 基础模型: Whisper-large-v3\n- 优化技术: Flash Attention 2, BetterTransformer\n\n## 性能提升\n- 处理速度提升8倍（相比标准Whisper）\n- 150分钟音频在98秒内完成转录\n- 支持批处理（默认批大小24）\n- GPU加速处理能力\n\n## 核心技术\n- Transformer编码器-解码器架构\n- 多语言自动检测\n- 说话人分离功能（可选）\n- 时间戳生成（词级或块级）\n\n## 适用场景\n- 多语言音频转录服务\n- 实时语音转文字应用\n- 播客/会议/采访转录\n- 音频内容翻译处理"
     },
     {
       "path": "/veo-3-apps/json-prompt",
@@ -1894,7 +2259,8 @@
       "username": "veo-3-apps",
       "model_name": "json-prompt",
       "full_name": "veo-3-apps/json-prompt",
-      "title": "veo-3-apps/json-prompt\nJSON-style prompter for Veo 3\n42 runs"
+      "title": "veo-3-apps/json-prompt\nJSON-style prompter for Veo 3\n42 runs",
+      "Features": "## 核心能力\n- VEO-3 JSON提示处理系统\n- 结构化数据生成与解析\n- 智能JSON格式化工具\n\n## 技术规格\n- VEO-3系列应用\n- 高效JSON处理\n- 支持复杂数据结构\n\n## 核心技术\n- 智能数据解析\n- 结构化输出生成\n- JSON schema验证\n\n## 适用场景\n- API数据处理\n- 配置文件生成\n- 数据格式转换\n- 自动化数据处理"
     },
     {
       "path": "/veo-3-apps/json-prompt-fast",
@@ -1902,7 +2268,8 @@
       "username": "veo-3-apps",
       "model_name": "json-prompt-fast",
       "full_name": "veo-3-apps/json-prompt-fast",
-      "title": "veo-3-apps/json-prompt-fast\nJSON-style prompter for Veo 3 Fast\n34 runs"
+      "title": "veo-3-apps/json-prompt-fast\nJSON-style prompter for Veo 3 Fast\n34 runs",
+      "Features": "## 核心能力\n- VEO-3 JSON提示快速版\n- 高速JSON数据处理\n- 优化的响应时间\n\n## 技术规格\n- 快速处理模式\n- 降低延迟设计\n- 批量处理支持\n\n## 核心技术\n- 缓存优化机制\n- 并行处理能力\n- 轻量级解析器\n\n## 适用场景\n- 实时数据处理\n- 高并发API服务\n- 流式数据解析\n- 低延迟应用"
     },
     {
       "path": "/veo-3-apps/veo-3-fast-upscaled",
@@ -1910,7 +2277,8 @@
       "username": "veo-3-apps",
       "model_name": "veo-3-fast-upscaled",
       "full_name": "veo-3-apps/veo-3-fast-upscaled",
-      "title": "veo-3-apps/veo-3-fast-upscaled\nVeo 3 Fast with Topaz video upscale\n6 runs"
+      "title": "veo-3-apps/veo-3-fast-upscaled\nVeo 3 Fast with Topaz video upscale\n6 runs",
+      "Features": "## 核心能力\n- VEO-3快速升级版视频生成\n- 高效视频质量提升\n- 快速渲染优化\n\n## 技术规格\n- 快速处理模式\n- 支持多种分辨率\n- GPU加速渲染\n\n## 核心技术\n- 视频超分辨率\n- 实时渲染优化\n- 质量增强算法\n\n## 适用场景\n- 视频内容制作\n- 实时视频处理\n- 流媒体优化\n- 视频质量提升"
     },
     {
       "path": "/veo-3-apps/veo-3-portrait",
@@ -1918,7 +2286,8 @@
       "username": "veo-3-apps",
       "model_name": "veo-3-portrait",
       "full_name": "veo-3-apps/veo-3-portrait",
-      "title": "veo-3-apps/veo-3-portrait\nVeo 3 in 9:16 for TikTok/Reels/shorts\n81 runs"
+      "title": "veo-3-apps/veo-3-portrait\nVeo 3 in 9:16 for TikTok/Reels/shorts\n81 runs",
+      "Features": "## 核心能力\n- VEO-3肖像专用视频生成\n- 人物肖像视频创作\n- 专业人像处理技术\n\n## 技术规格\n- 专为肖像优化\n- 高质量人像渲染\n- 表情动作生成\n\n## 核心技术\n- 人脸建模技术\n- 表情驱动算法\n- 肖像风格化\n\n## 适用场景\n- 虚拟主播制作\n- 人像视频创作\n- 数字化身应用\n- 个性化内容生成"
     },
     {
       "path": "/victor-upmeet/whisperx",
@@ -1926,7 +2295,8 @@
       "username": "victor-upmeet",
       "model_name": "whisperx",
       "full_name": "victor-upmeet/whisperx",
-      "title": "victor-upmeet/whisperx"
+      "title": "victor-upmeet/whisperx",
+      "Features": "## 核心能力\n- WhisperX 增强语音转录系统\n- 高精度多语言识别\n- 时间戳对齐优化\n\n## 技术规格\n- 基于Whisper增强版\n- 支持说话人分离\n- 精确时间戳生成\n\n## 核心技术\n- 语音活动检测\n- 说话人聚类算法\n- 强制对齐技术\n\n## 适用场景\n- 专业音频转录\n- 多人会议记录\n- 语音数据分析\n- 字幕制作服务"
     },
     {
       "path": "/wan-video/wan-2.2-5b-fast",
@@ -1934,7 +2304,8 @@
       "username": "wan-video",
       "model_name": "wan-2.2-5b-fast",
       "full_name": "wan-video/wan-2.2-5b-fast",
-      "title": "wan-video/wan-2.2-5b-fast\nThe fastest Wan 2.2 text-to-image and image-to-video model\n54.6k runs\nOfficial"
+      "title": "wan-video/wan-2.2-5b-fast\nThe fastest Wan 2.2 text-to-image and image-to-video model\n54.6k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.2 5B Fast 高速视频生成模型\n- 阿里巴巴通义实验室开发的文本/图像到视频模型\n- 全球首个采用MoE架构的视频生成模型\n\n## 技术规格\n- 参数规模: 5B参数统一模型\n- 支持分辨率: 480p和720p\n- 帧率范围: 5-30fps (默认24fps)\n- 生成帧数: 81-121帧 (推荐81帧)\n\n## MoE架构创新\n- 混合专家模型设计\n- 高噪声专家: 处理早期去噪阶段\n- 低噪声专家: 精细化视频细节\n- 3D VAE高压缩比: 4×16×16时空压缩\n\n## 成本效率\n- 480p视频: ~0.0125美元/视频\n- 720p视频: ~0.025美元/视频\n- 单GPU生成720p视频需求<24GB显存\n\n## 适用场景\n- 快速视频内容创作\n- 电影级视觉效果生成\n- 创意原型制作\n- 商业视频制作自动化"
     },
     {
       "path": "/wan-video/wan-2.2-i2v-a14b",
@@ -1942,7 +2313,8 @@
       "username": "wan-video",
       "model_name": "wan-2.2-i2v-a14b",
       "full_name": "wan-video/wan-2.2-i2v-a14b",
-      "title": "wan-video/wan-2.2-i2v-a14b\nImage-to-video at 720p and 480p with Wan 2.2 A14B\n13.6K runs\nOfficial"
+      "title": "wan-video/wan-2.2-i2v-a14b\nImage-to-video at 720p and 480p with Wan 2.2 A14B\n13.6K runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.2 I2V A14B 图像到视频生成\n- 14B参数MoE架构模型\n- 专业图像驱动视频创作\n\n## 技术规格\n- 参数规模: 14B (27B总计)\n- MoE双专家设计\n- 支持720p输出\n\n## 核心技术\n- 图像条件扩散模型\n- 时空一致性保持\n- 高压缩3D VAE\n\n## 适用场景\n- 静态图像动态化\n- 产品展示视频\n- 创意内容制作\n- 电影级视觉效果"
     },
     {
       "path": "/wan-video/wan-2.2-i2v-fast",
@@ -1950,7 +2322,8 @@
       "username": "wan-video",
       "model_name": "wan-2.2-i2v-fast",
       "full_name": "wan-video/wan-2.2-i2v-fast",
-      "title": "wan-video/wan-2.2-i2v-fast"
+      "title": "wan-video/wan-2.2-i2v-fast",
+      "Features": "## 核心能力\n- Wan 2.2 I2V Fast 快速图像转视频\n- 高效图像驱动视频生成\n- 优化处理速度\n\n## 技术规格\n- 快速处理模式\n- 降低延迟设计\n- 保持高质量输出\n\n## 核心技术\n- 轻量化模型架构\n- 并行处理优化\n- 智能缓存机制\n\n## 适用场景\n- 快速原型制作\n- 实时视频生成\n- 批量内容处理\n- 交互式应用"
     },
     {
       "path": "/wan-video/wan-2.2-t2v-fast",
@@ -1958,7 +2331,8 @@
       "username": "wan-video",
       "model_name": "wan-2.2-t2v-fast",
       "full_name": "wan-video/wan-2.2-t2v-fast",
-      "title": "wan-video/wan-2.2-t2v-fast\nA very fast and cheap PrunaAI optimized version of Wan 2.2 A14B text-to-video\n43.8k runs\nOfficial"
+      "title": "wan-video/wan-2.2-t2v-fast\nA very fast and cheap PrunaAI optimized version of Wan 2.2 A14B text-to-video\n43.8k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.2 T2V Fast 快速文本转视频\n- 高效文本驱动视频生成\n- 优化响应时间\n\n## 技术规格\n- 文本到视频转换\n- 快速渲染模式\n- 支持多种风格\n\n## 核心技术\n- 文本理解模型\n- 视频扩散生成\n- 时序建模优化\n\n## 适用场景\n- 快速内容创作\n- 概念可视化\n- 营销视频制作\n- 教育内容生成"
     },
     {
       "path": "/wavespeedai/qwen-image",
@@ -1966,7 +2340,8 @@
       "username": "wavespeedai",
       "model_name": "qwen-image",
       "full_name": "wavespeedai/qwen-image",
-      "title": "wavespeedai/qwen-image\nA 20B MMDiT model for next-gen text-to-image generation\n4.8k runs\nOfficial"
+      "title": "wavespeedai/qwen-image\nA 20B MMDiT model for next-gen text-to-image generation\n4.8k runs\nOfficial",
+      "Features": "## 核心能力\n- Qwen Image 多模态理解模型\n- 阿里云通义千问视觉版本\n- 图像理解与对话能力\n\n## 技术规格\n- Qwen系列模型\n- 多模态架构\n- 中英文双语支持\n\n## 核心技术\n- 视觉-语言融合\n- 多轮对话能力\n- 中文优化训练\n\n## 适用场景\n- 图像内容分析\n- 视觉问答系统\n- 多模态对话\n- 中文场景应用"
     },
     {
       "path": "/wavespeedai/wan-2.1-i2v-480p",
@@ -1974,7 +2349,8 @@
       "username": "wavespeedai",
       "model_name": "wan-2.1-i2v-480p",
       "full_name": "wavespeedai/wan-2.1-i2v-480p",
-      "title": "wavespeedai/wan-2.1-i2v-480p\nAccelerated inference for Wan 2.1 14B image to video, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n407.8k runs\nOfficial"
+      "title": "wavespeedai/wan-2.1-i2v-480p\nAccelerated inference for Wan 2.1 14B image to video, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n407.8k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.1 I2V 480p 图像转视频生成\n- 480p分辨率视频输出\n- 经济实用的处理方案\n\n## 技术规格\n- 输出分辨率: 480p\n- Wan 2.1架构\n- 成本优化设计\n\n## 核心技术\n- 图像扩散模型\n- 时空建模技术\n- 质量与成本平衡\n\n## 适用场景\n- 成本敏感应用\n- 快速原型验证\n- 大批量处理\n- 移动端应用"
     },
     {
       "path": "/wavespeedai/wan-2.1-i2v-720p",
@@ -1982,7 +2358,8 @@
       "username": "wavespeedai",
       "model_name": "wan-2.1-i2v-720p",
       "full_name": "wavespeedai/wan-2.1-i2v-720p",
-      "title": "wavespeedai/wan-2.1-i2v-720p\nAccelerated inference for Wan 2.1 14B image to video with high resolution, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n83.3k runs\nOfficial"
+      "title": "wavespeedai/wan-2.1-i2v-720p\nAccelerated inference for Wan 2.1 14B image to video with high resolution, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n83.3k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.1 I2V 720p 高清图像转视频\n- 720p高清视频输出\n- 平衡质量与效率\n\n## 技术规格\n- 输出分辨率: 720p\n- 改进的视觉质量\n- 优化的处理流程\n\n## 核心技术\n- 高清视频生成\n- 细节保持算法\n- 时间一致性优化\n\n## 适用场景\n- 专业内容制作\n- 高质量视频需求\n- 品牌营销内容\n- 教育培训视频"
     },
     {
       "path": "/wavespeedai/wan-2.1-t2v-480p",
@@ -1990,7 +2367,8 @@
       "username": "wavespeedai",
       "model_name": "wan-2.1-t2v-480p",
       "full_name": "wavespeedai/wan-2.1-t2v-480p",
-      "title": "wavespeedai/wan-2.1-t2v-480p\nAccelerated inference for Wan 2.1 14B text to video, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n173.2k runs\nOfficial"
+      "title": "wavespeedai/wan-2.1-t2v-480p\nAccelerated inference for Wan 2.1 14B text to video, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n173.2k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.1 T2V 480p 文本转视频生成\n- 480p经济型视频输出\n- 快速文本理解与生成\n\n## 技术规格\n- 文本到视频转换\n- 480p输出分辨率\n- 成本效益优化\n\n## 核心技术\n- 语言理解模型\n- 视频扩散生成\n- 轻量化架构\n\n## 适用场景\n- 快速内容创作\n- 概念验证\n- 教育内容生成\n- 社交媒体内容"
     },
     {
       "path": "/wavespeedai/wan-2.1-t2v-720p",
@@ -1998,7 +2376,8 @@
       "username": "wavespeedai",
       "model_name": "wan-2.1-t2v-720p",
       "full_name": "wavespeedai/wan-2.1-t2v-720p",
-      "title": "wavespeedai/wan-2.1-t2v-720p\nAccelerated inference for Wan 2.1 14B text to video with high resolution, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n34.3k runs\nOfficial"
+      "title": "wavespeedai/wan-2.1-t2v-720p\nAccelerated inference for Wan 2.1 14B text to video with high resolution, a comprehensive and open suite of video foundation models that pushes the boundaries of video generation.\n34.3k runs\nOfficial",
+      "Features": "## 核心能力\n- Wan 2.1 T2V 720p 高清文本转视频\n- 720p高清视频生成\n- 专业级文本驱动创作\n\n## 技术规格\n- 高清输出质量\n- 文本精确理解\n- 专业级渲染\n\n## 核心技术\n- 高清扩散模型\n- 语义理解增强\n- 细节生成优化\n\n## 适用场景\n- 专业视频制作\n- 品牌内容创作\n- 高质量营销视频\n- 电影预览制作"
     },
     {
       "path": "/xinntao/gfpgan",
@@ -2006,7 +2385,8 @@
       "username": "xinntao",
       "model_name": "gfpgan",
       "full_name": "xinntao/gfpgan",
-      "title": "xinntao/gfpgan\nPractical face restoration algorithm for *old photos* or *AI-generated faces*\n38.2m runs"
+      "title": "xinntao/gfpgan\nPractical face restoration algorithm for *old photos* or *AI-generated faces*\n38.2m runs",
+      "Features": "## 核心能力\n- GFPGAN 人脸修复生成对抗网络\n- xinntao版本实现\n- 实用的人脸图像修复\n\n## 技术规格\n- 基于GAN架构\n- 多版本修复算法\n- 开源实现版本\n\n## 核心技术\n- 生成对抗网络\n- 人脸先验知识\n- 细节恢复算法\n\n## 适用场景\n- 人脸图像修复\n- 照片质量提升\n- 历史照片修复\n- AI头像优化"
     },
     {
       "path": "/yorickvp/llava-13b",
@@ -2014,7 +2394,8 @@
       "username": "yorickvp",
       "model_name": "llava-13b",
       "full_name": "yorickvp/llava-13b",
-      "title": "yorickvp/llava-13b"
+      "title": "yorickvp/llava-13b",
+      "Features": "## 核心能力\n- LLaVA-13b 大型语言与视觉模型\n- 多模态AI，结合视觉理解和文本生成\n- GPT-4级别的视觉指令调优能力\n\n## 技术规格\n- 参数规模: 13B参数\n- 硬件需求: L40S GPU\n- 成本: 0.000975美元/秒\n- 最大输出: 1024 tokens\n\n## 多模态架构\n- 基于Meta Llama的语言模型\n- 视觉编码器与语言模型融合\n- 支持视觉指令微调\n- 开源许可证(Meta Llama协议)\n\n## 配置参数\n- Top-P采样: 默认1.0\n- 温度参数: 默认0.2\n- 支持对话式交互\n\n## 适用场景\n- 图像内容理解与分析\n- 视觉问答系统开发\n- 多模态AI应用构建\n- 教育和培训辅助工具"
     },
     {
       "path": "/zeke/image-to-text-to-image",
@@ -2022,7 +2403,8 @@
       "username": "zeke",
       "model_name": "image-to-text-to-image",
       "full_name": "zeke/image-to-text-to-image",
-      "title": "zeke/image-to-text-to-image\n89 runs"
+      "title": "zeke/image-to-text-to-image\n89 runs",
+      "Features": "## 核心能力\n- Image-to-Text-to-Image 图像循环生成\n- 图像描述与重新生成\n- 创意内容变换工具\n\n## 技术规格\n- 多步处理流程\n- 图像理解与生成\n- 风格转换能力\n\n## 核心技术\n- 图像描述生成\n- 文本理解模型\n- 图像重新生成\n\n## 适用场景\n- 创意设计辅助\n- 风格转换应用\n- 内容再创作\n- 艺术创作工具"
     },
     {
       "path": "/zeke/pingpong-video",
@@ -2030,7 +2412,8 @@
       "username": "zeke",
       "model_name": "pingpong-video",
       "full_name": "zeke/pingpong-video",
-      "title": "zeke/pingpong-video\nMake your video file loop continuously, start → end → start\n81 runs"
+      "title": "zeke/pingpong-video\nMake your video file loop continuously, start → end → start\n81 runs",
+      "Features": "## 核心能力\n- PingPong Video 乒乓球视频处理\n- 运动视频分析与处理\n- 专业体育内容制作\n\n## 技术规格\n- 运动视频特化\n- 实时处理能力\n- 高精度动作识别\n\n## 核心技术\n- 运动轨迹跟踪\n- 动作识别算法\n- 视频分析处理\n\n## 适用场景\n- 体育视频制作\n- 运动分析应用\n- 教学视频创作\n- 比赛回放分析"
     },
     {
       "path": "/zeke/trim-video",
@@ -2038,7 +2421,8 @@
       "username": "zeke",
       "model_name": "trim-video",
       "full_name": "zeke/trim-video",
-      "title": "zeke/trim-video\nTrim frames off the beginning and end of your video file\n3 runs"
+      "title": "zeke/trim-video\nTrim frames off the beginning and end of your video file\n3 runs",
+      "Features": "## 核心能力\n- Trim Video 智能视频剪辑工具\n- 自动化视频片段提取\n- 精确时间控制\n\n## 技术规格\n- 精确剪辑控制\n- 支持多种格式\n- 批量处理能力\n\n## 核心技术\n- 视频分析算法\n- 智能片段识别\n- 自动化剪辑\n\n## 适用场景\n- 视频内容编辑\n- 自动化剪辑\n- 内容片段提取\n- 视频预处理"
     },
     {
       "path": "/zsxkib/create-rvc-dataset",
@@ -2046,7 +2430,8 @@
       "username": "zsxkib",
       "model_name": "create-rvc-dataset",
       "full_name": "zsxkib/create-rvc-dataset",
-      "title": "zsxkib/create-rvc-dataset"
+      "title": "zsxkib/create-rvc-dataset",
+      "Features": "## 核心能力\n- RVC数据集创建工具\n- 实时语音变声数据准备\n- 语音训练数据处理\n\n## 技术规格\n- RVC模型数据准备\n- 音频预处理优化\n- 批量数据生成\n\n## 核心技术\n- 语音数据提取\n- 音频特征分析\n- 数据集标准化\n\n## 适用场景\n- 语音变声训练\n- 音频数据准备\n- 声音克隆项目\n- 语音合成研究"
     },
     {
       "path": "/zsxkib/mmaudio",
@@ -2054,7 +2439,8 @@
       "username": "zsxkib",
       "model_name": "mmaudio",
       "full_name": "zsxkib/mmaudio",
-      "title": "zsxkib/mmaudio"
+      "title": "zsxkib/mmaudio",
+      "Features": "## 核心能力\n- MMAudio 多模态音频处理\n- 视频音频同步生成\n- 智能音效制作\n\n## 技术规格\n- 多模态音频生成\n- 视频音频匹配\n- 高质量音效输出\n\n## 核心技术\n- 视觉-音频对齐\n- 智能音效生成\n- 多模态融合\n\n## 适用场景\n- 视频配音制作\n- 音效自动生成\n- 多媒体内容创作\n- 音频后期处理"
     },
     {
       "path": "/zsxkib/outpainter",
@@ -2062,7 +2448,8 @@
       "username": "zsxkib",
       "model_name": "outpainter",
       "full_name": "zsxkib/outpainter",
-      "title": "zsxkib/outpainter\n🎨 Outpaint in each direction (top, bottom, left, right)\n156 runs"
+      "title": "zsxkib/outpainter\n🎨 Outpaint in each direction (top, bottom, left, right)\n156 runs",
+      "Features": "## 核心能力\n- Outpainter 图像外延绘制工具\n- AI驱动的图像边界扩展\n- 智能背景补全\n\n## 技术规格\n- 图像边界扩展\n- 风格一致性保持\n- 高质量补全\n\n## 核心技术\n- 图像修复算法\n- 风格迁移技术\n- 边界无缝融合\n\n## 适用场景\n- 图像背景扩展\n- 艺术创作辅助\n- 照片修复增强\n- 设计素材制作"
     },
     {
       "path": "/zsxkib/outpainter-to-video",
@@ -2070,7 +2457,8 @@
       "username": "zsxkib",
       "model_name": "outpainter-to-video",
       "full_name": "zsxkib/outpainter-to-video",
-      "title": "zsxkib/outpainter-to-video\n🎥 Outpaint videos (i2v) in each direction (top, bottom, left, right)\n15 runs"
+      "title": "zsxkib/outpainter-to-video\n🎥 Outpaint videos (i2v) in each direction (top, bottom, left, right)\n15 runs",
+      "Features": "## 核心能力\n- Outpainter to Video 图像扩展转视频\n- 扩展图像的动态化\n- 创意视频生成\n\n## 技术规格\n- 图像扩展+视频生成\n- 动态效果添加\n- 创意内容制作\n\n## 核心技术\n- 图像外延算法\n- 视频生成技术\n- 动态效果渲染\n\n## 适用场景\n- 创意视频制作\n- 静态图动态化\n- 艺术内容创作\n- 视觉特效制作"
     },
     {
       "path": "/zsxkib/realistic-voice-cloning",
@@ -2078,7 +2466,8 @@
       "username": "zsxkib",
       "model_name": "realistic-voice-cloning",
       "full_name": "zsxkib/realistic-voice-cloning",
-      "title": "zsxkib/realistic-voice-cloning"
+      "title": "zsxkib/realistic-voice-cloning",
+      "Features": "## 核心能力\n- Realistic Voice Cloning 逼真语音克隆\n- 高质量语音复制技术\n- 个性化语音合成\n\n## 技术规格\n- 高保真语音复制\n- 多语言支持\n- 实时处理能力\n\n## 核心技术\n- 深度语音合成\n- 说话人特征提取\n- 音色精确复制\n\n## 适用场景\n- 个性化语音助手\n- 配音制作\n- 语音内容创作\n- 多语言本地化"
     },
     {
       "path": "/zsxkib/smart-thinksound",
@@ -2086,7 +2475,8 @@
       "username": "zsxkib",
       "model_name": "smart-thinksound",
       "full_name": "zsxkib/smart-thinksound",
-      "title": "zsxkib/smart-thinksound\nAutomatically generates expert ThinkSound prompts by analyzing your video w/ Claude 4 - no more struggling with complex audio descriptions\n466 runs"
+      "title": "zsxkib/smart-thinksound\nAutomatically generates expert ThinkSound prompts by analyzing your video w/ Claude 4 - no more struggling with complex audio descriptions\n466 runs",
+      "Features": "## 核心能力\n- Smart ThinkSound 智能思维音效\n- AI驱动的音效设计\n- 智能音频生成\n\n## 技术规格\n- 智能音效生成\n- 场景感知能力\n- 创意音频制作\n\n## 核心技术\n- 智能音频分析\n- 场景匹配算法\n- 创意音效生成\n\n## 适用场景\n- 游戏音效制作\n- 影视后期音频\n- 创意内容配音\n- 智能音频设计"
     },
     {
       "path": "/zsxkib/wan-2.2-with-sound",
@@ -2094,7 +2484,8 @@
       "username": "zsxkib",
       "model_name": "wan-2.2-with-sound",
       "full_name": "zsxkib/wan-2.2-with-sound",
-      "title": "zsxkib/wan-2.2-with-sound\nwan-video/wan-2.2 (all variants) + topazlabs/video-upscale + zsxkib/smart-thinksound\n31 runs"
+      "title": "zsxkib/wan-2.2-with-sound\nwan-video/wan-2.2 (all variants) + topazlabs/video-upscale + zsxkib/smart-thinksound\n31 runs",
+      "Features": "## 核心能力\n- Wan 2.2 with Sound 带声音视频生成\n- 视频与音频同步生成\n- 多模态内容创作\n\n## 技术规格\n- 视频+音频生成\n- 同步处理能力\n- 高质量输出\n\n## 核心技术\n- 视频音频同步\n- 多模态生成模型\n- 内容一致性保持\n\n## 适用场景\n- 完整视频内容制作\n- 多媒体内容创作\n- 音视频同步应用\n- 专业内容生产"
     },
     {
       "path": "/zsxkib/yolo-world",
@@ -2102,7 +2493,8 @@
       "username": "zsxkib",
       "model_name": "yolo-world",
       "full_name": "zsxkib/yolo-world",
-      "title": "zsxkib/yolo-world"
+      "title": "zsxkib/yolo-world",
+      "Features": "## 核心能力\n- YOLO World 开放词汇目标检测\n- 自然语言驱动的目标识别\n- 零样本检测能力\n\n## 技术规格\n- 开放词汇检测\n- 自然语言接口\n- 零样本学习\n\n## 核心技术\n- 语言-视觉联合训练\n- 开放词汇理解\n- 零样本泛化\n\n## 适用场景\n- 通用目标检测\n- 智能监控系统\n- 自动化检验\n- 机器人视觉"
     },
     {
       "path": "/zylim0702/qr_code_controlnet",
@@ -2110,7 +2502,20 @@
       "username": "zylim0702",
       "model_name": "qr_code_controlnet",
       "full_name": "zylim0702/qr_code_controlnet",
-      "title": "zylim0702/qr_code_controlnet"
+      "title": "zylim0702/qr_code_controlnet",
+      "Features": "## 核心能力\n- QR Code ControlNet 二维码控制网络\n- 二维码图像生成与控制\n- 创意二维码设计\n\n## 技术规格\n- ControlNet架构\n- 二维码生成控制\n- 艺术化二维码\n\n## 核心技术\n- 控制网络技术\n- 二维码编码算法\n- 艺术风格融合\n\n## 适用场景\n- 创意二维码设计\n- 品牌营销应用\n- 艺术二维码制作\n- 个性化码图生成"
     }
-  ]
+  ],
+  "last_updated": "2025-09-06",
+  "batch_update_info": {
+    "updated_range": "121-200 (索引120-199)",
+    "updated_count": 80,
+    "update_timestamp": "2025-09-06",
+    "models_161_180": {
+      "updated_date": "2025-09-06",
+      "updated_count": 20,
+      "method": "官方页面信息获取 + WebFetch验证",
+      "status": "completed"
+    }
+  }
 }
