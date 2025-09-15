@@ -36,9 +36,33 @@ check_macos() {
     fi
 }
 
+# 可选依赖检测：SwitchAudioSource（用于切换默认输出设备）
+check_switchaudiosource() {
+    if command -v SwitchAudioSource >/dev/null 2>&1; then
+        print_success "已检测到 SwitchAudioSource（输出切换可用）"
+        return 0
+    fi
+    print_info "未检测到 SwitchAudioSource（可选）。如需自动切换输出设备，可安装：brew install switchaudio-osx"
+    if command -v brew >/dev/null 2>&1; then
+        read -p "是否通过 Homebrew 安装 switchaudio-osx？(Y/n，默认Y): " install_sas
+        install_sas=${install_sas:-Y}
+        if [[ "$install_sas" == "Y" || "$install_sas" == "y" ]]; then
+            if brew install switchaudio-osx; then
+                print_success "已安装 switchaudio-osx"
+            else
+                print_info "安装失败，稍后可手动执行：brew install switchaudio-osx"
+            fi
+        else
+            print_info "已跳过安装，可后续手动安装：brew install switchaudio-osx"
+        fi
+    fi
+}
+
 # 主安装函数
 install() {
     print_info "开始安装 Bluetooth Audio Fix..."
+    # 检查可选依赖
+    check_switchaudiosource
     
     # 获取脚本所在目录
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -79,6 +103,10 @@ install() {
     echo ""
     read -p "设置目标输入音量 (0-100，默认100): " target_volume
     target_volume=${target_volume:-100}
+
+    echo ""
+    read -p "设置首选输出设备名称（留空=不切换）: " preferred_output
+    preferred_output=${preferred_output:-}
     
     # 创建 plist 文件
     cat > "$PLIST_PATH" << EOF
@@ -100,6 +128,8 @@ install() {
         <string>${DEVICE_NAME}</string>
         <key>INPUT_VOLUME</key>
         <string>${target_volume}</string>
+        <key>PREFERRED_OUTPUT_DEVICE</key>
+        <string>${preferred_output}</string>
     </dict>
     
     <!-- 监听蓝牙相关的系统文件变化 -->

@@ -8,14 +8,18 @@ macOS 在连接蓝牙音箱/耳机后，输入音量（Input Volume）经常会�
 
 - 🎯 **智能检测**：自动检测蓝牙音频设备连接事件
 - 🔊 **自动调节**：连接时立即将输入音量调整到指定值
+- 🔄 **输出切换**：在连接事件发生时，若存在首选输出设备（默认“LG ULTRAWIDE”），自动切换为系统输出
 - 🎛️ **灵活配置**：支持指定特定设备或所有蓝牙音频设备
 - 📝 **日志记录**：记录所有操作，方便排查问题
 - 🚀 **低资源占用**：事件驱动，仅在蓝牙状态变化时运行
+ - ⚙️ **可调延时与匹配**：可配置连接后的等待时长与输出设备匹配策略
 
 ## 系统要求
 
 - macOS 10.12 或更高版本
 - Bash shell（系统自带）
+- [可选] `switchaudio-osx`（命令 `SwitchAudioSource`）：用于自动切换音频输出设备。通过 Homebrew 安装：`brew install switchaudio-osx`
+  - 注意：LaunchAgent 环境下 `PATH` 精简，脚本已内置自动查找 `/opt/homebrew/bin` 与 `/usr/local/bin`，无需额外配置。
 
 ## 快速安装
 
@@ -71,6 +75,11 @@ launchctl list | grep bluetooth.audio
 tail -f ~/Library/Logs/bluetooth_audio_fix.log
 ```
 
+列出可用输出设备名称（用于核对精确名称）：
+```bash
+$(command -v SwitchAudioSource || echo /opt/homebrew/bin/SwitchAudioSource) -a -t output
+```
+
 临时停止服务：
 ```bash
 launchctl unload ~/Library/LaunchAgents/com.user.bluetooth.audio.fix.plist
@@ -89,6 +98,9 @@ launchctl load ~/Library/LaunchAgents/com.user.bluetooth.audio.fix.plist
 
 - `BLUETOOTH_DEVICE_NAME`：指定设备名称（留空则对所有蓝牙音频设备生效）
 - `INPUT_VOLUME`：目标输入音量（0-100，默认100）
+- `PREFERRED_OUTPUT_DEVICE`：首选的音频输出设备名称（默认 "LG ULTRAWIDE"）。安装了 `switchaudio-osx` 时将自动尝试切换到该设备。名称需与 `SwitchAudioSource -a -t output` 的输出完全一致（区分大小写）。若不想切换，留空即可。
+- `POST_CONNECT_DELAY`：蓝牙设备连上后到执行操作的延时（秒），默认 `2`，可视系统反应速度调整。
+- `OUTPUT_MATCH_MODE`：输出设备名匹配策略，`exact`（默认，完全匹配）或 `substring`（子串匹配且仅在唯一匹配时生效）。
 
 ### 修改配置
 
@@ -105,6 +117,8 @@ nano ~/Library/LaunchAgents/com.user.bluetooth.audio.fix.plist
     <string>你的设备名称</string>
     <key>INPUT_VOLUME</key>
     <string>100</string>
+    <key>PREFERRED_OUTPUT_DEVICE</key>
+    <string>LG ULTRAWIDE</string>
 </dict>
 ```
 
@@ -160,6 +174,18 @@ system_profiler SPAudioDataType | grep -E "^\s+[^:]+:$"
 ```bash
 tail -20 ~/Library/Logs/bluetooth_audio_fix.log
 ```
+
+### 输出设备没有自动切换
+
+1. 确认系统已安装 `switchaudio-osx`：
+```bash
+which SwitchAudioSource || ls /opt/homebrew/bin/SwitchAudioSource /usr/local/bin/SwitchAudioSource 2>/dev/null
+```
+2. 用 `SwitchAudioSource` 列出设备，确认名称完全一致：
+```bash
+$(command -v SwitchAudioSource || echo /opt/homebrew/bin/SwitchAudioSource) -a -t output
+```
+3. 查看日志中是否提示“未检测到 SwitchAudioSource”或“未找到输出设备名称”。若有，按提示修正或安装依赖。
 
 ### 权限问题
 

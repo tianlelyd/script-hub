@@ -16,6 +16,8 @@
         <string></string>
         <key>INPUT_VOLUME</key>
         <string>100</string>
+        <key>PREFERRED_OUTPUT_DEVICE</key>
+        <string></string>
     </dict>
     
     <!-- 监听蓝牙相关的系统文件变化 -->
