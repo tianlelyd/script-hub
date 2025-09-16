@@ -1,0 +1,7 @@
+python-dotenv
+sounddevice
+numpy
+websocket-client
+pynput
+pyperclip
+loguru
