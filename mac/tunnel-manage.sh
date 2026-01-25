@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# 配置文件路径（系统级服务）
+# 配置文件路径（用户级服务）
 CONFIG_FILE="$HOME/.cloudflared/config.yml"
-PLIST_FILE="/Library/LaunchDaemons/com.cloudflare.cloudflared.plist"
+PLIST_FILE="$HOME/Library/LaunchAgents/com.cloudflare.cloudflared.plist"
 SERVICE_NAME="com.cloudflare.cloudflared"
+LOG_OUT="$HOME/Library/Logs/com.cloudflare.cloudflared.out.log"
+LOG_ERR="$HOME/Library/Logs/com.cloudflare.cloudflared.err.log"
 
 # 颜色输出
 RED='\033[0;31m'
@@ -12,7 +14,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 function show_usage() {
-    echo "Cloudflare Tunnel 端口映射管理工具（系统级服务）"
+    echo "Cloudflare Tunnel 端口映射管理工具（用户级服务）"
     echo ""
     echo "用法: $0 {add|remove|list|restart|status|logs|install|uninstall|validate}"
     echo ""
@@ -20,11 +22,11 @@ function show_usage() {
     echo "  add <hostname> <port>     - 添加新的端口映射"
     echo "  remove <hostname>         - 删除端口映射"
     echo "  list                      - 列出所有映射"
-    echo "  restart                   - 重启服务（需要 sudo）"
+    echo "  restart                   - 重启服务"
     echo "  status                    - 查看服务状态"
     echo "  logs                      - 查看服务日志"
-    echo "  install                   - 安装服务（需要 sudo）"
-    echo "  uninstall                 - 卸载服务（需要 sudo）"
+    echo "  install                   - 安装服务"
+    echo "  uninstall                 - 卸载服务"
     echo "  validate                  - 验证配置文件"
     echo ""
     echo "示例:"
@@ -49,7 +51,7 @@ function add_mapping() {
     local backup_file="$CONFIG_FILE.bak.$(date +%Y%m%d_%H%M%S)"
     cp "$CONFIG_FILE" "$backup_file"
     echo -e "${YELLOW}已备份配置文件到: $backup_file${NC}"
-    
+
     # 获取 tunnel 名称
     tunnel_name=$(grep "^tunnel:" "$CONFIG_FILE" | awk '{print $2}')
     
@@ -81,7 +83,7 @@ function add_mapping() {
     }
     { print }
     ' "$CONFIG_FILE" > "$CONFIG_FILE.tmp"
-    
+
     # 替换原文件
     mv "$CONFIG_FILE.tmp" "$CONFIG_FILE"
     
@@ -94,14 +96,14 @@ function add_mapping() {
         
         # 自动重启服务
         echo -e "${YELLOW}重启服务...${NC}"
-        sudo launchctl unload -w "$PLIST_FILE" 2>/dev/null
+        launchctl stop "$SERVICE_NAME" 2>/dev/null
         sleep 2
-        sudo launchctl load -w "$PLIST_FILE"
-        
+        launchctl start "$SERVICE_NAME"
+
         sleep 3
-        
+
         # 检查服务状态
-        if sudo launchctl list | grep -q "$SERVICE_NAME"; then
+        if launchctl list | grep -q "$SERVICE_NAME"; then
             echo -e "${GREEN}服务已重启成功${NC}"
             echo ""
             echo -e "${GREEN}映射已成功添加并生效：${NC}"
@@ -123,12 +125,12 @@ function add_mapping() {
 
 function remove_mapping() {
     local hostname=$1
-    
+
     if [ -z "$hostname" ]; then
         echo -e "${RED}错误: 需要提供 hostname${NC}"
         exit 1
     fi
-    
+
     echo -e "${YELLOW}请手动编辑 $CONFIG_FILE 删除以下映射:${NC}"
     echo "$hostname"
     echo ""
@@ -138,12 +140,12 @@ function remove_mapping() {
 function list_mappings() {
     echo -e "${GREEN}当前端口映射：${NC}"
     echo ""
-    
+
     if [ ! -f "$CONFIG_FILE" ]; then
         echo -e "${RED}配置文件不存在: $CONFIG_FILE${NC}"
         return 1
     fi
-    
+
     # 提取并格式化映射信息
     awk '/^[ \t]*- hostname:/ {
         # 提取 hostname
@@ -156,33 +158,32 @@ function list_mappings() {
             printf "  %-40s -> %s\n", hostname, service
         }
     }' "$CONFIG_FILE"
-    
+
     # 显示 tunnel 名称
     tunnel_name=$(grep "^tunnel:" "$CONFIG_FILE" | awk '{print $2}')
     if [ -n "$tunnel_name" ]; then
         echo ""
         echo -e "Tunnel: ${GREEN}$tunnel_name${NC}"
     fi
-    
+
     echo ""
 }
 
 function restart_service() {
     echo -e "${YELLOW}重启 Cloudflare Tunnel 服务...${NC}"
-    
+
     # 先验证配置
     validate_config
-    
-    # 重启服务
-    echo "需要 sudo 权限来重启系统服务"
-    sudo launchctl unload -w "$PLIST_FILE" 2>/dev/null
+
+    # 重启服务（使用 stop/start）
+    launchctl stop "$SERVICE_NAME" 2>/dev/null
     sleep 2
-    sudo launchctl load -w "$PLIST_FILE"
-    
+    launchctl start "$SERVICE_NAME"
+
     sleep 3
-    
+
     # 检查服务状态
-    if sudo launchctl list | grep -q "$SERVICE_NAME"; then
+    if launchctl list | grep -q "$SERVICE_NAME"; then
         echo -e "${GREEN}服务已重启成功${NC}"
         # 获取 tunnel 信息
         tunnel_name=$(grep "^tunnel:" "$CONFIG_FILE" | awk '{print $2}')
@@ -201,13 +202,13 @@ function restart_service() {
 function check_status() {
     echo -e "${GREEN}Cloudflare Tunnel 服务状态：${NC}"
     echo ""
-    
-    # 检查 LaunchDaemon 状态
-    if sudo launchctl list | grep -q "$SERVICE_NAME"; then
-        echo -e "LaunchDaemon: ${GREEN}运行中${NC}"
-        sudo launchctl list | grep "$SERVICE_NAME"
+
+    # 检查 LaunchAgent 状态
+    if launchctl list | grep -q "$SERVICE_NAME"; then
+        echo -e "LaunchAgent: ${GREEN}运行中${NC}"
+        launchctl list | grep "$SERVICE_NAME"
     else
-        echo -e "LaunchDaemon: ${RED}未运行${NC}"
+        echo -e "LaunchAgent: ${RED}未运行${NC}"
     fi
     
     echo ""
@@ -219,9 +220,9 @@ function check_status() {
     else
         echo -e "Cloudflared 进程: ${RED}未运行${NC}"
     fi
-    
+
     echo ""
-    
+
     # 获取 tunnel 信息
     tunnel_name=$(grep "^tunnel:" "$CONFIG_FILE" | awk '{print $2}')
     if [ -n "$tunnel_name" ]; then
@@ -234,34 +235,34 @@ function check_status() {
 function show_logs() {
     echo -e "${GREEN}查看最近的日志：${NC}"
     echo ""
-    
-    # 系统级日志
-    if [ -f "/Library/Logs/com.cloudflare.cloudflared.out.log" ]; then
+
+    # 用户级日志
+    if [ -f "$LOG_OUT" ]; then
         echo "标准输出日志："
-        sudo tail -n 20 "/Library/Logs/com.cloudflare.cloudflared.out.log"
+        tail -n 20 "$LOG_OUT"
     fi
-    
+
     echo ""
-    
-    if [ -f "/Library/Logs/com.cloudflare.cloudflared.err.log" ]; then
+
+    if [ -f "$LOG_ERR" ]; then
         echo "错误日志："
-        sudo tail -n 20 "/Library/Logs/com.cloudflare.cloudflared.err.log"
+        tail -n 20 "$LOG_ERR"
     fi
-    
+
     echo ""
     echo -e "${YELLOW}持续查看日志请运行:${NC}"
-    echo "  sudo tail -f /Library/Logs/com.cloudflare.cloudflared.err.log"
+    echo "  tail -f $LOG_ERR"
 }
 
 # 添加新函数
 function validate_config() {
     echo -e "${YELLOW}验证配置文件...${NC}"
-    
+
     if [ ! -f "$CONFIG_FILE" ]; then
         echo -e "${RED}配置文件不存在: $CONFIG_FILE${NC}"
         exit 1
     fi
-    
+
     if cloudflared tunnel ingress validate > /dev/null 2>&1; then
         echo -e "${GREEN}配置验证通过${NC}"
         return 0
@@ -274,34 +275,61 @@ function validate_config() {
 
 function install_service() {
     echo -e "${GREEN}安装 Cloudflare Tunnel 服务...${NC}"
-    
+
     # 验证配置
     validate_config
-    
-    echo "安装系统级服务（需要 sudo 权限）"
-    sudo cloudflared --config "$CONFIG_FILE" service install
-    
+
+    # 安装用户级服务
+    echo "安装用户级服务..."
+    cloudflared service install
+
     # 确保 plist 文件包含正确的参数
     if [ -f "$PLIST_FILE" ]; then
         echo -e "${GREEN}服务已安装到: $PLIST_FILE${NC}"
+
+        # 检查并修复 plist 配置（添加 tunnel run 参数）
+        if ! grep -q "<string>tunnel</string>" "$PLIST_FILE"; then
+            echo -e "${YELLOW}修复 plist 配置文件，添加 tunnel run 参数...${NC}"
+
+            # 备份原文件
+            cp "$PLIST_FILE" "$PLIST_FILE.bak"
+
+            # 添加 tunnel run 参数
+            awk '/<string>\/opt\/homebrew\/bin\/cloudflared<\/string>/ {
+                print
+                print "\t\t<string>tunnel</string>"
+                print "\t\t<string>run</string>"
+                next
+            }
+            { print }' "$PLIST_FILE.bak" > "$PLIST_FILE"
+
+            echo -e "${GREEN}配置文件已修复${NC}"
+        fi
+
         echo "启动服务..."
-        sudo launchctl load -w "$PLIST_FILE"
+        launchctl load "$PLIST_FILE"
+
+        echo ""
+        echo -e "${GREEN}提示：${NC}"
+        echo "  - 配置文件：$CONFIG_FILE"
+        echo "  - cloudflared 会自动读取默认路径的配置"
+        echo "  - 修改配置后请运行：$0 restart"
     else
         echo -e "${RED}服务安装失败${NC}"
         exit 1
     fi
-    
+
     sleep 3
     check_status
 }
 
 function uninstall_service() {
     echo -e "${YELLOW}卸载 Cloudflare Tunnel 服务...${NC}"
-    
-    echo "卸载系统级服务（需要 sudo 权限）"
-    sudo launchctl unload -w "$PLIST_FILE" 2>/dev/null
-    sudo cloudflared service uninstall
-    
+
+    echo "卸载用户级服务..."
+    launchctl unload "$PLIST_FILE" 2>/dev/null
+    cloudflared service uninstall
+
     echo -e "${GREEN}服务已卸载${NC}"
 }
 
