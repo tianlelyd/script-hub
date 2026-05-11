@@ -16,3 +16,7 @@ node .\maskData.js -t json -f .\mrsoft.common.config.json -o .\mrsoft.common.con
 ```shell
 node ..\script-hub\generateStructure.js ./
 ```
+
+## macOS 工具
+
+- [Doubao IME Global ASR Switch](./mac/doubao-global-asr/README.md): 开启豆包输入法隐藏的全局语音输入快捷键开关。
