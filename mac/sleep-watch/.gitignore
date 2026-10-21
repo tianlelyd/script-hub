@@ -1,0 +1,5 @@
+logs/
+*.jsonl
+*.pid
+*.lock
+*.stderr

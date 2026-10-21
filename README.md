@@ -20,3 +20,4 @@ node ..\script-hub\generateStructure.js ./
 ## macOS 工具
 
 - [Doubao IME Global ASR Switch](./mac/doubao-global-asr/README.md): 开启豆包输入法隐藏的全局语音输入快捷键开关。
+- [SleepDisabled 参数监控与调用者审计](./mac/sleep-watch/README.md): 记录睡眠开关变化，追踪 pmset 的调用进程与参数。
