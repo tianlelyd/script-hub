@@ -1,0 +1,11 @@
+{
+  "name": "REPLACE_WITH_BONJOUR_SERVICE_NAME",
+  "port": 59123,
+  "txt": [
+    "flags=0",
+    "minVer=8",
+    "ver=26",
+    "authTag=REPLACE_WITH_AUTH_TAG",
+    "identifier=REPLACE_WITH_BONJOUR_SERVICE_NAME"
+  ]
+}

@@ -21,3 +21,4 @@ node ..\script-hub\generateStructure.js ./
 
 - [Doubao IME Global ASR Switch](./mac/doubao-global-asr/README.md): 开启豆包输入法隐藏的全局语音输入快捷键开关。
 - [SleepDisabled 参数监控与调用者审计](./mac/sleep-watch/README.md): 记录睡眠开关变化，追踪 pmset 的调用进程与参数。
+- [iPhone Tailscale 远程调试](./mac/iphone-tailscale-debug/README.md): 通过 Mac 本机 OrbStack 代理连接远程 iPhone，无需路由器转发。
